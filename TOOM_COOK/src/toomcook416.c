@@ -70,7 +70,14 @@ void toomcook416(const uint32_t *a, const uint32_t *b, uint32_t *c)
         bws[6][j] = r[0];
         bws[0][j] = r[3];
     }
-
+    for (int i = 0; i < 7; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            printf("a[%d][%d]=%x b[%d][%d]=%x\n", i, j, aws[i][j], i, j, bws[i][j]);
+        }
+        printf("\n");
+    }
     for (int i = 0; i < 7; i++)
     {
         toomcook44(aws[i], bws[i], w[i]);

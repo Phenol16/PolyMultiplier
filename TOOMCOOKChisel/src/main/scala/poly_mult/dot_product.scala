@@ -9,4 +9,6 @@ class dotIO extends Bundle {
   val valid_out = Output(Bool())
   val c = Output(Vec(4, UInt(27.W)))
 }
-class dot_product extends Module {}
+class dot_product extends Module {
+  val io = IO(new dotIO)
+}

@@ -9,4 +9,7 @@ class interpIO extends Bundle {
   val c = Output(Vec(16, UInt(24.W)))
 }
 
-class interpolation extends Module {}
+class interpolation extends Module {
+  val io = IO(new interpIO)
+  
+}
