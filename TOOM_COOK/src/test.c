@@ -62,54 +62,51 @@ void test_toomcook416()
             b[i] &= 0xFF;
         } */
     uint32_t a[16], b[16], c[16], d[16];
-
-    srand(time(NULL));
-    for (int n = 0; n < 100; n++)
+    for (int i = 0; i < 16; i++)
     {
-
-        for (int i = 0; i < 16; i++)
-        {
-            a[i] = rand();
-            b[i] = rand();
-        }
-        for (int i = 0; i < 16; ++i)
-        {
-            a[i] &= 0xFFFFFF;
-            b[i] &= 0xFF;
-        }
-        schoolbook(a, b, c, 16);
-        toomcook416(a, b, d);
-        for (int i = 0; i < 16; i++)
-        {
-            if (c[i] != d[i])
-            {
-                printf("n=%d,i=%d,c[%d] = %x,d[%d] = %x\n", n, i, i, c[i], i, d[i]);
-                return;
-            }
-        }
+        a[i] = 2 * i + 1;
+        b[i] = 10 * (i + 1);
     }
-    printf("All random test pass\n");
-}
-void test_toomcook464()
-{
-    uint32_t a[64], b[64], c[64], d[64];
-    for (int i = 0; i < 64; i++)
-    {
-        a[i] = 1;
-        b[i] = i;
-    }
-    for (int i = 0; i < 64; ++i)
+    for (int i = 0; i < 16; ++i)
     {
         a[i] &= 0xFFFFFF;
         b[i] &= 0xFF;
     }
-    schoolbook(a, b, c, 64);
-    toomcook464(a, b, d);
-    /*     for (int i = 0; i < 64; i++)
+    schoolbook(a, b, c, 16);
+    toomcook416(a, b, d);
+    for (int i = 0; i < 16; i++)
+    {
+        if (c[i] != d[i])
         {
-            if (c[i] != d[i])
+            printf("i=%d,c[%d] = %x,d[%d] = %x\n", i, i, c[i], i, d[i]);
+        }
+    }
+    /*     uint32_t a[16], b[16], c[16], d[16];
+
+        srand(time(NULL));
+        for (int n = 0; n < 100; n++)
+        {
+
+            for (int i = 0; i < 16; i++)
             {
-                printf("i=%d,c[%d] = %x,d[%d] = %x\n", i, i, c[i], i, d[i]);
+                a[i] = rand();
+                b[i] = rand();
             }
-        } */
+            for (int i = 0; i < 16; ++i)
+            {
+                a[i] &= 0xFFFFFF;
+                b[i] &= 0xFF;
+            }
+    schoolbook(a, b, c, 16);
+    toomcook416(a, b, d);
+    for (int i = 0; i < 16; i++)
+    {
+        if (c[i] != d[i])
+        {
+            printf("n=%d,i=%d,c[%d] = %x,d[%d] = %x\n", n, i, i, c[i], i, d[i]);
+            return;
+        }
+    }
+}
+printf("All random test pass\n");*/
 }

@@ -41,16 +41,45 @@ class kernel extends Module {
   for (i <- 0 until 7) {
     for (j <- 0 until 4) {
       dot_c_wire(i * 4 + j) := dots(i).io.c(j)
+
     }
   }
   val dot_c_reg = RegNext(dot_c_wire)
+
+  /*   when(dot_valid_reg) {
+    printf("--- Stage 2 7x dot_product ---\n")
+    for (i <- 0 until 7) {
+      printf(
+        "Point %d, a = [%x,%x,%x,%x],b = [%x,%x,%x,%x],w = [%x,%x,%x,%x]\n",
+        i.U,
+        A_eval_reg(i * 4 + 0),
+        A_eval_reg(i * 4 + 1),
+        A_eval_reg(i * 4 + 2),
+        A_eval_reg(i * 4 + 3),
+        B_eval_reg(i * 4 + 0),
+        B_eval_reg(i * 4 + 1),
+        B_eval_reg(i * 4 + 2),
+        B_eval_reg(i * 4 + 3),
+        dot_c_reg(i * 4 + 0),
+        dot_c_reg(i * 4 + 1),
+        dot_c_reg(i * 4 + 2),
+        dot_c_reg(i * 4 + 3)
+      )
+    }
+  } */
 
   // ========== Stage 3: interpolation ==========
   val interp = Module(new interpolation)
   interp.io.valid_in := dot_valid_reg
   interp.io.w := dot_c_reg
-
+  when(interp.io.valid_out) {
+    printf("--- Stage 3 interpolation ---\n")
+    for (i <- 0 until 16) {
+      printf("c[%d]=%x\n", i.U, interp.io.c(i))
+    }
+  }
   // ========== Output ==========
   io.valid_out := interp.io.valid_out
   io.c := interp.io.c
+
 }

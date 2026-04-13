@@ -12,21 +12,17 @@ class interpIO extends Bundle {
 class interpolation extends Module {
   val io = IO(new interpIO)
 
-  // ---------- 状态机 ----------
   val sIdle :: sCompute :: sDone :: Nil = Enum(3)
   val state = RegInit(sIdle)
 
   val col = RegInit(0.U(2.W)) // 当前列 i = 0..3
 
-  // ---------- 寄存器：跨列保存 r[7/8/9]（即上一列的 r[0/1/2]） ----------
   val prev0 = RegInit(0.U(27.W)) // r[7] = 上列 r[0]
   val prev1 = RegInit(0.U(27.W)) // r[8] = 上列 r[1]
   val prev2 = RegInit(0.U(27.W)) // r[9] = 上列 r[2]
 
-  // ---------- 输出寄存器 ----------
   val cReg = RegInit(VecInit(Seq.fill(16)(0.U(27.W))))
 
-  // ---------- 状态跳转 ----------
   switch(state) {
     is(sIdle) {
       when(io.valid_in) {
@@ -53,7 +49,6 @@ class interpolation extends Module {
     }
   }
 
-  // ---------- 组合逻辑 ----------
   val r0_in = io.w(0.U * 4.U + col)
   val r1_in = io.w(1.U * 4.U + col)
   val r2_in = io.w(2.U * 4.U + col)
@@ -94,7 +89,6 @@ class interpolation extends Module {
 
   val s_r1_f = (s_r1_e - s_r5_d) & MASK
 
-  // ---------- 将本列结果写入 cReg ----------
   when(state === sCompute) {
     cReg(col * 4.U + 3.U) := s_r3_b
 
@@ -108,12 +102,10 @@ class interpolation extends Module {
       cReg(col * 4.U + 2.U) := (s_r4_d + prev0) & MASK // r[4] + r[7]
     }
 
-    // 保存本列 r[0/1/2] 供下列使用
     prev0 := s_r0
     prev1 := s_r1_f
     prev2 := s_r2_d
 
-    // 最后一列：对 c[0..2] 做最终修正
     when(col === 3.U) {
       cReg(0.U) := (cReg(0.U) - s_r2_d) & MASK
       cReg(1.U) := (cReg(1.U) - s_r1_f) & MASK
@@ -121,7 +113,6 @@ class interpolation extends Module {
     }
   }
 
-  // ---------- 输出 ----------
   io.valid_out := (state === sDone)
   for (i <- 0 until 16) {
     io.c(i) := cReg(i)(23, 0)
