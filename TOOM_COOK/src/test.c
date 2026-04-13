@@ -26,22 +26,25 @@ void test_toomcook44()
 }
 void test_toomcook44_unmodulo()
 {
-    uint32_t a[4], b[4], c[4], d[7];
-    for (int i = 0; i < 4; i++)
-    {
-        a[i] = 2 * i + 1;
-        b[i] = 10 * i;
-    }
+    uint32_t c[4], d[7];
+    /*     for (int i = 0; i < 4; i++)
+        {
+            a[i] = 2 * i + 1;
+            b[i] = 200*(i+1);
+        } */
+    uint32_t a[4] = {0x3E9CB03C, 0x4448C4, 0x20E32E7F, 0x185DF036};
+    uint32_t b[4] = {0x9B07, 0x783F, 0xC581, 0xAED9};
     for (int i = 0; i < 4; ++i)
     {
-        a[i] &= 0xFFFFFF;
-        b[i] &= 0xFF;
+        a[i] &= 0x3FFFFFFF;
+        b[i] &= 0xFFFF;
     }
     schoolbook(a, b, c, 4);
-    toomcook44_unmodulo(a, b, d);
+    // toomcook44_unmodulo(a, b, d);
+    toomcook44(a, b, d);
     for (int i = 0; i < 4; i++)
     {
-        printf("c[%d] = %x\n", i, c[i]);
+        printf("c[%d] = %x d[%d] = %x\n", i, c[i], i, d[i]);
     } /*
      for (int i = 0; i < 7; i++)
      {
@@ -59,25 +62,33 @@ void test_toomcook416()
             b[i] &= 0xFF;
         } */
     uint32_t a[16], b[16], c[16], d[16];
-    for (int i = 0; i < 16; i++)
+
+    srand(time(NULL));
+    for (int n = 0; n < 100; n++)
     {
-        a[i] = i * 0x12345 + 0x5a;
-        b[i] = i * 37 + 11;
-    }
-    for (int i = 0; i < 16; ++i)
-    {
-        a[i] &= 0xFFFFFF;
-        b[i] &= 0xFF;
-    }
-    schoolbook(a, b, c, 16);
-    toomcook416(a, b, d);
-/*     for (int i = 0; i < 16; i++)
-    {
-        if (c[i] != d[i])
+
+        for (int i = 0; i < 16; i++)
         {
-            printf("i=%d,c[%d] = %x,d[%d] = %x\n", i, i, c[i], i, d[i]);
+            a[i] = rand();
+            b[i] = rand();
         }
-    } */
+        for (int i = 0; i < 16; ++i)
+        {
+            a[i] &= 0xFFFFFF;
+            b[i] &= 0xFF;
+        }
+        schoolbook(a, b, c, 16);
+        toomcook416(a, b, d);
+        for (int i = 0; i < 16; i++)
+        {
+            if (c[i] != d[i])
+            {
+                printf("n=%d,i=%d,c[%d] = %x,d[%d] = %x\n", n, i, i, c[i], i, d[i]);
+                return;
+            }
+        }
+    }
+    printf("All random test pass\n");
 }
 void test_toomcook464()
 {
@@ -94,11 +105,11 @@ void test_toomcook464()
     }
     schoolbook(a, b, c, 64);
     toomcook464(a, b, d);
-/*     for (int i = 0; i < 64; i++)
-    {
-        if (c[i] != d[i])
+    /*     for (int i = 0; i < 64; i++)
         {
-            printf("i=%d,c[%d] = %x,d[%d] = %x\n", i, i, c[i], i, d[i]);
-        }
-    } */
+            if (c[i] != d[i])
+            {
+                printf("i=%d,c[%d] = %x,d[%d] = %x\n", i, i, c[i], i, d[i]);
+            }
+        } */
 }

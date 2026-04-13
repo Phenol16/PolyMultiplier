@@ -38,9 +38,9 @@ void toomcook44(const uint32_t *a, const uint32_t *b, uint32_t *c)
         uint32_t Bw = (B[i] & 0xFFFF) | ((B[i] >> 15) & 0x10000);
         w[i] = mul_signed_mq31_q17(Aw, Bw);
     }
-    /* for (int i = 0; i < 7; i++)
+/*     for (int i = 0; i < 7; i++)
     {
-        printf("w[%d]=%d\n", i, w[i]);
+        printf("Aw[%d]=%x   Bw[%d]=%x    w[%d]=%x\n", i, A[i], i, B[i], i, w[i]);
     } */
     // Interpolation
     uint32_t r[6];
@@ -98,7 +98,7 @@ void toomcook44(const uint32_t *a, const uint32_t *b, uint32_t *c)
         } */
     for (int j = 0; j < 4; j++)
     {
-        c[j] &= 0x3FFFFFFF;
+        c[j] &= 0x7FFFFFF;
     }
 }
 
@@ -132,10 +132,10 @@ void toomcook44_unmodulo(const uint32_t *a, const uint32_t *b, uint32_t *c)
         w[i] = mul_signed_mq28_q13(Aw, Bw);
     }
 
-/*     for (int i = 0; i < 7; i++)
-    {
-        printf("Aw[%d]=%x,Bw[%d]=%x,w[%d]=%x\n", i, A[i], i, B[i], i, w[i]);
-    } */
+    /*     for (int i = 0; i < 7; i++)
+        {
+            printf("Aw[%d]=%x,Bw[%d]=%x,w[%d]=%x\n", i, A[i], i, B[i], i, w[i]);
+        } */
     // Interpolation
     uint32_t r[6];
     r[1] = (w[1] + w[4]) & 0x7FFFFFF;
