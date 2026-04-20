@@ -36,16 +36,6 @@ class evaluation extends Module {
     val ah1 = ar1 +& Cat(ah0, 0.U(1.W))
     val ah2 = ar0 +& Cat(ah1, 0.U(1.W))
 
-    /*     io.A_eval(j * 7 + 0) := ar3
-    io.A_eval(j * 7 + 1) := ah2
-    io.A_eval(j * 7 + 2) := a_even +& a_odd
-    io.A_eval(j * 7 + 3) := fillMsb(a_even -& a_odd, 30)
-    io.A_eval(j * 7 + 4) := Cat(a_scaled_even, 0.U(1.W)) +& a_scaled_odd
-    io.A_eval(j * 7 + 5) := fillMsb(
-      Cat(a_scaled_even, 0.U(1.W)) -& a_scaled_odd,
-      30
-    )
-    io.A_eval(j * 7 + 6) := ar0 */
     io.A_eval(j + 0) := ar3
     io.A_eval(j + 4) := ah2
     io.A_eval(j + 8) := a_even +& a_odd
@@ -71,16 +61,6 @@ class evaluation extends Module {
     val bh1 = br1 +& Cat(bh0, 0.U(1.W))
     val bh2 = br0 +& Cat(bh1, 0.U(1.W))
 
-    /* io.B_eval(j * 7 + 0) := br3
-    io.B_eval(j * 7 + 1) := bh2
-    io.B_eval(j * 7 + 2) := b_even +& b_odd
-    io.B_eval(j * 7 + 3) := fillMsb(b_even -& b_odd, 16)
-    io.B_eval(j * 7 + 4) := Cat(b_scaled_even, 0.U(1.W)) +& b_scaled_odd
-    io.B_eval(j * 7 + 5) := fillMsb(
-      Cat(b_scaled_even, 0.U(1.W)) -& b_scaled_odd,
-      16
-    )
-    io.B_eval(j * 7 + 6) := br0 */
     io.B_eval(j + 0) := br3
     io.B_eval(j + 4) := bh2
     io.B_eval(j + 8) := b_even +& b_odd

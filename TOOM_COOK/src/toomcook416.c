@@ -82,13 +82,13 @@ void toomcook416(const uint32_t *a, const uint32_t *b, uint32_t *c)
     {
         toomcook44(aws[i], bws[i], w[i]);
     }
-/*     for (int i = 0; i < 7; i++)
-    {
-        printf("Point %d, a = [%x,%x,%x,%x],b = [%x,%x,%x,%x],w = [%x,%x,%x,%x]\n", i,
-               aws[i][0], aws[i][1], aws[i][2], aws[i][3],
-               bws[i][0], bws[i][1], bws[i][2], bws[i][3],
-               w[i][0], w[i][1], w[i][2], w[i][3]);
-    } */
+    /*     for (int i = 0; i < 7; i++)
+        {
+            printf("Point %d, a = [%x,%x,%x,%x],b = [%x,%x,%x,%x],w = [%x,%x,%x,%x]\n", i,
+                   aws[i][0], aws[i][1], aws[i][2], aws[i][3],
+                   bws[i][0], bws[i][1], bws[i][2], bws[i][3],
+                   w[i][0], w[i][1], w[i][2], w[i][3]);
+        } */
     // interpolation
     uint32_t r[10] = {0};
     for (int i = 0; i < 4; i++)
@@ -149,5 +149,4 @@ void toomcook416(const uint32_t *a, const uint32_t *b, uint32_t *c)
     {
         c[i] &= 0xFFFFFF;
     }
-
 }

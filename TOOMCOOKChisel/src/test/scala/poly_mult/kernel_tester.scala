@@ -50,8 +50,8 @@ class KernelTest extends AnyFlatSpec with ChiselScalatestTester {
     }
   }
 }
-/*
-class KernelTest extends AnyFlatSpec with ChiselScalatestTester {
+
+/* class KernelTest extends AnyFlatSpec with ChiselScalatestTester {
   "kernel" should "show internal values" in {
     test(new kernel) { dut =>
       dut.io.valid_in.poke(true.B)
@@ -65,5 +65,4 @@ class KernelTest extends AnyFlatSpec with ChiselScalatestTester {
     }
   }
 
-}
- */
+} */

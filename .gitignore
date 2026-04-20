@@ -1,2 +1,7 @@
 .metals/
 .vscode/
+.bsp/
+.ammonite/
+out/
+target/
+*.log

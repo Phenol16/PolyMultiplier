@@ -1,4 +1,7 @@
 #include "poly.h"
+#define N 64
+#define mask24 &0xFFFFFF
+#define mask8 &0xFF
 
 void test_toomcook44()
 {
@@ -109,4 +112,22 @@ void test_toomcook416()
     }
 }
 printf("All random test pass\n");*/
+}
+void test_toomcook464()
+{
+    uint32_t a[N], b[N], c[N], d[N];
+    for (int i = 0; i < N; i++)
+    {
+        a[i] = (i);
+        b[i] = (10 * (i + 1)) ;
+    }
+    schoolbook(a, b, c, N);
+    toomcook464(a, b, d);
+    /*     for (int i = 0; i < N; i++)
+        {
+            if (c[i] != d[i])
+            {
+                printf("i=%d,c[%d] = %x,d[%d] = %x\n", i, i, c[i], i, d[i]);
+            }
+        } */
 }
