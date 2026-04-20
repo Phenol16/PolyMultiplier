@@ -27,10 +27,6 @@ void test_toomcook464();
 
 void toomcook4(const uint32_t *a, const uint32_t *b, uint32_t *c, int N);
 void test_toomcook4();
-void evaluation(const uint32_t *a, uint32_t *aws, int j, int N);
-void product(uint32_t *a, uint32_t *b, uint64_t *c);
-uint64_t mul_signed_mq39_q29(uint64_t a, uint32_t b);
-void interpolation(uint64_t *w, uint64_t *c, uint64_t *r, int i, int N);
 
 uint32_t mul_signed_mq28_q13(uint32_t a, uint32_t b);
 // uint32_t mul_signed_mq28_q17(uint32_t a, uint32_t b);
