@@ -237,33 +237,7 @@ static void toomcook4_recursive(const uint64_t *a, const uint64_t *b, uint64_t *
     }
 }
 
-void toomcook4(const uint32_t *a, const uint32_t *b, uint32_t *c, int N)
+void toomcook4(const uint64_t *a_in, const uint64_t *b_in, uint64_t *c_out, int N)
 {
-    uint64_t *a64 = (uint64_t *)malloc((size_t)N * sizeof(uint64_t));
-    uint64_t *b64 = (uint64_t *)malloc((size_t)N * sizeof(uint64_t));
-    uint64_t *c64 = (uint64_t *)malloc((size_t)N * sizeof(uint64_t));
-    if (a64 == NULL || b64 == NULL || c64 == NULL)
-    {
-        free(a64);
-        free(b64);
-        free(c64);
-        return;
-    }
-
-    for (int i = 0; i < N; i++)
-    {
-        a64[i] = a[i];
-        b64[i] = b[i];
-    }
-
-    toomcook4_recursive(a64, b64, c64, N);
-
-    for (int i = 0; i < N; i++)
-    {
-        c[i] = (uint32_t)c64[i];
-    }
-
-    free(a64);
-    free(b64);
-    free(c64);
+    toomcook4_recursive(a_in, b_in, c_out, N);
 }

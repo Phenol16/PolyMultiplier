@@ -25,7 +25,7 @@ uint64_t mul_signed_mq33_q21(uint64_t a, uint32_t b);
 void toomcook464(const uint32_t *a, const uint32_t *b, uint32_t *c);
 void test_toomcook464();
 
-void toomcook4(const uint32_t *a, const uint32_t *b, uint32_t *c, int N);
+void toomcook4(const uint64_t *a_in, const uint64_t *b_in, uint64_t *c_out, int N);
 void test_toomcook4();
 
 uint32_t mul_signed_mq28_q13(uint32_t a, uint32_t b);
