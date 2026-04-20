@@ -116,18 +116,63 @@ printf("All random test pass\n");*/
 void test_toomcook464()
 {
     uint32_t a[N], b[N], c[N], d[N];
+    int mismatch_count = 0;
+    int printed_mismatch = 0;
+
     for (int i = 0; i < N; i++)
     {
-        a[i] = (i);
-        b[i] = (10 * (i + 1)) ;
+        a[i] = (uint32_t)i & 0xFFFFFF;
+        b[i] = (uint32_t)(10 * (i + 1)) & 0xFF;
     }
     schoolbook(a, b, c, N);
     toomcook464(a, b, d);
-    /*     for (int i = 0; i < N; i++)
+
+    for (int i = 0; i < N; i++)
+    {
+        if (c[i] != d[i])
+        {
+            mismatch_count++;
+            if (printed_mismatch < 5)
+            {
+                printf("[deterministic] i=%d, c[%d]=%x, d[%d]=%x\n", i, i, c[i], i, d[i]);
+                printed_mismatch++;
+            }
+        }
+    }
+
+    srand(1);
+    for (int n = 0; n < 200; n++)
+    {
+        for (int i = 0; i < N; i++)
+        {
+            a[i] = (uint32_t)rand() & 0xFFFFFF;
+            b[i] = (uint32_t)rand() & 0xFF;
+        }
+
+        schoolbook(a, b, c, N);
+        toomcook464(a, b, d);
+
+        for (int i = 0; i < N; i++)
         {
             if (c[i] != d[i])
             {
-                printf("i=%d,c[%d] = %x,d[%d] = %x\n", i, i, c[i], i, d[i]);
+                mismatch_count++;
+                if (printed_mismatch < 5)
+                {
+                    printf("[random n=%d] i=%d, c[%d]=%x, d[%d]=%x\n", n, i, i, c[i], i, d[i]);
+                    printed_mismatch++;
+                }
+                break;
             }
-        } */
+        }
+    }
+
+    if (mismatch_count == 0)
+    {
+        printf("toomcook464 checks passed (deterministic + random)\n");
+    }
+    else
+    {
+        printf("toomcook464 checks found %d mismatches\n", mismatch_count);
+    }
 }
