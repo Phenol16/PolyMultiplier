@@ -13,3 +13,19 @@
   
 + a:24+3+3+3+3+3=39?
 + b:8+4+4+4+4+4+1=29?
+
+uint32_t acoeff[4][4][4][16], bcoeff[4][4][4][16];
+for (int i = 0; i < 4; i++)
+{
+    for (int j = 0; j < 4; j++)
+    {
+        for (int k = 0; k < 4; k++)
+        {
+            for (int l = 0; l < 16; l++)
+            {
+                acoeff[i][j][k][l] = a[4 * (4 * (4 * l + k) + j) + i]; // acoeff[256*i + 64*j + 16*k + l]=a[64*l + 16*k + 4*j + i]
+                bcoeff[i][j][k][l] = b[4 * (4 * (4 * l + k) + j) + i];
+            }
+        }
+    }
+}

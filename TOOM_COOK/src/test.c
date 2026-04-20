@@ -138,7 +138,8 @@ void test_toomcook464()
 }
 void test_toomcook4()
 {
-    uint32_t a[N], b[N], c[N], d[N];
+    uint32_t a[N], b[N], c[N];
+    uint64_t a64[N], b64[N], d[N];
     for (int n = 0; n < 100; n++)
     {
         srand(time(NULL));
@@ -146,15 +147,17 @@ void test_toomcook4()
         {
             a[i] = rand() & mask24;
             b[i] = rand() & mask8;
+            a64[i] = a[i];
+            b64[i] = b[i];
         }
         schoolbook(a, b, c, N);
-        toomcook4(a, b, d, N);
+        toomcook4(a64, b64, d, N);
         for (int i = 0; i < N; i++)
         {
-            if (c[i] != d[i])
+            if (c[i] != (uint32_t)d[i])
             {
-                printf("n=%d,i=%d,c[%d] = %x,d[%d] = %x\n", n, i, i, c[i], i, d[i]);
-                if (i = 63)
+                printf("n=%d,i=%d,c[%d] = %x,d[%d] = %llx\n", n, i, i, c[i], i, (unsigned long long)d[i]);
+                if (i == 63)
                 {
                     printf("fail!");
                     return;
