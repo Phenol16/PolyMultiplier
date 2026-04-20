@@ -5,6 +5,7 @@
 #define mask30 0x3FFFFFFFULL
 #define mask27 0x7FFFFFFULL
 #define mask24 0xFFFFFFULL
+#define mask39 0x7FFFFFFFFFULL
 
 static inline uint64_t coeff_mask_by_size(int N)
 {
@@ -47,26 +48,63 @@ static void evaluation(const uint64_t *a, uint64_t *aws, int j, int N)
 
 static void product(const uint64_t *a, const uint64_t *b, uint64_t *c)
 {
-    for (int i = 0; i < 4; i++)
+    uint64_t aws[7], bws[7], w[7];
+    uint64_t r[6];
+
+    // evaluation at 7 points (same scheme as主流程)
+    aws[0] = a[3];
+    aws[1] = a[0] + (a[1] << 1) + (a[2] << 2) + (a[3] << 3);
+    aws[2] = a[0] + a[1] + a[2] + a[3];
+    aws[3] = a[0] - a[1] + a[2] - a[3];
+    aws[4] = (a[0] << 3) + (a[1] << 2) + (a[2] << 1) + a[3];
+    aws[5] = (a[0] << 3) - (a[1] << 2) + (a[2] << 1) - a[3];
+    aws[6] = a[0];
+
+    bws[0] = b[3];
+    bws[1] = b[0] + (b[1] << 1) + (b[2] << 2) + (b[3] << 3);
+    bws[2] = b[0] + b[1] + b[2] + b[3];
+    bws[3] = b[0] - b[1] + b[2] - b[3];
+    bws[4] = (b[0] << 3) + (b[1] << 2) + (b[2] << 1) + b[3];
+    bws[5] = (b[0] << 3) - (b[1] << 2) + (b[2] << 1) - b[3];
+    bws[6] = b[0];
+
+    // signed multiply in mod 2^39 ring with 29-bit signed second operand
+    for (int i = 0; i < 7; i++)
     {
-        c[i] = 0;
+        uint64_t aw = aws[i] & mask39;
+        uint64_t bw = bws[i] & 0x1FFFFFFFULL;
+        uint64_t bw_sign = bw & 0x10000000ULL;
+        int64_t bw_signed = (int64_t)((bw | (uint64_t)(-(int64_t)bw_sign)) & mask39);
+        int64_t mul = (int64_t)aw * bw_signed;
+        w[i] = (uint64_t)mul & mask39;
     }
-    for (int i = 0; i < 4; i++)
-    {
-        for (int j = 0; j < 4; j++)
-        {
-            uint64_t prod = (a[i] * b[j]) & mask36;
-            int k = i + j;
-            if (k < 4)
-            {
-                c[k] = (c[k] + prod) & mask36;
-            }
-            else
-            {
-                c[k - 4] = (c[k - 4] - prod) & mask36;
-            }
-        }
-    }
+
+    // interpolation (沿用你之前方案)
+    r[5] = (w[5] - w[4]) & mask39;
+    r[3] = ((w[3] - w[2]) & mask39) >> 1;
+    r[4] = (w[4] - w[0]) & mask39;
+
+    r[4] = ((r[4] << 1) + r[5] - (w[6] << 7)) & mask39;
+    r[2] = (w[2] + r[3]) & mask39;
+
+    r[1] = (w[1] + w[4] - (r[2] << 6) - r[2]) & mask39;
+    r[2] = (r[2] - w[6] - w[0]) & mask39;
+
+    r[1] = (r[1] + r[2] + (r[2] << 2) + (r[2] << 3) + (r[2] << 5)) & mask39;
+    r[4] = ((uint64_t)(((r[4] - (r[2] << 3)) & mask39) >> 3) * 0xAAAAAAAABULL) & mask36;
+
+    r[5] = (((r[5] + r[1]) >> 1) * 0xEEEEEEEEFULL) & 0x1FFFFFFFFFULL;
+    r[1] = ((uint64_t)(((r[1] + (r[3] << 4)) & mask39) >> 1) * 0xE38E38E39ULL) & 0x1FFFFFFFFFULL;
+    r[2] = (r[2] - r[4]) & mask36;
+
+    r[3] = (-r[3] - r[1]) & mask36;
+    r[5] = (r[1] - r[5]) >> 1;
+    r[1] = r[1] - r[5];
+
+    c[0] = (w[6] - r[2]) & mask36;
+    c[1] = (r[5] - r[1]) & mask36;
+    c[2] = (r[4] - w[0]) & mask36;
+    c[3] = r[3] & mask36;
 }
 
 static void interpolation(const uint64_t *w, uint64_t *c, uint64_t *r, int i, int N)
