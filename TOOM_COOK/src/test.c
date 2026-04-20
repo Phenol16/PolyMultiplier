@@ -1,7 +1,8 @@
 #include "poly.h"
-#define N 64
-#define mask24 &0xFFFFFF
-#define mask8 &0xFF
+
+#define N 1024
+#define mask24 0xFFFFFF
+#define mask8 0xFF
 
 void test_toomcook44()
 {
@@ -116,18 +117,50 @@ printf("All random test pass\n");*/
 void test_toomcook464()
 {
     uint32_t a[N], b[N], c[N], d[N];
-    for (int i = 0; i < N; i++)
+    for (int n = 0; n < 100; n++)
     {
-        a[i] = (i);
-        b[i] = (10 * (i + 1)) ;
-    }
-    schoolbook(a, b, c, N);
-    toomcook464(a, b, d);
-    /*     for (int i = 0; i < N; i++)
+        srand(time(NULL));
+        for (int i = 0; i < N; i++)
+        {
+            a[i] = rand() & mask24;
+            b[i] = rand() & mask8;
+        }
+        schoolbook(a, b, c, N);
+        toomcook464(a, b, d);
+        for (int i = 0; i < N; i++)
         {
             if (c[i] != d[i])
             {
                 printf("i=%d,c[%d] = %x,d[%d] = %x\n", i, i, c[i], i, d[i]);
             }
-        } */
+        }
+    }
+}
+void test_toomcook4()
+{
+    uint32_t a[N], b[N], c[N], d[N];
+    for (int n = 0; n < 100; n++)
+    {
+        srand(time(NULL));
+        for (int i = 0; i < N; i++)
+        {
+            a[i] = rand() & mask24;
+            b[i] = rand() & mask8;
+        }
+        schoolbook(a, b, c, N);
+        toomcook4(a, b, d, N);
+        for (int i = 0; i < N; i++)
+        {
+            if (c[i] != d[i])
+            {
+                printf("n=%d,i=%d,c[%d] = %x,d[%d] = %x\n", n, i, i, c[i], i, d[i]);
+                if (i = 63)
+                {
+                    printf("fail!");
+                    return;
+                }
+            }
+        }
+    }
+    printf("pass!");
 }

@@ -1,6 +1,6 @@
 #include "poly.h"
 
-#define mask24 &0xFFFFFF
+#define mask24 0xFFFFFF
 
 void toomcook464(const uint32_t *a, const uint32_t *b, uint32_t *c)
 {
@@ -9,16 +9,8 @@ void toomcook464(const uint32_t *a, const uint32_t *b, uint32_t *c)
 
     for (int j = 0; j < 16; j++)
     {
-        eval(a, aws, j, 4);
-        eval(b, bws, j, 4);
-    }
-
-    for (int i = 0; i < 7; i++)
-    {
-        for (int j = 0; j < 16; j++)
-        {
-            printf("aws[%d][%d]=%d,bws[%d][%d]=%d\n", i, j, aws[7 * i + j], i, j, bws[7 * i + j]);
-        }
+        eval(a, aws, j, 16);
+        eval(b, bws, j, 16);
     }
 
     for (int i = 0; i < 7; i++)
@@ -36,6 +28,6 @@ void toomcook464(const uint32_t *a, const uint32_t *b, uint32_t *c)
     c[2] -= r[0];
     for (int i = 0; i < 64; i++)
     {
-        c[i] = c[i] mask24;
+        c[i] = c[i] & mask24;
     }
 }

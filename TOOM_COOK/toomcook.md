@@ -4,8 +4,6 @@
 + 规范chisel代码：tabulate test 
 + C语言改为24+3+3
 
-+ 4->16->64->256->1024
-
 + interp 展开 
 + 乘法并行 main.c
 + reg插入

@@ -1,11 +1,12 @@
 #include "poly.h"
 
-#define mask33 0x1FFFFFFFF
+#define mask33 0x1FFFFFFFFULL
 #define mask30 0x3FFFFFFF
 #define mask28 0xFFFFFFF
 #define mask27 0x7FFFFFF
 #define mask25 0x1FFFFFF
 #define mask24 0xFFFFFF
+
 void kernel(uint32_t *a, uint32_t *b, uint32_t *c)
 {
     uint32_t aws[7 * 4], bws[7 * 4];
@@ -144,6 +145,7 @@ void interp(uint32_t *w, uint32_t *c, uint32_t *r, int i, int N)
         c[4 * i + 2] = r[4] + r[7];
     }
 }
+
 uint64_t mul_signed_mq33_q21(uint64_t a, uint32_t b)
 {
     uint32_t b_sign = b & 0x100000;
@@ -151,6 +153,7 @@ uint64_t mul_signed_mq33_q21(uint64_t a, uint32_t b)
     int64_t c = (int64_t)a * b_signed;
     return (uint64_t)c & 0x1FFFFFFFFULL;
 }
+
 void dot_product(uint32_t *a, uint32_t *b, uint32_t *c)
 {
     uint32_t aws[7], bws[7];
@@ -196,21 +199,3 @@ void dot_product(uint32_t *a, uint32_t *b, uint32_t *c)
         c[j] &= mask30;
     }
 }
-/* uint32_t aws[7], bws[7];
-uint64_t w[7];
-
-for (int i = 0; i < 7; i++)
-{
-    // 24+3+3+3, 8+4+4+4+1
-    uint32_t aw = aws[i];
-    uint32_t bw = bws[i] & 0x1FFFFF; // 21 bit
-    w[i] = mul_signed_mq33_q21(aw, bw);
-}
-
-uint64_t mul_signed_mq33_q21(uint32_t a, uint32_t b)
-{
-    uint32_t b_sign = b & 0x100000;
-    int64_t b_signed = ((int64_t)(b | (uint32_t)(-(int32_t)b_sign))) & 0x1FFFFFFFFULL;
-    int64_t c = (int64_t)(uint64_t)a * b_signed;
-    return (uint64_t)c & 0x1FFFFFFFFULL;
-} */
