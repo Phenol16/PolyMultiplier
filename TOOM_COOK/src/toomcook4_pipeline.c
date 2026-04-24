@@ -125,14 +125,14 @@
      /* N=256 */ { mask27, mask24, mask25, 0xAAAAABULL,    0xE38E39ULL,    0xEEEEEFULL    },
  };
  
- /* 根据 N 获取参数表索引 */
- static inline int interp_param_idx(int N)
- {
-     switch (N) {
-         case   4: return 0;
-         case  16: return 1;
-         case  64: return 2;
-         case 256: return 3;
+/* 根据 stride(=N/4) 获取参数表索引 */
+static inline int interp_param_idx(int stride)
+{
+    switch (stride) {
+        case   4: return 0;
+        case  16: return 1;
+        case  64: return 2;
+        case 256: return 3;
          default:  return -1;
      }
  }
@@ -210,45 +210,83 @@
  /*                                                                      */
  /*  in 和 out 可以是同一块内存（in先被读取，再被覆盖）。               */
  /* ================================================================== */
- static void eval_layer(const uint64_t *in, uint64_t *out, int seg_len)
- {
-     int stride = seg_len / 4;
- 
-     /* 先把 in 的低4行复制到 out（若 in != out） */
-     if (in != out)
-         memcpy(out, in, 4 * stride * sizeof(uint64_t));
-     /* 高3行（k=4,5,6）由评估核填写，无需初始化 */
- 
-     /* 对每个块 j 运行评估核 */
-     for (int j = 0; j < stride; j++)
-         eval_core(out, j, stride);
- }
+static void eval_layer(const uint64_t *in, uint64_t *out, int seg_len)
+{
+    int stride = seg_len / 4;
+
+    for (int j = 0; j < stride; j++)
+    {
+        uint64_t r0 = in[4 * j + 0];
+        uint64_t r1 = in[4 * j + 1];
+        uint64_t r2 = in[4 * j + 2];
+        uint64_t r3 = in[4 * j + 3];
+        uint64_t t0, t1;
+
+        out[0 * stride + j] = r3;
+        out[1 * stride + j] = (r3 << 3) + (r2 << 2) + (r1 << 1) + r0;
+
+        t0 = r0 + r2;
+        t1 = r1 + r3;
+        out[2 * stride + j] = t0 + t1;
+        out[3 * stride + j] = t0 - t1;
+
+        t0 = (((r0 << 2) + r2) << 1);
+        t1 = (r1 << 2) + r3;
+        out[4 * stride + j] = t0 + t1;
+        out[5 * stride + j] = t0 - t1;
+        out[6 * stride + j] = r0;
+    }
+}
  
  /* ================================================================== */
  /*  整层插值：对 stride 个位置运行插值核，结果写入 c[0..4*stride-1]    */
  /* ================================================================== */
- static void interp_layer(const uint64_t *w, uint64_t *c, int stride)
- {
-     int N = stride * 4;   /* 当前层多项式长度 */
-     int idx = interp_param_idx(N);
-     const InterpParam *p = &INTERP_PARAMS[idx];
- 
-     uint64_t pr0 = 0, pr1 = 0, pr2 = 0;   /* 上一块遗留的高位系数 */
-     uint64_t nr0, nr1, nr2;
- 
-     for (int i = 0; i < stride; i++)
-     {
-         interp_core(w, c, i, stride, p,
-                     pr0, pr1, pr2,
-                     &nr0, &nr1, &nr2);
-         pr0 = nr0; pr1 = nr1; pr2 = nr2;
-     }
- 
-     /* 修正最后三个重叠项（等价于原始代码的 c[0]-=r[2] 等） */
-     c[0] -= pr2;
-     c[1] -= pr1;
-     c[2] -= pr0;
- }
+static void interp_layer(const uint64_t *w, uint64_t *c, int stride)
+{
+    int idx = interp_param_idx(stride);
+    const InterpParam *p = &INTERP_PARAMS[idx];
+
+    uint64_t pr0 = 0, pr1 = 0, pr2 = 0;   /* 上一块遗留的高位系数 */
+    uint64_t nr0, nr1, nr2;
+
+    for (int i = 0; i < stride; i++)
+    {
+        interp_core(w, c, i, stride, p,
+                    pr0, pr1, pr2,
+                    &nr0, &nr1, &nr2);
+        pr0 = nr0; pr1 = nr1; pr2 = nr2;
+    }
+
+    /* 修正最后三个重叠项（等价于原始代码的 c[0]-=r[2] 等） */
+    c[0] -= pr2;
+    c[1] -= pr1;
+    c[2] -= pr0;
+}
+
+static void product16(const uint64_t *a, const uint64_t *b, uint64_t *c);
+
+/* ================================================================== */
+/*  N=16 子流水：16系数 -> (评估)7×4 -> 7次product16 -> (插值)16系数       */
+/* ================================================================== */
+static void pipeline16(const uint64_t *a16, const uint64_t *b16, uint64_t *c16)
+{
+    uint64_t ae[7 * 4], be[7 * 4], w[7 * 4];
+    memset(w, 0, sizeof(w));
+
+    eval_layer(a16, ae, 16);
+    eval_layer(b16, be, 16);
+
+    for (int pt = 0; pt < 7; pt++)
+    {
+        uint64_t tmp[7];
+        product16(&ae[pt * 4], &be[pt * 4], tmp);
+        for (int k = 0; k < 4; k++)
+            w[pt * 4 + k] = tmp[k];
+    }
+
+    memset(c16, 0, 16 * sizeof(uint64_t));
+    interp_layer(w, c16, /*stride=*/4);
+}
  
  /* ================================================================== */
  /*  16阶底层乘法核（product16）                                         */
@@ -279,8 +317,7 @@
      }
  
      /* 插值（N=4，stride=1）*/
-     const InterpParam *p = &INTERP_PARAMS[0];   /* N=4 */
-     uint64_t r1, r2, r3, r4, r5;
+    uint64_t r1, r2, r3, r4, r5;
  
      r5 = (w[5] - w[4]) & mask39;
      r3 = ((w[3] - w[2]) & mask39) >> 1;
@@ -323,59 +360,20 @@
  /* ================================================================== */
  /*  主函数：三级流水 Toom-Cook 1024 阶乘法                              */
  /* ================================================================== */
- void toomcook4_pipeline(const uint64_t *a, const uint64_t *b, uint64_t *c)
- {
-     /* ============================================================
-      * STAGE 1：三级评估
-      *
-      * 数据布局说明（striding）：
-      *   第 L 级评估后，数据存在 [7^L × (1024/4^L)] 的数组中，
-      *   其中每组内按 [point * (1024/4^(L+1)) + coeff] 排列。
-      *
-      * L=0：aws0[7  × 256]，stride=256
-      * L=1：aws1[49 × 64]， stride=64
-      * L=2：aws2[343× 16]， stride=16（最后4个是实际系数）
-      * ============================================================ */
- 
-     /* --- L0 评估：输入 a[1024]，输出 aws0[7×256] --- */
-     /*
-      * 布局：aws0[k * 256 + j]，k=0..6 为评估点，j=0..255 为系数索引
-      * eval_layer 对 j=0..255 每个位置调用 eval_core(stride=256)
-      */
-     uint64_t aws0[7 * 256], bws0[7 * 256];
-     eval_layer(a, aws0, 1024);
-     eval_layer(b, bws0, 1024);
- 
-     /*
-      * --- L1 评估：对 aws0 中7个评估点各自的256系数段再做评估 ---
-      *
-      * aws0 的布局是 [point0 * 256 + coeff]。
-      * 对于 point0=i，其256个系数为 aws0[i*256 + 0..255]。
-      * 将这256个系数再做评估（stride=64），得 7×64 的输出。
-      * 结果存入 aws1[i * 7 * 64 + point1 * 64 + coeff]。
-      *
-      * 等价于：aws1[(i*7+j)*64 + k]
-      *   i = L0 评估点 (0..6)
-      *   j = L1 评估点 (0..6)
-      *   k = 系数索引 (0..63)
-      */
+void toomcook4_pipeline(const uint64_t *a, const uint64_t *b, uint64_t *c)
+{
+    /* L0/L1/L2 评估：1024 -> 7x256 -> 49x64 -> 343x16 */
+    uint64_t aws0[7 * 256], bws0[7 * 256];
+    eval_layer(a, aws0, 1024);
+    eval_layer(b, bws0, 1024);
+
      uint64_t aws1[7 * 7 * 64], bws1[7 * 7 * 64];
      for (int i = 0; i < 7; i++)
      {
          eval_layer(&aws0[i * 256], &aws1[i * 7 * 64], 256);
          eval_layer(&bws0[i * 256], &bws1[i * 7 * 64], 256);
      }
- 
-     /*
-      * --- L2 评估：对 aws1 中 49 个段各自的64系数再做评估 ---
-      *
-      * 结果 aws2[(i*7+j)*7*16 + k*16 + coeff]
-      *   i = L0 评估点, j = L1 评估点, k = L2 评估点
-      *   coeff = 0..15（每段4个有效系数 + 7个评估点槽）
-      *
-      * 即 aws2[seg343 * 7 * 16 + point2 * 16 + c]
-      *   seg343 = i*49+j*7+... 实际下面用 (i*7+j) 作 L1 段索引
-      */
+
      uint64_t aws2[7 * 7 * 7 * 16], bws2[7 * 7 * 7 * 16];
      for (int i = 0; i < 7; i++)
      for (int j = 0; j < 7; j++)
@@ -384,124 +382,26 @@
          eval_layer(&aws1[seg49 * 64], &aws2[seg49 * 7 * 16], 64);
          eval_layer(&bws1[seg49 * 64], &bws2[seg49 * 7 * 16], 64);
      }
- 
-     /*
-      * 至此 aws2/bws2 的布局为：
-      *   aws2[seg343 * 16 + coeff]，seg343 = 0..342，coeff = 0..15
-      *   其中 coeff=0..3 是4个多项式系数（L2评估后每子块4系数）
-      *
-      * 等价理解：aws2 中有 343 组，每组是一个4系数的小多项式（N=16段）。
-      * 相邻的7组（同一 seg49）按 stride=4 组织，eval_core 已按此排列。
-      */
- 
-     /* ============================================================
-      * STAGE 2：343 次 product16（时间复用同一乘法核）
-      *
-      * 对每个 seg343，取其4个系数做 product16，输出7个系数。
-      * 结果存入 w2，布局与 aws2 相同：w2[seg343 * 16 + coeff]。
-      * ============================================================ */
-     uint64_t w2[7 * 7 * 7 * 16];
-     memset(w2, 0, sizeof(w2));
- 
-     for (int seg49 = 0; seg49 < 49; seg49++)
-     {
-         /*
-          * 在 aws2[seg49 * 7 * 16] 中，按 stride=4 布局存放了7个评估点，
-          * 每评估点4个系数。即：
-          *   评估点 k 的系数 c 存在 aws2[seg49*7*16 + k*4 + c]
-          *
-          * 这7组（k=0..6）需要分别做 product16（每组4个系数）。
-          * 但注意：product16 的4个输入系数要从 aws2 中连续读出：
-          *   a_sub[c] = aws2[seg49*7*16 + k*4 + c]，c=0..3
-          *
-          * 同理 b_sub，输出 w2_sub[0..6]（7系数）写回 w2 同位置。
-          */
-         for (int k = 0; k < 7; k++)
-         {
-             int seg343 = seg49 * 7 + k;
-             const uint64_t *pa = &aws2[seg343 * 4];
-             const uint64_t *pb = &bws2[seg343 * 4];
- 
-             /*
-              * product16 输出7个系数存入 tmp，
-              * 这7个系数将作为 interp_layer(N=16,stride=4) 的输入：
-              *   w2[point * stride + i]，point=0..6，stride=4，i=k（此处 i=k 不对）
-              *
-              * 重新理解布局：
-              * interp_layer(w, c, stride=4) 读取 w[point*4 + i]，i=0..3。
-              * 对于 seg49 块，其插值输入应为：
-              *   w_for_interp[point*4 + k] = product结果的 point 系数
-              *   (k 是该 seg49 内的子块索引，即位置 i)
-              *
-              * 所以 product16 的输出 tmp[point] 应写入：
-              *   w2[seg49*7*4*4 + point*4 + k]（如果按4×4块组织）
-              *
-              * 等价：w2_interp[seg49 * (7*4) + point*4 + k]
-              * 即   w2[seg49 * 28 + point * 4 + k]
-              */
-             uint64_t tmp[7];
-             product16(pa, pb, tmp);
- 
-             /* 将 product16 的7个输出写入插值输入布局 */
-             for (int pt = 0; pt < 7; pt++)
-                 w2[seg49 * 28 + pt * 4 + k] = tmp[pt];
-         }
-     }
- 
-     /* ============================================================
-      * STAGE 3：三级插值（逆序）
-      *
-      * L2 插值：49 次 interp_layer(stride=4，N=16)
-      *   输入 w2[seg49*28]（布局 [point*4+i]）→ 输出 w1_seg[0..15]
-      *   合并进 w1[seg49*16]
-      *
-      * L1 插值：7 次 interp_layer(stride=16，N=64)
-      *   输入 w1[i*7*16]（布局 [point*16+j]）→ 输出 w0_seg[0..63]
-      *
-      * L0 插值：1 次 interp_layer(stride=64，N=256)
-      *   输入 w0[i*7*64]（布局 [point*64+j]）→ 输出 c[0..255]（累积）
-      * ============================================================ */
- 
-     /* --- L2 插值：49 × interp_layer(stride=4) → w1[49×16] --- */
-     uint64_t w1[7 * 7 * 16];
-     memset(w1, 0, sizeof(w1));
- 
-     for (int seg49 = 0; seg49 < 49; seg49++)
-     {
-         interp_layer(&w2[seg49 * 28], &w1[seg49 * 16], /*stride=*/4);
-         /* 结果 w1[seg49*16 + 0..15] 是16个系数的一个段 */
-     }
- 
-     /*
-      * 此时 w1 的布局：
-      *   w1[(i*7+j)*16 + coeff]，i=L0点，j=L1点，coeff=0..15
-      *
-      * 需要重排为 interp_layer(stride=16) 所需的 [point*16+coeff] 布局：
-      *   w1_for_L1[i * 7 * 16 + j * 16 + coeff] 已经是这个形式！
-      *   （i*7+j 就是 seg49，乘以16加coeff）
-      * 无需额外重排。
-      */
- 
-     /* --- L1 插值：7 × interp_layer(stride=16) → w0[7×64] --- */
-     uint64_t w0[7 * 64];
-     memset(w0, 0, sizeof(w0));
- 
-     for (int i = 0; i < 7; i++)
-     {
-         interp_layer(&w1[i * 7 * 16], &w0[i * 64], /*stride=*/16);
-     }
- 
-     /* --- L0 插值：1 × interp_layer(stride=64) → c[256] --- */
-     memset(c, 0, 256 * sizeof(uint64_t));  /* 只写前256个 */
- 
-     /*
-      * w0 布局：w0[i*64 + coeff]，i=L0点，coeff=0..63
-      * interp_layer 期望 w[point*stride + i]，stride=64
-      * 恰好匹配：w0[point*64 + i] ✓
-      */
-     interp_layer(w0, c, /*stride=*/64);
- 
-     /* --- 最终截断 --- */
-     for (int i = 0; i < 256; i++)
-         c[i] &= mask24;
- }
+
+    /* 343 个 N=16 子流水（每次：16输入 -> 16输出） */
+    uint64_t w2[7 * 7 * 7 * 16];
+    for (int seg343 = 0; seg343 < 343; seg343++)
+        pipeline16(&aws2[seg343 * 16], &bws2[seg343 * 16], &w2[seg343 * 16]);
+
+    /* 逆向插值：343x16 -> 49x64 -> 7x256 -> 1024 */
+    uint64_t w1[7 * 7 * 64];
+    memset(w1, 0, sizeof(w1));
+    for (int seg49 = 0; seg49 < 49; seg49++)
+        interp_layer(&w2[seg49 * 7 * 16], &w1[seg49 * 64], /*stride=*/16);
+
+    uint64_t w0[7 * 256];
+    memset(w0, 0, sizeof(w0));
+    for (int i = 0; i < 7; i++)
+        interp_layer(&w1[i * 7 * 64], &w0[i * 256], /*stride=*/64);
+
+    memset(c, 0, 1024 * sizeof(uint64_t));
+    interp_layer(w0, c, /*stride=*/256);
+
+    for (int i = 0; i < 1024; i++)
+        c[i] &= mask24;
+}
