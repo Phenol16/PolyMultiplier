@@ -12,32 +12,34 @@
  #define mask25  0x1FFFFFFULL
  #define mask24  0xFFFFFFULL
 
-void eval_core(uint64_t *buf, int j, int stride)
- {
-     uint64_t r0 = buf[0 * stride + j];
-     uint64_t r1 = buf[1 * stride + j];
-     uint64_t r2 = buf[2 * stride + j];
-     uint64_t r3 = buf[3 * stride + j];
- 
-     uint64_t t0, t1;
- 
-     buf[0 * stride + j] = r3;
- 
-     buf[1 * stride + j] = (r3 << 3) + (r2 << 2) + (r1 << 1) + r0;
- 
-     t0 = r0 + r2;
-     t1 = r1 + r3;
-     buf[2 * stride + j] = t0 + t1;
-     buf[3 * stride + j] = t0 - t1;
- 
-     t0 = (((r0 << 2) + r2) << 1);
-     t1 = (r1 << 2) + r3;
-     buf[4 * stride + j] = t0 + t1;
-     buf[5 * stride + j] = t0 - t1;
- 
-     buf[6 * stride + j] = r0;
- }
- 
+void eval_layer(const uint64_t *in, uint64_t *out, int seg_len)
+{
+    int stride = seg_len / 4;
+
+    for (int j = 0; j < stride; j++)
+    {
+        uint64_t r0 = in[4 * j + 0];
+        uint64_t r1 = in[4 * j + 1];
+        uint64_t r2 = in[4 * j + 2];
+        uint64_t r3 = in[4 * j + 3];
+        uint64_t t0, t1;
+
+        out[0 * stride + j] = r3;
+        out[1 * stride + j] = (r3 << 3) + (r2 << 2) + (r1 << 1) + r0;
+
+        t0 = r0 + r2;
+        t1 = r1 + r3;
+        out[2 * stride + j] = t0 + t1;
+        out[3 * stride + j] = t0 - t1;
+
+        t0 = (((r0 << 2) + r2) << 1);
+        t1 = (r1 << 2) + r3;
+        out[4 * stride + j] = t0 + t1;
+        out[5 * stride + j] = t0 - t1;
+        out[6 * stride + j] = r0;
+    }
+}
+
  typedef struct {
      uint64_t mk;      /* 主掩码 */
      uint64_t mk_r2;   /* r2 输出掩码 */
@@ -120,33 +122,7 @@ void interp_core(
      *out_r2 = r2;
  }
  
-void eval_layer(const uint64_t *in, uint64_t *out, int seg_len)
-{
-    int stride = seg_len / 4;
 
-    for (int j = 0; j < stride; j++)
-    {
-        uint64_t r0 = in[4 * j + 0];
-        uint64_t r1 = in[4 * j + 1];
-        uint64_t r2 = in[4 * j + 2];
-        uint64_t r3 = in[4 * j + 3];
-        uint64_t t0, t1;
-
-        out[0 * stride + j] = r3;
-        out[1 * stride + j] = (r3 << 3) + (r2 << 2) + (r1 << 1) + r0;
-
-        t0 = r0 + r2;
-        t1 = r1 + r3;
-        out[2 * stride + j] = t0 + t1;
-        out[3 * stride + j] = t0 - t1;
-
-        t0 = (((r0 << 2) + r2) << 1);
-        t1 = (r1 << 2) + r3;
-        out[4 * stride + j] = t0 + t1;
-        out[5 * stride + j] = t0 - t1;
-        out[6 * stride + j] = r0;
-    }
-}
 
 void interp_layer(const uint64_t *w, uint64_t *c, int stride)
 {
@@ -169,13 +145,11 @@ void interp_layer(const uint64_t *w, uint64_t *c, int stride)
     c[2] -= pr0;
 }
 
-void product16(const uint64_t *a, const uint64_t *b, uint64_t *c)
+void product4(const uint64_t *a, const uint64_t *b, uint64_t *c)
  {
      uint64_t aws[7], bws[7];
-     memcpy(aws, a, 4 * sizeof(uint64_t));
-     memcpy(bws, b, 4 * sizeof(uint64_t));
-     eval_core(aws, 0, 1);
-     eval_core(bws, 0, 1);
+     eval_layer(a,aws,4);
+     eval_layer(b,bws,4);
      uint64_t w[7];
      for (int i = 0; i < 7; i++)
      {
@@ -220,7 +194,6 @@ void product16(const uint64_t *a, const uint64_t *b, uint64_t *c)
 void core16(const uint64_t *a16, const uint64_t *b16, uint64_t *c16)
 {
     uint64_t ae[7 * 4], be[7 * 4], w[7 * 4];
-    memset(w, 0, sizeof(w));
 
     eval_layer(a16, ae, 16);
     eval_layer(b16, be, 16);
@@ -228,18 +201,19 @@ void core16(const uint64_t *a16, const uint64_t *b16, uint64_t *c16)
     for (int pt = 0; pt < 7; pt++)
     {
         uint64_t tmp[7];
-        product16(&ae[pt * 4], &be[pt * 4], tmp);
+        product4(&ae[pt * 4], &be[pt * 4], tmp);
         for (int k = 0; k < 4; k++)
             w[pt * 4 + k] = tmp[k];
     }
 
-    memset(c16, 0, 16 * sizeof(uint64_t));
     interp_layer(w, c16, /*stride=*/4);
 }
+
+
  /* ================================================================== */
  /*  主函数                             */
  /* ================================================================== */
-void toomcook4_pipeline(const uint64_t *a, const uint64_t *b, uint64_t *c)
+void toomcook4_2(const uint64_t *a, const uint64_t *b, uint64_t *c)
 {
     /* L0/L1/L2 评估：1024 -> 7x256 -> 49x64 -> 343x16 */
     uint64_t aws0[7 * 256], bws0[7 * 256];
@@ -262,23 +236,19 @@ void toomcook4_pipeline(const uint64_t *a, const uint64_t *b, uint64_t *c)
          eval_layer(&bws1[seg49 * 64], &bws2[seg49 * 7 * 16], 64);
      }
 
-    /* 343 个 N=16（每次：16输入 -> 16输出） */
+    /* 343 次 N=16 */
     uint64_t w2[7 * 7 * 7 * 16];
     for (int seg343 = 0; seg343 < 343; seg343++)
         core16(&aws2[seg343 * 16], &bws2[seg343 * 16], &w2[seg343 * 16]);
 
     /* 插值：343x16 -> 49x64 -> 7x256 -> 1024 */
     uint64_t w1[7 * 7 * 64];
-    memset(w1, 0, sizeof(w1));
     for (int seg49 = 0; seg49 < 49; seg49++)
         interp_layer(&w2[seg49 * 7 * 16], &w1[seg49 * 64], /*stride=*/16);
 
     uint64_t w0[7 * 256];
-    memset(w0, 0, sizeof(w0));
     for (int i = 0; i < 7; i++)
         interp_layer(&w1[i * 7 * 64], &w0[i * 256], /*stride=*/64);
-
-    memset(c, 0, 1024 * sizeof(uint64_t));
     interp_layer(w0, c, /*stride=*/256);
 
     for (int i = 0; i < 1024; i++)
