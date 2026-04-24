@@ -4,6 +4,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 
 void schoolbook(const uint32_t *a, const uint32_t *b, uint32_t *c, int n);
