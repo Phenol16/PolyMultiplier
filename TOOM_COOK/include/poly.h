@@ -32,6 +32,7 @@ void interpolation(const uint64_t *w, uint64_t *c, uint64_t *r, int i, int N);
 
 void test_hardware();
 void toomcook4_2(const uint64_t *a, const uint64_t *b, uint64_t *c);
+void toomcook4_3(const uint64_t *a, const uint64_t *b, uint64_t *c);
 
 uint32_t mul_signed_mq28_q13(uint32_t a, uint32_t b);
 // uint32_t mul_signed_mq28_q17(uint32_t a, uint32_t b);
