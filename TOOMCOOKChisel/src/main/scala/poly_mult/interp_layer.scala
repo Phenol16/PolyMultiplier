@@ -11,7 +11,6 @@ class InterpLayerIO(val stride: Int, val inW: Int, val outW: Int)
   val out = Output(Vec(4 * stride, UInt(outW.W)))
 }
 
-// 占位插值层：后续可替换为精确公式
 class InterpLayer(val stride: Int, val inW: Int, val outW: Int)
     extends Module {
   val io = IO(new InterpLayerIO(stride, inW, outW))

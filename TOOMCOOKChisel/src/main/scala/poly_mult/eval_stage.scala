@@ -5,53 +5,85 @@ import chisel3.util._
 
 class EvalPoint(val inW: Int, val outW: Int) extends Module {
   val io = IO(new Bundle {
-    val r0 = Input(UInt(inW.W))
-    val r1 = Input(UInt(inW.W))
-    val r2 = Input(UInt(inW.W))
-    val r3 = Input(UInt(inW.W))
-    val pt = Input(UInt(3.W))
+    val r0  = Input(UInt(inW.W))
+    val r1  = Input(UInt(inW.W))
+    val r2  = Input(UInt(inW.W))
+    val r3  = Input(UInt(inW.W))
+    val pt  = Input(UInt(3.W))
     val out = Output(UInt(outW.W))
   })
 
+  private def fillMsb(value: UInt, targetWidth: Int): UInt = {
+    if (value.getWidth >= targetWidth) {
+      value(targetWidth - 1, 0)
+    } else {
+      Cat(Fill(targetWidth - value.getWidth, value(value.getWidth - 1)), value)
+    }
+  }
   val even = io.r0 +& io.r2
-  val odd = io.r1 +& io.r3
+  val odd  = io.r1 +& io.r3
 
-  val scaledEven = Cat(io.r0, 0.U(2.W)) +& io.r2
-  val scaledOdd = Cat(io.r1, 0.U(2.W)) +& io.r3
+  val scaled_even = Cat(io.r0, 0.U(2.W)) +& io.r2
+  val scaled_odd  = Cat(io.r1, 0.U(2.W)) +& io.r3
 
-  val v0 = io.r3
-  val v1 = io.r0 +& (io.r1 << 1) +& (io.r2 << 2) +& (io.r3 << 3)
-  val v2 = even +& odd
-  val sub = even -& odd
-  val v3 = if (outW > sub.getWidth) {
-    Cat(Fill(outW - sub.getWidth, sub(sub.getWidth - 1)), sub)
-  } else {
-    sub(outW - 1, 0)
-  }
-  val v4 = Cat(scaledEven, 0.U(1.W)) +& scaledOdd
-  val sub2 = Cat(scaledEven, 0.U(1.W)) -& scaledOdd
-  val v5 = if (outW > sub2.getWidth) {
-    Cat(Fill(outW - sub2.getWidth, sub2(sub2.getWidth - 1)), sub2)
-  } else {
-    sub2(outW - 1, 0)
-  }
-  val v6 = io.r0
+  val h0 = io.r2 +& Cat(io.r3, 0.U(1.W))
+  val h1 = io.r1 +& Cat(h0, 0.U(1.W))
+  val h2 = io.r0 +& Cat(h1, 0.U(1.W))
 
-  io.out := MuxLookup(
-    io.pt,
-    0.U(outW.W),
-    Seq(
-      0.U -> v0(outW - 1, 0),
-      1.U -> v1(outW - 1, 0),
-      2.U -> v2(outW - 1, 0),
-      3.U -> v3(outW - 1, 0),
-      4.U -> v4(outW - 1, 0),
-      5.U -> v5(outW - 1, 0),
-      6.U -> v6(outW - 1, 0)
-    )
+  val v_inf = io.r3
+
+  val v_pos2 = h2
+
+  val v_pos1 = even +& odd
+
+  val v_neg1 = fillMsb(
+    even -& odd,
+    outW
   )
-}
 
+  val v_pos_half = Cat(scaled_even, 0.U(1.W)) +& scaled_odd
+
+  val v_neg_half = fillMsb(
+    Cat(scaled_even, 0.U(1.W)) -& scaled_odd,
+    outW
+  )
+
+  val v_zero = io.r0
+
+  val out_wire = WireDefault(0.U(outW.W))
+
+  switch(io.pt) {
+    is(0.U) {
+      out_wire := v_inf
+    }
+
+    is(1.U) {
+      out_wire := v_pos2
+    }
+
+    is(2.U) {
+      out_wire := v_pos1
+    }
+
+    is(3.U) {
+      out_wire := v_neg1
+    }
+
+    is(4.U) {
+      out_wire := v_pos_half
+    }
+
+    is(5.U) {
+      out_wire := v_neg_half
+    }
+
+    is(6.U) {
+      out_wire := v_zero
+    }
+  }
+
+  io.out := out_wire
+}
 class EvalStageIO extends Bundle {
   val start = Input(Bool())
   val aIn = Input(Vec(1024, UInt(24.W)))
