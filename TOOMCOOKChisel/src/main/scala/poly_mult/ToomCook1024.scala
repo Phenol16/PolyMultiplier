@@ -271,6 +271,7 @@ class InterpLayerSeqTC43(stride: Int, pidx: Int, inW: Int, outW: Int) extends Mo
   val colCnt   = RegInit(0.U(log2Ceil(stride).W))
   val running  = RegInit(false.B)
   val fixStage = RegInit(false.B)
+  val doneReg  = RegInit(false.B)
 
   val prevR0 = RegInit(0.U(mk2.W))
   val prevR1 = RegInit(0.U(mk2.W))
@@ -286,10 +287,14 @@ class InterpLayerSeqTC43(stride: Int, pidx: Int, inW: Int, outW: Int) extends Mo
   core.io.pr1 := prevR1
   core.io.pr2 := prevR2
 
-  io.done := false.B
+  io.done := doneReg
   io.cOut := cReg
 
-  when(io.start && !running && !fixStage) {
+  when(doneReg) {
+    doneReg := false.B
+  }
+
+  when(io.start && !running && !fixStage && !doneReg) {
     colCnt   := 0.U
     running  := true.B
     fixStage := false.B
@@ -320,7 +325,7 @@ class InterpLayerSeqTC43(stride: Int, pidx: Int, inW: Int, outW: Int) extends Mo
     cReg(1) := mask(cReg(1) - prevR1, outW)
     cReg(2) := mask(cReg(2) - prevR0, outW)
     fixStage := false.B
-    io.done := true.B
+    doneReg := true.B
   }
 }
 
@@ -462,16 +467,19 @@ class ToomCook43 extends Module {
 
   // ==========================================================================
   //  状态机：
-  //  IDLE      : 等待 valid_in，并锁存输入 a/b
-  //  RUN_CORE  : 循环 49 组，每组驱动 7 个 Core16
-  //  WAIT_CORE : 等待最后一组 Core16 的 1 拍延迟输出写回 w2Reg
-  //  INTERP1   : 执行 stride=16 插值并寄存
-  //  INTERP2   : 执行 stride=64 插值并寄存
-  //  INTERP3   : 执行 stride=256 插值并寄存最终结果
-  //  DONE      : valid_out 拉高 1 拍
+  //  IDLE          : 等待 valid_in，并锁存输入 a/b
+  //  RUN_CORE      : 循环 49 组，每组驱动 7 个 Core16
+  //  WAIT_CORE     : 等待最后一组 Core16 的 1 拍延迟输出写回 w2Reg
+  //  INTERP*_START : 对应插值层 start 拉高 1 拍
+  //  INTERP*_WAIT  : 等待对应插值层 done 并写回结果
+  //  DONE          : valid_out 拉高 1 拍
   // ==========================================================================
   object State extends ChiselEnum {
-    val IDLE, RUN_CORE, WAIT_CORE, INTERP1, INTERP2, INTERP3, DONE = Value
+    val IDLE, RUN_CORE, WAIT_CORE,
+      INTERP1_START, INTERP1_WAIT,
+      INTERP2_START, INTERP2_WAIT,
+      INTERP3_START, INTERP3_WAIT,
+      DONE = Value
   }
 
   val state = RegInit(State.IDLE)
@@ -606,49 +614,54 @@ class ToomCook43 extends Module {
     is(State.WAIT_CORE) {
       // 等待最后一组 core 输出在本拍写回 w2Reg
       interpGroupCnt := 0.U
-      state := State.INTERP1
+      state := State.INTERP1_START
     }
 
-    is(State.INTERP1) {
-      // 每组启动一次 stride=16 时序插值，done 后写 64 个结果
-      when(!interp16Seq.io.done) {
-        interp16Seq.io.start := true.B
-      }
+    is(State.INTERP1_START) {
+      interp16Seq.io.start := true.B
+      state := State.INTERP1_WAIT
+    }
+
+    is(State.INTERP1_WAIT) {
       when(interp16Seq.io.done) {
         for (k <- 0 until 64) {
           regW1(interpGroupCnt * 64.U + k.U) := interp16Seq.io.cOut(k)
         }
         when(interpGroupCnt === 48.U) {
           interpGroupCnt := 0.U
-          state := State.INTERP2
+          state := State.INTERP2_START
         }.otherwise {
           interpGroupCnt := interpGroupCnt + 1.U
+          state := State.INTERP1_START
         }
       }
     }
 
-    is(State.INTERP2) {
-      // 每组启动一次 stride=64 时序插值，done 后写 256 个结果
-      when(!interp64Seq.io.done) {
-        interp64Seq.io.start := true.B
-      }
+    is(State.INTERP2_START) {
+      interp64Seq.io.start := true.B
+      state := State.INTERP2_WAIT
+    }
+
+    is(State.INTERP2_WAIT) {
       when(interp64Seq.io.done) {
         for (k <- 0 until 256) {
           regW0(interpGroupCnt * 256.U + k.U) := interp64Seq.io.cOut(k)
         }
         when(interpGroupCnt === 6.U) {
-          state := State.INTERP3
+          state := State.INTERP3_START
         }.otherwise {
           interpGroupCnt := interpGroupCnt + 1.U
+          state := State.INTERP2_START
         }
       }
     }
 
-    is(State.INTERP3) {
-      // 启动一次 stride=256 时序插值，done 后写 1024 个输出
-      when(!interp256Seq.io.done) {
-        interp256Seq.io.start := true.B
-      }
+    is(State.INTERP3_START) {
+      interp256Seq.io.start := true.B
+      state := State.INTERP3_WAIT
+    }
+
+    is(State.INTERP3_WAIT) {
       when(interp256Seq.io.done) {
         for (i <- 0 until 1024) {
           regC(i) := mask(interp256Seq.io.cOut(i), 24)
