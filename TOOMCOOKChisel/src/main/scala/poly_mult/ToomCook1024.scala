@@ -9,6 +9,18 @@ object Util {
     require(bits > 0, "mask bits must be positive")
     x.pad(bits)(bits - 1, 0)
   }
+
+  def extendTo(x: UInt, bits: Int, signed: Boolean): UInt = {
+    require(bits > 0, "extend bits must be positive")
+
+    if (x.getWidth >= bits) {
+      x(bits - 1, 0)
+    } else if (signed) {
+      Cat(Fill(bits - x.getWidth, x(x.getWidth - 1)), x)
+    } else {
+      x.pad(bits)
+    }
+  }
 }
 import Util._
 
@@ -34,7 +46,7 @@ object InterpParamTable {
 // =============================================================================
 //  EvalLayerTC43：4个输入 -> 7个 Toom-Cook 求值点，纯组合硬件模块
 // =============================================================================
-class EvalLayerTC43(inW: Int, outW: Int) extends Module {
+class EvalLayerTC43(inW: Int, outW: Int, signedInput: Boolean = false) extends Module {
   val io = IO(new Bundle {
     val r   = Input(Vec(4, UInt(inW.W)))
     val out = Output(Vec(7, UInt(outW.W)))
@@ -42,10 +54,10 @@ class EvalLayerTC43(inW: Int, outW: Int) extends Module {
 
   private val w = outW
 
-  val r0 = io.r(0)
-  val r1 = io.r(1)
-  val r2 = io.r(2)
-  val r3 = io.r(3)
+  val r0 = extendTo(io.r(0), outW, signedInput)
+  val r1 = extendTo(io.r(1), outW, signedInput)
+  val r2 = extendTo(io.r(2), outW, signedInput)
+  val r3 = extendTo(io.r(3), outW, signedInput)
 
   val t0 = mask(r0 + r2, w)
   val t1 = mask(r1 + r3, w)
@@ -54,15 +66,15 @@ class EvalLayerTC43(inW: Int, outW: Int) extends Module {
   io.out(1) := mask((r3 << 3) + (r2 << 2) + (r1 << 1) + r0, w)
   io.out(2) := mask(t0 + t1, w)
   io.out(3) := mask(t0 - t1, w)
-  io.out(4) := mask((mask((r0 << 2) + r2, w) << 1) + ((r1 << 2) + r3), w)
-  io.out(5) := mask((mask((r0 << 2) + r2, w) << 1) - ((r1 << 2) + r3), w)
+  io.out(4) := mask((r0 << 3) + (r1 << 2) + (r2 << 1) + r3, w)
+  io.out(5) := mask((r0 << 3) - (r1 << 2) + (r2 << 1) - r3, w)
   io.out(6) := mask(r0, w)
 }
 
 // =============================================================================
 //  TC4EvalPoint：4个输入按 pt 选择一个求值点，纯组合硬件模块
 // =============================================================================
-class TC4EvalPoint(inW: Int, outW: Int) extends Module {
+class TC4EvalPoint(inW: Int, outW: Int, signedInput: Boolean = false) extends Module {
   val io = IO(new Bundle {
     val r   = Input(Vec(4, UInt(inW.W)))
     val pt  = Input(UInt(3.W))
@@ -71,10 +83,10 @@ class TC4EvalPoint(inW: Int, outW: Int) extends Module {
 
   private val w = outW
 
-  val r0 = mask(io.r(0), w)
-  val r1 = mask(io.r(1), w)
-  val r2 = mask(io.r(2), w)
-  val r3 = mask(io.r(3), w)
+  val r0 = extendTo(io.r(0), outW, signedInput)
+  val r1 = extendTo(io.r(1), outW, signedInput)
+  val r2 = extendTo(io.r(2), outW, signedInput)
+  val r3 = extendTo(io.r(3), outW, signedInput)
 
   val t0 = mask(r0 + r2, w)
   val t1 = mask(r1 + r3, w)
@@ -84,8 +96,8 @@ class TC4EvalPoint(inW: Int, outW: Int) extends Module {
     1.U -> mask((r3 << 3) + (r2 << 2) + (r1 << 1) + r0, w),
     2.U -> mask(t0 + t1, w),
     3.U -> mask(t0 - t1, w),
-    4.U -> mask((mask((r0 << 2) + r2, w) << 1) + ((r1 << 2) + r3), w),
-    5.U -> mask((mask((r0 << 2) + r2, w) << 1) - ((r1 << 2) + r3), w),
+    4.U -> mask((r0 << 3) + (r1 << 2) + (r2 << 1) + r3, w),
+    5.U -> mask((r0 << 3) - (r1 << 2) + (r2 << 1) - r3, w),
     6.U -> mask(r0, w)
   ))
 }
@@ -110,7 +122,7 @@ class BuildEvalVec16(memW: Int, outW: Int) extends Module {
       val lv1 = Wire(Vec(4, UInt(outW.W)))
 
       for (j <- 0 until 4) {
-        val eval0 = Module(new TC4EvalPoint(memW, outW))
+        val eval0 = Module(new TC4EvalPoint(memW, outW, signedInput = false))
         eval0.io.r(0) := io.in(64 * l + 16 * k + 4 * j + 0)
         eval0.io.r(1) := io.in(64 * l + 16 * k + 4 * j + 1)
         eval0.io.r(2) := io.in(64 * l + 16 * k + 4 * j + 2)
@@ -119,13 +131,13 @@ class BuildEvalVec16(memW: Int, outW: Int) extends Module {
         lv1(j)        := eval0.io.out
       }
 
-      val eval1 = Module(new TC4EvalPoint(outW, outW))
+      val eval1 = Module(new TC4EvalPoint(outW, outW, signedInput = true))
       eval1.io.r := lv1
       eval1.io.pt := io.pt1
       lv2(k) := eval1.io.out
     }
 
-    val eval2 = Module(new TC4EvalPoint(outW, outW))
+    val eval2 = Module(new TC4EvalPoint(outW, outW, signedInput = true))
     eval2.io.r := lv2
     eval2.io.pt := io.pt2
     io.out(l) := eval2.io.out
@@ -165,7 +177,7 @@ class EvalLaneFixed(memW: Int, outW: Int, laneConst: Int, evalLanes: Int = 4) ex
   for (k <- 0 until 4) {
     val lv1 = Wire(Vec(4, UInt(outW.W)))
     for (j <- 0 until 4) {
-      val eval0 = Module(new TC4EvalPoint(memW, outW))
+      val eval0 = Module(new TC4EvalPoint(memW, outW, signedInput = false))
       val offset = 16 * k + 4 * j
       eval0.io.r(0) := pickByPhase(offset + 0)
       eval0.io.r(1) := pickByPhase(offset + 1)
@@ -175,13 +187,13 @@ class EvalLaneFixed(memW: Int, outW: Int, laneConst: Int, evalLanes: Int = 4) ex
       lv1(j)        := eval0.io.out
     }
 
-    val eval1 = Module(new TC4EvalPoint(outW, outW))
+    val eval1 = Module(new TC4EvalPoint(outW, outW, signedInput = true))
     eval1.io.r  := lv1
     eval1.io.pt := io.pt1
     lv2(k)      := eval1.io.out
   }
 
-  val eval2 = Module(new TC4EvalPoint(outW, outW))
+  val eval2 = Module(new TC4EvalPoint(outW, outW, signedInput = true))
   eval2.io.r  := lv2
   eval2.io.pt := io.pt2
   io.out      := eval2.io.out
@@ -406,8 +418,8 @@ class Product4TC43(aInW: Int, bInW: Int) extends Module {
     val out = Output(Vec(7, UInt(PROD_OUT_W.W)))
   })
 
-  val evalA = Module(new EvalLayerTC43(aInW, A_PROD_EVAL_W))
-  val evalB = Module(new EvalLayerTC43(bInW, B_PROD_EVAL_W))
+  val evalA = Module(new EvalLayerTC43(aInW, A_PROD_EVAL_W, signedInput = true))
+  val evalB = Module(new EvalLayerTC43(bInW, B_PROD_EVAL_W, signedInput = true))
 
   evalA.io.r := io.a4
   evalB.io.r := io.b4
@@ -476,8 +488,8 @@ class Core16TC43(aInW: Int, bInW: Int) extends Module {
   val be = Wire(Vec(7 * 4, UInt(B_CORE_EVAL_W.W)))
 
   for (seg <- 0 until 4) {
-    val evalA = Module(new EvalLayerTC43(aInW, A_CORE_EVAL_W))
-    val evalB = Module(new EvalLayerTC43(bInW, B_CORE_EVAL_W))
+    val evalA = Module(new EvalLayerTC43(aInW, A_CORE_EVAL_W, signedInput = true))
+    val evalB = Module(new EvalLayerTC43(bInW, B_CORE_EVAL_W, signedInput = true))
 
     evalA.io.r(0) := io.avec(seg * 4 + 0)
     evalA.io.r(1) := io.avec(seg * 4 + 1)
