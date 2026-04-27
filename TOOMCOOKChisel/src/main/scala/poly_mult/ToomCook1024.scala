@@ -252,6 +252,79 @@ class InterpLayerTC43(stride: Int, pidx: Int, inW: Int, outW: Int) extends Modul
 }
 
 // =============================================================================
+//  InterpLayerSeqTC43：时序复用插值层
+//  仅使用 1 个 InterpCoreTC43，每拍处理一列，总计 stride 列
+// =============================================================================
+class InterpLayerSeqTC43(stride: Int, pidx: Int, inW: Int, outW: Int) extends Module {
+  private val p   = InterpParamTable.params(pidx)
+  private val mk2 = p.mk2
+
+  val io = IO(new Bundle {
+    val start = Input(Bool())
+    val wIn   = Input(Vec(7 * stride, UInt(inW.W)))
+    val done  = Output(Bool())
+    val cOut  = Output(Vec(4 * stride, UInt(outW.W)))
+  })
+
+  val core = Module(new InterpCoreTC43(pidx, inW))
+
+  val colCnt   = RegInit(0.U(log2Ceil(stride).W))
+  val running  = RegInit(false.B)
+  val fixStage = RegInit(false.B)
+
+  val prevR0 = RegInit(0.U(mk2.W))
+  val prevR1 = RegInit(0.U(mk2.W))
+  val prevR2 = RegInit(0.U(mk2.W))
+
+  val cReg = RegInit(VecInit(Seq.fill(4 * stride)(0.U(outW.W))))
+
+  for (pt <- 0 until 7) {
+    val rdIdx = (pt * stride).U + colCnt
+    core.io.pIn(pt) := io.wIn(rdIdx)
+  }
+  core.io.pr0 := prevR0
+  core.io.pr1 := prevR1
+  core.io.pr2 := prevR2
+
+  io.done := false.B
+  io.cOut := cReg
+
+  when(io.start && !running && !fixStage) {
+    colCnt   := 0.U
+    running  := true.B
+    fixStage := false.B
+    prevR0   := 0.U
+    prevR1   := 0.U
+    prevR2   := 0.U
+    cReg     := VecInit(Seq.fill(4 * stride)(0.U(outW.W)))
+  }.elsewhen(running) {
+    val base = colCnt << 2
+    cReg(base + 3.U) := mask(core.io.c3, outW)
+    cReg(base + 0.U) := mask(core.io.c0part, outW)
+    cReg(base + 1.U) := mask(core.io.c1part, outW)
+    cReg(base + 2.U) := mask(core.io.c2part, outW)
+
+    prevR0 := core.io.nr0
+    prevR1 := core.io.nr1
+    prevR2 := core.io.nr2
+
+    when(colCnt === (stride - 1).U) {
+      running  := false.B
+      fixStage := true.B
+    }.otherwise {
+      colCnt := colCnt + 1.U
+    }
+  }.elsewhen(fixStage) {
+    // 末尾修正：c[0] -= pr2, c[1] -= pr1, c[2] -= pr0
+    cReg(0) := mask(cReg(0) - prevR2, outW)
+    cReg(1) := mask(cReg(1) - prevR1, outW)
+    cReg(2) := mask(cReg(2) - prevR0, outW)
+    fixStage := false.B
+    io.done := true.B
+  }
+}
+
+// =============================================================================
 //  Product4TC43：4系数 × 4系数 -> 7系数，纯组合硬件模块
 // =============================================================================
 class Product4TC43 extends Module {
@@ -407,17 +480,23 @@ class ToomCook43 extends Module {
   val regA = Reg(Vec(1024, UInt(24.W)))
   val regB = Reg(Vec(1024, UInt(8.W)))
 
-  // Stage0 点乘结果存储：343 * 16
+  // 中间结果寄存器
   val w2Reg = Reg(Vec(343 * 16, UInt(36.W)))
   val regW1 = Reg(Vec(49 * 64, UInt(33.W)))
   val regW0 = Reg(Vec(7 * 256, UInt(27.W)))
   val regC  = Reg(Vec(1024, UInt(24.W)))
 
-  // RUN_CORE 组计数器：0..48
+  // RUN_CORE：组计数器 0..48（每组 7 个 seg）
   val groupCnt = RegInit(0.U(6.W))
+  // 为避免硬件除法/取模，用两个小计数器直接表示 pt0/pt1
+  val corePt0 = RegInit(0.U(3.W))
+  val corePt1 = RegInit(0.U(3.W))
+
+  // 插值阶段组计数器：INTERP1 用 0..48，INTERP2 用 0..6
+  val interpGroupCnt = RegInit(0.U(6.W))
 
   // 仅实例化 7 个 Core16，按 lane 复用
-  val cores = Seq.fill(7)(Module(new Core16TC43))
+  val cores  = Seq.fill(7)(Module(new Core16TC43))
   val buildA = Seq.fill(7)(Module(new BuildEvalVec16(memW = 24, outW = 24)))
   val buildB = Seq.fill(7)(Module(new BuildEvalVec16(memW = 8, outW = 8)))
 
@@ -425,15 +504,33 @@ class ToomCook43 extends Module {
   val segPipe  = Reg(Vec(7, UInt(9.W)))
   val segVPipe = RegInit(VecInit(Seq.fill(7)(false.B)))
 
+  // 三个时序复用插值层：各 1 个实例
+  val interp16Seq  = Module(new InterpLayerSeqTC43(stride = 16,  pidx = 1, inW = 36, outW = 33))
+  val interp64Seq  = Module(new InterpLayerSeqTC43(stride = 64,  pidx = 2, inW = 33, outW = 27))
+  val interp256Seq = Module(new InterpLayerSeqTC43(stride = 256, pidx = 3, inW = 27, outW = 24))
+
+  // 默认输入与输出
+  io.valid_out := false.B
+  io.c         := regC
+
+  interp16Seq.io.start  := false.B
+  interp64Seq.io.start  := false.B
+  interp256Seq.io.start := false.B
+
+  for (k <- 0 until 7 * 256) {
+    interp256Seq.io.wIn(k) := regW0(k)
+  }
+
   val runCoreFire = state === State.RUN_CORE
 
   for (lane <- 0 until 7) {
+    // seg = groupCnt * 7 + lane
     val seg = groupCnt * 7.U + lane.U
 
-    // 注意：pt0/pt1/pt2 都是运行时 UInt，而不是 Scala Int
-    val pt0 = (seg / 49.U)(2, 0)
-    val pt1 = ((seg / 7.U) % 7.U)(2, 0)
-    val pt2 = (seg % 7.U)(2, 0)
+    // 不使用硬件除法/取模：pt0/pt1 来自计数器，pt2 直接等于 lane
+    val pt0 = corePt0
+    val pt1 = corePt1
+    val pt2 = lane.U(3.W)
 
     buildA(lane).io.in  := regA
     buildA(lane).io.pt0 := pt0
@@ -456,7 +553,7 @@ class ToomCook43 extends Module {
       segVPipe(lane) := false.B
     }
 
-    // Core16 输出写回 w2Reg，地址使用打一拍后的 seg 对齐 valid
+    // Core16 输出写回 w2Reg：地址打一拍对齐 valid
     when(segVPipe(lane) && cores(lane).io.valid_out) {
       for (t <- 0 until 16) {
         val wrIdx = (segPipe(lane) << 4) + t.U
@@ -465,59 +562,27 @@ class ToomCook43 extends Module {
     }
   }
 
-  // ==========================================================================
-  //  INTERP1：49 个 stride=16 插值（组合），在状态 INTERP1 时寄存
-  // ==========================================================================
-  val interp1 = Seq.fill(49)(Module(new InterpLayerTC43(stride = 16, pidx = 1, inW = 36, outW = 33)))
-  val w1Wire  = Wire(Vec(49 * 64, UInt(33.W)))
+  // INTERP1 输入选择：每次送入 7*16
+  val interp1Base = interpGroupCnt * (7 * 16).U
+  for (k <- 0 until 7 * 16) {
+    interp16Seq.io.wIn(k) := w2Reg(interp1Base + k.U)
+  }
 
-  for (seg49 <- 0 until 49) {
-    for (k <- 0 until 7 * 16) {
-      interp1(seg49).io.wIn(k) := w2Reg(seg49 * 7 * 16 + k)
-    }
-    for (k <- 0 until 64) {
-      w1Wire(seg49 * 64 + k) := interp1(seg49).io.cOut(k)
-    }
+  // INTERP2 输入选择：每次送入 7*64
+  val interp2Base = interpGroupCnt * (7 * 64).U
+  for (k <- 0 until 7 * 64) {
+    interp64Seq.io.wIn(k) := regW1(interp2Base + k.U)
   }
 
   // ==========================================================================
-  //  INTERP2：7 个 stride=64 插值（组合），在状态 INTERP2 时寄存
-  // ==========================================================================
-  val interp2 = Seq.fill(7)(Module(new InterpLayerTC43(stride = 64, pidx = 2, inW = 33, outW = 27)))
-  val w0Wire  = Wire(Vec(7 * 256, UInt(27.W)))
-
-  for (i <- 0 until 7) {
-    for (k <- 0 until 7 * 64) {
-      interp2(i).io.wIn(k) := regW1(i * 7 * 64 + k)
-    }
-    for (k <- 0 until 256) {
-      w0Wire(i * 256 + k) := interp2(i).io.cOut(k)
-    }
-  }
-
-  // ==========================================================================
-  //  INTERP3：1 个 stride=256 插值（组合），在状态 INTERP3 时寄存
-  // ==========================================================================
-  val interpFinal = Module(new InterpLayerTC43(stride = 256, pidx = 3, inW = 27, outW = 24))
-  for (k <- 0 until 7 * 256) {
-    interpFinal.io.wIn(k) := regW0(k)
-  }
-
-  val cWire = Wire(Vec(1024, UInt(24.W)))
-  for (i <- 0 until 1024) {
-    cWire(i) := mask(interpFinal.io.cOut(i), 24)
-  }
-
-  // 默认输出
-  io.valid_out := false.B
-  io.c         := regC
-
-  // ==========================================================================
-  //  FSM 状态转移与寄存控制
+  //  FSM：Core 复用 + 三段插值时序复用
   // ==========================================================================
   switch(state) {
     is(State.IDLE) {
-      groupCnt := 0.U
+      groupCnt       := 0.U
+      corePt0        := 0.U
+      corePt1        := 0.U
+      interpGroupCnt := 0.U
       when(io.valid_in) {
         regA  := io.a
         regB  := io.b
@@ -530,27 +595,67 @@ class ToomCook43 extends Module {
         state := State.WAIT_CORE
       }.otherwise {
         groupCnt := groupCnt + 1.U
+        when(corePt1 === 6.U) {
+          corePt1 := 0.U
+          corePt0 := corePt0 + 1.U
+        }.otherwise {
+          corePt1 := corePt1 + 1.U
+        }
       }
     }
 
     is(State.WAIT_CORE) {
       // 等待最后一组 core 输出在本拍写回 w2Reg
+      interpGroupCnt := 0.U
       state := State.INTERP1
     }
 
     is(State.INTERP1) {
-      regW1 := w1Wire
-      state := State.INTERP2
+      // 每组启动一次 stride=16 时序插值，done 后写 64 个结果
+      when(!interp16Seq.io.done) {
+        interp16Seq.io.start := true.B
+      }
+      when(interp16Seq.io.done) {
+        for (k <- 0 until 64) {
+          regW1(interpGroupCnt * 64.U + k.U) := interp16Seq.io.cOut(k)
+        }
+        when(interpGroupCnt === 48.U) {
+          interpGroupCnt := 0.U
+          state := State.INTERP2
+        }.otherwise {
+          interpGroupCnt := interpGroupCnt + 1.U
+        }
+      }
     }
 
     is(State.INTERP2) {
-      regW0 := w0Wire
-      state := State.INTERP3
+      // 每组启动一次 stride=64 时序插值，done 后写 256 个结果
+      when(!interp64Seq.io.done) {
+        interp64Seq.io.start := true.B
+      }
+      when(interp64Seq.io.done) {
+        for (k <- 0 until 256) {
+          regW0(interpGroupCnt * 256.U + k.U) := interp64Seq.io.cOut(k)
+        }
+        when(interpGroupCnt === 6.U) {
+          state := State.INTERP3
+        }.otherwise {
+          interpGroupCnt := interpGroupCnt + 1.U
+        }
+      }
     }
 
     is(State.INTERP3) {
-      regC  := cWire
-      state := State.DONE
+      // 启动一次 stride=256 时序插值，done 后写 1024 个输出
+      when(!interp256Seq.io.done) {
+        interp256Seq.io.start := true.B
+      }
+      when(interp256Seq.io.done) {
+        for (i <- 0 until 1024) {
+          regC(i) := mask(interp256Seq.io.cOut(i), 24)
+        }
+        state := State.DONE
+      }
     }
 
     is(State.DONE) {
