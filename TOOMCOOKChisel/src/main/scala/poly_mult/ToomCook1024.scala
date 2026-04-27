@@ -501,24 +501,26 @@ class ToomCook43 extends Module {
   val regW0 = Reg(Vec(7, Vec(256, UInt(27.W))))
   val regC  = Reg(Vec(1024, UInt(24.W)))
 
-  // RUN_CORE：组计数器 0..48（每组 7 个 seg）
+  // RUN_CORE：单路计数器
+  val pt0Cnt   = RegInit(0.U(3.W))
+  val pt1Cnt   = RegInit(0.U(3.W))
+  val pt2Cnt   = RegInit(0.U(3.W))
   val groupCnt = RegInit(0.U(6.W))
-
-  val corePt0 = RegInit(0.U(3.W))
-  val corePt1 = RegInit(0.U(3.W))
+  val waitCoreCnt = RegInit(0.U(1.W))
 
   // 插值阶段组计数器：INTERP1 用 0..48，INTERP2 用 0..6
   val interpGroupCnt = RegInit(0.U(6.W))
   val interp1BlockCnt = RegInit(0.U(3.W))
   val interp1SubCnt   = RegInit(0.U(3.W))
 
-  // 仅实例化 7 个 Core16，按 lane 复用
-  val cores  = Seq.fill(7)(Module(new Core16TC43))
-  val buildA = Seq.fill(7)(Module(new BuildEvalVec16(memW = 24, outW = 24)))
-  val buildB = Seq.fill(7)(Module(new BuildEvalVec16(memW = 8, outW = 8)))
+  // 前端改为单路复用
+  val core   = Module(new Core16TC43)
+  val buildA = Module(new BuildEvalVec16(memW = 24, outW = 24))
+  val buildB = Module(new BuildEvalVec16(memW = 8, outW = 8))
 
-  val groupPipe = Reg(Vec(7, UInt(6.W)))
-  val segVPipe = RegInit(VecInit(Seq.fill(7)(false.B)))
+  val groupPipe = Reg(UInt(6.W))
+  val pt2Pipe   = Reg(UInt(3.W))
+  val segVPipe  = RegInit(false.B)
 
   // 三个时序复用插值层：各 1 个实例
   val interp16Seq  = Module(new InterpLayerSeqTC43(stride = 16,  pidx = 1, inW = 36, outW = 33))
@@ -541,36 +543,65 @@ class ToomCook43 extends Module {
 
   val runCoreFire = state === State.RUN_CORE
 
-  for (lane <- 0 until 7) {
-    val pt0 = corePt0
-    val pt1 = corePt1
-    val pt2 = lane.U(3.W)
+  buildA.io.in  := regA
+  buildA.io.pt0 := pt0Cnt
+  buildA.io.pt1 := pt1Cnt
+  buildA.io.pt2 := pt2Cnt
 
-    buildA(lane).io.in  := regA
-    buildA(lane).io.pt0 := pt0
-    buildA(lane).io.pt1 := pt1
-    buildA(lane).io.pt2 := pt2
+  buildB.io.in  := regB
+  buildB.io.pt0 := pt0Cnt
+  buildB.io.pt1 := pt1Cnt
+  buildB.io.pt2 := pt2Cnt
 
-    buildB(lane).io.in  := regB
-    buildB(lane).io.pt0 := pt0
-    buildB(lane).io.pt1 := pt1
-    buildB(lane).io.pt2 := pt2
+  core.io.valid_in := runCoreFire
+  core.io.avec     := buildA.io.out
+  core.io.bvec     := buildB.io.out
 
-    cores(lane).io.valid_in := runCoreFire
-    cores(lane).io.avec     := buildA(lane).io.out
-    cores(lane).io.bvec     := buildB(lane).io.out
+  when(runCoreFire) {
+    groupPipe := groupCnt
+    pt2Pipe   := pt2Cnt
+    segVPipe  := true.B
+  }.otherwise {
+    segVPipe := false.B
+  }
 
-    when(runCoreFire) {
-      groupPipe(lane) := groupCnt
-      segVPipe(lane) := true.B
-    }.otherwise {
-      segVPipe(lane) := false.B
-    }
-
-    // Core16 输出写回 w2Reg：地址打一拍对齐 valid
-    when(segVPipe(lane) && cores(lane).io.valid_out) {
-      for (t <- 0 until 16) {
-        w2Reg(groupPipe(lane))(lane * 16 + t) := cores(lane).io.cOut(t)
+  // Core16 输出写回 w2Reg：地址打一拍对齐 valid
+  when(segVPipe && core.io.valid_out) {
+    switch(pt2Pipe) {
+      is(0.U) {
+        for (t <- 0 until 16) {
+          w2Reg(groupPipe)(0 * 16 + t) := core.io.cOut(t)
+        }
+      }
+      is(1.U) {
+        for (t <- 0 until 16) {
+          w2Reg(groupPipe)(1 * 16 + t) := core.io.cOut(t)
+        }
+      }
+      is(2.U) {
+        for (t <- 0 until 16) {
+          w2Reg(groupPipe)(2 * 16 + t) := core.io.cOut(t)
+        }
+      }
+      is(3.U) {
+        for (t <- 0 until 16) {
+          w2Reg(groupPipe)(3 * 16 + t) := core.io.cOut(t)
+        }
+      }
+      is(4.U) {
+        for (t <- 0 until 16) {
+          w2Reg(groupPipe)(4 * 16 + t) := core.io.cOut(t)
+        }
+      }
+      is(5.U) {
+        for (t <- 0 until 16) {
+          w2Reg(groupPipe)(5 * 16 + t) := core.io.cOut(t)
+        }
+      }
+      is(6.U) {
+        for (t <- 0 until 16) {
+          w2Reg(groupPipe)(6 * 16 + t) := core.io.cOut(t)
+        }
       }
     }
   }
@@ -592,9 +623,11 @@ class ToomCook43 extends Module {
   // ==========================================================================
   switch(state) {
     is(State.IDLE) {
+      pt0Cnt         := 0.U
+      pt1Cnt         := 0.U
+      pt2Cnt         := 0.U
       groupCnt       := 0.U
-      corePt0        := 0.U
-      corePt1        := 0.U
+      waitCoreCnt    := 0.U
       interpGroupCnt := 0.U
       interp1BlockCnt := 0.U
       interp1SubCnt   := 0.U
@@ -606,25 +639,35 @@ class ToomCook43 extends Module {
     }
 
     is(State.RUN_CORE) {
-      when(groupCnt === 48.U) {
+      when(pt0Cnt === 6.U && pt1Cnt === 6.U && pt2Cnt === 6.U) {
         state := State.WAIT_CORE
       }.otherwise {
-        groupCnt := groupCnt + 1.U
-        when(corePt1 === 6.U) {
-          corePt1 := 0.U
-          corePt0 := corePt0 + 1.U
+        when(pt2Cnt === 6.U) {
+          pt2Cnt := 0.U
+          groupCnt := groupCnt + 1.U
+          when(pt1Cnt === 6.U) {
+            pt1Cnt := 0.U
+            pt0Cnt := pt0Cnt + 1.U
+          }.otherwise {
+            pt1Cnt := pt1Cnt + 1.U
+          }
         }.otherwise {
-          corePt1 := corePt1 + 1.U
+          pt2Cnt := pt2Cnt + 1.U
         }
       }
     }
 
     is(State.WAIT_CORE) {
-      // 等待最后一组 core 输出在本拍写回 w2Reg
-      interpGroupCnt := 0.U
-      interp1BlockCnt := 0.U
-      interp1SubCnt   := 0.U
-      state := State.INTERP1_START
+      // 等待最后一个 core 输出写回 w2Reg
+      when(waitCoreCnt === 0.U) {
+        waitCoreCnt := 1.U
+      }.otherwise {
+        waitCoreCnt := 0.U
+        interpGroupCnt := 0.U
+        interp1BlockCnt := 0.U
+        interp1SubCnt   := 0.U
+        state := State.INTERP1_START
+      }
     }
 
     is(State.INTERP1_START) {
