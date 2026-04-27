@@ -133,6 +133,47 @@ class BuildEvalVec16(memW: Int, outW: Int) extends Module {
 }
 
 // =============================================================================
+//  EvalLane：三层 TC4 求值的单 lane 版本
+//  每拍计算一个指定 lane(l) 的输出，laneIdx 取值 0..15
+// =============================================================================
+class EvalLane(memW: Int, outW: Int) extends Module {
+  val io = IO(new Bundle {
+    val in      = Input(Vec(1024, UInt(memW.W)))
+    val pt0     = Input(UInt(3.W))
+    val pt1     = Input(UInt(3.W))
+    val pt2     = Input(UInt(3.W))
+    val laneIdx = Input(UInt(4.W))
+    val out     = Output(UInt(outW.W))
+  })
+
+  val lv2 = Wire(Vec(4, UInt(outW.W)))
+
+  for (k <- 0 until 4) {
+    val lv1 = Wire(Vec(4, UInt(outW.W)))
+    for (j <- 0 until 4) {
+      val eval0 = Module(new TC4EvalPoint(memW, outW))
+      val baseIdx = io.laneIdx * 64.U + (16 * k + 4 * j).U
+      eval0.io.r(0) := io.in(baseIdx + 0.U)
+      eval0.io.r(1) := io.in(baseIdx + 1.U)
+      eval0.io.r(2) := io.in(baseIdx + 2.U)
+      eval0.io.r(3) := io.in(baseIdx + 3.U)
+      eval0.io.pt   := io.pt0
+      lv1(j)        := eval0.io.out
+    }
+
+    val eval1 = Module(new TC4EvalPoint(outW, outW))
+    eval1.io.r  := lv1
+    eval1.io.pt := io.pt1
+    lv2(k)      := eval1.io.out
+  }
+
+  val eval2 = Module(new TC4EvalPoint(outW, outW))
+  eval2.io.r  := lv2
+  eval2.io.pt := io.pt2
+  io.out      := eval2.io.out
+}
+
+// =============================================================================
 //  InterpCoreTC43：单列插值核心，纯组合硬件模块
 // =============================================================================
 class InterpCoreTC43(pidx: Int, inW: Int) extends Module {
@@ -471,6 +512,8 @@ class ToomCook43IO extends Bundle {
 
 class ToomCook43 extends Module {
   val io = IO(new ToomCook43IO)
+  private val EVAL_LANES  = 4
+  private val EVAL_PHASES = 16 / EVAL_LANES
 
   // ==========================================================================
   //  状态机：
@@ -501,11 +544,12 @@ class ToomCook43 extends Module {
   val regW0 = Reg(Vec(7, Vec(256, UInt(27.W))))
   val regC  = Reg(Vec(1024, UInt(24.W)))
 
-  // RUN_CORE：单路计数器
+  // RUN_CORE：单路计数器 + eval lane 收集相位
   val pt0Cnt   = RegInit(0.U(3.W))
   val pt1Cnt   = RegInit(0.U(3.W))
   val pt2Cnt   = RegInit(0.U(3.W))
   val groupCnt = RegInit(0.U(6.W))
+  val evalPhaseCnt = RegInit(0.U(log2Ceil(EVAL_PHASES).W))
   val waitCoreCnt = RegInit(0.U(1.W))
 
   // 插值阶段组计数器：INTERP1 用 0..48，INTERP2 用 0..6
@@ -513,10 +557,12 @@ class ToomCook43 extends Module {
   val interp1BlockCnt = RegInit(0.U(3.W))
   val interp1SubCnt   = RegInit(0.U(3.W))
 
-  // 前端改为单路复用
+  // 前端改为多 lane eval + 单路 core 复用
   val core   = Module(new Core16TC43)
-  val buildA = Module(new BuildEvalVec16(memW = 24, outW = 24))
-  val buildB = Module(new BuildEvalVec16(memW = 8, outW = 8))
+  val evalLanesA = Seq.fill(EVAL_LANES)(Module(new EvalLane(memW = 24, outW = 24)))
+  val evalLanesB = Seq.fill(EVAL_LANES)(Module(new EvalLane(memW = 8, outW = 8)))
+  val avecBuf = Reg(Vec(16, UInt(24.W)))
+  val bvecBuf = Reg(Vec(16, UInt(8.W)))
 
   val groupPipe = Reg(UInt(6.W))
   val pt2Pipe   = Reg(UInt(3.W))
@@ -542,22 +588,53 @@ class ToomCook43 extends Module {
   }
 
   val runCoreFire = state === State.RUN_CORE
+  val evalLastPhase = evalPhaseCnt === (EVAL_PHASES - 1).U
+  val segFire = runCoreFire && evalLastPhase
 
-  buildA.io.in  := regA
-  buildA.io.pt0 := pt0Cnt
-  buildA.io.pt1 := pt1Cnt
-  buildA.io.pt2 := pt2Cnt
+  val laneOutA = Wire(Vec(EVAL_LANES, UInt(24.W)))
+  val laneOutB = Wire(Vec(EVAL_LANES, UInt(8.W)))
+  for (lane <- 0 until EVAL_LANES) {
+    val laneIdx = evalPhaseCnt * EVAL_LANES.U + lane.U
+    evalLanesA(lane).io.in      := regA
+    evalLanesA(lane).io.pt0     := pt0Cnt
+    evalLanesA(lane).io.pt1     := pt1Cnt
+    evalLanesA(lane).io.pt2     := pt2Cnt
+    evalLanesA(lane).io.laneIdx := laneIdx
+    laneOutA(lane)              := evalLanesA(lane).io.out
 
-  buildB.io.in  := regB
-  buildB.io.pt0 := pt0Cnt
-  buildB.io.pt1 := pt1Cnt
-  buildB.io.pt2 := pt2Cnt
+    evalLanesB(lane).io.in      := regB
+    evalLanesB(lane).io.pt0     := pt0Cnt
+    evalLanesB(lane).io.pt1     := pt1Cnt
+    evalLanesB(lane).io.pt2     := pt2Cnt
+    evalLanesB(lane).io.laneIdx := laneIdx
+    laneOutB(lane)              := evalLanesB(lane).io.out
+  }
 
-  core.io.valid_in := runCoreFire
-  core.io.avec     := buildA.io.out
-  core.io.bvec     := buildB.io.out
+  val coreAvecIn = Wire(Vec(16, UInt(24.W)))
+  val coreBvecIn = Wire(Vec(16, UInt(8.W)))
+  for (i <- 0 until 16) {
+    coreAvecIn(i) := avecBuf(i)
+    coreBvecIn(i) := bvecBuf(i)
+  }
+  for (lane <- 0 until EVAL_LANES) {
+    val idx = evalPhaseCnt * EVAL_LANES.U + lane.U
+    coreAvecIn(idx) := laneOutA(lane)
+    coreBvecIn(idx) := laneOutB(lane)
+  }
+
+  core.io.valid_in := segFire
+  core.io.avec     := coreAvecIn
+  core.io.bvec     := coreBvecIn
 
   when(runCoreFire) {
+    for (lane <- 0 until EVAL_LANES) {
+      val idx = evalPhaseCnt * EVAL_LANES.U + lane.U
+      avecBuf(idx) := laneOutA(lane)
+      bvecBuf(idx) := laneOutB(lane)
+    }
+  }
+
+  when(segFire) {
     groupPipe := groupCnt
     pt2Pipe   := pt2Cnt
     segVPipe  := true.B
@@ -627,6 +704,7 @@ class ToomCook43 extends Module {
       pt1Cnt         := 0.U
       pt2Cnt         := 0.U
       groupCnt       := 0.U
+      evalPhaseCnt   := 0.U
       waitCoreCnt    := 0.U
       interpGroupCnt := 0.U
       interp1BlockCnt := 0.U
@@ -639,21 +717,26 @@ class ToomCook43 extends Module {
     }
 
     is(State.RUN_CORE) {
-      when(pt0Cnt === 6.U && pt1Cnt === 6.U && pt2Cnt === 6.U) {
-        state := State.WAIT_CORE
-      }.otherwise {
-        when(pt2Cnt === 6.U) {
-          pt2Cnt := 0.U
-          groupCnt := groupCnt + 1.U
-          when(pt1Cnt === 6.U) {
-            pt1Cnt := 0.U
-            pt0Cnt := pt0Cnt + 1.U
-          }.otherwise {
-            pt1Cnt := pt1Cnt + 1.U
-          }
+      when(evalLastPhase) {
+        evalPhaseCnt := 0.U
+        when(pt0Cnt === 6.U && pt1Cnt === 6.U && pt2Cnt === 6.U) {
+          state := State.WAIT_CORE
         }.otherwise {
-          pt2Cnt := pt2Cnt + 1.U
+          when(pt2Cnt === 6.U) {
+            pt2Cnt := 0.U
+            groupCnt := groupCnt + 1.U
+            when(pt1Cnt === 6.U) {
+              pt1Cnt := 0.U
+              pt0Cnt := pt0Cnt + 1.U
+            }.otherwise {
+              pt1Cnt := pt1Cnt + 1.U
+            }
+          }.otherwise {
+            pt2Cnt := pt2Cnt + 1.U
+          }
         }
+      }.otherwise {
+        evalPhaseCnt := evalPhaseCnt + 1.U
       }
     }
 
