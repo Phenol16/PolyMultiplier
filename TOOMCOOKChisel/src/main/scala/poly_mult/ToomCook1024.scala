@@ -133,18 +133,32 @@ class BuildEvalVec16(memW: Int, outW: Int) extends Module {
 }
 
 // =============================================================================
-//  EvalLane：三层 TC4 求值的单 lane 版本
-//  每拍计算一个指定 lane(l) 的输出，laneIdx 取值 0..15
+//  EvalLaneFixed：三层 TC4 求值的固定 lane 版本
+//  laneConst 固定后，每拍用 phase 在静态地址集合内选择一个 l
+//  避免对 Vec(1024, ...) 使用动态 UInt 下标
 // =============================================================================
-class EvalLane(memW: Int, outW: Int) extends Module {
+class EvalLaneFixed(memW: Int, outW: Int, laneConst: Int, evalLanes: Int = 4) extends Module {
+  require(evalLanes > 0 && 16 % evalLanes == 0, "evalLanes must be a positive divisor of 16")
+  require(laneConst >= 0 && laneConst < evalLanes, "laneConst must be within [0, evalLanes)")
+  private val evalPhases = 16 / evalLanes
+
   val io = IO(new Bundle {
-    val in      = Input(Vec(1024, UInt(memW.W)))
-    val pt0     = Input(UInt(3.W))
-    val pt1     = Input(UInt(3.W))
-    val pt2     = Input(UInt(3.W))
-    val laneIdx = Input(UInt(4.W))
-    val out     = Output(UInt(outW.W))
+    val in    = Input(Vec(1024, UInt(memW.W)))
+    val pt0   = Input(UInt(3.W))
+    val pt1   = Input(UInt(3.W))
+    val pt2   = Input(UInt(3.W))
+    val phase = Input(UInt(log2Ceil(evalPhases).W))
+    val out   = Output(UInt(outW.W))
   })
+
+  def pickByPhase(offset: Int): UInt = {
+    val defaultIdx = laneConst * 64 + offset
+    val tbl = (0 until evalPhases).map { p =>
+      val l = laneConst + p * evalLanes
+      p.U -> io.in(l * 64 + offset)
+    }
+    MuxLookup(io.phase, io.in(defaultIdx), tbl)
+  }
 
   val lv2 = Wire(Vec(4, UInt(outW.W)))
 
@@ -152,11 +166,11 @@ class EvalLane(memW: Int, outW: Int) extends Module {
     val lv1 = Wire(Vec(4, UInt(outW.W)))
     for (j <- 0 until 4) {
       val eval0 = Module(new TC4EvalPoint(memW, outW))
-      val baseIdx = io.laneIdx * 64.U + (16 * k + 4 * j).U
-      eval0.io.r(0) := io.in(baseIdx + 0.U)
-      eval0.io.r(1) := io.in(baseIdx + 1.U)
-      eval0.io.r(2) := io.in(baseIdx + 2.U)
-      eval0.io.r(3) := io.in(baseIdx + 3.U)
+      val offset = 16 * k + 4 * j
+      eval0.io.r(0) := pickByPhase(offset + 0)
+      eval0.io.r(1) := pickByPhase(offset + 1)
+      eval0.io.r(2) := pickByPhase(offset + 2)
+      eval0.io.r(3) := pickByPhase(offset + 3)
       eval0.io.pt   := io.pt0
       lv1(j)        := eval0.io.out
     }
@@ -559,8 +573,8 @@ class ToomCook43 extends Module {
 
   // 前端改为多 lane eval + 单路 core 复用
   val core   = Module(new Core16TC43)
-  val evalLanesA = Seq.fill(EVAL_LANES)(Module(new EvalLane(memW = 24, outW = 24)))
-  val evalLanesB = Seq.fill(EVAL_LANES)(Module(new EvalLane(memW = 8, outW = 8)))
+  val evalLanesA = (0 until EVAL_LANES).map(lane => Module(new EvalLaneFixed(memW = 24, outW = 24, laneConst = lane, evalLanes = EVAL_LANES)))
+  val evalLanesB = (0 until EVAL_LANES).map(lane => Module(new EvalLaneFixed(memW = 8, outW = 8, laneConst = lane, evalLanes = EVAL_LANES)))
   val avecBuf = Reg(Vec(16, UInt(24.W)))
   val bvecBuf = Reg(Vec(16, UInt(8.W)))
 
@@ -594,20 +608,19 @@ class ToomCook43 extends Module {
   val laneOutA = Wire(Vec(EVAL_LANES, UInt(24.W)))
   val laneOutB = Wire(Vec(EVAL_LANES, UInt(8.W)))
   for (lane <- 0 until EVAL_LANES) {
-    val laneIdx = evalPhaseCnt * EVAL_LANES.U + lane.U
-    evalLanesA(lane).io.in      := regA
-    evalLanesA(lane).io.pt0     := pt0Cnt
-    evalLanesA(lane).io.pt1     := pt1Cnt
-    evalLanesA(lane).io.pt2     := pt2Cnt
-    evalLanesA(lane).io.laneIdx := laneIdx
-    laneOutA(lane)              := evalLanesA(lane).io.out
+    evalLanesA(lane).io.in    := regA
+    evalLanesA(lane).io.pt0   := pt0Cnt
+    evalLanesA(lane).io.pt1   := pt1Cnt
+    evalLanesA(lane).io.pt2   := pt2Cnt
+    evalLanesA(lane).io.phase := evalPhaseCnt
+    laneOutA(lane)            := evalLanesA(lane).io.out
 
-    evalLanesB(lane).io.in      := regB
-    evalLanesB(lane).io.pt0     := pt0Cnt
-    evalLanesB(lane).io.pt1     := pt1Cnt
-    evalLanesB(lane).io.pt2     := pt2Cnt
-    evalLanesB(lane).io.laneIdx := laneIdx
-    laneOutB(lane)              := evalLanesB(lane).io.out
+    evalLanesB(lane).io.in    := regB
+    evalLanesB(lane).io.pt0   := pt0Cnt
+    evalLanesB(lane).io.pt1   := pt1Cnt
+    evalLanesB(lane).io.pt2   := pt2Cnt
+    evalLanesB(lane).io.phase := evalPhaseCnt
+    laneOutB(lane)            := evalLanesB(lane).io.out
   }
 
   val coreAvecIn = Wire(Vec(16, UInt(24.W)))
