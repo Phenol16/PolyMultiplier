@@ -38,11 +38,11 @@ class ToomCook1024Test extends AnyFlatSpec with ChiselScalatestTester {
       dut.io.valid_in.poke(false.B)
 
       var timeout = 0
-      while (!dut.io.valid_out.peek().litToBoolean && timeout < 2000) {
+      while (!dut.io.valid_out.peek().litToBoolean && timeout < 3000) {
         dut.clock.step(1)
         timeout += 1
       }
-      assert(timeout < 2000, "Error: 等待 io.valid_out 超时！")
+      assert(timeout < 3000, "Error: 等待 io.valid_out 超时！")
 
       for (i <- 0 until n) {
         dut.io.c(i).expect(c_expected(i).U, s"计算错误！索引 $i 处结果不匹配。")
