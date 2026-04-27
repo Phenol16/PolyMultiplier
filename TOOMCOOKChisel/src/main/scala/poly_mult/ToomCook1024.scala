@@ -277,7 +277,10 @@ class InterpLayerSeqTC43(stride: Int, pidx: Int, inW: Int, outW: Int) extends Mo
   val prevR1 = RegInit(0.U(mk2.W))
   val prevR2 = RegInit(0.U(mk2.W))
 
-  val cReg = RegInit(VecInit(Seq.fill(4 * stride)(0.U(outW.W))))
+  val c0Reg = Reg(Vec(stride, UInt(outW.W)))
+  val c1Reg = Reg(Vec(stride, UInt(outW.W)))
+  val c2Reg = Reg(Vec(stride, UInt(outW.W)))
+  val c3Reg = Reg(Vec(stride, UInt(outW.W)))
 
   for (pt <- 0 until 7) {
     val rdIdx = (pt * stride).U + colCnt
@@ -288,7 +291,13 @@ class InterpLayerSeqTC43(stride: Int, pidx: Int, inW: Int, outW: Int) extends Mo
   core.io.pr2 := prevR2
 
   io.done := doneReg
-  io.cOut := cReg
+
+  for (i <- 0 until stride) {
+    io.cOut(4 * i + 0) := c0Reg(i)
+    io.cOut(4 * i + 1) := c1Reg(i)
+    io.cOut(4 * i + 2) := c2Reg(i)
+    io.cOut(4 * i + 3) := c3Reg(i)
+  }
 
   when(doneReg) {
     doneReg := false.B
@@ -301,13 +310,11 @@ class InterpLayerSeqTC43(stride: Int, pidx: Int, inW: Int, outW: Int) extends Mo
     prevR0   := 0.U
     prevR1   := 0.U
     prevR2   := 0.U
-    cReg     := VecInit(Seq.fill(4 * stride)(0.U(outW.W)))
   }.elsewhen(running) {
-    val base = colCnt << 2
-    cReg(base + 3.U) := mask(core.io.c3, outW)
-    cReg(base + 0.U) := mask(core.io.c0part, outW)
-    cReg(base + 1.U) := mask(core.io.c1part, outW)
-    cReg(base + 2.U) := mask(core.io.c2part, outW)
+    c0Reg(colCnt) := mask(core.io.c0part, outW)
+    c1Reg(colCnt) := mask(core.io.c1part, outW)
+    c2Reg(colCnt) := mask(core.io.c2part, outW)
+    c3Reg(colCnt) := mask(core.io.c3, outW)
 
     prevR0 := core.io.nr0
     prevR1 := core.io.nr1
@@ -321,9 +328,9 @@ class InterpLayerSeqTC43(stride: Int, pidx: Int, inW: Int, outW: Int) extends Mo
     }
   }.elsewhen(fixStage) {
     // 末尾修正：c[0] -= pr2, c[1] -= pr1, c[2] -= pr0
-    cReg(0) := mask(cReg(0) - prevR2, outW)
-    cReg(1) := mask(cReg(1) - prevR1, outW)
-    cReg(2) := mask(cReg(2) - prevR0, outW)
+    c0Reg(0) := mask(c0Reg(0) - prevR2, outW)
+    c1Reg(0) := mask(c1Reg(0) - prevR1, outW)
+    c2Reg(0) := mask(c2Reg(0) - prevR0, outW)
     fixStage := false.B
     doneReg := true.B
   }
@@ -489,9 +496,9 @@ class ToomCook43 extends Module {
   val regB = Reg(Vec(1024, UInt(8.W)))
 
   // 中间结果寄存器
-  val w2Reg = Reg(Vec(343 * 16, UInt(36.W)))
-  val regW1 = Reg(Vec(49 * 64, UInt(33.W)))
-  val regW0 = Reg(Vec(7 * 256, UInt(27.W)))
+  val w2Reg = Reg(Vec(49, Vec(7 * 16, UInt(36.W))))
+  val regW1 = Reg(Vec(7, Vec(7, Vec(64, UInt(33.W)))))
+  val regW0 = Reg(Vec(7, Vec(256, UInt(27.W))))
   val regC  = Reg(Vec(1024, UInt(24.W)))
 
   // RUN_CORE：组计数器 0..48（每组 7 个 seg）
@@ -502,14 +509,16 @@ class ToomCook43 extends Module {
 
   // 插值阶段组计数器：INTERP1 用 0..48，INTERP2 用 0..6
   val interpGroupCnt = RegInit(0.U(6.W))
+  val interp1BlockCnt = RegInit(0.U(3.W))
+  val interp1SubCnt   = RegInit(0.U(3.W))
 
   // 仅实例化 7 个 Core16，按 lane 复用
   val cores  = Seq.fill(7)(Module(new Core16TC43))
   val buildA = Seq.fill(7)(Module(new BuildEvalVec16(memW = 24, outW = 24)))
   val buildB = Seq.fill(7)(Module(new BuildEvalVec16(memW = 8, outW = 8)))
 
-  // 写地址对齐寄存：Core16 有 1 拍 valid 延迟，因此 seg 也打一拍
-  val segPipe  = Reg(Vec(7, UInt(9.W)))
+  // 写地址对齐寄存：Core16 有 1 拍 valid 延迟
+  val groupPipe = Reg(Vec(7, UInt(6.W)))
   val segVPipe = RegInit(VecInit(Seq.fill(7)(false.B)))
 
   // 三个时序复用插值层：各 1 个实例
@@ -525,16 +534,15 @@ class ToomCook43 extends Module {
   interp64Seq.io.start  := false.B
   interp256Seq.io.start := false.B
 
-  for (k <- 0 until 7 * 256) {
-    interp256Seq.io.wIn(k) := regW0(k)
+  for (g <- 0 until 7) {
+    for (k <- 0 until 256) {
+      interp256Seq.io.wIn(g * 256 + k) := regW0(g)(k)
+    }
   }
 
   val runCoreFire = state === State.RUN_CORE
 
   for (lane <- 0 until 7) {
-    // seg = groupCnt * 7 + lane
-    val seg = groupCnt * 7.U + lane.U
-
     val pt0 = corePt0
     val pt1 = corePt1
     val pt2 = lane.U(3.W)
@@ -554,7 +562,7 @@ class ToomCook43 extends Module {
     cores(lane).io.bvec     := buildB(lane).io.out
 
     when(runCoreFire) {
-      segPipe(lane)  := seg
+      groupPipe(lane) := groupCnt
       segVPipe(lane) := true.B
     }.otherwise {
       segVPipe(lane) := false.B
@@ -563,22 +571,21 @@ class ToomCook43 extends Module {
     // Core16 输出写回 w2Reg：地址打一拍对齐 valid
     when(segVPipe(lane) && cores(lane).io.valid_out) {
       for (t <- 0 until 16) {
-        val wrIdx = (segPipe(lane) << 4) + t.U
-        w2Reg(wrIdx) := cores(lane).io.cOut(t)
+        w2Reg(groupPipe(lane))(lane * 16 + t) := cores(lane).io.cOut(t)
       }
     }
   }
 
   // INTERP1 输入选择：每次送入 7*16
-  val interp1Base = interpGroupCnt * (7 * 16).U
   for (k <- 0 until 7 * 16) {
-    interp16Seq.io.wIn(k) := w2Reg(interp1Base + k.U)
+    interp16Seq.io.wIn(k) := w2Reg(interpGroupCnt)(k)
   }
 
   // INTERP2 输入选择：每次送入 7*64
-  val interp2Base = interpGroupCnt * (7 * 64).U
-  for (k <- 0 until 7 * 64) {
-    interp64Seq.io.wIn(k) := regW1(interp2Base + k.U)
+  for (sub <- 0 until 7) {
+    for (k <- 0 until 64) {
+      interp64Seq.io.wIn(sub * 64 + k) := regW1(interpGroupCnt)(sub)(k)
+    }
   }
 
   // ==========================================================================
@@ -590,6 +597,8 @@ class ToomCook43 extends Module {
       corePt0        := 0.U
       corePt1        := 0.U
       interpGroupCnt := 0.U
+      interp1BlockCnt := 0.U
+      interp1SubCnt   := 0.U
       when(io.valid_in) {
         regA  := io.a
         regB  := io.b
@@ -614,6 +623,8 @@ class ToomCook43 extends Module {
     is(State.WAIT_CORE) {
       // 等待最后一组 core 输出在本拍写回 w2Reg
       interpGroupCnt := 0.U
+      interp1BlockCnt := 0.U
+      interp1SubCnt   := 0.U
       state := State.INTERP1_START
     }
 
@@ -625,12 +636,21 @@ class ToomCook43 extends Module {
     is(State.INTERP1_WAIT) {
       when(interp16Seq.io.done) {
         for (k <- 0 until 64) {
-          regW1(interpGroupCnt * 64.U + k.U) := interp16Seq.io.cOut(k)
+          regW1(interp1BlockCnt)(interp1SubCnt)(k) := interp16Seq.io.cOut(k)
         }
-        when(interpGroupCnt === 48.U) {
-          interpGroupCnt := 0.U
-          state := State.INTERP2_START
+        when(interp1SubCnt === 6.U) {
+          interp1SubCnt := 0.U
+          when(interp1BlockCnt === 6.U) {
+            interp1BlockCnt := 0.U
+            interpGroupCnt := 0.U
+            state := State.INTERP2_START
+          }.otherwise {
+            interp1BlockCnt := interp1BlockCnt + 1.U
+            interpGroupCnt := interpGroupCnt + 1.U
+            state := State.INTERP1_START
+          }
         }.otherwise {
+          interp1SubCnt := interp1SubCnt + 1.U
           interpGroupCnt := interpGroupCnt + 1.U
           state := State.INTERP1_START
         }
@@ -645,9 +665,10 @@ class ToomCook43 extends Module {
     is(State.INTERP2_WAIT) {
       when(interp64Seq.io.done) {
         for (k <- 0 until 256) {
-          regW0(interpGroupCnt * 256.U + k.U) := interp64Seq.io.cOut(k)
+          regW0(interpGroupCnt)(k) := interp64Seq.io.cOut(k)
         }
         when(interpGroupCnt === 6.U) {
+          interpGroupCnt := 0.U
           state := State.INTERP3_START
         }.otherwise {
           interpGroupCnt := interpGroupCnt + 1.U
