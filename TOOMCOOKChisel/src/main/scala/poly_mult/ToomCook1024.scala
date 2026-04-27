@@ -388,117 +388,174 @@ class ToomCook43 extends Module {
   val io = IO(new ToomCook43IO)
 
   // ==========================================================================
-  //  输入寄存
+  //  状态机：
+  //  IDLE      : 等待 valid_in，并锁存输入 a/b
+  //  RUN_CORE  : 循环 49 组，每组驱动 7 个 Core16
+  //  WAIT_CORE : 等待最后一组 Core16 的 1 拍延迟输出写回 w2Reg
+  //  INTERP1   : 执行 stride=16 插值并寄存
+  //  INTERP2   : 执行 stride=64 插值并寄存
+  //  INTERP3   : 执行 stride=256 插值并寄存最终结果
+  //  DONE      : valid_out 拉高 1 拍
   // ==========================================================================
-  val regA = RegEnable(io.a, io.valid_in)
-  val regB = RegEnable(io.b, io.valid_in)
-  val v0   = io.valid_in
-
-  // ==========================================================================
-  //  Stage 0：343个 Core16TC43 并行
-  //  每个 Core16 的输入由两个 BuildEvalVec16 硬件模块生成
-  // ==========================================================================
-  val core16Insts = Seq.fill(343)(Module(new Core16TC43))
-
-  for (seg <- 0 until 343) {
-    val pt0 = (seg / 49).U(3.W)
-    val pt1 = ((seg / 7) % 7).U(3.W)
-    val pt2 = (seg % 7).U(3.W)
-
-    val buildA = Module(new BuildEvalVec16(memW = 24, outW = 24))
-    val buildB = Module(new BuildEvalVec16(memW = 8, outW = 8))
-
-    buildA.io.in  := regA
-    buildA.io.pt0 := pt0
-    buildA.io.pt1 := pt1
-    buildA.io.pt2 := pt2
-
-    buildB.io.in  := regB
-    buildB.io.pt0 := pt0
-    buildB.io.pt1 := pt1
-    buildB.io.pt2 := pt2
-
-    core16Insts(seg).io.valid_in := v0
-    core16Insts(seg).io.avec     := buildA.io.out
-    core16Insts(seg).io.bvec     := buildB.io.out
+  object State extends ChiselEnum {
+    val IDLE, RUN_CORE, WAIT_CORE, INTERP1, INTERP2, INTERP3, DONE = Value
   }
 
-  val v1 = core16Insts(0).io.valid_out
+  val state = RegInit(State.IDLE)
 
-  // ==========================================================================
-  //  切割点2：Core16输出 -> W2寄存器
-  // ==========================================================================
-  val w2Wire = Wire(Vec(343 * 16, UInt(36.W)))
+  // 输入锁存寄存器（仅在 IDLE 且 valid_in 时更新）
+  val regA = Reg(Vec(1024, UInt(24.W)))
+  val regB = Reg(Vec(1024, UInt(8.W)))
 
-  for (seg <- 0 until 343) {
-    for (t <- 0 until 16) {
-      w2Wire(seg * 16 + t) := core16Insts(seg).io.cOut(t)
+  // Stage0 点乘结果存储：343 * 16
+  val w2Reg = Reg(Vec(343 * 16, UInt(36.W)))
+  val regW1 = Reg(Vec(49 * 64, UInt(33.W)))
+  val regW0 = Reg(Vec(7 * 256, UInt(27.W)))
+  val regC  = Reg(Vec(1024, UInt(24.W)))
+
+  // RUN_CORE 组计数器：0..48
+  val groupCnt = RegInit(0.U(6.W))
+
+  // 仅实例化 7 个 Core16，按 lane 复用
+  val cores = Seq.fill(7)(Module(new Core16TC43))
+  val buildA = Seq.fill(7)(Module(new BuildEvalVec16(memW = 24, outW = 24)))
+  val buildB = Seq.fill(7)(Module(new BuildEvalVec16(memW = 8, outW = 8)))
+
+  // 写地址对齐寄存：Core16 有 1 拍 valid 延迟，因此 seg 也打一拍
+  val segPipe  = Reg(Vec(7, UInt(9.W)))
+  val segVPipe = RegInit(VecInit(Seq.fill(7)(false.B)))
+
+  val runCoreFire = state === State.RUN_CORE
+
+  for (lane <- 0 until 7) {
+    val seg = groupCnt * 7.U + lane.U
+
+    // 注意：pt0/pt1/pt2 都是运行时 UInt，而不是 Scala Int
+    val pt0 = (seg / 49.U)(2, 0)
+    val pt1 = ((seg / 7.U) % 7.U)(2, 0)
+    val pt2 = (seg % 7.U)(2, 0)
+
+    buildA(lane).io.in  := regA
+    buildA(lane).io.pt0 := pt0
+    buildA(lane).io.pt1 := pt1
+    buildA(lane).io.pt2 := pt2
+
+    buildB(lane).io.in  := regB
+    buildB(lane).io.pt0 := pt0
+    buildB(lane).io.pt1 := pt1
+    buildB(lane).io.pt2 := pt2
+
+    cores(lane).io.valid_in := runCoreFire
+    cores(lane).io.avec     := buildA(lane).io.out
+    cores(lane).io.bvec     := buildB(lane).io.out
+
+    when(runCoreFire) {
+      segPipe(lane)  := seg
+      segVPipe(lane) := true.B
+    }.otherwise {
+      segVPipe(lane) := false.B
+    }
+
+    // Core16 输出写回 w2Reg，地址使用打一拍后的 seg 对齐 valid
+    when(segVPipe(lane) && cores(lane).io.valid_out) {
+      for (t <- 0 until 16) {
+        val wrIdx = (segPipe(lane) << 4) + t.U
+        w2Reg(wrIdx) := cores(lane).io.cOut(t)
+      }
     }
   }
 
-  val regW2 = RegEnable(w2Wire, v1)
-  val v2    = RegNext(v1, false.B)
-
   // ==========================================================================
-  //  Stage 2：49个 InterpLayer(stride=16) 并行
+  //  INTERP1：49 个 stride=16 插值（组合），在状态 INTERP1 时寄存
   // ==========================================================================
-  val w1Wire = Wire(Vec(49 * 64, UInt(33.W)))
+  val interp1 = Seq.fill(49)(Module(new InterpLayerTC43(stride = 16, pidx = 1, inW = 36, outW = 33)))
+  val w1Wire  = Wire(Vec(49 * 64, UInt(33.W)))
 
   for (seg49 <- 0 until 49) {
-    val interp = Module(new InterpLayerTC43(stride = 16, pidx = 1, inW = 36, outW = 33))
-
     for (k <- 0 until 7 * 16) {
-      interp.io.wIn(k) := regW2(seg49 * 7 * 16 + k)
+      interp1(seg49).io.wIn(k) := w2Reg(seg49 * 7 * 16 + k)
     }
-
     for (k <- 0 until 64) {
-      w1Wire(seg49 * 64 + k) := interp.io.cOut(k)
+      w1Wire(seg49 * 64 + k) := interp1(seg49).io.cOut(k)
     }
   }
 
-  val regW1 = RegEnable(w1Wire, v2)
-  val v3    = RegNext(v2, false.B)
-
   // ==========================================================================
-  //  Stage 3：7个 InterpLayer(stride=64) 并行
+  //  INTERP2：7 个 stride=64 插值（组合），在状态 INTERP2 时寄存
   // ==========================================================================
-  val w0Wire = Wire(Vec(7 * 256, UInt(27.W)))
+  val interp2 = Seq.fill(7)(Module(new InterpLayerTC43(stride = 64, pidx = 2, inW = 33, outW = 27)))
+  val w0Wire  = Wire(Vec(7 * 256, UInt(27.W)))
 
   for (i <- 0 until 7) {
-    val interp = Module(new InterpLayerTC43(stride = 64, pidx = 2, inW = 33, outW = 27))
-
     for (k <- 0 until 7 * 64) {
-      interp.io.wIn(k) := regW1(i * 7 * 64 + k)
+      interp2(i).io.wIn(k) := regW1(i * 7 * 64 + k)
     }
-
     for (k <- 0 until 256) {
-      w0Wire(i * 256 + k) := interp.io.cOut(k)
+      w0Wire(i * 256 + k) := interp2(i).io.cOut(k)
     }
   }
 
-  val regW0 = RegEnable(w0Wire, v3)
-  val v4    = RegNext(v3, false.B)
-
   // ==========================================================================
-  //  Stage 4：1个 InterpLayer(stride=256)
+  //  INTERP3：1 个 stride=256 插值（组合），在状态 INTERP3 时寄存
   // ==========================================================================
   val interpFinal = Module(new InterpLayerTC43(stride = 256, pidx = 3, inW = 27, outW = 24))
-
   for (k <- 0 until 7 * 256) {
     interpFinal.io.wIn(k) := regW0(k)
   }
 
-  // ==========================================================================
-  //  输出寄存
-  // ==========================================================================
   val cWire = Wire(Vec(1024, UInt(24.W)))
   for (i <- 0 until 1024) {
     cWire(i) := mask(interpFinal.io.cOut(i), 24)
   }
 
-  val regC = RegEnable(cWire, v4)
-  val v5   = RegNext(v4, false.B)
-
-  io.valid_out := v5
+  // 默认输出
+  io.valid_out := false.B
   io.c         := regC
+
+  // ==========================================================================
+  //  FSM 状态转移与寄存控制
+  // ==========================================================================
+  switch(state) {
+    is(State.IDLE) {
+      groupCnt := 0.U
+      when(io.valid_in) {
+        regA  := io.a
+        regB  := io.b
+        state := State.RUN_CORE
+      }
+    }
+
+    is(State.RUN_CORE) {
+      when(groupCnt === 48.U) {
+        state := State.WAIT_CORE
+      }.otherwise {
+        groupCnt := groupCnt + 1.U
+      }
+    }
+
+    is(State.WAIT_CORE) {
+      // 等待最后一组 core 输出在本拍写回 w2Reg
+      state := State.INTERP1
+    }
+
+    is(State.INTERP1) {
+      regW1 := w1Wire
+      state := State.INTERP2
+    }
+
+    is(State.INTERP2) {
+      regW0 := w0Wire
+      state := State.INTERP3
+    }
+
+    is(State.INTERP3) {
+      regC  := cWire
+      state := State.DONE
+    }
+
+    is(State.DONE) {
+      io.valid_out := true.B
+      state := State.IDLE
+    }
+  }
 }
