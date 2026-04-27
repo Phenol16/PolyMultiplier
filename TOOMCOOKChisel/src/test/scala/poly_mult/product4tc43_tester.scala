@@ -9,8 +9,8 @@ import scala.util.Random
 
 class Product4TC43Test extends AnyFlatSpec with ChiselScalatestTester {
 
-  private val AWidth = 24
-  private val BWidth = 8
+  private val AWidth = 36
+  private val BWidth = 24
   private val OutWidth = 36
 
   private val MaskA: BigInt = (BigInt(1) << AWidth) - 1
@@ -91,7 +91,7 @@ class Product4TC43Test extends AnyFlatSpec with ChiselScalatestTester {
   behavior of "Product4TC43"
 
   it should "match 4x4 schoolbook multiplication modulo 2^36" in {
-    test(new Product4TC43)
+    test(new Product4TC43(aInW = 36, bInW = 24))
       .withAnnotations(Seq(VerilatorBackendAnnotation)) { dut =>
 
         dut.clock.setTimeout(0)
@@ -188,12 +188,12 @@ class Product4TC43Test extends AnyFlatSpec with ChiselScalatestTester {
 
         // ---------------------------------------------------------------------
         // Case 7: 接近真实输入范围的随机。
-        // a 为 24 bit，b 为 8 bit。
+        // a 为 36 bit，b 为 24 bit。
         // ---------------------------------------------------------------------
         val rngFull = new Random(42)
         for (caseId <- 0 until 10) {
-          val a = Seq.fill(4)(BigInt(rngFull.nextInt() & 0xffffff))
-          val b = Seq.fill(4)(BigInt(rngFull.nextInt() & 0xff))
+          val a = Seq.fill(4)(BigInt(rngFull.nextLong() & ((1L << 36) - 1)))
+          val b = Seq.fill(4)(BigInt(rngFull.nextInt() & 0xffffff))
 
           runCase(
             dut = dut,

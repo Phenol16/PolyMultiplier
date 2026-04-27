@@ -9,6 +9,18 @@ object Util {
     require(bits > 0, "mask bits must be positive")
     x.pad(bits)(bits - 1, 0)
   }
+
+  def extendTo(x: UInt, bits: Int, signed: Boolean): UInt = {
+    require(bits > 0, "extend bits must be positive")
+
+    if (x.getWidth >= bits) {
+      x(bits - 1, 0)
+    } else if (signed) {
+      Cat(Fill(bits - x.getWidth, x(x.getWidth - 1)), x)
+    } else {
+      x.pad(bits)
+    }
+  }
 }
 import Util._
 
@@ -34,7 +46,7 @@ object InterpParamTable {
 // =============================================================================
 //  EvalLayerTC43：4个输入 -> 7个 Toom-Cook 求值点，纯组合硬件模块
 // =============================================================================
-class EvalLayerTC43(inW: Int, outW: Int) extends Module {
+class EvalLayerTC43(inW: Int, outW: Int, signedInput: Boolean = false) extends Module {
   val io = IO(new Bundle {
     val r   = Input(Vec(4, UInt(inW.W)))
     val out = Output(Vec(7, UInt(outW.W)))
@@ -42,10 +54,10 @@ class EvalLayerTC43(inW: Int, outW: Int) extends Module {
 
   private val w = outW
 
-  val r0 = io.r(0)
-  val r1 = io.r(1)
-  val r2 = io.r(2)
-  val r3 = io.r(3)
+  val r0 = extendTo(io.r(0), outW, signedInput)
+  val r1 = extendTo(io.r(1), outW, signedInput)
+  val r2 = extendTo(io.r(2), outW, signedInput)
+  val r3 = extendTo(io.r(3), outW, signedInput)
 
   val t0 = mask(r0 + r2, w)
   val t1 = mask(r1 + r3, w)
@@ -54,15 +66,15 @@ class EvalLayerTC43(inW: Int, outW: Int) extends Module {
   io.out(1) := mask((r3 << 3) + (r2 << 2) + (r1 << 1) + r0, w)
   io.out(2) := mask(t0 + t1, w)
   io.out(3) := mask(t0 - t1, w)
-  io.out(4) := mask((mask((r0 << 2) + r2, w) << 1) + ((r1 << 2) + r3), w)
-  io.out(5) := mask((mask((r0 << 2) + r2, w) << 1) - ((r1 << 2) + r3), w)
+  io.out(4) := mask((r0 << 3) + (r1 << 2) + (r2 << 1) + r3, w)
+  io.out(5) := mask((r0 << 3) - (r1 << 2) + (r2 << 1) - r3, w)
   io.out(6) := mask(r0, w)
 }
 
 // =============================================================================
 //  TC4EvalPoint：4个输入按 pt 选择一个求值点，纯组合硬件模块
 // =============================================================================
-class TC4EvalPoint(inW: Int, outW: Int) extends Module {
+class TC4EvalPoint(inW: Int, outW: Int, signedInput: Boolean = false) extends Module {
   val io = IO(new Bundle {
     val r   = Input(Vec(4, UInt(inW.W)))
     val pt  = Input(UInt(3.W))
@@ -71,10 +83,10 @@ class TC4EvalPoint(inW: Int, outW: Int) extends Module {
 
   private val w = outW
 
-  val r0 = mask(io.r(0), w)
-  val r1 = mask(io.r(1), w)
-  val r2 = mask(io.r(2), w)
-  val r3 = mask(io.r(3), w)
+  val r0 = extendTo(io.r(0), outW, signedInput)
+  val r1 = extendTo(io.r(1), outW, signedInput)
+  val r2 = extendTo(io.r(2), outW, signedInput)
+  val r3 = extendTo(io.r(3), outW, signedInput)
 
   val t0 = mask(r0 + r2, w)
   val t1 = mask(r1 + r3, w)
@@ -84,8 +96,8 @@ class TC4EvalPoint(inW: Int, outW: Int) extends Module {
     1.U -> mask((r3 << 3) + (r2 << 2) + (r1 << 1) + r0, w),
     2.U -> mask(t0 + t1, w),
     3.U -> mask(t0 - t1, w),
-    4.U -> mask((mask((r0 << 2) + r2, w) << 1) + ((r1 << 2) + r3), w),
-    5.U -> mask((mask((r0 << 2) + r2, w) << 1) - ((r1 << 2) + r3), w),
+    4.U -> mask((r0 << 3) + (r1 << 2) + (r2 << 1) + r3, w),
+    5.U -> mask((r0 << 3) - (r1 << 2) + (r2 << 1) - r3, w),
     6.U -> mask(r0, w)
   ))
 }
@@ -110,7 +122,7 @@ class BuildEvalVec16(memW: Int, outW: Int) extends Module {
       val lv1 = Wire(Vec(4, UInt(outW.W)))
 
       for (j <- 0 until 4) {
-        val eval0 = Module(new TC4EvalPoint(memW, outW))
+        val eval0 = Module(new TC4EvalPoint(memW, outW, signedInput = false))
         eval0.io.r(0) := io.in(64 * l + 16 * k + 4 * j + 0)
         eval0.io.r(1) := io.in(64 * l + 16 * k + 4 * j + 1)
         eval0.io.r(2) := io.in(64 * l + 16 * k + 4 * j + 2)
@@ -119,13 +131,13 @@ class BuildEvalVec16(memW: Int, outW: Int) extends Module {
         lv1(j)        := eval0.io.out
       }
 
-      val eval1 = Module(new TC4EvalPoint(outW, outW))
+      val eval1 = Module(new TC4EvalPoint(outW, outW, signedInput = true))
       eval1.io.r := lv1
       eval1.io.pt := io.pt1
       lv2(k) := eval1.io.out
     }
 
-    val eval2 = Module(new TC4EvalPoint(outW, outW))
+    val eval2 = Module(new TC4EvalPoint(outW, outW, signedInput = true))
     eval2.io.r := lv2
     eval2.io.pt := io.pt2
     io.out(l) := eval2.io.out
@@ -157,7 +169,7 @@ class EvalLaneFixed(memW: Int, outW: Int, laneConst: Int, evalLanes: Int = 4) ex
       val l = laneConst + p * evalLanes
       p.U -> io.in(l * 64 + offset)
     }
-    MuxLookup(io.phase, io.in(defaultIdx), tbl)
+    MuxLookup(io.phase, io.in(defaultIdx))(tbl)
   }
 
   val lv2 = Wire(Vec(4, UInt(outW.W)))
@@ -165,7 +177,7 @@ class EvalLaneFixed(memW: Int, outW: Int, laneConst: Int, evalLanes: Int = 4) ex
   for (k <- 0 until 4) {
     val lv1 = Wire(Vec(4, UInt(outW.W)))
     for (j <- 0 until 4) {
-      val eval0 = Module(new TC4EvalPoint(memW, outW))
+      val eval0 = Module(new TC4EvalPoint(memW, outW, signedInput = false))
       val offset = 16 * k + 4 * j
       eval0.io.r(0) := pickByPhase(offset + 0)
       eval0.io.r(1) := pickByPhase(offset + 1)
@@ -175,13 +187,13 @@ class EvalLaneFixed(memW: Int, outW: Int, laneConst: Int, evalLanes: Int = 4) ex
       lv1(j)        := eval0.io.out
     }
 
-    val eval1 = Module(new TC4EvalPoint(outW, outW))
+    val eval1 = Module(new TC4EvalPoint(outW, outW, signedInput = true))
     eval1.io.r  := lv1
     eval1.io.pt := io.pt1
     lv2(k)      := eval1.io.out
   }
 
-  val eval2 = Module(new TC4EvalPoint(outW, outW))
+  val eval2 = Module(new TC4EvalPoint(outW, outW, signedInput = true))
   eval2.io.r  := lv2
   eval2.io.pt := io.pt2
   io.out      := eval2.io.out
@@ -394,56 +406,61 @@ class InterpLayerSeqTC43(stride: Int, pidx: Int, inW: Int, outW: Int) extends Mo
 // =============================================================================
 //  Product4TC43：4系数 × 4系数 -> 7系数，纯组合硬件模块
 // =============================================================================
-class Product4TC43 extends Module {
+class Product4TC43(aInW: Int, bInW: Int) extends Module {
+  private val A_PROD_EVAL_W = aInW + 3
+  private val B_PROD_EVAL_W = bInW + 4 + 1
+  private val PROD_MUL_MOD_W = 39
+  private val PROD_OUT_W = 36
+
   val io = IO(new Bundle {
-    val a4  = Input(Vec(4, UInt(24.W)))
-    val b4  = Input(Vec(4, UInt(8.W)))
-    val out = Output(Vec(7, UInt(36.W)))
+    val a4  = Input(Vec(4, UInt(aInW.W)))
+    val b4  = Input(Vec(4, UInt(bInW.W)))
+    val out = Output(Vec(7, UInt(PROD_OUT_W.W)))
   })
 
-  val evalA = Module(new EvalLayerTC43(24, 39))
-  val evalB = Module(new EvalLayerTC43(8, 29))
+  val evalA = Module(new EvalLayerTC43(aInW, A_PROD_EVAL_W, signedInput = true))
+  val evalB = Module(new EvalLayerTC43(bInW, B_PROD_EVAL_W, signedInput = true))
 
   evalA.io.r := io.a4
   evalB.io.r := io.b4
 
-  val wMul = Wire(Vec(7, UInt(39.W)))
+  val wMul = Wire(Vec(7, UInt(PROD_MUL_MOD_W.W)))
 
   for (i <- 0 until 7) {
-    val bw     = evalB.io.out(i)(28, 0)
-    val bwSign = bw(28)
-    val bwSext = Cat(Fill(10, bwSign), bw).asSInt
-    val awInt  = evalA.io.out(i)(38, 0).asSInt
-    wMul(i) := mask((awInt * bwSext).asUInt, 39)
+    val bw     = evalB.io.out(i)(B_PROD_EVAL_W - 1, 0)
+    val bwSign = bw(B_PROD_EVAL_W - 1)
+    val bwSext = Cat(Fill(PROD_MUL_MOD_W - B_PROD_EVAL_W, bwSign), bw).asSInt
+    val awInt  = evalA.io.out(i)(A_PROD_EVAL_W - 1, 0).asSInt
+    wMul(i) := mask((awInt * bwSext).asUInt, PROD_MUL_MOD_W)
   }
 
-  val r5a = mask(wMul(5) - wMul(4), 39)
-  val r3a = mask(mask(wMul(3) - wMul(2), 39) >> 1, 39)
-  val r4a = mask(wMul(4) - wMul(0), 39)
-  val r4b = mask((r4a << 1) + r5a - (wMul(6) << 7), 39)
-  val r2a = mask(wMul(2) + r3a, 39)
-  val r1a = mask(wMul(1) + wMul(4) - (r2a << 6) - r2a, 39)
-  val r2b = mask(r2a - wMul(6) - wMul(0), 39)
-  val r1b = mask(r1a + r2b + (r2b << 2) + (r2b << 3) + (r2b << 5), 39)
+  val r5a = mask(wMul(5) - wMul(4), PROD_MUL_MOD_W)
+  val r3a = mask(mask(wMul(3) - wMul(2), PROD_MUL_MOD_W) >> 1, PROD_MUL_MOD_W)
+  val r4a = mask(wMul(4) - wMul(0), PROD_MUL_MOD_W)
+  val r4b = mask((r4a << 1) + r5a - (wMul(6) << 7), PROD_MUL_MOD_W)
+  val r2a = mask(wMul(2) + r3a, PROD_MUL_MOD_W)
+  val r1a = mask(wMul(1) + wMul(4) - (r2a << 6) - r2a, PROD_MUL_MOD_W)
+  val r2b = mask(r2a - wMul(6) - wMul(0), PROD_MUL_MOD_W)
+  val r1b = mask(r1a + r2b + (r2b << 2) + (r2b << 3) + (r2b << 5), PROD_MUL_MOD_W)
 
   val r4c = mask(
-    mask(mask(r4b - (r2b << 3), 39) >> 3, 39) * "hAAAAAAAAB".U(42.W), 36
+    mask(mask(r4b - (r2b << 3), PROD_MUL_MOD_W) >> 3, PROD_MUL_MOD_W) * "hAAAAAAAAB".U(42.W), PROD_OUT_W
   )
   val r5b = mask(
-    mask((r5a + r1b) >> 1, 39) * "hEEEEEEEEF".U(42.W), 37
+    mask((r5a + r1b) >> 1, PROD_MUL_MOD_W) * "hEEEEEEEEF".U(42.W), 37
   )
   val r1c = mask(
-    mask(mask(r1b + (r3a << 4), 39) >> 1, 39) * "hE38E38E39".U(42.W), 37
+    mask(mask(r1b + (r3a << 4), PROD_MUL_MOD_W) >> 1, PROD_MUL_MOD_W) * "hE38E38E39".U(42.W), 37
   )
 
-  val r2c = mask(r2b - r4c, 36)
-  val r3b = mask(0.U - r3a - r1c, 36)
-  val r5c = mask((r1c - r5b) >> 1, 36)
-  val r1d = mask(r1c - r5c, 36)
+  val r2c = mask(r2b - r4c, PROD_OUT_W)
+  val r3b = mask(0.U - r3a - r1c, PROD_OUT_W)
+  val r5c = mask((r1c - r5b) >> 1, PROD_OUT_W)
+  val r1d = mask(r1c - r5c, PROD_OUT_W)
 
-  io.out(0) := mask(wMul(6) - r2c, 36)
-  io.out(1) := mask(r5c - r1d, 36)
-  io.out(2) := mask(r4c - wMul(0), 36)
+  io.out(0) := mask(wMul(6) - r2c, PROD_OUT_W)
+  io.out(1) := mask(r5c - r1d, PROD_OUT_W)
+  io.out(2) := mask(r4c - wMul(0), PROD_OUT_W)
   io.out(3) := r3b
   io.out(4) := 0.U
   io.out(5) := 0.U
@@ -454,21 +471,25 @@ class Product4TC43 extends Module {
 //  Core16TC43：16元素子核
 //  模块内部仍保留原设计的一拍寄存器切割：Product4输出 -> InterpLayer输入
 // =============================================================================
-class Core16TC43 extends Module {
+class Core16TC43(aInW: Int, bInW: Int) extends Module {
+  private val A_CORE_EVAL_W = aInW + 3
+  private val B_CORE_EVAL_W = bInW + 4
+  private val CORE_OUT_W = 36
+
   val io = IO(new Bundle {
     val valid_in  = Input(Bool())
-    val avec      = Input(Vec(16, UInt(24.W)))
-    val bvec      = Input(Vec(16, UInt(8.W)))
+    val avec      = Input(Vec(16, UInt(aInW.W)))
+    val bvec      = Input(Vec(16, UInt(bInW.W)))
     val valid_out = Output(Bool())
-    val cOut      = Output(Vec(16, UInt(36.W)))
+    val cOut      = Output(Vec(16, UInt(CORE_OUT_W.W)))
   })
 
-  val ae = Wire(Vec(7 * 4, UInt(39.W)))
-  val be = Wire(Vec(7 * 4, UInt(29.W)))
+  val ae = Wire(Vec(7 * 4, UInt(A_CORE_EVAL_W.W)))
+  val be = Wire(Vec(7 * 4, UInt(B_CORE_EVAL_W.W)))
 
   for (seg <- 0 until 4) {
-    val evalA = Module(new EvalLayerTC43(24, 39))
-    val evalB = Module(new EvalLayerTC43(8, 29))
+    val evalA = Module(new EvalLayerTC43(aInW, A_CORE_EVAL_W, signedInput = true))
+    val evalB = Module(new EvalLayerTC43(bInW, B_CORE_EVAL_W, signedInput = true))
 
     evalA.io.r(0) := io.avec(seg * 4 + 0)
     evalA.io.r(1) := io.avec(seg * 4 + 1)
@@ -486,14 +507,14 @@ class Core16TC43 extends Module {
     }
   }
 
-  val wProd = Wire(Vec(7 * 4, UInt(36.W)))
+  val wProd = Wire(Vec(7 * 4, UInt(CORE_OUT_W.W)))
 
   for (pt <- 0 until 7) {
-    val prod = Module(new Product4TC43)
+    val prod = Module(new Product4TC43(aInW = A_CORE_EVAL_W, bInW = B_CORE_EVAL_W))
 
     for (k <- 0 until 4) {
-      prod.io.a4(k) := ae(pt * 4 + k)(23, 0)
-      prod.io.b4(k) := be(pt * 4 + k)(7, 0)
+      prod.io.a4(k) := ae(pt * 4 + k)
+      prod.io.b4(k) := be(pt * 4 + k)
     }
 
     for (k <- 0 until 4) {
@@ -526,6 +547,12 @@ class ToomCook43IO extends Bundle {
 
 class ToomCook43 extends Module {
   val io = IO(new ToomCook43IO)
+  private val A_IN_W = 24
+  private val B_IN_W = 8
+  private val TOP_EVAL_LEVELS = 3
+  private val A_TOP_EVAL_W = A_IN_W + 3 * TOP_EVAL_LEVELS
+  private val B_TOP_EVAL_W = B_IN_W + 4 * TOP_EVAL_LEVELS
+  private val CORE_OUT_W = 36
   private val EVAL_LANES  = 4
   private val EVAL_PHASES = 16 / EVAL_LANES
 
@@ -553,7 +580,7 @@ class ToomCook43 extends Module {
   val regB = Reg(Vec(1024, UInt(8.W)))
 
   // 中间结果寄存器
-  val w2Reg = Reg(Vec(49, Vec(7 * 16, UInt(36.W))))
+  val w2Reg = Reg(Vec(49, Vec(7 * 16, UInt(CORE_OUT_W.W))))
   val regW1 = Reg(Vec(7, Vec(7, Vec(64, UInt(33.W)))))
   val regW0 = Reg(Vec(7, Vec(256, UInt(27.W))))
   val regC  = Reg(Vec(1024, UInt(24.W)))
@@ -572,11 +599,11 @@ class ToomCook43 extends Module {
   val interp1SubCnt   = RegInit(0.U(3.W))
 
   // 前端改为多 lane eval + 单路 core 复用
-  val core   = Module(new Core16TC43)
-  val evalLanesA = (0 until EVAL_LANES).map(lane => Module(new EvalLaneFixed(memW = 24, outW = 24, laneConst = lane, evalLanes = EVAL_LANES)))
-  val evalLanesB = (0 until EVAL_LANES).map(lane => Module(new EvalLaneFixed(memW = 8, outW = 8, laneConst = lane, evalLanes = EVAL_LANES)))
-  val avecBuf = Reg(Vec(16, UInt(24.W)))
-  val bvecBuf = Reg(Vec(16, UInt(8.W)))
+  val core   = Module(new Core16TC43(aInW = A_TOP_EVAL_W, bInW = B_TOP_EVAL_W))
+  val evalLanesA = (0 until EVAL_LANES).map(lane => Module(new EvalLaneFixed(memW = A_IN_W, outW = A_TOP_EVAL_W, laneConst = lane, evalLanes = EVAL_LANES)))
+  val evalLanesB = (0 until EVAL_LANES).map(lane => Module(new EvalLaneFixed(memW = B_IN_W, outW = B_TOP_EVAL_W, laneConst = lane, evalLanes = EVAL_LANES)))
+  val avecBuf = Reg(Vec(16, UInt(A_TOP_EVAL_W.W)))
+  val bvecBuf = Reg(Vec(16, UInt(B_TOP_EVAL_W.W)))
 
   val groupPipe = Reg(UInt(6.W))
   val pt2Pipe   = Reg(UInt(3.W))
@@ -605,8 +632,8 @@ class ToomCook43 extends Module {
   val evalLastPhase = evalPhaseCnt === (EVAL_PHASES - 1).U
   val segFire = runCoreFire && evalLastPhase
 
-  val laneOutA = Wire(Vec(EVAL_LANES, UInt(24.W)))
-  val laneOutB = Wire(Vec(EVAL_LANES, UInt(8.W)))
+  val laneOutA = Wire(Vec(EVAL_LANES, UInt(A_TOP_EVAL_W.W)))
+  val laneOutB = Wire(Vec(EVAL_LANES, UInt(B_TOP_EVAL_W.W)))
   for (lane <- 0 until EVAL_LANES) {
     evalLanesA(lane).io.in    := regA
     evalLanesA(lane).io.pt0   := pt0Cnt
@@ -623,8 +650,8 @@ class ToomCook43 extends Module {
     laneOutB(lane)            := evalLanesB(lane).io.out
   }
 
-  val coreAvecIn = Wire(Vec(16, UInt(24.W)))
-  val coreBvecIn = Wire(Vec(16, UInt(8.W)))
+  val coreAvecIn = Wire(Vec(16, UInt(A_TOP_EVAL_W.W)))
+  val coreBvecIn = Wire(Vec(16, UInt(B_TOP_EVAL_W.W)))
   for (i <- 0 until 16) {
     coreAvecIn(i) := avecBuf(i)
     coreBvecIn(i) := bvecBuf(i)
