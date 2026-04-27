@@ -9,8 +9,8 @@ import scala.util.Random
 
 class Product4TC43Test extends AnyFlatSpec with ChiselScalatestTester {
 
-  private val AWidth = 36
-  private val BWidth = 24
+  private val AWidth = 39
+  private val BWidth = 29
   private val OutWidth = 36
 
   private val MaskA: BigInt = (BigInt(1) << AWidth) - 1
@@ -91,7 +91,7 @@ class Product4TC43Test extends AnyFlatSpec with ChiselScalatestTester {
   behavior of "Product4TC43"
 
   it should "match 4x4 schoolbook multiplication modulo 2^36" in {
-    test(new Product4TC43(aInW = 36, bInW = 24))
+    test(new Product4TC43)
       .withAnnotations(Seq(VerilatorBackendAnnotation)) { dut =>
 
         dut.clock.setTimeout(0)
