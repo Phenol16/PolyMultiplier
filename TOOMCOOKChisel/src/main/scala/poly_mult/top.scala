@@ -35,10 +35,17 @@ class top extends Module {
     busyReg := true.B
   }
 
+  val evalAIn = Wire(Vec(1024, UInt(24.W)))
+  val evalBIn = Wire(Vec(1024, UInt(8.W)))
+  for (i <- 0 until 1024) {
+    evalAIn(i) := Mux(startPulse, io.a(i), aLatched(i))
+    evalBIn(i) := Mux(startPulse, io.b(i), bLatched(i))
+  }
+
   // EvalStage
   eval.io.start := startPulse
-  eval.io.aIn := aLatched
-  eval.io.bIn := bLatched
+  eval.io.aIn := evalAIn
+  eval.io.bIn := evalBIn
 
   // Queue1
   qEvalToCore.io.enq <> eval.io.out
