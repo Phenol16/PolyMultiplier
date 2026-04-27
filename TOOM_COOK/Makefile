@@ -2,7 +2,7 @@ CC = gcc
 //CFLAGS = -I include -Wall -Wextra -O0 -g -std=c99
 CFLAGS = -I include -Wall -Wextra -O3 -std=c99
 SRC = src/schoolbook.c \
-src/toomcook44.c src/toomcook416.c src/kernel.c src/toomcook464.c src/toomcook4.c src/toomcook4pipe.c src/toomcook4_2.c\
+src/toomcook44.c src/toomcook416.c src/kernel.c src/toomcook464.c src/toomcook4.c src/toomcook4_3.c src/toomcook4_2.c\
 src/calculator.c src/test.c \
 app/main.c
 OBJ = $(SRC:.c=.o)

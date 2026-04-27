@@ -182,7 +182,7 @@ void test_hardware()
             b64[i] = b[i];
         }
         schoolbook(a, b, c, N);
-        toomcook4_2(a64, b64, d);
+        toomcook4_3(a64, b64, d);
         for (int i = 0; i < N; i++)
         {
             if (c[i] != (uint32_t)d[i])
