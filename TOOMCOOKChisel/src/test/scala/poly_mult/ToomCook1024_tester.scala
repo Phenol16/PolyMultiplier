@@ -50,7 +50,7 @@ class ToomCook1024Test extends AnyFlatSpec with ChiselScalatestTester {
   }
 
   private def runCase(
-      dut: ToomCook43,
+      dut: ToomCook1024,
       label: String,
       aVals: Seq[BigInt],
       bVals: Seq[BigInt],
@@ -149,9 +149,9 @@ class ToomCook1024Test extends AnyFlatSpec with ChiselScalatestTester {
   behavior of "ToomCook1024"
 
   it should "debug deterministic cases before random test" in {
-    println(s"[${now()}] before test(new ToomCook43)")
+    println(s"[${now()}] before test(new ToomCook1024)")
 
-    test(new ToomCook43)
+    test(new ToomCook1024)
       .withAnnotations(Seq(VerilatorBackendAnnotation)) { dut =>
 
         dut.clock.setTimeout(0)
