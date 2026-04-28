@@ -7,7 +7,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 
 import scala.util.Random
 
-class Product4TC43Test extends AnyFlatSpec with ChiselScalatestTester {
+class Product4Test extends AnyFlatSpec with ChiselScalatestTester {
 
   private val A_EVAL_W = 39
   private val B_EVAL_W = 29
@@ -22,7 +22,7 @@ class Product4TC43Test extends AnyFlatSpec with ChiselScalatestTester {
   private def modOut(x: BigInt): BigInt = x & MaskOut
 
   /**
-    * 当前 Product4TC43 的有效语义：
+    * 当前 Product4 的有效语义：
     * 4 项输入经过 Product4 后输出 4 项负循环结果，out(4..6)=0。
     *
     * 环：
@@ -56,7 +56,7 @@ class Product4TC43Test extends AnyFlatSpec with ChiselScalatestTester {
   }
 
   private def pokeProductInput(
-      dut: Product4TC43,
+      dut: Product4,
       a: Seq[BigInt],
       b: Seq[BigInt]
   ): Unit = {
@@ -70,19 +70,19 @@ class Product4TC43Test extends AnyFlatSpec with ChiselScalatestTester {
   }
 
   private def runProductCase(
-      dut: Product4TC43,
+      dut: Product4,
       label: String,
       a: Seq[BigInt],
       b: Seq[BigInt],
       printAll: Boolean = true
   ): Unit = {
-    println(s"========== Product4TC43 case: $label ==========")
+    println(s"========== Product4 case: $label ==========")
 
     val expected = schoolbook4Negacyclic(a, b)
 
     pokeProductInput(dut, a, b)
 
-    // Product4TC43 是组合模块；step 1 拍只是让波形/打印更稳定。
+    // Product4 是组合模块；step 1 拍只是让波形/打印更稳定。
     dut.clock.step(1)
 
     var mismatchCount = 0
@@ -108,16 +108,16 @@ class Product4TC43Test extends AnyFlatSpec with ChiselScalatestTester {
 
     assert(
       mismatchCount == 0,
-      s"[$label] Product4TC43 mismatchCount=$mismatchCount"
+      s"[$label] Product4 mismatchCount=$mismatchCount"
     )
 
     println(s"[$label] PASS")
   }
 
-  behavior of "Product4TC43"
+  behavior of "Product4"
 
   it should "match 4-term negacyclic reference for deterministic and random cases" in {
-    test(new Product4TC43)
+    test(new Product4)
       .withAnnotations(Seq(VerilatorBackendAnnotation)) { dut =>
 
         dut.clock.setTimeout(0)
