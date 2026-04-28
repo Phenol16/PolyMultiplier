@@ -7,7 +7,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 
 import scala.util.Random
 
-class Core16TC43Test extends AnyFlatSpec with ChiselScalatestTester {
+class Core16Test extends AnyFlatSpec with ChiselScalatestTester {
 
   private val N = 16
 
@@ -67,7 +67,7 @@ class Core16TC43Test extends AnyFlatSpec with ChiselScalatestTester {
   }
 
   private def pokeCoreInput(
-      dut: Core16TC43,
+      dut: Core16,
       a: Seq[BigInt],
       b: Seq[BigInt]
   ): Unit = {
@@ -81,7 +81,7 @@ class Core16TC43Test extends AnyFlatSpec with ChiselScalatestTester {
   }
 
   private def fireAndWaitCore(
-      dut: Core16TC43,
+      dut: Core16,
       maxWait: Int = 20
   ): Int = {
     dut.io.valid_in.poke(true.B)
@@ -97,18 +97,18 @@ class Core16TC43Test extends AnyFlatSpec with ChiselScalatestTester {
       seen = dut.io.valid_out.peek().litToBoolean
     }
 
-    assert(seen, s"Core16TC43 valid_out timeout, maxWait=$maxWait")
+    assert(seen, s"Core16 valid_out timeout, maxWait=$maxWait")
     cycle
   }
 
   private def runCoreCase(
-      dut: Core16TC43,
+      dut: Core16,
       label: String,
       a: Seq[BigInt],
       b: Seq[BigInt],
       printAll: Boolean = true
   ): Unit = {
-    println(s"========== Core16TC43 case: $label ==========")
+    println(s"========== Core16 case: $label ==========")
 
     val expected = schoolbook16Negacyclic(a, b)
 
@@ -151,7 +151,7 @@ class Core16TC43Test extends AnyFlatSpec with ChiselScalatestTester {
 
     assert(
       mismatchCount == 0,
-      s"[$label] Core16TC43 mismatchCount=$mismatchCount"
+      s"[$label] Core16 mismatchCount=$mismatchCount"
     )
 
     println(s"[$label] PASS")
@@ -160,10 +160,10 @@ class Core16TC43Test extends AnyFlatSpec with ChiselScalatestTester {
     dut.clock.step(2)
   }
 
-  behavior of "Core16TC43"
+  behavior of "Core16"
 
   it should "match 16-term negacyclic schoolbook multiplication modulo x^16 + 1" in {
-    test(new Core16TC43)
+    test(new Core16)
       .withAnnotations(Seq(VerilatorBackendAnnotation)) { dut =>
 
         dut.clock.setTimeout(0)
