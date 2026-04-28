@@ -10,5 +10,7 @@ class EvalLayer(inW: Int, outW: Int) extends Module {
     val out = Output(Vec(7, UInt(outW.W)))
   })
 
-  io.out := EvalMath.eval4Points(io.r(0), io.r(1), io.r(2), io.r(3), outW)
+  val evalMath = Module(new EvalMath(inW, outW))
+  evalMath.io.r := io.r
+  io.out := evalMath.io.out
 }

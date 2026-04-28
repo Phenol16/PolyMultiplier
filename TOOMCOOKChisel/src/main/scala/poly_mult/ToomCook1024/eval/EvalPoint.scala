@@ -11,6 +11,7 @@ class EvalPoint(inW: Int, outW: Int) extends Module {
     val out = Output(UInt(outW.W))
   })
 
-  val points = EvalMath.eval4Points(io.r(0), io.r(1), io.r(2), io.r(3), outW)
-  io.out := MuxLookup(io.pt, 0.U(outW.W))((0 until 7).map(i => i.U -> points(i)))
+  val evalMath = Module(new EvalMath(inW, outW))
+  evalMath.io.r := io.r
+  io.out := MuxLookup(io.pt, 0.U(outW.W))((0 until 7).map(i => i.U -> evalMath.io.out(i)))
 }

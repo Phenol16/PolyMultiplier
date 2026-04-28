@@ -3,9 +3,7 @@ package poly_mult
 import chisel3._
 import chisel3.util._
 
-// EvalLaneFixed：三层 TC4 求值的固定 lane 版本
 // laneConst 固定后，每拍用 phase 在静态地址集合内选择一个 l
-// 避免对 Vec(1024, ...) 使用动态 UInt 下标
 class EvalLaneFixed(memW: Int, outW: Int, laneConst: Int, evalLanes: Int = 4) extends Module {
   require(evalLanes > 0 && 16 % evalLanes == 0, "evalLanes must be a positive divisor of 16")
   require(laneConst >= 0 && laneConst < evalLanes, "laneConst must be within [0, evalLanes)")
