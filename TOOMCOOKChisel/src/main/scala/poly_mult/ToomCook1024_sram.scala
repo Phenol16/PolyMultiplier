@@ -2,6 +2,7 @@ package poly_mult_sram
 
 import chisel3._
 import chisel3.util._
+import chisel3.experimental.{BlackBox, HasBlackBoxResource}
 
 
 object Util {
@@ -567,6 +568,7 @@ class SpRam(width: Int, depth: Int) extends BlackBox(Map("WIDTH" -> width, "DEPT
 }
 
 class InterpLayerSeq2ColTC43(stride: Int, pidx: Int, inW: Int, outW: Int) extends Module {
+  require(stride % 2 == 0, "2-column interpolation requires even stride")
   private val p = InterpParamTable.params(pidx)
   private val mk2 = p.mk2
   val io = IO(new Bundle {
@@ -575,40 +577,71 @@ class InterpLayerSeq2ColTC43(stride: Int, pidx: Int, inW: Int, outW: Int) extend
     val done = Output(Bool())
     val cOut = Output(Vec(4 * stride, UInt(outW.W)))
   })
+
   val core0 = Module(new InterpCoreTC43(pidx, inW))
   val core1 = Module(new InterpCoreTC43(pidx, inW))
   val colCnt = RegInit(0.U(log2Ceil(stride).W))
   val running = RegInit(false.B)
   val fixStage = RegInit(false.B)
   val doneReg = RegInit(false.B)
-  val prevR0 = RegInit(0.U(mk2.W)); val prevR1 = RegInit(0.U(mk2.W)); val prevR2 = RegInit(0.U(mk2.W))
-  val c0Reg = Reg(Vec(stride, UInt(outW.W))); val c1Reg = Reg(Vec(stride, UInt(outW.W))); val c2Reg = Reg(Vec(stride, UInt(outW.W))); val c3Reg = Reg(Vec(stride, UInt(outW.W)))
+  val prevR0 = RegInit(0.U(mk2.W))
+  val prevR1 = RegInit(0.U(mk2.W))
+  val prevR2 = RegInit(0.U(mk2.W))
 
+  val c0Reg = Reg(Vec(stride, UInt(outW.W)))
+  val c1Reg = Reg(Vec(stride, UInt(outW.W)))
+  val c2Reg = Reg(Vec(stride, UInt(outW.W)))
+  val c3Reg = Reg(Vec(stride, UInt(outW.W)))
+
+  val col1 = colCnt + 1.U
   for (pt <- 0 until 7) {
-    core0.io.pIn(pt) := io.wIn(pt * stride + colCnt)
-    core1.io.pIn(pt) := io.wIn(pt * stride + colCnt + 1.U)
+    val row = Wire(Vec(stride, UInt(inW.W)))
+    for (i <- 0 until stride) row(i) := io.wIn(pt * stride + i)
+    core0.io.pIn(pt) := row(colCnt)
+    core1.io.pIn(pt) := row(col1)
   }
-  core0.io.pr0 := prevR0; core0.io.pr1 := prevR1; core0.io.pr2 := prevR2
-  core1.io.pr0 := core0.io.nr0; core1.io.pr1 := core0.io.nr1; core1.io.pr2 := core0.io.nr2
 
-  for (i <- 0 until stride) {
-    io.cOut(4 * i + 0) := c0Reg(i); io.cOut(4 * i + 1) := c1Reg(i); io.cOut(4 * i + 2) := c2Reg(i); io.cOut(4 * i + 3) := c3Reg(i)
-  }
+  core0.io.pr0 := prevR0
+  core0.io.pr1 := prevR1
+  core0.io.pr2 := prevR2
+  core1.io.pr0 := core0.io.nr0
+  core1.io.pr1 := core0.io.nr1
+  core1.io.pr2 := core0.io.nr2
+
   io.done := doneReg
+  for (i <- 0 until stride) {
+    io.cOut(4 * i + 0) := c0Reg(i)
+    io.cOut(4 * i + 1) := c1Reg(i)
+    io.cOut(4 * i + 2) := c2Reg(i)
+    io.cOut(4 * i + 3) := c3Reg(i)
+  }
+
   when(doneReg) { doneReg := false.B }
 
   when(io.start && !running && !fixStage && !doneReg) {
-    colCnt := 0.U; running := true.B; prevR0 := 0.U; prevR1 := 0.U; prevR2 := 0.U
+    colCnt := 0.U
+    running := true.B
+    prevR0 := 0.U; prevR1 := 0.U; prevR2 := 0.U
   }.elsewhen(running) {
-    c0Reg(colCnt) := mask(core0.io.c0part, outW); c1Reg(colCnt) := mask(core0.io.c1part, outW); c2Reg(colCnt) := mask(core0.io.c2part, outW); c3Reg(colCnt) := mask(core0.io.c3, outW)
-    c0Reg(colCnt + 1.U) := mask(core1.io.c0part, outW); c1Reg(colCnt + 1.U) := mask(core1.io.c1part, outW); c2Reg(colCnt + 1.U) := mask(core1.io.c2part, outW); c3Reg(colCnt + 1.U) := mask(core1.io.c3, outW)
-    prevR0 := core1.io.nr0; prevR1 := core1.io.nr1; prevR2 := core1.io.nr2
-    when(colCnt === (stride - 2).U) { running := false.B; fixStage := true.B }.otherwise { colCnt := colCnt + 2.U }
+    c0Reg(colCnt) := mask(core0.io.c0part, outW)
+    c1Reg(colCnt) := mask(core0.io.c1part, outW)
+    c2Reg(colCnt) := mask(core0.io.c2part, outW)
+    c3Reg(colCnt) := mask(core0.io.c3, outW)
+    c0Reg(col1) := mask(core1.io.c0part, outW)
+    c1Reg(col1) := mask(core1.io.c1part, outW)
+    c2Reg(col1) := mask(core1.io.c2part, outW)
+    c3Reg(col1) := mask(core1.io.c3, outW)
+    prevR0 := core1.io.nr0
+    prevR1 := core1.io.nr1
+    prevR2 := core1.io.nr2
+    when(colCnt === (stride - 2).U) { running := false.B; fixStage := true.B }
+      .otherwise { colCnt := colCnt + 2.U }
   }.elsewhen(fixStage) {
     c0Reg(0) := mask(c0Reg(0) - prevR2, outW)
     c1Reg(0) := mask(c1Reg(0) - prevR1, outW)
     c2Reg(0) := mask(c2Reg(0) - prevR0, outW)
-    fixStage := false.B; doneReg := true.B
+    fixStage := false.B
+    doneReg := true.B
   }
 }
 
@@ -622,88 +655,251 @@ class ToomCook43IO extends Bundle {
 
 class ToomCook43 extends Module {
   def packVec(xs: Seq[UInt]): UInt = Cat(xs.reverse)
-  def unpackVec(x: UInt, n: Int, w: Int): Vec[UInt] = { val v = Wire(Vec(n, UInt(w.W))); for (i <- 0 until n) v(i) := x((i + 1) * w - 1, i * w); v }
-  val io = IO(new ToomCook43IO)
-  private val A_EVAL_W = TC43EvalWidth.A_EVAL_W; private val B_EVAL_W = TC43EvalWidth.B_EVAL_W
-  private val EVAL_LANES = 4; private val EVAL_PHASES = 4
-  // NOTE: current version keeps Vec IO; future version can switch to external SRAM + tile cache.
+  def unpackVec(x: UInt, n: Int, w: Int): Vec[UInt] = {
+    val v = Wire(Vec(n, UInt(w.W)))
+    for (i <- 0 until n) v(i) := x((i + 1) * w - 1, i * w)
+    v
+  }
 
-  val regA = Reg(Vec(1024, UInt(24.W))); val regB = Reg(Vec(1024, UInt(8.W))); val regC = Reg(Vec(1024, UInt(24.W)))
-  io.c := regC; io.valid_out := false.B
+  val io = IO(new ToomCook43IO)
+  private val A_EVAL_W = TC43EvalWidth.A_EVAL_W
+  private val B_EVAL_W = TC43EvalWidth.B_EVAL_W
+  private val EVAL_LANES = 4
+
+  val regA = Reg(Vec(1024, UInt(24.W)))
+  val regB = Reg(Vec(1024, UInt(8.W)))
+  val regC = Reg(Vec(1024, UInt(24.W)))
+  io.c := regC
+  io.valid_out := false.B
 
   val evalLanesA = (0 until EVAL_LANES).map(l => Module(new EvalLaneFixed(24, A_EVAL_W, l, EVAL_LANES)))
   val evalLanesB = (0 until EVAL_LANES).map(l => Module(new EvalLaneFixed(8, B_EVAL_W, l, EVAL_LANES)))
   val core = Module(new Core16TC43)
-  val interp16Seq = Module(new InterpLayerSeqTC43(16,1,36,33)); interp16Seq.io.start := false.B
-  val interp64Seq = Module(new InterpLayerSeqTC43(64,2,33,27)); interp64Seq.io.start := false.B
-  val interp256Seq2 = Module(new InterpLayerSeq2ColTC43(256,3,27,24)); interp256Seq2.io.start := false.B
+  val interp16Seq = Module(new InterpLayerSeqTC43(16, 1, 36, 33))
+  val interp64Seq = Module(new InterpLayerSeqTC43(64, 2, 33, 27))
+  val interp256Seq2 = Module(new InterpLayerSeq2ColTC43(256, 3, 27, 24))
+  interp16Seq.io.start := false.B
+  interp64Seq.io.start := false.B
+  interp256Seq2.io.start := false.B
 
-  val fifoValid = RegInit(false.B); val fifoAvec = Reg(Vec(16, UInt(A_EVAL_W.W))); val fifoBvec = Reg(Vec(16, UInt(B_EVAL_W.W)))
+  val busy = RegInit(false.B)
+  val evalPhase = RegInit(0.U(2.W))
+  val pt0 = RegInit(0.U(3.W)); val pt1 = RegInit(0.U(3.W)); val pt2 = RegInit(0.U(3.W))
+  val evalDone = RegInit(false.B)
+
+  val fifoValid = RegInit(false.B)
+  val fifoAvec = Reg(Vec(16, UInt(A_EVAL_W.W)))
+  val fifoBvec = Reg(Vec(16, UInt(B_EVAL_W.W)))
   val fifoPt0 = Reg(UInt(3.W)); val fifoPt1 = Reg(UInt(3.W)); val fifoPt2 = Reg(UInt(3.W))
-  val evalPhase = RegInit(0.U(2.W)); val pt0 = RegInit(0.U(3.W)); val pt1 = RegInit(0.U(3.W)); val pt2 = RegInit(0.U(3.W)); val evalDone = RegInit(false.B)
-  val avecBuild = Reg(Vec(16, UInt(A_EVAL_W.W))); val bvecBuild = Reg(Vec(16, UInt(B_EVAL_W.W)))
+  val avecBuild = Reg(Vec(16, UInt(A_EVAL_W.W)))
+  val bvecBuild = Reg(Vec(16, UInt(B_EVAL_W.W)))
 
-  val w2Ram = Seq.fill(2,7)(Module(new SpRam(576,1))); val w2Ready = RegInit(VecInit(Seq.fill(2)(false.B))); val w2Full = RegInit(VecInit(Seq.fill(2,7)(false.B)))
+  val corePending = RegInit(false.B)
+  val outPt0 = Reg(UInt(3.W)); val outPt1 = Reg(UInt(3.W)); val outPt2 = Reg(UInt(3.W))
+  val w2WBuf = RegInit(0.U(1.W))
+
+  val w2Ram = Seq.fill(2, 7)(Module(new SpRam(576, 2)))
+  val w1Ram = Seq.fill(2, 7)(Module(new SpRam(2112, 2)))
+  val w2Ready = RegInit(VecInit(Seq.fill(2)(false.B)))
+  val w2Full = RegInit(VecInit(Seq.fill(2) { VecInit(Seq.fill(7)(false.B)) }))
   val w2Pt0 = Reg(Vec(2, UInt(3.W))); val w2Pt1 = Reg(Vec(2, UInt(3.W)))
-  val w1Ram = Seq.fill(2,7)(Module(new SpRam(2112,1))); val w1BlockReady = RegInit(VecInit(Seq.fill(2)(false.B))); val w1SubReady = RegInit(VecInit(Seq.fill(2,7)(false.B))); val w1Block = Reg(Vec(2, UInt(3.W)))
-  val w0Reg = Reg(Vec(7, Vec(256, UInt(27.W)))); val w0Ready = RegInit(VecInit(Seq.fill(7)(false.B)))
+
+  val w1BufValid = RegInit(VecInit(Seq.fill(2)(false.B)))
+  val w1BufBlock = Reg(Vec(2, UInt(3.W)))
+  val w1SubReady = RegInit(VecInit(Seq.fill(2) { VecInit(Seq.fill(7)(false.B)) }))
+  val w1BlockReady = RegInit(VecInit(Seq.fill(2)(false.B)))
+
+  val w0Reg = Reg(Vec(7, Vec(256, UInt(27.W))))
+  val w0Ready = RegInit(VecInit(Seq.fill(7)(false.B)))
+
+  val i1Idle :: i1ReadReq :: i1ReadCap :: i1Run :: i1WriteW1 :: Nil = Enum(5)
+  val i2Idle :: i2ReadReq :: i2ReadCap :: i2Run :: i2WriteW0 :: Nil = Enum(5)
+  val i1State = RegInit(i1Idle)
+  val i2State = RegInit(i2Idle)
+  val i1Buf = RegInit(0.U(1.W))
+  val i2Buf = RegInit(0.U(1.W))
+
+  val w2Local = Reg(Vec(7, Vec(16, UInt(36.W))))
+  val w1Local = Reg(Vec(7, Vec(64, UInt(33.W))))
+  for (i <- 0 until 7 * 16) interp16Seq.io.wIn(i) := w2Local(i / 16)(i % 16)
+  for (i <- 0 until 7 * 64) interp64Seq.io.wIn(i) := w1Local(i / 64)(i % 64)
+  for (g <- 0 until 7; k <- 0 until 256) interp256Seq2.io.wIn(g * 256 + k) := w0Reg(g)(k)
 
   for (b <- 0 until 2; p <- 0 until 7) {
-    w2Ram(b)(p).io.clk := clock; w2Ram(b)(p).io.en := false.B; w2Ram(b)(p).io.we := false.B; w2Ram(b)(p).io.addr := 0.U; w2Ram(b)(p).io.din := 0.U
-    w1Ram(b)(p).io.clk := clock; w1Ram(b)(p).io.en := false.B; w1Ram(b)(p).io.we := false.B; w1Ram(b)(p).io.addr := 0.U; w1Ram(b)(p).io.din := 0.U
+    w2Ram(b)(p).io.clk := clock; w2Ram(b)(p).io.en := false.B; w2Ram(b)(p).io.we := false.B; w2Ram(b)(p).io.addr := 0.U(1.W); w2Ram(b)(p).io.din := 0.U
+    w1Ram(b)(p).io.clk := clock; w1Ram(b)(p).io.en := false.B; w1Ram(b)(p).io.we := false.B; w1Ram(b)(p).io.addr := 0.U(1.W); w1Ram(b)(p).io.din := 0.U
   }
 
-  // Eval engine
   for (l <- 0 until EVAL_LANES) {
     evalLanesA(l).io.in := regA; evalLanesA(l).io.pt0 := pt0; evalLanesA(l).io.pt1 := pt1; evalLanesA(l).io.pt2 := pt2; evalLanesA(l).io.phase := evalPhase
     evalLanesB(l).io.in := regB; evalLanesB(l).io.pt0 := pt0; evalLanesB(l).io.pt1 := pt1; evalLanesB(l).io.pt2 := pt2; evalLanesB(l).io.phase := evalPhase
   }
-  val canPush = !fifoValid && !evalDone
+
+  val canPush = busy && !fifoValid && !evalDone
+  val nextAvec = Wire(Vec(16, UInt(A_EVAL_W.W)))
+  val nextBvec = Wire(Vec(16, UInt(B_EVAL_W.W)))
+  nextAvec := avecBuild
+  nextBvec := bvecBuild
+  for (l <- 0 until EVAL_LANES) {
+    val idx = evalPhase * EVAL_LANES.U + l.U
+    nextAvec(idx) := evalLanesA(l).io.out
+    nextBvec(idx) := evalLanesB(l).io.out
+  }
+
   when(canPush) {
-    for (l <- 0 until EVAL_LANES) { val idx = evalPhase * EVAL_LANES.U + l.U; avecBuild(idx) := evalLanesA(l).io.out; bvecBuild(idx) := evalLanesB(l).io.out }
+    avecBuild := nextAvec
+    bvecBuild := nextBvec
     when(evalPhase === 3.U) {
-      fifoValid := true.B; fifoAvec := avecBuild; fifoBvec := bvecBuild; fifoPt0 := pt0; fifoPt1 := pt1; fifoPt2 := pt2; evalPhase := 0.U
-      when(pt0===6.U && pt1===6.U && pt2===6.U){evalDone:=true.B}.otherwise{ when(pt2===6.U){pt2:=0.U; when(pt1===6.U){pt1:=0.U; pt0:=pt0+1.U}.otherwise{pt1:=pt1+1.U}}.otherwise{pt2:=pt2+1.U} }
+      fifoValid := true.B
+      fifoAvec := nextAvec
+      fifoBvec := nextBvec
+      fifoPt0 := pt0; fifoPt1 := pt1; fifoPt2 := pt2
+      evalPhase := 0.U
+      when(pt0 === 6.U && pt1 === 6.U && pt2 === 6.U) { evalDone := true.B }
+        .otherwise {
+          when(pt2 === 6.U) {
+            pt2 := 0.U
+            when(pt1 === 6.U) { pt1 := 0.U; pt0 := pt0 + 1.U }
+              .otherwise { pt1 := pt1 + 1.U }
+          }.otherwise { pt2 := pt2 + 1.U }
+        }
     }.otherwise { evalPhase := evalPhase + 1.U }
   }
 
-  // Core engine
-  val corePending = RegInit(false.B); val outPt2 = Reg(UInt(3.W)); val outPt0 = Reg(UInt(3.W)); val outPt1 = Reg(UInt(3.W)); val w2WBuf = RegInit(0.U(1.W))
-  core.io.valid_in := false.B; core.io.avec := fifoAvec; core.io.bvec := fifoBvec
-  when(fifoValid && !corePending && !w2Ready(w2WBuf)) { core.io.valid_in := true.B; corePending := true.B; outPt2 := fifoPt2; outPt0 := fifoPt0; outPt1 := fifoPt1; fifoValid := false.B }
+  core.io.valid_in := false.B
+  core.io.avec := fifoAvec
+  core.io.bvec := fifoBvec
+  when(busy && fifoValid && !corePending && !w2Ready(w2WBuf)) {
+    core.io.valid_in := true.B
+    corePending := true.B
+    outPt0 := fifoPt0; outPt1 := fifoPt1; outPt2 := fifoPt2
+    fifoValid := false.B
+  }
+
+  for (buf <- 0 until 2; p <- 0 until 7) {
+    when(corePending && core.io.valid_out && w2WBuf === buf.U && outPt2 === p.U) {
+      w2Ram(buf)(p).io.en := true.B
+      w2Ram(buf)(p).io.we := true.B
+      w2Ram(buf)(p).io.din := packVec(core.io.cOut)
+    }
+  }
   when(corePending && core.io.valid_out) {
-    w2Ram(w2WBuf)(outPt2).io.en := true.B; w2Ram(w2WBuf)(outPt2).io.we := true.B; w2Ram(w2WBuf)(outPt2).io.din := packVec(core.io.cOut)
-    w2Full(w2WBuf)(outPt2) := true.B; corePending := false.B
-    when(outPt2===6.U){w2Ready(w2WBuf):=true.B; w2Pt0(w2WBuf):=outPt0; w2Pt1(w2WBuf):=outPt1; w2WBuf := ~w2WBuf}
+    w2Full(w2WBuf)(outPt2) := true.B
+    corePending := false.B
+    when(outPt2 === 6.U) {
+      w2Ready(w2WBuf) := true.B
+      w2Pt0(w2WBuf) := outPt0
+      w2Pt1(w2WBuf) := outPt1
+      w2WBuf := ~w2WBuf
+    }
   }
 
-  // Interp1 engine
-  val i1State = RegInit(0.U(2.W)); val i1Buf = Reg(UInt(1.W)); val w2Local = Reg(Vec(7, Vec(16, UInt(36.W))))
-  for (i <- 0 until 7*16) interp16Seq.io.wIn(i) := w2Local(i/16)(i%16)
-  when(i1State===0.U){ when(w2Ready(0)){i1Buf:=0.U;i1State:=1.U}.elsewhen(w2Ready(1)){i1Buf:=1.U;i1State:=1.U} }
-  when(i1State===1.U){ for (p<-0 until 7){w2Ram(i1Buf)(p).io.en:=true.B}; i1State:=2.U }
-  when(i1State===2.U){ for (p<-0 until 7){ w2Local(p):=unpackVec(w2Ram(i1Buf)(p).io.dout,16,36)}; interp16Seq.io.start:=true.B; i1State:=3.U }
-  when(i1State===3.U && interp16Seq.io.done){
-    val bSel = Mux(w1BlockReady(0) || w1SubReady(0).asUInt.orR, 1.U, 0.U)
-    w1Ram(bSel)(w2Pt1(i1Buf)).io.en:=true.B; w1Ram(bSel)(w2Pt1(i1Buf)).io.we:=true.B; w1Ram(bSel)(w2Pt1(i1Buf)).io.din:=packVec(interp16Seq.io.cOut)
-    w1Block(bSel):=w2Pt0(i1Buf); w1SubReady(bSel)(w2Pt1(i1Buf)):=true.B
-    when(w1SubReady(bSel).asUInt.andR){w1BlockReady(bSel):=true.B}
-    w2Ready(i1Buf):=false.B; w2Full(i1Buf):=VecInit(Seq.fill(7)(false.B)); i1State:=0.U
+  when(i1State === i1Idle) {
+    when(w2Ready(0)) { i1Buf := 0.U; i1State := i1ReadReq }
+      .elsewhen(w2Ready(1)) { i1Buf := 1.U; i1State := i1ReadReq }
+  }.elsewhen(i1State === i1ReadReq) {
+    i1State := i1ReadCap
+  }.elsewhen(i1State === i1ReadCap) {
+    for (p <- 0 until 7) {
+      val d = Mux(i1Buf === 0.U, w2Ram(0)(p).io.dout, w2Ram(1)(p).io.dout)
+      w2Local(p) := unpackVec(d, 16, 36)
+    }
+    i1State := i1Run
+  }.elsewhen(i1State === i1Run) {
+    interp16Seq.io.start := true.B
+    when(interp16Seq.io.done) { i1State := i1WriteW1 }
+  }.elsewhen(i1State === i1WriteW1) {
+    val curBlock = Mux(i1Buf === 0.U, w2Pt0(0), w2Pt0(1))
+    val curSub = Mux(i1Buf === 0.U, w2Pt1(0), w2Pt1(1))
+    val hit0 = w1BufValid(0) && (w1BufBlock(0) === curBlock)
+    val hit1 = w1BufValid(1) && (w1BufBlock(1) === curBlock)
+    val empty0 = !w1BufValid(0)
+    val empty1 = !w1BufValid(1)
+    val canAlloc = hit0 || hit1 || empty0 || empty1
+    when(canAlloc) {
+      val selBuf = Wire(UInt(1.W))
+      selBuf := Mux(hit0 || (!hit1 && empty0), 0.U, 1.U)
+      when(!w1BufValid(selBuf)) { w1BufValid(selBuf) := true.B; w1BufBlock(selBuf) := curBlock }
+      for (buf <- 0 until 2; sub <- 0 until 7) {
+        when(selBuf === buf.U && curSub === sub.U) {
+          w1Ram(buf)(sub).io.en := true.B
+          w1Ram(buf)(sub).io.we := true.B
+          w1Ram(buf)(sub).io.din := packVec(interp16Seq.io.cOut)
+        }
+      }
+      val oldReady = Wire(Vec(7, Bool()))
+      oldReady := Mux(selBuf === 0.U, w1SubReady(0), w1SubReady(1))
+      val nextReady = Wire(Vec(7, Bool()))
+      nextReady := oldReady
+      nextReady(curSub) := true.B
+      when(selBuf === 0.U) {
+        w1SubReady(0) := nextReady
+        when(nextReady.asUInt.andR) { w1BlockReady(0) := true.B }
+      }.otherwise {
+        w1SubReady(1) := nextReady
+        when(nextReady.asUInt.andR) { w1BlockReady(1) := true.B }
+      }
+      w2Ready(i1Buf) := false.B
+      w2Full(i1Buf) := VecInit(Seq.fill(7)(false.B))
+      i1State := i1Idle
+    }
   }
 
-  // Interp2 engine
-  val i2State = RegInit(0.U(2.W)); val i2Buf = Reg(UInt(1.W)); val w1Local = Reg(Vec(7, Vec(64, UInt(33.W))))
-  for (i <- 0 until 7*64) interp64Seq.io.wIn(i) := w1Local(i/64)(i%64)
-  when(i2State===0.U){ when(w1BlockReady(0)){i2Buf:=0.U;i2State:=1.U}.elsewhen(w1BlockReady(1)){i2Buf:=1.U;i2State:=1.U} }
-  when(i2State===1.U){ for (s<-0 until 7){w1Ram(i2Buf)(s).io.en:=true.B}; i2State:=2.U }
-  when(i2State===2.U){ for (s<-0 until 7){w1Local(s):=unpackVec(w1Ram(i2Buf)(s).io.dout,64,33)}; interp64Seq.io.start:=true.B; i2State:=3.U }
-  when(i2State===3.U && interp64Seq.io.done){ w0Reg(w1Block(i2Buf)):=unpackVec(packVec(interp64Seq.io.cOut),256,27); w0Ready(w1Block(i2Buf)):=true.B; w1BlockReady(i2Buf):=false.B; w1SubReady(i2Buf):=VecInit(Seq.fill(7)(false.B)); i2State:=0.U }
+  for (buf <- 0 until 2) {
+    when(i1Buf === buf.U && i1State === i1ReadReq) {
+      for (p <- 0 until 7) { w2Ram(buf)(p).io.en := true.B; w2Ram(buf)(p).io.we := false.B }
+    }
+    when(i2Buf === buf.U && i2State === i2ReadReq) {
+      for (s <- 0 until 7) { w1Ram(buf)(s).io.en := true.B; w1Ram(buf)(s).io.we := false.B }
+    }
+  }
 
-  // Interp3
-  for (g <- 0 until 7; k <- 0 until 256) interp256Seq2.io.wIn(g*256+k) := w0Reg(g)(k)
-  val outDone = RegInit(false.B)
-  when(w0Ready.asUInt.andR && !outDone) { interp256Seq2.io.start := true.B; outDone := true.B }
-  when(interp256Seq2.io.done){ for (i<-0 until 1024) regC(i):=mask(interp256Seq2.io.cOut(i),24); io.valid_out:=true.B; outDone:=false.B; w0Ready:=VecInit(Seq.fill(7)(false.B)); evalDone:=false.B; pt0:=0.U;pt1:=0.U;pt2:=0.U;evalPhase:=0.U }
+  when(i2State === i2Idle) {
+    when(w1BlockReady(0)) { i2Buf := 0.U; i2State := i2ReadReq }
+      .elsewhen(w1BlockReady(1)) { i2Buf := 1.U; i2State := i2ReadReq }
+  }.elsewhen(i2State === i2ReadReq) {
+    i2State := i2ReadCap
+  }.elsewhen(i2State === i2ReadCap) {
+    for (s <- 0 until 7) {
+      val d = Mux(i2Buf === 0.U, w1Ram(0)(s).io.dout, w1Ram(1)(s).io.dout)
+      w1Local(s) := unpackVec(d, 64, 33)
+    }
+    i2State := i2Run
+  }.elsewhen(i2State === i2Run) {
+    interp64Seq.io.start := true.B
+    when(interp64Seq.io.done) { i2State := i2WriteW0 }
+  }.elsewhen(i2State === i2WriteW0) {
+    val blk = Mux(i2Buf === 0.U, w1BufBlock(0), w1BufBlock(1))
+    for (i <- 0 until 256) w0Reg(blk)(i) := interp64Seq.io.cOut(i)
+    w0Ready(blk) := true.B
+    w1BlockReady(i2Buf) := false.B
+    w1SubReady(i2Buf) := VecInit(Seq.fill(7)(false.B))
+    w1BufValid(i2Buf) := false.B
+    i2State := i2Idle
+  }
 
-  when(io.valid_in){ regA:=io.a; regB:=io.b }
+  val outArmed = RegInit(false.B)
+  when(busy && w0Ready.asUInt.andR && !outArmed) { interp256Seq2.io.start := true.B; outArmed := true.B }
+  when(interp256Seq2.io.done) {
+    for (i <- 0 until 1024) regC(i) := mask(interp256Seq2.io.cOut(i), 24)
+    io.valid_out := true.B
+    busy := false.B
+    outArmed := false.B
+  }
+
+  when(io.valid_in && !busy) {
+    regA := io.a
+    regB := io.b
+    busy := true.B
+    pt0 := 0.U; pt1 := 0.U; pt2 := 0.U; evalPhase := 0.U; evalDone := false.B
+    fifoValid := false.B; corePending := false.B
+    w2Ready := VecInit(Seq.fill(2)(false.B))
+    w2Full := VecInit(Seq.fill(2) { VecInit(Seq.fill(7)(false.B)) })
+    w1BlockReady := VecInit(Seq.fill(2)(false.B))
+    w1SubReady := VecInit(Seq.fill(2) { VecInit(Seq.fill(7)(false.B)) })
+    w1BufValid := VecInit(Seq.fill(2)(false.B))
+    w0Ready := VecInit(Seq.fill(7)(false.B))
+    i1State := i1Idle; i2State := i2Idle; outArmed := false.B
+    w2WBuf := 0.U
+  }
 }
