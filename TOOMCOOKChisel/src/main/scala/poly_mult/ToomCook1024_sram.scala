@@ -347,6 +347,11 @@ class InterpLayerSeqTC43(stride: Int, pidx: Int, inW: Int, outW: Int) extends Mo
     val wIn   = Input(Vec(7 * stride, UInt(inW.W)))
     val done  = Output(Bool())
     val cOut  = Output(Vec(4 * stride, UInt(outW.W)))
+    val dbg_started = Output(Bool())
+    val dbg_ran_any = Output(Bool())
+    val dbg_core_any_nonzero = Output(Bool())
+    val dbg_c0_before_fix = Output(UInt(outW.W))
+    val dbg_c0_after_fix = Output(UInt(outW.W))
   })
 
   val core = Module(new InterpCoreTC43(pidx, inW))
@@ -365,15 +370,29 @@ class InterpLayerSeqTC43(stride: Int, pidx: Int, inW: Int, outW: Int) extends Mo
   val c2Reg = Reg(Vec(stride, UInt(outW.W)))
   val c3Reg = Reg(Vec(stride, UInt(outW.W)))
 
+  val dbgStarted = RegInit(false.B)
+  val dbgRanAny = RegInit(false.B)
+  val dbgCoreAnyNonZero = RegInit(false.B)
+  val dbgC0BeforeFix = RegInit(0.U(outW.W))
+  val dbgC0AfterFix = RegInit(0.U(outW.W))
+
   for (pt <- 0 until 7) {
-    val rdIdx = (pt * stride).U + colCnt
-    core.io.pIn(pt) := io.wIn(rdIdx)
+    val row = Wire(Vec(stride, UInt(inW.W)))
+    for (i <- 0 until stride) {
+      row(i) := io.wIn(pt * stride + i)
+    }
+    core.io.pIn(pt) := row(colCnt)
   }
   core.io.pr0 := prevR0
   core.io.pr1 := prevR1
   core.io.pr2 := prevR2
 
   io.done := doneReg
+  io.dbg_started := dbgStarted
+  io.dbg_ran_any := dbgRanAny
+  io.dbg_core_any_nonzero := dbgCoreAnyNonZero
+  io.dbg_c0_before_fix := dbgC0BeforeFix
+  io.dbg_c0_after_fix := dbgC0AfterFix
 
   for (i <- 0 until stride) {
     io.cOut(4 * i + 0) := c0Reg(i)
@@ -393,7 +412,25 @@ class InterpLayerSeqTC43(stride: Int, pidx: Int, inW: Int, outW: Int) extends Mo
     prevR0   := 0.U
     prevR1   := 0.U
     prevR2   := 0.U
+    dbgStarted := true.B
+    dbgRanAny := false.B
+    dbgCoreAnyNonZero := false.B
+    dbgC0BeforeFix := 0.U
+    dbgC0AfterFix := 0.U
+    for (i <- 0 until stride) {
+      c0Reg(i) := 0.U
+      c1Reg(i) := 0.U
+      c2Reg(i) := 0.U
+      c3Reg(i) := 0.U
+    }
   }.elsewhen(running) {
+    dbgRanAny := true.B
+    when(core.io.c0part.orR || core.io.c1part.orR || core.io.c2part.orR || core.io.c3.orR) {
+      dbgCoreAnyNonZero := true.B
+    }
+    when(colCnt === 0.U) {
+      dbgC0BeforeFix := mask(core.io.c0part, outW)
+    }
     c0Reg(colCnt) := mask(core.io.c0part, outW)
     c1Reg(colCnt) := mask(core.io.c1part, outW)
     c2Reg(colCnt) := mask(core.io.c2part, outW)
@@ -411,6 +448,7 @@ class InterpLayerSeqTC43(stride: Int, pidx: Int, inW: Int, outW: Int) extends Mo
     }
   }.elsewhen(fixStage) {
     // 末尾修正：c[0] -= pr2, c[1] -= pr1, c[2] -= pr0
+    dbgC0AfterFix := mask(c0Reg(0) - prevR2, outW)
     c0Reg(0) := mask(c0Reg(0) - prevR2, outW)
     c1Reg(0) := mask(c1Reg(0) - prevR1, outW)
     c2Reg(0) := mask(c2Reg(0) - prevR0, outW)
@@ -666,6 +704,11 @@ class ToomCook43IO extends Bundle {
   val dbg_interp256_comb_nonzero = Output(Bool())
   val dbg_interp256_comb_c0 = Output(UInt(24.W))
   val dbg_interp256_seq_c0 = Output(UInt(24.W))
+  val dbg_i3_seq_started = Output(Bool())
+  val dbg_i3_seq_ran_any = Output(Bool())
+  val dbg_i3_seq_core_any_nonzero = Output(Bool())
+  val dbg_i3_seq_c0_before_fix = Output(UInt(24.W))
+  val dbg_i3_seq_c0_after_fix = Output(UInt(24.W))
   val dbg_core_write_count = Output(UInt(16.W))
   val dbg_interp1_group_count = Output(UInt(16.W))
   val dbg_interp2_block_count = Output(UInt(16.W))
@@ -1087,6 +1130,11 @@ class ToomCook43 extends Module {
   io.dbg_interp256_comb_nonzero := dbgInterp256CombNonZero
   io.dbg_interp256_comb_c0 := dbgInterp256CombC0
   io.dbg_interp256_seq_c0 := dbgInterp256SeqC0
+  io.dbg_i3_seq_started := interp256Seq.io.dbg_started
+  io.dbg_i3_seq_ran_any := interp256Seq.io.dbg_ran_any
+  io.dbg_i3_seq_core_any_nonzero := interp256Seq.io.dbg_core_any_nonzero
+  io.dbg_i3_seq_c0_before_fix := interp256Seq.io.dbg_c0_before_fix
+  io.dbg_i3_seq_c0_after_fix := interp256Seq.io.dbg_c0_after_fix
   io.dbg_core_write_count := dbgCoreWriteCount
   io.dbg_interp1_group_count := dbgInterp1Count
   io.dbg_interp2_block_count := dbgInterp2Count
