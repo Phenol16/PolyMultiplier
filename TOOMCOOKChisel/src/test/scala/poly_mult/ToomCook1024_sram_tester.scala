@@ -105,6 +105,30 @@ class ToomCook1024Test extends AnyFlatSpec with ChiselScalatestTester {
       s"[$label] Error: 等待 io.valid_out 超时！maxWaitCycles=$maxWaitCycles"
     )
 
+    println(
+      s"[$label DEBUG] coreNZ=${dut.io.dbg_core_nonzero.peek().litToBoolean}, " +
+        s"w2WriteNZ=${dut.io.dbg_w2_write_nonzero.peek().litToBoolean}, " +
+        s"w2ReadNZ=${dut.io.dbg_w2_read_nonzero.peek().litToBoolean}, " +
+        s"interp16NZ=${dut.io.dbg_interp16_nonzero.peek().litToBoolean}, " +
+        s"w1WriteNZ=${dut.io.dbg_w1_write_nonzero.peek().litToBoolean}, " +
+        s"w1ReadNZ=${dut.io.dbg_w1_read_nonzero.peek().litToBoolean}, " +
+        s"interp64NZ=${dut.io.dbg_interp64_nonzero.peek().litToBoolean}, " +
+        s"w0WriteNZ=${dut.io.dbg_w0_write_nonzero.peek().litToBoolean}, " +
+        s"interp256NZ=${dut.io.dbg_interp256_nonzero.peek().litToBoolean}, " +
+        s"finalNZ=${dut.io.dbg_final_nonzero.peek().litToBoolean}"
+    )
+    println(
+      s"[$label DEBUG] coreWriteCount=${dut.io.dbg_core_write_count.peek().litValue}, " +
+        s"interp1GroupCount=${dut.io.dbg_interp1_group_count.peek().litValue}, " +
+        s"interp2BlockCount=${dut.io.dbg_interp2_block_count.peek().litValue}, " +
+        s"w2Ready=0b${dut.io.dbg_w2_ready.peek().litValue.toString(2)}, " +
+        s"w2Empty=0b${dut.io.dbg_w2_empty.peek().litValue.toString(2)}, " +
+        s"w2Reading=0b${dut.io.dbg_w2_reading.peek().litValue.toString(2)}, " +
+        s"w2Writing=0b${dut.io.dbg_w2_writing.peek().litValue.toString(2)}, " +
+        s"w1BlockReady=0b${dut.io.dbg_w1_block_ready.peek().litValue.toString(2)}, " +
+        s"w0Ready=0b${dut.io.dbg_w0_ready.peek().litValue.toString(2)}"
+    )
+
     println(s"[${now()}][$label] start checking outputs, outCycle=$outCycle")
 
     var mismatchCount = 0
