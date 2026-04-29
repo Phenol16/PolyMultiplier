@@ -812,7 +812,7 @@ class ToomCook43 extends Module {
 
   val i1Idle :: i1ReadReq :: i1ReadCap :: i1Start :: i1Run :: i1WriteW1 :: Nil = Enum(6)
   val i2Idle :: i2ReadReq :: i2ReadCap :: i2Start :: i2Run :: i2WriteW0 :: Nil = Enum(6)
-  val i3Idle :: i3Start :: i3Run :: Nil = Enum(3)
+  val i3Idle :: i3Start :: i3Run :: i3OutValid :: Nil = Enum(4)
   val i1State = RegInit(i1Idle)
   val i2State = RegInit(i2Idle)
   val i3State = RegInit(i3Idle)
@@ -1070,6 +1070,8 @@ class ToomCook43 extends Module {
       dbgFinalNonZero := true.B
     }
     for (i <- 0 until 1024) regC(i) := mask(interp256Seq.io.cOut(i), 24)
+    i3State := i3OutValid
+  }.elsewhen(i3State === i3OutValid) {
     io.valid_out := true.B
     busy := false.B
     i3State := i3Idle
