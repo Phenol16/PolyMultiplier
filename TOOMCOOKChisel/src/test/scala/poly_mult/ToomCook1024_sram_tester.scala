@@ -120,6 +120,17 @@ class ToomCook1024Test extends AnyFlatSpec with ChiselScalatestTester {
         s"finalNZ=${dut.io.dbg_final_nonzero.peek().litToBoolean}"
     )
     println(
+      s"[$label DEBUG3] w0RegNZ=${dut.io.dbg_w0_reg_nonzero.peek().litToBoolean}, " +
+        s"w0BlockNZ=0b${dut.io.dbg_w0_block_nonzero.peek().litValue.toString(2)}"
+    )
+    println(
+      s"[$label DEBUG3] combInterp3NZ=${dut.io.dbg_interp256_comb_nonzero.peek().litToBoolean}, " +
+        s"combC0=0x${dut.io.dbg_interp256_comb_c0.peek().litValue.toString(16)}, " +
+        s"seqC0=0x${dut.io.dbg_interp256_seq_c0.peek().litValue.toString(16)}, " +
+        s"interp256NZ=${dut.io.dbg_interp256_nonzero.peek().litToBoolean}, " +
+        s"finalNZ=${dut.io.dbg_final_nonzero.peek().litToBoolean}"
+    )
+    println(
       s"[$label DEBUG] coreWriteCount=${dut.io.dbg_core_write_count.peek().litValue}, " +
         s"interp1GroupCount=${dut.io.dbg_interp1_group_count.peek().litValue}, " +
         s"interp2BlockCount=${dut.io.dbg_interp2_block_count.peek().litValue}, " +
