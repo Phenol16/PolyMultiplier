@@ -556,6 +556,7 @@ class Core16TC43 extends Module {
 // =============================================================================
 
 class SpRam(width: Int, depth: Int) extends BlackBox(Map("WIDTH" -> width, "DEPTH" -> depth)) with HasBlackBoxResource {
+  override def desiredName: String = "sp_ram"
   val io = IO(new Bundle {
     val clk = Input(Clock())
     val en = Input(Bool())
@@ -666,6 +667,11 @@ class ToomCook43 extends Module {
   private val B_EVAL_W = TC43EvalWidth.B_EVAL_W
   private val EVAL_LANES = 4
 
+  // Current version keeps the original Vec(1024) input interface and stores
+  // the accepted frame in regA/regB.
+  // This version only SRAM-izes the Core->Interp W2 and Interp1->Interp2 W1
+  // intermediate buffers.
+  // External input SRAM + local tile cache is reserved for a later version.
   val regA = Reg(Vec(1024, UInt(24.W)))
   val regB = Reg(Vec(1024, UInt(8.W)))
   val regC = Reg(Vec(1024, UInt(24.W)))
@@ -700,6 +706,9 @@ class ToomCook43 extends Module {
 
   val w2Ram = Seq.fill(2, 7)(Module(new SpRam(576, 2)))
   val w1Ram = Seq.fill(2, 7)(Module(new SpRam(2112, 2)))
+  val w2Empty = RegInit(VecInit(Seq.fill(2)(true.B)))
+  val w2Writing = RegInit(VecInit(Seq.fill(2)(false.B)))
+  val w2Reading = RegInit(VecInit(Seq.fill(2)(false.B)))
   val w2Ready = RegInit(VecInit(Seq.fill(2)(false.B)))
   val w2Full = RegInit(VecInit(Seq.fill(2) { VecInit(Seq.fill(7)(false.B)) }))
   val w2Pt0 = Reg(Vec(2, UInt(3.W))); val w2Pt1 = Reg(Vec(2, UInt(3.W)))
@@ -712,10 +721,12 @@ class ToomCook43 extends Module {
   val w0Reg = Reg(Vec(7, Vec(256, UInt(27.W))))
   val w0Ready = RegInit(VecInit(Seq.fill(7)(false.B)))
 
-  val i1Idle :: i1ReadReq :: i1ReadCap :: i1Run :: i1WriteW1 :: Nil = Enum(5)
-  val i2Idle :: i2ReadReq :: i2ReadCap :: i2Run :: i2WriteW0 :: Nil = Enum(5)
+  val i1Idle :: i1ReadReq :: i1ReadCap :: i1Start :: i1Run :: i1WriteW1 :: Nil = Enum(6)
+  val i2Idle :: i2ReadReq :: i2ReadCap :: i2Start :: i2Run :: i2WriteW0 :: Nil = Enum(6)
+  val i3Idle :: i3Start :: i3Run :: Nil = Enum(3)
   val i1State = RegInit(i1Idle)
   val i2State = RegInit(i2Idle)
+  val i3State = RegInit(i3Idle)
   val i1Buf = RegInit(0.U(1.W))
   val i2Buf = RegInit(0.U(1.W))
 
@@ -769,9 +780,12 @@ class ToomCook43 extends Module {
   core.io.valid_in := false.B
   core.io.avec := fifoAvec
   core.io.bvec := fifoBvec
-  when(busy && fifoValid && !corePending && !w2Ready(w2WBuf)) {
+  val canUseW2WriteBuf = (w2Empty(w2WBuf) || w2Writing(w2WBuf)) && !w2Reading(w2WBuf) && !w2Ready(w2WBuf)
+  when(busy && fifoValid && !corePending && canUseW2WriteBuf) {
     core.io.valid_in := true.B
     corePending := true.B
+    w2Empty(w2WBuf) := false.B
+    w2Writing(w2WBuf) := true.B
     outPt0 := fifoPt0; outPt1 := fifoPt1; outPt2 := fifoPt2
     fifoValid := false.B
   }
@@ -784,19 +798,37 @@ class ToomCook43 extends Module {
     }
   }
   when(corePending && core.io.valid_out) {
-    w2Full(w2WBuf)(outPt2) := true.B
     corePending := false.B
-    when(outPt2 === 6.U) {
-      w2Ready(w2WBuf) := true.B
-      w2Pt0(w2WBuf) := outPt0
-      w2Pt1(w2WBuf) := outPt1
-      w2WBuf := ~w2WBuf
+    when(w2WBuf === 0.U) {
+      val next0 = Wire(Vec(7, Bool()))
+      next0 := w2Full(0)
+      next0(outPt2) := true.B
+      w2Full(0) := next0
+      when(next0.asUInt.andR) {
+        w2Writing(0) := false.B
+        w2Ready(0) := true.B
+        w2Pt0(0) := outPt0
+        w2Pt1(0) := outPt1
+        w2WBuf := 1.U
+      }
+    }.otherwise {
+      val next1 = Wire(Vec(7, Bool()))
+      next1 := w2Full(1)
+      next1(outPt2) := true.B
+      w2Full(1) := next1
+      when(next1.asUInt.andR) {
+        w2Writing(1) := false.B
+        w2Ready(1) := true.B
+        w2Pt0(1) := outPt0
+        w2Pt1(1) := outPt1
+        w2WBuf := 0.U
+      }
     }
   }
 
   when(i1State === i1Idle) {
-    when(w2Ready(0)) { i1Buf := 0.U; i1State := i1ReadReq }
-      .elsewhen(w2Ready(1)) { i1Buf := 1.U; i1State := i1ReadReq }
+    when(w2Ready(0) && !w2Writing(0)) { i1Buf := 0.U; w2Reading(0) := true.B; i1State := i1ReadReq }
+      .elsewhen(w2Ready(1) && !w2Writing(1)) { i1Buf := 1.U; w2Reading(1) := true.B; i1State := i1ReadReq }
   }.elsewhen(i1State === i1ReadReq) {
     i1State := i1ReadCap
   }.elsewhen(i1State === i1ReadCap) {
@@ -804,9 +836,11 @@ class ToomCook43 extends Module {
       val d = Mux(i1Buf === 0.U, w2Ram(0)(p).io.dout, w2Ram(1)(p).io.dout)
       w2Local(p) := unpackVec(d, 16, 36)
     }
+    i1State := i1Start
+  }.elsewhen(i1State === i1Start) {
+    interp16Seq.io.start := true.B
     i1State := i1Run
   }.elsewhen(i1State === i1Run) {
-    interp16Seq.io.start := true.B
     when(interp16Seq.io.done) { i1State := i1WriteW1 }
   }.elsewhen(i1State === i1WriteW1) {
     val curBlock = Mux(i1Buf === 0.U, w2Pt0(0), w2Pt0(1))
@@ -819,7 +853,11 @@ class ToomCook43 extends Module {
     when(canAlloc) {
       val selBuf = Wire(UInt(1.W))
       selBuf := Mux(hit0 || (!hit1 && empty0), 0.U, 1.U)
-      when(!w1BufValid(selBuf)) { w1BufValid(selBuf) := true.B; w1BufBlock(selBuf) := curBlock }
+      when(selBuf === 0.U) {
+        when(!w1BufValid(0)) { w1BufValid(0) := true.B; w1BufBlock(0) := curBlock }
+      }.otherwise {
+        when(!w1BufValid(1)) { w1BufValid(1) := true.B; w1BufBlock(1) := curBlock }
+      }
       for (buf <- 0 until 2; sub <- 0 until 7) {
         when(selBuf === buf.U && curSub === sub.U) {
           w1Ram(buf)(sub).io.en := true.B
@@ -840,6 +878,8 @@ class ToomCook43 extends Module {
         when(nextReady.asUInt.andR) { w1BlockReady(1) := true.B }
       }
       w2Ready(i1Buf) := false.B
+      w2Reading(i1Buf) := false.B
+      w2Empty(i1Buf) := true.B
       w2Full(i1Buf) := VecInit(Seq.fill(7)(false.B))
       i1State := i1Idle
     }
@@ -864,9 +904,11 @@ class ToomCook43 extends Module {
       val d = Mux(i2Buf === 0.U, w1Ram(0)(s).io.dout, w1Ram(1)(s).io.dout)
       w1Local(s) := unpackVec(d, 64, 33)
     }
+    i2State := i2Start
+  }.elsewhen(i2State === i2Start) {
+    interp64Seq.io.start := true.B
     i2State := i2Run
   }.elsewhen(i2State === i2Run) {
-    interp64Seq.io.start := true.B
     when(interp64Seq.io.done) { i2State := i2WriteW0 }
   }.elsewhen(i2State === i2WriteW0) {
     val blk = Mux(i2Buf === 0.U, w1BufBlock(0), w1BufBlock(1))
@@ -878,28 +920,37 @@ class ToomCook43 extends Module {
     i2State := i2Idle
   }
 
-  val outArmed = RegInit(false.B)
-  when(busy && w0Ready.asUInt.andR && !outArmed) { interp256Seq2.io.start := true.B; outArmed := true.B }
-  when(interp256Seq2.io.done) {
+  when(i3State === i3Idle && busy && w0Ready.asUInt.andR) {
+    i3State := i3Start
+  }.elsewhen(i3State === i3Start) {
+    interp256Seq2.io.start := true.B
+    i3State := i3Run
+  }.elsewhen(i3State === i3Run && interp256Seq2.io.done) {
     for (i <- 0 until 1024) regC(i) := mask(interp256Seq2.io.cOut(i), 24)
     io.valid_out := true.B
     busy := false.B
-    outArmed := false.B
+    i3State := i3Idle
   }
 
+  // valid_in is accepted only when busy=false.
+  // The caller/testbench must not assert valid_in while busy=true.
+  // Future version may add ready_in for streaming multi-frame input.
   when(io.valid_in && !busy) {
     regA := io.a
     regB := io.b
     busy := true.B
     pt0 := 0.U; pt1 := 0.U; pt2 := 0.U; evalPhase := 0.U; evalDone := false.B
     fifoValid := false.B; corePending := false.B
+    w2Empty := VecInit(Seq.fill(2)(true.B))
+    w2Writing := VecInit(Seq.fill(2)(false.B))
+    w2Reading := VecInit(Seq.fill(2)(false.B))
     w2Ready := VecInit(Seq.fill(2)(false.B))
     w2Full := VecInit(Seq.fill(2) { VecInit(Seq.fill(7)(false.B)) })
     w1BlockReady := VecInit(Seq.fill(2)(false.B))
     w1SubReady := VecInit(Seq.fill(2) { VecInit(Seq.fill(7)(false.B)) })
     w1BufValid := VecInit(Seq.fill(2)(false.B))
     w0Ready := VecInit(Seq.fill(7)(false.B))
-    i1State := i1Idle; i2State := i2Idle; outArmed := false.B
+    i1State := i1Idle; i2State := i2Idle; i3State := i3Idle
     w2WBuf := 0.U
   }
 }
