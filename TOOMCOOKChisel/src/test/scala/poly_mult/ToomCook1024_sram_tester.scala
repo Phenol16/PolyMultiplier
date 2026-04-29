@@ -114,8 +114,30 @@ class ToomCook1024Test extends AnyFlatSpec with ChiselScalatestTester {
         s"w1ReadNZ=${dut.io.dbg_w1_read_nonzero.peek().litToBoolean}, " +
         s"interp64NZ=${dut.io.dbg_interp64_nonzero.peek().litToBoolean}, " +
         s"w0WriteNZ=${dut.io.dbg_w0_write_nonzero.peek().litToBoolean}, " +
+        s"w0RegNZ=${dut.io.dbg_w0_reg_nonzero.peek().litToBoolean}, " +
+        s"w0BlockNZ=0b${dut.io.dbg_w0_block_nonzero.peek().litValue.toString(2)}, " +
         s"interp256NZ=${dut.io.dbg_interp256_nonzero.peek().litToBoolean}, " +
         s"finalNZ=${dut.io.dbg_final_nonzero.peek().litToBoolean}"
+    )
+    println(
+      s"[$label DEBUG3] w0RegNZ=${dut.io.dbg_w0_reg_nonzero.peek().litToBoolean}, " +
+        s"w0BlockNZ=0b${dut.io.dbg_w0_block_nonzero.peek().litValue.toString(2)}"
+    )
+    println(
+      s"[$label DEBUG3] combInterp3NZ=${dut.io.dbg_interp256_comb_nonzero.peek().litToBoolean}, " +
+        s"combC0=0x${dut.io.dbg_interp256_comb_c0.peek().litValue.toString(16)}, " +
+        s"seqC0=0x${dut.io.dbg_interp256_seq_c0.peek().litValue.toString(16)}, " +
+        s"interp256NZ=${dut.io.dbg_interp256_nonzero.peek().litToBoolean}, " +
+        s"finalNZ=${dut.io.dbg_final_nonzero.peek().litToBoolean}"
+    )
+    println(
+      s"[$label DEBUG3] i3SeqStarted=${dut.io.dbg_i3_seq_started.peek().litToBoolean}, " +
+        s"i3SeqRanAny=${dut.io.dbg_i3_seq_ran_any.peek().litToBoolean}, " +
+        s"i3SeqCoreAnyNZ=${dut.io.dbg_i3_seq_core_any_nonzero.peek().litToBoolean}, " +
+        s"i3SeqC0BeforeFix=0x${dut.io.dbg_i3_seq_c0_before_fix.peek().litValue.toString(16)}, " +
+        s"i3SeqC0AfterFix=0x${dut.io.dbg_i3_seq_c0_after_fix.peek().litValue.toString(16)}, " +
+        s"combC0=0x${dut.io.dbg_interp256_comb_c0.peek().litValue.toString(16)}, " +
+        s"seqC0=0x${dut.io.dbg_interp256_seq_c0.peek().litValue.toString(16)}"
     )
     println(
       s"[$label DEBUG] coreWriteCount=${dut.io.dbg_core_write_count.peek().litValue}, " +
