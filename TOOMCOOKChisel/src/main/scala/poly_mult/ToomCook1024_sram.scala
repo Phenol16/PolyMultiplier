@@ -1,0 +1,879 @@
+package poly_mult_sram
+
+import chisel3._
+import chisel3.util._
+
+
+object Util {
+  def mask(value: UInt, targetWidth: Int): UInt = {
+    require(targetWidth > 0, "mask width must be positive")
+    if (value.getWidth >= targetWidth) {
+      value(targetWidth - 1, 0)
+    } else {
+      Cat(Fill(targetWidth - value.getWidth, 0.U), value)
+    }
+  }
+
+  def fillMsb(value: UInt, targetWidth: Int): UInt = {
+    require(targetWidth > 0, "fillMsb width must be positive")
+    if (value.getWidth >= targetWidth) {
+      value(targetWidth - 1, 0)
+    } else {
+      Cat(Fill(targetWidth - value.getWidth, value(value.getWidth - 1)), value)
+    }
+  }
+}
+import Util._
+
+object TC43EvalWidth {
+  val A_EVAL_W = 39
+  val B_EVAL_W = 29
+}
+
+// =============================================================================
+//  插值参数表：编译期常量，不是硬件模块
+// =============================================================================
+object InterpParamTable {
+  case class Param(mk: Int, mk2: Int, mk3: Int,
+                   inv3: BigInt, inv9: BigInt, inv18: BigInt)
+
+  val params = Seq(
+    // stride=4,   paramIdx=0
+    Param(36, 33, 34, BigInt("AAAAAAAAB",  16), BigInt("238E38E39", 16), BigInt("2EEEEEEEF", 16)),
+    // stride=16,  paramIdx=1
+    Param(33, 30, 31, BigInt("2AAAAAAB",   16), BigInt("38E38E39",  16), BigInt("6EEEEEEF",  16)),
+    // stride=64,  paramIdx=2
+    Param(30, 27, 28, BigInt("2AAAAAB",    16), BigInt("8E38E39",   16), BigInt("EEEEEEF",   16)),
+    // stride=256, paramIdx=3
+    Param(27, 24, 25, BigInt("AAAAAB",     16), BigInt("E38E39",    16), BigInt("EEEEEEF",   16))
+  )
+}
+
+// =============================================================================
+//  EvalLayerTC43：4个输入 -> 7个 Toom-Cook 求值点，纯组合硬件模块
+// =============================================================================
+class EvalLayerTC43(inW: Int, outW: Int) extends Module {
+  val io = IO(new Bundle {
+    val r   = Input(Vec(4, UInt(inW.W)))
+    val out = Output(Vec(7, UInt(outW.W)))
+  })
+
+  val r0 = io.r(0)
+  val r1 = io.r(1)
+  val r2 = io.r(2)
+  val r3 = io.r(3)
+
+  val even = r0 +& r2
+  val odd  = r1 +& r3
+
+  val scaledEven = Cat(r0, 0.U(2.W)) +& r2
+  val scaledOdd  = Cat(r1, 0.U(2.W)) +& r3
+
+  val high0 = r2 +& Cat(r3, 0.U(1.W))
+  val high1 = r1 +& Cat(high0, 0.U(1.W))
+  val high2 = r0 +& Cat(high1, 0.U(1.W))
+
+  io.out(0) := mask(r3, outW)
+  io.out(1) := mask(high2, outW)
+  io.out(2) := mask(even +& odd, outW)
+  io.out(3) := fillMsb(even -& odd, outW)
+  io.out(4) := mask(Cat(scaledEven, 0.U(1.W)) +& scaledOdd, outW)
+  io.out(5) := fillMsb(Cat(scaledEven, 0.U(1.W)) -& scaledOdd, outW)
+  io.out(6) := mask(r0, outW)
+}
+
+// =============================================================================
+//  TC4EvalPoint：4个输入按 pt 选择一个求值点，纯组合硬件模块
+// =============================================================================
+class TC4EvalPoint(inW: Int, outW: Int) extends Module {
+  val io = IO(new Bundle {
+    val r   = Input(Vec(4, UInt(inW.W)))
+    val pt  = Input(UInt(3.W))
+    val out = Output(UInt(outW.W))
+  })
+
+  val r0 = io.r(0)
+  val r1 = io.r(1)
+  val r2 = io.r(2)
+  val r3 = io.r(3)
+
+  val even = r0 +& r2
+  val odd  = r1 +& r3
+
+  val scaledEven = Cat(r0, 0.U(2.W)) +& r2
+  val scaledOdd  = Cat(r1, 0.U(2.W)) +& r3
+
+  val high0 = r2 +& Cat(r3, 0.U(1.W))
+  val high1 = r1 +& Cat(high0, 0.U(1.W))
+  val high2 = r0 +& Cat(high1, 0.U(1.W))
+
+  io.out := MuxLookup(io.pt, 0.U(outW.W))(Seq(
+    0.U -> mask(r3, outW),
+    1.U -> mask(high2, outW),
+    2.U -> mask(even +& odd, outW),
+    3.U -> fillMsb(even -& odd, outW),
+    4.U -> mask(Cat(scaledEven, 0.U(1.W)) +& scaledOdd, outW),
+    5.U -> fillMsb(Cat(scaledEven, 0.U(1.W)) -& scaledOdd, outW),
+    6.U -> mask(r0, outW)
+  ))
+}
+
+// =============================================================================
+//  BuildEvalVec16：三层 TC4 求值，1024输入 -> 16输出，纯组合硬件模块
+//  输入布局：in[64*l + 16*k + 4*j + i]
+// =============================================================================
+class BuildEvalVec16(memW: Int, outW: Int) extends Module {
+  val io = IO(new Bundle {
+    val in  = Input(Vec(1024, UInt(memW.W)))
+    val pt0 = Input(UInt(3.W))
+    val pt1 = Input(UInt(3.W))
+    val pt2 = Input(UInt(3.W))
+    val out = Output(Vec(16, UInt(outW.W)))
+  })
+
+  for (l <- 0 until 16) {
+    val lv2 = Wire(Vec(4, UInt(outW.W)))
+
+    for (k <- 0 until 4) {
+      val lv1 = Wire(Vec(4, UInt(outW.W)))
+
+      for (j <- 0 until 4) {
+        val eval0 = Module(new TC4EvalPoint(memW, outW))
+        eval0.io.r(0) := io.in(64 * l + 16 * k + 4 * j + 0)
+        eval0.io.r(1) := io.in(64 * l + 16 * k + 4 * j + 1)
+        eval0.io.r(2) := io.in(64 * l + 16 * k + 4 * j + 2)
+        eval0.io.r(3) := io.in(64 * l + 16 * k + 4 * j + 3)
+        eval0.io.pt   := io.pt0
+        lv1(j)        := eval0.io.out
+      }
+
+      val eval1 = Module(new TC4EvalPoint(outW, outW))
+      eval1.io.r := lv1
+      eval1.io.pt := io.pt1
+      lv2(k) := eval1.io.out
+    }
+
+    val eval2 = Module(new TC4EvalPoint(outW, outW))
+    eval2.io.r := lv2
+    eval2.io.pt := io.pt2
+    io.out(l) := eval2.io.out
+  }
+}
+
+// =============================================================================
+//  EvalLaneFixed：三层 TC4 求值的固定 lane 版本
+//  laneConst 固定后，每拍用 phase 在静态地址集合内选择一个 l
+//  避免对 Vec(1024, ...) 使用动态 UInt 下标
+// =============================================================================
+class EvalLaneFixed(memW: Int, outW: Int, laneConst: Int, evalLanes: Int = 4) extends Module {
+  require(evalLanes > 0 && 16 % evalLanes == 0, "evalLanes must be a positive divisor of 16")
+  require(laneConst >= 0 && laneConst < evalLanes, "laneConst must be within [0, evalLanes)")
+  private val evalPhases = 16 / evalLanes
+
+  val io = IO(new Bundle {
+    val in    = Input(Vec(1024, UInt(memW.W)))
+    val pt0   = Input(UInt(3.W))
+    val pt1   = Input(UInt(3.W))
+    val pt2   = Input(UInt(3.W))
+    val phase = Input(UInt(log2Ceil(evalPhases).W))
+    val out   = Output(UInt(outW.W))
+  })
+
+  def pickByPhase(offset: Int): UInt = {
+    val defaultIdx = laneConst * 64 + offset
+    val tbl = (0 until evalPhases).map { p =>
+      val l = laneConst + p * evalLanes
+      p.U -> io.in(l * 64 + offset)
+    }
+    MuxLookup(io.phase, io.in(defaultIdx))(tbl)
+  }
+
+  val lv2 = Wire(Vec(4, UInt(outW.W)))
+
+  for (k <- 0 until 4) {
+    val lv1 = Wire(Vec(4, UInt(outW.W)))
+    for (j <- 0 until 4) {
+      val eval0 = Module(new TC4EvalPoint(memW, outW))
+      val offset = 16 * k + 4 * j
+      eval0.io.r(0) := pickByPhase(offset + 0)
+      eval0.io.r(1) := pickByPhase(offset + 1)
+      eval0.io.r(2) := pickByPhase(offset + 2)
+      eval0.io.r(3) := pickByPhase(offset + 3)
+      eval0.io.pt   := io.pt0
+      lv1(j)        := eval0.io.out
+    }
+
+    val eval1 = Module(new TC4EvalPoint(outW, outW))
+    eval1.io.r  := lv1
+    eval1.io.pt := io.pt1
+    lv2(k)      := eval1.io.out
+  }
+
+  val eval2 = Module(new TC4EvalPoint(outW, outW))
+  eval2.io.r  := lv2
+  eval2.io.pt := io.pt2
+  io.out      := eval2.io.out
+}
+
+// =============================================================================
+//  InterpCoreTC43：单列插值核心，纯组合硬件模块
+// =============================================================================
+class InterpCoreTC43(pidx: Int, inW: Int) extends Module {
+  private val p   = InterpParamTable.params(pidx)
+  private val mk  = p.mk
+  private val mk2 = p.mk2
+  private val mk3 = p.mk3
+
+  val io = IO(new Bundle {
+    val pIn = Input(Vec(7, UInt(inW.W)))
+    val pr0 = Input(UInt(mk2.W))
+    val pr1 = Input(UInt(mk2.W))
+    val pr2 = Input(UInt(mk2.W))
+
+    val c3     = Output(UInt(mk2.W))
+    val c0part = Output(UInt(mk2.W))
+    val c1part = Output(UInt(mk2.W))
+    val c2part = Output(UInt(mk2.W))
+    val nr0    = Output(UInt(mk2.W))
+    val nr1    = Output(UInt(mk2.W))
+    val nr2    = Output(UInt(mk2.W))
+  })
+
+  val p0 = mask(io.pIn(0), mk)
+  val p1 = mask(io.pIn(1), mk)
+  val p2 = mask(io.pIn(2), mk)
+  val p3 = mask(io.pIn(3), mk)
+  val p4 = mask(io.pIn(4), mk)
+  val p5 = mask(io.pIn(5), mk)
+  val p6 = mask(io.pIn(6), mk)
+
+  val r5a = mask(p5 - p4, mk)
+  val r3a = mask(mask(p3 - p2, mk) >> 1, mk)
+  val r4a = mask(p4 - p0, mk)
+  val r4b = mask((r4a << 1) + r5a - (p6 << 7), mk)
+  val r2a = mask(p2 + r3a, mk)
+  val r1a = mask(p1 + p4 - (r2a << 6) - r2a, mk)
+  val r2b = mask(r2a - p6 - p0, mk)
+  val r1b = mask(r1a + r2b + (r2b << 2) + (r2b << 3) + (r2b << 5), mk)
+
+  val r4c = mask(
+    mask(mask(r4b - (r2b << 3), mk) >> 3, mk) * p.inv3.U(42.W), mk2
+  )
+  val r5b = mask(
+    mask((r5a + r1b) >> 1, mk) * p.inv18.U(42.W), mk3
+  )
+  val r1c = mask(
+    mask(mask(r1b + (r3a << 4), mk) >> 1, mk) * p.inv9.U(42.W), mk3
+  )
+
+  val r2c = mask(r2b - r4c, mk2)
+  val r3b = mask(0.U - r3a - r1c, mk2)
+  val r5c = mask((r1c - r5b) >> 1, mk2)
+  val r1d = mask(r1c - r5c, mk2)
+
+  io.c3     := r3b
+  io.c0part := mask(p6 + io.pr2, mk2)
+  io.c1part := mask(r5c + io.pr1, mk2)
+  io.c2part := mask(r4c + io.pr0, mk2)
+  io.nr0    := mask(p0, mk2)
+  io.nr1    := r1d
+  io.nr2    := r2c
+}
+
+// =============================================================================
+//  InterpLayerTC43：stride列插值层，纯组合硬件模块
+//  wIn 布局：wIn[pt*stride + col]
+//  cOut布局：cOut[4*col + k]
+// =============================================================================
+class InterpLayerTC43(stride: Int, pidx: Int, inW: Int, outW: Int) extends Module {
+  private val p   = InterpParamTable.params(pidx)
+  private val mk2 = p.mk2
+
+  val io = IO(new Bundle {
+    val wIn  = Input(Vec(7 * stride, UInt(inW.W)))
+    val cOut = Output(Vec(4 * stride, UInt(outW.W)))
+  })
+
+  val cRaw  = Wire(Vec(4 * stride, UInt(outW.W)))
+  val prevR0 = Wire(Vec(stride + 1, UInt(mk2.W)))
+  val prevR1 = Wire(Vec(stride + 1, UInt(mk2.W)))
+  val prevR2 = Wire(Vec(stride + 1, UInt(mk2.W)))
+
+  prevR0(0) := 0.U
+  prevR1(0) := 0.U
+  prevR2(0) := 0.U
+
+  for (i <- 0 until stride) {
+    val core = Module(new InterpCoreTC43(pidx, inW))
+
+    for (pt <- 0 until 7) {
+      core.io.pIn(pt) := io.wIn(pt * stride + i)
+    }
+
+    core.io.pr0 := prevR0(i)
+    core.io.pr1 := prevR1(i)
+    core.io.pr2 := prevR2(i)
+
+    cRaw(4 * i + 3) := core.io.c3
+    cRaw(4 * i + 0) := core.io.c0part
+    cRaw(4 * i + 1) := core.io.c1part
+    cRaw(4 * i + 2) := core.io.c2part
+
+    prevR0(i + 1) := core.io.nr0
+    prevR1(i + 1) := core.io.nr1
+    prevR2(i + 1) := core.io.nr2
+  }
+
+  for (i <- 0 until 4 * stride) {
+    io.cOut(i) := cRaw(i)
+  }
+
+  // 末尾修正：c[0] -= pr2, c[1] -= pr1, c[2] -= pr0
+  io.cOut(0) := mask(cRaw(0) - prevR2(stride), outW)
+  io.cOut(1) := mask(cRaw(1) - prevR1(stride), outW)
+  io.cOut(2) := mask(cRaw(2) - prevR0(stride), outW)
+}
+
+// =============================================================================
+//  InterpLayerSeqTC43：时序复用插值层
+//  仅使用 1 个 InterpCoreTC43，每拍处理一列，总计 stride 列
+// =============================================================================
+class InterpLayerSeqTC43(stride: Int, pidx: Int, inW: Int, outW: Int) extends Module {
+  private val p   = InterpParamTable.params(pidx)
+  private val mk2 = p.mk2
+
+  val io = IO(new Bundle {
+    val start = Input(Bool())
+    val wIn   = Input(Vec(7 * stride, UInt(inW.W)))
+    val done  = Output(Bool())
+    val cOut  = Output(Vec(4 * stride, UInt(outW.W)))
+  })
+
+  val core = Module(new InterpCoreTC43(pidx, inW))
+
+  val colCnt   = RegInit(0.U(log2Ceil(stride).W))
+  val running  = RegInit(false.B)
+  val fixStage = RegInit(false.B)
+  val doneReg  = RegInit(false.B)
+
+  val prevR0 = RegInit(0.U(mk2.W))
+  val prevR1 = RegInit(0.U(mk2.W))
+  val prevR2 = RegInit(0.U(mk2.W))
+
+  val c0Reg = Reg(Vec(stride, UInt(outW.W)))
+  val c1Reg = Reg(Vec(stride, UInt(outW.W)))
+  val c2Reg = Reg(Vec(stride, UInt(outW.W)))
+  val c3Reg = Reg(Vec(stride, UInt(outW.W)))
+
+  for (pt <- 0 until 7) {
+    val rdIdx = (pt * stride).U + colCnt
+    core.io.pIn(pt) := io.wIn(rdIdx)
+  }
+  core.io.pr0 := prevR0
+  core.io.pr1 := prevR1
+  core.io.pr2 := prevR2
+
+  io.done := doneReg
+
+  for (i <- 0 until stride) {
+    io.cOut(4 * i + 0) := c0Reg(i)
+    io.cOut(4 * i + 1) := c1Reg(i)
+    io.cOut(4 * i + 2) := c2Reg(i)
+    io.cOut(4 * i + 3) := c3Reg(i)
+  }
+
+  when(doneReg) {
+    doneReg := false.B
+  }
+
+  when(io.start && !running && !fixStage && !doneReg) {
+    colCnt   := 0.U
+    running  := true.B
+    fixStage := false.B
+    prevR0   := 0.U
+    prevR1   := 0.U
+    prevR2   := 0.U
+  }.elsewhen(running) {
+    c0Reg(colCnt) := mask(core.io.c0part, outW)
+    c1Reg(colCnt) := mask(core.io.c1part, outW)
+    c2Reg(colCnt) := mask(core.io.c2part, outW)
+    c3Reg(colCnt) := mask(core.io.c3, outW)
+
+    prevR0 := core.io.nr0
+    prevR1 := core.io.nr1
+    prevR2 := core.io.nr2
+
+    when(colCnt === (stride - 1).U) {
+      running  := false.B
+      fixStage := true.B
+    }.otherwise {
+      colCnt := colCnt + 1.U
+    }
+  }.elsewhen(fixStage) {
+    // 末尾修正：c[0] -= pr2, c[1] -= pr1, c[2] -= pr0
+    c0Reg(0) := mask(c0Reg(0) - prevR2, outW)
+    c1Reg(0) := mask(c1Reg(0) - prevR1, outW)
+    c2Reg(0) := mask(c2Reg(0) - prevR0, outW)
+    fixStage := false.B
+    doneReg := true.B
+  }
+}
+
+// =============================================================================
+//  Product4TC43：4系数 × 4系数 -> 7系数，纯组合硬件模块
+// =============================================================================
+class Product4TC43 extends Module {
+  private val A_EVAL_W = TC43EvalWidth.A_EVAL_W
+  private val B_EVAL_W = TC43EvalWidth.B_EVAL_W
+  private val PROD_MUL_MOD_W = A_EVAL_W
+  private val PROD_OUT_W = 36
+
+  val io = IO(new Bundle {
+    val a4  = Input(Vec(4, UInt(A_EVAL_W.W)))
+    val b4  = Input(Vec(4, UInt(B_EVAL_W.W)))
+    val out = Output(Vec(7, UInt(PROD_OUT_W.W)))
+  })
+
+  val evalA = Module(new EvalLayerTC43(A_EVAL_W, A_EVAL_W))
+  val evalB = Module(new EvalLayerTC43(B_EVAL_W, B_EVAL_W))
+
+  evalA.io.r := io.a4
+  evalB.io.r := io.b4
+
+  val wMul = Wire(Vec(7, UInt(PROD_MUL_MOD_W.W)))
+
+  for (i <- 0 until 7) {
+    val bw     = evalB.io.out(i)(B_EVAL_W - 1, 0)
+    val bwSign = bw(B_EVAL_W - 1)
+    val bwSext = Cat(Fill(A_EVAL_W - B_EVAL_W, bwSign), bw).asSInt
+    val awInt  = evalA.io.out(i)(A_EVAL_W - 1, 0).asSInt
+    wMul(i) := mask((awInt * bwSext).asUInt, PROD_MUL_MOD_W)
+  }
+
+  val r5a = mask(wMul(5) - wMul(4), PROD_MUL_MOD_W)
+  val r3a = mask(mask(wMul(3) - wMul(2), PROD_MUL_MOD_W) >> 1, PROD_MUL_MOD_W)
+  val r4a = mask(wMul(4) - wMul(0), PROD_MUL_MOD_W)
+  val r4b = mask((r4a << 1) + r5a - (wMul(6) << 7), PROD_MUL_MOD_W)
+  val r2a = mask(wMul(2) + r3a, PROD_MUL_MOD_W)
+  val r1a = mask(wMul(1) + wMul(4) - (r2a << 6) - r2a, PROD_MUL_MOD_W)
+  val r2b = mask(r2a - wMul(6) - wMul(0), PROD_MUL_MOD_W)
+  val r1b = mask(r1a + r2b + (r2b << 2) + (r2b << 3) + (r2b << 5), PROD_MUL_MOD_W)
+
+  val r4c = mask(
+    mask(mask(r4b - (r2b << 3), PROD_MUL_MOD_W) >> 3, PROD_MUL_MOD_W) * "hAAAAAAAAB".U(42.W), PROD_OUT_W
+  )
+  val r5b = mask(
+    mask((r5a + r1b) >> 1, PROD_MUL_MOD_W) * "hEEEEEEEEF".U(42.W), 37
+  )
+  val r1c = mask(
+    mask(mask(r1b + (r3a << 4), PROD_MUL_MOD_W) >> 1, PROD_MUL_MOD_W) * "hE38E38E39".U(42.W), 37
+  )
+
+  val r2c = mask(r2b - r4c, PROD_OUT_W)
+  val r3b = mask(0.U - r3a - r1c, PROD_OUT_W)
+  val r5c = mask((r1c - r5b) >> 1, PROD_OUT_W)
+  val r1d = mask(r1c - r5c, PROD_OUT_W)
+
+  io.out(0) := mask(wMul(6) - r2c, PROD_OUT_W)
+  io.out(1) := mask(r5c - r1d, PROD_OUT_W)
+  io.out(2) := mask(r4c - wMul(0), PROD_OUT_W)
+  io.out(3) := r3b
+  io.out(4) := 0.U
+  io.out(5) := 0.U
+  io.out(6) := 0.U
+}
+
+// =============================================================================
+//  Core16TC43：16元素子核
+//  模块内部仍保留原设计的一拍寄存器切割：Product4输出 -> InterpLayer输入
+// =============================================================================
+class Core16TC43 extends Module {
+  private val A_EVAL_W = TC43EvalWidth.A_EVAL_W
+  private val B_EVAL_W = TC43EvalWidth.B_EVAL_W
+  private val CORE_OUT_W = 36
+
+  val io = IO(new Bundle {
+    val valid_in  = Input(Bool())
+    val avec      = Input(Vec(16, UInt(A_EVAL_W.W)))
+    val bvec      = Input(Vec(16, UInt(B_EVAL_W.W)))
+    val valid_out = Output(Bool())
+    val cOut      = Output(Vec(16, UInt(CORE_OUT_W.W)))
+  })
+
+  val ae = Wire(Vec(7 * 4, UInt(A_EVAL_W.W)))
+  val be = Wire(Vec(7 * 4, UInt(B_EVAL_W.W)))
+
+  for (seg <- 0 until 4) {
+    val evalA = Module(new EvalLayerTC43(A_EVAL_W, A_EVAL_W))
+    val evalB = Module(new EvalLayerTC43(B_EVAL_W, B_EVAL_W))
+
+    evalA.io.r(0) := io.avec(seg * 4 + 0)
+    evalA.io.r(1) := io.avec(seg * 4 + 1)
+    evalA.io.r(2) := io.avec(seg * 4 + 2)
+    evalA.io.r(3) := io.avec(seg * 4 + 3)
+
+    evalB.io.r(0) := io.bvec(seg * 4 + 0)
+    evalB.io.r(1) := io.bvec(seg * 4 + 1)
+    evalB.io.r(2) := io.bvec(seg * 4 + 2)
+    evalB.io.r(3) := io.bvec(seg * 4 + 3)
+
+    for (pt <- 0 until 7) {
+      ae(pt * 4 + seg) := evalA.io.out(pt)
+      be(pt * 4 + seg) := evalB.io.out(pt)
+    }
+  }
+
+  val wProd = Wire(Vec(7 * 4, UInt(CORE_OUT_W.W)))
+
+  for (pt <- 0 until 7) {
+    val prod = Module(new Product4TC43)
+
+    for (k <- 0 until 4) {
+      prod.io.a4(k) := ae(pt * 4 + k)
+      prod.io.b4(k) := be(pt * 4 + k)
+    }
+
+    for (k <- 0 until 4) {
+      wProd(pt * 4 + k) := prod.io.out(k)
+    }
+  }
+
+  val regW     = RegEnable(wProd, io.valid_in)
+  val regValid = RegNext(io.valid_in, false.B)
+
+  val interp = Module(new InterpLayerTC43(stride = 4, pidx = 0, inW = 36, outW = 36))
+  interp.io.wIn := regW
+
+  io.valid_out := regValid
+  io.cOut      := interp.io.cOut
+}
+
+// =============================================================================
+//  ToomCook43 顶层
+//  保留原本的整体流水结构：
+//  输入寄存 -> Core16内部寄存 -> W2寄存 -> W1寄存 -> W0寄存 -> 输出寄存
+// =============================================================================
+class ToomCook43IO extends Bundle {
+  val valid_in  = Input(Bool())
+  val a         = Input(Vec(1024, UInt(24.W)))
+  val b         = Input(Vec(1024, UInt(8.W)))
+  val valid_out = Output(Bool())
+  val c         = Output(Vec(1024, UInt(24.W)))
+}
+
+class ToomCook43 extends Module {
+  val io = IO(new ToomCook43IO)
+  private val A_IN_W = 24
+  private val B_IN_W = 8
+  private val A_EVAL_W = TC43EvalWidth.A_EVAL_W
+  private val B_EVAL_W = TC43EvalWidth.B_EVAL_W
+  private val CORE_OUT_W = 36
+  private val EVAL_LANES  = 4
+  private val EVAL_PHASES = 16 / EVAL_LANES
+
+  // ==========================================================================
+  //  状态机：
+  //  IDLE          : 等待 valid_in，并锁存输入 a/b
+  //  RUN_CORE      : 循环 49 组，每组驱动 7 个 Core16
+  //  WAIT_CORE     : 等待最后一组 Core16 的 1 拍延迟输出写回 w2Reg
+  //  INTERP*_START : 对应插值层 start 拉高 1 拍
+  //  INTERP*_WAIT  : 等待对应插值层 done 并写回结果
+  //  DONE          : valid_out 拉高 1 拍
+  // ==========================================================================
+  object State extends ChiselEnum {
+    val IDLE, RUN_CORE, WAIT_CORE,
+      INTERP1_START, INTERP1_WAIT,
+      INTERP2_START, INTERP2_WAIT,
+      INTERP3_START, INTERP3_WAIT,
+      DONE = Value
+  }
+
+  val state = RegInit(State.IDLE)
+
+  // 输入锁存寄存器（仅在 IDLE 且 valid_in 时更新）
+  val regA = Reg(Vec(1024, UInt(24.W)))
+  val regB = Reg(Vec(1024, UInt(8.W)))
+
+  // 中间结果寄存器
+  val w2Reg = Reg(Vec(49, Vec(7 * 16, UInt(CORE_OUT_W.W))))
+  val regW1 = Reg(Vec(7, Vec(7, Vec(64, UInt(33.W)))))
+  val regW0 = Reg(Vec(7, Vec(256, UInt(27.W))))
+  val regC  = Reg(Vec(1024, UInt(24.W)))
+
+  // RUN_CORE：单路计数器 + eval lane 收集相位
+  val pt0Cnt   = RegInit(0.U(3.W))
+  val pt1Cnt   = RegInit(0.U(3.W))
+  val pt2Cnt   = RegInit(0.U(3.W))
+  val groupCnt = RegInit(0.U(6.W))
+  val evalPhaseCnt = RegInit(0.U(log2Ceil(EVAL_PHASES).W))
+  val waitCoreCnt = RegInit(0.U(1.W))
+
+  // 插值阶段组计数器：INTERP1 用 0..48，INTERP2 用 0..6
+  val interpGroupCnt = RegInit(0.U(6.W))
+  val interp1BlockCnt = RegInit(0.U(3.W))
+  val interp1SubCnt   = RegInit(0.U(3.W))
+
+  // 前端改为多 lane eval + 单路 core 复用
+  val core   = Module(new Core16TC43)
+  val evalLanesA = (0 until EVAL_LANES).map(lane => Module(new EvalLaneFixed(memW = A_IN_W, outW = A_EVAL_W, laneConst = lane, evalLanes = EVAL_LANES)))
+  val evalLanesB = (0 until EVAL_LANES).map(lane => Module(new EvalLaneFixed(memW = B_IN_W, outW = B_EVAL_W, laneConst = lane, evalLanes = EVAL_LANES)))
+  val avecBuf = Reg(Vec(16, UInt(A_EVAL_W.W)))
+  val bvecBuf = Reg(Vec(16, UInt(B_EVAL_W.W)))
+
+  val groupPipe = Reg(UInt(6.W))
+  val pt2Pipe   = Reg(UInt(3.W))
+  val segVPipe  = RegInit(false.B)
+
+  // 三个时序复用插值层：各 1 个实例
+  val interp16Seq  = Module(new InterpLayerSeqTC43(stride = 16,  pidx = 1, inW = 36, outW = 33))
+  val interp64Seq  = Module(new InterpLayerSeqTC43(stride = 64,  pidx = 2, inW = 33, outW = 27))
+  val interp256Seq = Module(new InterpLayerSeqTC43(stride = 256, pidx = 3, inW = 27, outW = 24))
+
+  // 默认输入与输出
+  io.valid_out := false.B
+  io.c         := regC
+
+  interp16Seq.io.start  := false.B
+  interp64Seq.io.start  := false.B
+  interp256Seq.io.start := false.B
+
+  for (g <- 0 until 7) {
+    for (k <- 0 until 256) {
+      interp256Seq.io.wIn(g * 256 + k) := regW0(g)(k)
+    }
+  }
+
+  val runCoreFire = state === State.RUN_CORE
+  val evalLastPhase = evalPhaseCnt === (EVAL_PHASES - 1).U
+  val segFire = runCoreFire && evalLastPhase
+
+  val laneOutA = Wire(Vec(EVAL_LANES, UInt(A_EVAL_W.W)))
+  val laneOutB = Wire(Vec(EVAL_LANES, UInt(B_EVAL_W.W)))
+  for (lane <- 0 until EVAL_LANES) {
+    evalLanesA(lane).io.in    := regA
+    evalLanesA(lane).io.pt0   := pt0Cnt
+    evalLanesA(lane).io.pt1   := pt1Cnt
+    evalLanesA(lane).io.pt2   := pt2Cnt
+    evalLanesA(lane).io.phase := evalPhaseCnt
+    laneOutA(lane)            := evalLanesA(lane).io.out
+
+    evalLanesB(lane).io.in    := regB
+    evalLanesB(lane).io.pt0   := pt0Cnt
+    evalLanesB(lane).io.pt1   := pt1Cnt
+    evalLanesB(lane).io.pt2   := pt2Cnt
+    evalLanesB(lane).io.phase := evalPhaseCnt
+    laneOutB(lane)            := evalLanesB(lane).io.out
+  }
+
+  val coreAvecIn = Wire(Vec(16, UInt(A_EVAL_W.W)))
+  val coreBvecIn = Wire(Vec(16, UInt(B_EVAL_W.W)))
+  for (i <- 0 until 16) {
+    coreAvecIn(i) := avecBuf(i)
+    coreBvecIn(i) := bvecBuf(i)
+  }
+  for (lane <- 0 until EVAL_LANES) {
+    val idx = evalPhaseCnt * EVAL_LANES.U + lane.U
+    coreAvecIn(idx) := laneOutA(lane)
+    coreBvecIn(idx) := laneOutB(lane)
+  }
+
+  core.io.valid_in := segFire
+  core.io.avec     := coreAvecIn
+  core.io.bvec     := coreBvecIn
+
+  when(runCoreFire) {
+    for (lane <- 0 until EVAL_LANES) {
+      val idx = evalPhaseCnt * EVAL_LANES.U + lane.U
+      avecBuf(idx) := laneOutA(lane)
+      bvecBuf(idx) := laneOutB(lane)
+    }
+  }
+
+  when(segFire) {
+    groupPipe := groupCnt
+    pt2Pipe   := pt2Cnt
+    segVPipe  := true.B
+  }.otherwise {
+    segVPipe := false.B
+  }
+
+  // Core16 输出写回 w2Reg：地址打一拍对齐 valid
+  when(segVPipe && core.io.valid_out) {
+    switch(pt2Pipe) {
+      is(0.U) {
+        for (t <- 0 until 16) {
+          w2Reg(groupPipe)(0 * 16 + t) := core.io.cOut(t)
+        }
+      }
+      is(1.U) {
+        for (t <- 0 until 16) {
+          w2Reg(groupPipe)(1 * 16 + t) := core.io.cOut(t)
+        }
+      }
+      is(2.U) {
+        for (t <- 0 until 16) {
+          w2Reg(groupPipe)(2 * 16 + t) := core.io.cOut(t)
+        }
+      }
+      is(3.U) {
+        for (t <- 0 until 16) {
+          w2Reg(groupPipe)(3 * 16 + t) := core.io.cOut(t)
+        }
+      }
+      is(4.U) {
+        for (t <- 0 until 16) {
+          w2Reg(groupPipe)(4 * 16 + t) := core.io.cOut(t)
+        }
+      }
+      is(5.U) {
+        for (t <- 0 until 16) {
+          w2Reg(groupPipe)(5 * 16 + t) := core.io.cOut(t)
+        }
+      }
+      is(6.U) {
+        for (t <- 0 until 16) {
+          w2Reg(groupPipe)(6 * 16 + t) := core.io.cOut(t)
+        }
+      }
+    }
+  }
+
+  // INTERP1 输入选择：每次送入 7*16
+  for (k <- 0 until 7 * 16) {
+    interp16Seq.io.wIn(k) := w2Reg(interpGroupCnt)(k)
+  }
+
+  // INTERP2 输入选择：每次送入 7*64
+  for (sub <- 0 until 7) {
+    for (k <- 0 until 64) {
+      interp64Seq.io.wIn(sub * 64 + k) := regW1(interpGroupCnt)(sub)(k)
+    }
+  }
+
+  // ==========================================================================
+  //  FSM：Core 复用 + 三段插值时序复用
+  // ==========================================================================
+  switch(state) {
+    is(State.IDLE) {
+      pt0Cnt         := 0.U
+      pt1Cnt         := 0.U
+      pt2Cnt         := 0.U
+      groupCnt       := 0.U
+      evalPhaseCnt   := 0.U
+      waitCoreCnt    := 0.U
+      interpGroupCnt := 0.U
+      interp1BlockCnt := 0.U
+      interp1SubCnt   := 0.U
+      when(io.valid_in) {
+        regA  := io.a
+        regB  := io.b
+        state := State.RUN_CORE
+      }
+    }
+
+    is(State.RUN_CORE) {
+      when(evalLastPhase) {
+        evalPhaseCnt := 0.U
+        when(pt0Cnt === 6.U && pt1Cnt === 6.U && pt2Cnt === 6.U) {
+          state := State.WAIT_CORE
+        }.otherwise {
+          when(pt2Cnt === 6.U) {
+            pt2Cnt := 0.U
+            groupCnt := groupCnt + 1.U
+            when(pt1Cnt === 6.U) {
+              pt1Cnt := 0.U
+              pt0Cnt := pt0Cnt + 1.U
+            }.otherwise {
+              pt1Cnt := pt1Cnt + 1.U
+            }
+          }.otherwise {
+            pt2Cnt := pt2Cnt + 1.U
+          }
+        }
+      }.otherwise {
+        evalPhaseCnt := evalPhaseCnt + 1.U
+      }
+    }
+
+    is(State.WAIT_CORE) {
+      // 等待最后一个 core 输出写回 w2Reg
+      when(waitCoreCnt === 0.U) {
+        waitCoreCnt := 1.U
+      }.otherwise {
+        waitCoreCnt := 0.U
+        interpGroupCnt := 0.U
+        interp1BlockCnt := 0.U
+        interp1SubCnt   := 0.U
+        state := State.INTERP1_START
+      }
+    }
+
+    is(State.INTERP1_START) {
+      interp16Seq.io.start := true.B
+      state := State.INTERP1_WAIT
+    }
+
+    is(State.INTERP1_WAIT) {
+      when(interp16Seq.io.done) {
+        for (k <- 0 until 64) {
+          regW1(interp1BlockCnt)(interp1SubCnt)(k) := interp16Seq.io.cOut(k)
+        }
+        when(interp1SubCnt === 6.U) {
+          interp1SubCnt := 0.U
+          when(interp1BlockCnt === 6.U) {
+            interp1BlockCnt := 0.U
+            interpGroupCnt := 0.U
+            state := State.INTERP2_START
+          }.otherwise {
+            interp1BlockCnt := interp1BlockCnt + 1.U
+            interpGroupCnt := interpGroupCnt + 1.U
+            state := State.INTERP1_START
+          }
+        }.otherwise {
+          interp1SubCnt := interp1SubCnt + 1.U
+          interpGroupCnt := interpGroupCnt + 1.U
+          state := State.INTERP1_START
+        }
+      }
+    }
+
+    is(State.INTERP2_START) {
+      interp64Seq.io.start := true.B
+      state := State.INTERP2_WAIT
+    }
+
+    is(State.INTERP2_WAIT) {
+      when(interp64Seq.io.done) {
+        for (k <- 0 until 256) {
+          regW0(interpGroupCnt)(k) := interp64Seq.io.cOut(k)
+        }
+        when(interpGroupCnt === 6.U) {
+          interpGroupCnt := 0.U
+          state := State.INTERP3_START
+        }.otherwise {
+          interpGroupCnt := interpGroupCnt + 1.U
+          state := State.INTERP2_START
+        }
+      }
+    }
+
+    is(State.INTERP3_START) {
+      interp256Seq.io.start := true.B
+      state := State.INTERP3_WAIT
+    }
+
+    is(State.INTERP3_WAIT) {
+      when(interp256Seq.io.done) {
+        for (i <- 0 until 1024) {
+          regC(i) := mask(interp256Seq.io.cOut(i), 24)
+        }
+        state := State.DONE
+      }
+    }
+
+    is(State.DONE) {
+      io.valid_out := true.B
+      state := State.IDLE
+    }
+  }
+}

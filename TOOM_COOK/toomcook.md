@@ -29,3 +29,15 @@ for (int i = 0; i < 4; i++)
         }
     }
 }
+
++ cycle
++ 优化sram减少周期
++ reg -> sram
++ encrypu-chisel/src/main/resources/sp_ram.v
++ bank
+
++ 论文
+
++ 实验设置
++ DC 功耗 面积
++ 不同bit(24,8)的功耗，core大小

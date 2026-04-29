@@ -3,7 +3,7 @@ package poly_mult
 import chisel3._
 import chisel3.util._
 
-// InterPlayer：stride列插值层，纯组合硬件模块
+// InterPlayer
 // wIn 布局：wIn[pt*stride + col]
 // cOut布局：cOut[4*col + k]
 class InterPlayer(stride: Int, pidx: Int, inW: Int, outW: Int) extends Module {

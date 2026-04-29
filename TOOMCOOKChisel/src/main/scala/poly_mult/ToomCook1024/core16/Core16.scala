@@ -3,8 +3,6 @@ package poly_mult
 import chisel3._
 import chisel3.util._
 
-// Core16：16元素子核
-// 模块内部仍保留原设计的一拍寄存器切割：Product4输出 -> InterpLayer输入
 class Core16 extends Module {
   private val A_EVAL_W = PolyMulConfig.A_EVAL_W
   private val B_EVAL_W = PolyMulConfig.B_EVAL_W
