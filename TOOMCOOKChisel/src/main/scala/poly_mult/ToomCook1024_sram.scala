@@ -660,6 +660,12 @@ class InterpLayerSeq2ColTC43(stride: Int, pidx: Int, inW: Int, outW: Int) extend
     colCnt := 0.U
     running := true.B
     prevR0 := 0.U; prevR1 := 0.U; prevR2 := 0.U
+    for (i <- 0 until stride) {
+      c0Reg(i) := 0.U
+      c1Reg(i) := 0.U
+      c2Reg(i) := 0.U
+      c3Reg(i) := 0.U
+    }
   }.elsewhen(running) {
     c0Reg(colCnt) := mask(core0.io.c0part, outW)
     c1Reg(colCnt) := mask(core0.io.c1part, outW)
@@ -744,7 +750,7 @@ class ToomCook43 extends Module {
   val core = Module(new Core16TC43)
   val interp16Seq = Module(new InterpLayerSeqTC43(16, 1, 36, 33))
   val interp64Seq = Module(new InterpLayerSeqTC43(64, 2, 33, 27))
-  val interp256Seq = Module(new InterpLayerSeqTC43(256, 3, 27, 24))
+  val interp256Seq = Module(new InterpLayerSeq2ColTC43(256, 3, 27, 24))
   interp16Seq.io.start := false.B
   interp64Seq.io.start := false.B
   interp256Seq.io.start := false.B
