@@ -789,7 +789,7 @@ class ToomCook43 extends Module {
   val pt0 = RegInit(0.U(3.W)); val pt1 = RegInit(0.U(3.W)); val pt2 = RegInit(0.U(3.W))
   val evalDone = RegInit(false.B)
 
-  val evalCoreQ = Module(new Queue(new EvalCoreJob(A_EVAL_W, B_EVAL_W), 2, pipe = true, flow = true))
+  val evalCoreQ = Module(new Queue(new EvalCoreJob(A_EVAL_W, B_EVAL_W), 2, pipe = true, flow = false))
   val avecBuild = Reg(Vec(16, UInt(A_EVAL_W.W)))
   val bvecBuild = Reg(Vec(16, UInt(B_EVAL_W.W)))
 
@@ -850,14 +850,6 @@ class ToomCook43 extends Module {
 
   val nextAvec = Wire(Vec(16, UInt(A_EVAL_W.W)))
   val nextBvec = Wire(Vec(16, UInt(B_EVAL_W.W)))
-  evalCoreQ.io.enq.valid := false.B
-  evalCoreQ.io.enq.bits.avec := nextAvec
-  evalCoreQ.io.enq.bits.bvec := nextBvec
-  evalCoreQ.io.enq.bits.pt0 := pt0
-  evalCoreQ.io.enq.bits.pt1 := pt1
-  evalCoreQ.io.enq.bits.pt2 := pt2
-  evalCoreQ.io.deq.ready := false.B
-
   nextAvec := avecBuild
   nextBvec := bvecBuild
   for (l <- 0 until EVAL_LANES) {
@@ -867,25 +859,35 @@ class ToomCook43 extends Module {
   }
 
   val evalAtLastPhase = evalPhase === 3.U
-  val canEvalStep = busy && !evalDone && (!evalAtLastPhase || evalCoreQ.io.enq.ready)
+  val evalJobValid = busy && !evalDone && evalAtLastPhase
+  val evalNonLastStep = busy && !evalDone && !evalAtLastPhase
 
-  when(canEvalStep) {
+  evalCoreQ.io.enq.valid := evalJobValid
+  evalCoreQ.io.enq.bits.avec := nextAvec
+  evalCoreQ.io.enq.bits.bvec := nextBvec
+  evalCoreQ.io.enq.bits.pt0 := pt0
+  evalCoreQ.io.enq.bits.pt1 := pt1
+  evalCoreQ.io.enq.bits.pt2 := pt2
+  evalCoreQ.io.deq.ready := false.B
+
+  when(evalNonLastStep) {
     avecBuild := nextAvec
     bvecBuild := nextBvec
-    when(evalPhase === 3.U) {
-      evalCoreQ.io.enq.valid := true.B
-      when(evalCoreQ.io.enq.fire) {
-        evalPhase := 0.U
-        when(pt0 === 6.U && pt1 === 6.U && pt2 === 6.U) { evalDone := true.B }
-          .otherwise {
-            when(pt2 === 6.U) {
-              pt2 := 0.U
-              when(pt1 === 6.U) { pt1 := 0.U; pt0 := pt0 + 1.U }
-                .otherwise { pt1 := pt1 + 1.U }
-            }.otherwise { pt2 := pt2 + 1.U }
-          }
+    evalPhase := evalPhase + 1.U
+  }
+
+  when(evalJobValid && evalCoreQ.io.enq.fire) {
+    avecBuild := nextAvec
+    bvecBuild := nextBvec
+    evalPhase := 0.U
+    when(pt0 === 6.U && pt1 === 6.U && pt2 === 6.U) { evalDone := true.B }
+      .otherwise {
+        when(pt2 === 6.U) {
+          pt2 := 0.U
+          when(pt1 === 6.U) { pt1 := 0.U; pt0 := pt0 + 1.U }
+            .otherwise { pt1 := pt1 + 1.U }
+        }.otherwise { pt2 := pt2 + 1.U }
       }
-    }.otherwise { evalPhase := evalPhase + 1.U }
   }
 
   core.io.valid_in := false.B
