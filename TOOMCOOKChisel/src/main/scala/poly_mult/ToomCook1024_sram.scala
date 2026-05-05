@@ -689,6 +689,14 @@ class InterpLayerSeq2ColTC43(stride: Int, pidx: Int, inW: Int, outW: Int) extend
   }
 }
 
+class EvalCoreJob(aW: Int, bW: Int) extends Bundle {
+  val avec = Vec(16, UInt(aW.W))
+  val bvec = Vec(16, UInt(bW.W))
+  val pt0 = UInt(3.W)
+  val pt1 = UInt(3.W)
+  val pt2 = UInt(3.W)
+}
+
 class ToomCook43IO extends Bundle {
   val valid_in = Input(Bool())
   val a = Input(Vec(1024, UInt(24.W)))
@@ -719,6 +727,12 @@ class ToomCook43IO extends Bundle {
   val dbg_w2_writing = Output(UInt(2.W))
   val dbg_w1_block_ready = Output(UInt(2.W))
   val dbg_w0_ready = Output(UInt(7.W))
+  val dbg_cycle = Output(UInt(16.W))
+  val dbg_core_last_cycle = Output(UInt(16.W))
+  val dbg_interp1_last_cycle = Output(UInt(16.W))
+  val dbg_interp2_last_cycle = Output(UInt(16.W))
+  val dbg_i3_start_cycle = Output(UInt(16.W))
+  val dbg_i3_done_cycle = Output(UInt(16.W))
 }
 
 class ToomCook43 extends Module {
@@ -775,12 +789,16 @@ class ToomCook43 extends Module {
   val pt0 = RegInit(0.U(3.W)); val pt1 = RegInit(0.U(3.W)); val pt2 = RegInit(0.U(3.W))
   val evalDone = RegInit(false.B)
 
-  val fifoValid = RegInit(false.B)
-  val fifoAvec = Reg(Vec(16, UInt(A_EVAL_W.W)))
-  val fifoBvec = Reg(Vec(16, UInt(B_EVAL_W.W)))
-  val fifoPt0 = Reg(UInt(3.W)); val fifoPt1 = Reg(UInt(3.W)); val fifoPt2 = Reg(UInt(3.W))
+  val evalCoreQ = Module(new Queue(new EvalCoreJob(A_EVAL_W, B_EVAL_W), 2, pipe = true, flow = false))
   val avecBuild = Reg(Vec(16, UInt(A_EVAL_W.W)))
   val bvecBuild = Reg(Vec(16, UInt(B_EVAL_W.W)))
+
+  val dbgCycle = RegInit(0.U(16.W))
+  val dbgCoreLastCycle = RegInit(0.U(16.W))
+  val dbgInterp1LastCycle = RegInit(0.U(16.W))
+  val dbgInterp2LastCycle = RegInit(0.U(16.W))
+  val dbgI3StartCycle = RegInit(0.U(16.W))
+  val dbgI3DoneCycle = RegInit(0.U(16.W))
 
   val corePending = RegInit(false.B)
   val outPt0 = Reg(UInt(3.W)); val outPt1 = Reg(UInt(3.W)); val outPt2 = Reg(UInt(3.W))
@@ -830,7 +848,6 @@ class ToomCook43 extends Module {
     evalLanesB(l).io.in := regB; evalLanesB(l).io.pt0 := pt0; evalLanesB(l).io.pt1 := pt1; evalLanesB(l).io.pt2 := pt2; evalLanesB(l).io.phase := evalPhase
   }
 
-  val canPush = busy && !fifoValid && !evalDone
   val nextAvec = Wire(Vec(16, UInt(A_EVAL_W.W)))
   val nextBvec = Wire(Vec(16, UInt(B_EVAL_W.W)))
   nextAvec := avecBuild
@@ -841,37 +858,56 @@ class ToomCook43 extends Module {
     nextBvec(idx) := evalLanesB(l).io.out
   }
 
-  when(canPush) {
+  val evalAtLastPhase = evalPhase === 3.U
+  val evalJobValid = busy && !evalDone && evalAtLastPhase
+  val evalNonLastStep = busy && !evalDone && !evalAtLastPhase
+
+  evalCoreQ.io.enq.valid := evalJobValid
+  evalCoreQ.io.enq.bits.avec := nextAvec
+  evalCoreQ.io.enq.bits.bvec := nextBvec
+  evalCoreQ.io.enq.bits.pt0 := pt0
+  evalCoreQ.io.enq.bits.pt1 := pt1
+  evalCoreQ.io.enq.bits.pt2 := pt2
+  evalCoreQ.io.deq.ready := false.B
+
+  when(evalNonLastStep) {
     avecBuild := nextAvec
     bvecBuild := nextBvec
-    when(evalPhase === 3.U) {
-      fifoValid := true.B
-      fifoAvec := nextAvec
-      fifoBvec := nextBvec
-      fifoPt0 := pt0; fifoPt1 := pt1; fifoPt2 := pt2
-      evalPhase := 0.U
-      when(pt0 === 6.U && pt1 === 6.U && pt2 === 6.U) { evalDone := true.B }
-        .otherwise {
-          when(pt2 === 6.U) {
-            pt2 := 0.U
-            when(pt1 === 6.U) { pt1 := 0.U; pt0 := pt0 + 1.U }
-              .otherwise { pt1 := pt1 + 1.U }
-          }.otherwise { pt2 := pt2 + 1.U }
-        }
-    }.otherwise { evalPhase := evalPhase + 1.U }
+    evalPhase := evalPhase + 1.U
+  }
+
+  when(evalJobValid && evalCoreQ.io.enq.fire) {
+    avecBuild := nextAvec
+    bvecBuild := nextBvec
+    evalPhase := 0.U
+    when(pt0 === 6.U && pt1 === 6.U && pt2 === 6.U) { evalDone := true.B }
+      .otherwise {
+        when(pt2 === 6.U) {
+          pt2 := 0.U
+          when(pt1 === 6.U) { pt1 := 0.U; pt0 := pt0 + 1.U }
+            .otherwise { pt1 := pt1 + 1.U }
+        }.otherwise { pt2 := pt2 + 1.U }
+      }
   }
 
   core.io.valid_in := false.B
-  core.io.avec := fifoAvec
-  core.io.bvec := fifoBvec
+  core.io.avec := evalCoreQ.io.deq.bits.avec
+  core.io.bvec := evalCoreQ.io.deq.bits.bvec
   val canUseW2WriteBuf = (w2Empty(w2WBuf) || w2Writing(w2WBuf)) && !w2Reading(w2WBuf) && !w2Ready(w2WBuf)
-  when(busy && fifoValid && !corePending && canUseW2WriteBuf) {
+  val canCoreTake = busy && evalCoreQ.io.deq.valid && !corePending && canUseW2WriteBuf
+  evalCoreQ.io.deq.ready := canCoreTake
+  when(canCoreTake) {
     core.io.valid_in := true.B
     corePending := true.B
     w2Empty(w2WBuf) := false.B
     w2Writing(w2WBuf) := true.B
-    outPt0 := fifoPt0; outPt1 := fifoPt1; outPt2 := fifoPt2
-    fifoValid := false.B
+    outPt0 := evalCoreQ.io.deq.bits.pt0
+    outPt1 := evalCoreQ.io.deq.bits.pt1
+    outPt2 := evalCoreQ.io.deq.bits.pt2
+  }
+
+  when(busy) {
+    dbgCycle := dbgCycle + 1.U
   }
 
   for (buf <- 0 until 2; p <- 0 until 7) {
@@ -883,6 +919,7 @@ class ToomCook43 extends Module {
   }
   when(corePending && core.io.valid_out) {
     dbgCoreWriteCount := dbgCoreWriteCount + 1.U
+    dbgCoreLastCycle := dbgCycle
     when(core.io.cOut.asUInt.orR) {
       dbgCoreNonZero := true.B
       dbgW2WriteNonZero := true.B
@@ -978,6 +1015,7 @@ class ToomCook43 extends Module {
       w2Empty(i1Buf) := true.B
       w2Full(i1Buf) := VecInit(Seq.fill(7)(false.B))
       dbgInterp1Count := dbgInterp1Count + 1.U
+      dbgInterp1LastCycle := dbgCycle
       i1State := i1Idle
     }
   }
@@ -1030,6 +1068,7 @@ class ToomCook43 extends Module {
     w1SubReady(i2Buf) := VecInit(Seq.fill(7)(false.B))
     w1BufValid(i2Buf) := false.B
     dbgInterp2Count := dbgInterp2Count + 1.U
+    dbgInterp2LastCycle := dbgCycle
     i2State := i2Idle
   }
 
@@ -1045,6 +1084,7 @@ class ToomCook43 extends Module {
   when(i3State === i3Idle && busy && w0Ready.asUInt.andR) {
     i3State := i3Start
   }.elsewhen(i3State === i3Start) {
+    dbgI3StartCycle := dbgCycle
     when(w0RegAnyNonZero) {
       dbgW0RegNonZero := true.B
     }
@@ -1052,6 +1092,7 @@ class ToomCook43 extends Module {
     interp256Seq.io.start := true.B
     i3State := i3Run
   }.elsewhen(i3State === i3Run && interp256Seq.io.done) {
+    dbgI3DoneCycle := dbgCycle
     when(interp256Seq.io.cOut.asUInt.orR) {
       dbgInterp256NonZero := true.B
       dbgFinalNonZero := true.B
@@ -1068,11 +1109,12 @@ class ToomCook43 extends Module {
   // The caller/testbench must not assert valid_in while busy=true.
   // Future version may add ready_in for streaming multi-frame input.
   when(io.valid_in && !busy) {
+    assert(!evalCoreQ.io.deq.valid, "evalCoreQ must be empty when accepting a new frame")
     regA := io.a
     regB := io.b
     busy := true.B
     pt0 := 0.U; pt1 := 0.U; pt2 := 0.U; evalPhase := 0.U; evalDone := false.B
-    fifoValid := false.B; corePending := false.B
+    corePending := false.B
     w2Empty := VecInit(Seq.fill(2)(true.B))
     w2Writing := VecInit(Seq.fill(2)(false.B))
     w2Reading := VecInit(Seq.fill(2)(false.B))
@@ -1097,6 +1139,12 @@ class ToomCook43 extends Module {
     dbgCoreWriteCount := 0.U
     dbgInterp1Count := 0.U
     dbgInterp2Count := 0.U
+    dbgCycle := 0.U
+    dbgCoreLastCycle := 0.U
+    dbgInterp1LastCycle := 0.U
+    dbgInterp2LastCycle := 0.U
+    dbgI3StartCycle := 0.U
+    dbgI3DoneCycle := 0.U
     dbgW0RegNonZero := false.B
     dbgW0BlockNonZero := VecInit(Seq.fill(7)(false.B))
   }
@@ -1125,4 +1173,10 @@ class ToomCook43 extends Module {
   io.dbg_w2_writing := w2Writing.asUInt
   io.dbg_w1_block_ready := w1BlockReady.asUInt
   io.dbg_w0_ready := w0Ready.asUInt
+  io.dbg_cycle := dbgCycle
+  io.dbg_core_last_cycle := dbgCoreLastCycle
+  io.dbg_interp1_last_cycle := dbgInterp1LastCycle
+  io.dbg_interp2_last_cycle := dbgInterp2LastCycle
+  io.dbg_i3_start_cycle := dbgI3StartCycle
+  io.dbg_i3_done_cycle := dbgI3DoneCycle
 }
