@@ -134,6 +134,14 @@ class ToomCook1024Test extends AnyFlatSpec with ChiselScalatestTester {
         s"w1BlockReady=0b${dut.io.dbg_w1_block_ready.peek().litValue.toString(2)}, " +
         s"w0Ready=0b${dut.io.dbg_w0_ready.peek().litValue.toString(2)}"
     )
+    println(
+      s"[$label TIMING] cycle=${dut.io.dbg_cycle.peek().litValue}, " +
+        s"coreLast=${dut.io.dbg_core_last_cycle.peek().litValue}, " +
+        s"interp1Last=${dut.io.dbg_interp1_last_cycle.peek().litValue}, " +
+        s"interp2Last=${dut.io.dbg_interp2_last_cycle.peek().litValue}, " +
+        s"i3Start=${dut.io.dbg_i3_start_cycle.peek().litValue}, " +
+        s"i3Done=${dut.io.dbg_i3_done_cycle.peek().litValue}"
+    )
 
     println(s"[${now()}][$label] start checking outputs, outCycle=$outCycle")
 
