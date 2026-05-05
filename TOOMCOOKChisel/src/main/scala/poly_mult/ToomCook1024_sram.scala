@@ -703,37 +703,11 @@ class ToomCook43IO extends Bundle {
   val b = Input(Vec(1024, UInt(8.W)))
   val valid_out = Output(Bool())
   val c = Output(Vec(1024, UInt(24.W)))
-  val dbg_core_nonzero = Output(Bool())
-  val dbg_w2_write_nonzero = Output(Bool())
-  val dbg_w2_read_nonzero = Output(Bool())
-  val dbg_interp16_nonzero = Output(Bool())
-  val dbg_w1_write_nonzero = Output(Bool())
-  val dbg_w1_read_nonzero = Output(Bool())
-  val dbg_interp64_nonzero = Output(Bool())
-  val dbg_w0_write_nonzero = Output(Bool())
-  val dbg_interp256_nonzero = Output(Bool())
-  val dbg_final_nonzero = Output(Bool())
-  val dbg_w0_reg_nonzero = Output(Bool())
-  val dbg_w0_block_nonzero = Output(UInt(7.W))
   val dbg_core_write_count = Output(UInt(16.W))
   val dbg_interp1_group_count = Output(UInt(16.W))
   val dbg_interp2_block_count = Output(UInt(16.W))
-  val dbg_i1_state = Output(UInt(4.W))
-  val dbg_i2_state = Output(UInt(4.W))
-  val dbg_i3_state = Output(UInt(4.W))
-  val dbg_w2_ready = Output(UInt(2.W))
-  val dbg_w2_empty = Output(UInt(2.W))
-  val dbg_w2_reading = Output(UInt(2.W))
-  val dbg_w2_writing = Output(UInt(2.W))
-  val dbg_w1_block_ready = Output(UInt(2.W))
-  val dbg_w0_ready = Output(UInt(7.W))
-  val dbg_cycle = Output(UInt(16.W))
-  val dbg_core_last_cycle = Output(UInt(16.W))
-  val dbg_interp1_last_cycle = Output(UInt(16.W))
-  val dbg_interp2_last_cycle = Output(UInt(16.W))
-  val dbg_i3_start_cycle = Output(UInt(16.W))
-  val dbg_i3_done_cycle = Output(UInt(16.W))
 }
+
 
 class ToomCook43 extends Module {
   def packVec(xs: Seq[UInt]): UInt = Cat(xs.reverse)
@@ -770,18 +744,6 @@ class ToomCook43 extends Module {
   interp256Seq.io.start := false.B
 
   val busy = RegInit(false.B)
-  val dbgCoreNonZero = RegInit(false.B)
-  val dbgW2WriteNonZero = RegInit(false.B)
-  val dbgW2ReadNonZero = RegInit(false.B)
-  val dbgInterp16NonZero = RegInit(false.B)
-  val dbgW1WriteNonZero = RegInit(false.B)
-  val dbgW1ReadNonZero = RegInit(false.B)
-  val dbgInterp64NonZero = RegInit(false.B)
-  val dbgW0WriteNonZero = RegInit(false.B)
-  val dbgInterp256NonZero = RegInit(false.B)
-  val dbgFinalNonZero = RegInit(false.B)
-  val dbgW0RegNonZero = RegInit(false.B)
-  val dbgW0BlockNonZero = RegInit(VecInit(Seq.fill(7)(false.B)))
   val dbgCoreWriteCount = RegInit(0.U(16.W))
   val dbgInterp1Count = RegInit(0.U(16.W))
   val dbgInterp2Count = RegInit(0.U(16.W))
@@ -793,12 +755,6 @@ class ToomCook43 extends Module {
   val avecBuild = Reg(Vec(16, UInt(A_EVAL_W.W)))
   val bvecBuild = Reg(Vec(16, UInt(B_EVAL_W.W)))
 
-  val dbgCycle = RegInit(0.U(16.W))
-  val dbgCoreLastCycle = RegInit(0.U(16.W))
-  val dbgInterp1LastCycle = RegInit(0.U(16.W))
-  val dbgInterp2LastCycle = RegInit(0.U(16.W))
-  val dbgI3StartCycle = RegInit(0.U(16.W))
-  val dbgI3DoneCycle = RegInit(0.U(16.W))
 
   val corePending = RegInit(false.B)
   val outPt0 = Reg(UInt(3.W)); val outPt1 = Reg(UInt(3.W)); val outPt2 = Reg(UInt(3.W))
@@ -906,10 +862,6 @@ class ToomCook43 extends Module {
     outPt2 := evalCoreQ.io.deq.bits.pt2
   }
 
-  when(busy) {
-    dbgCycle := dbgCycle + 1.U
-  }
-
   for (buf <- 0 until 2; p <- 0 until 7) {
     when(corePending && core.io.valid_out && w2WBuf === buf.U && outPt2 === p.U) {
       w2Ram(buf)(p).io.en := true.B
@@ -919,11 +871,6 @@ class ToomCook43 extends Module {
   }
   when(corePending && core.io.valid_out) {
     dbgCoreWriteCount := dbgCoreWriteCount + 1.U
-    dbgCoreLastCycle := dbgCycle
-    when(core.io.cOut.asUInt.orR) {
-      dbgCoreNonZero := true.B
-      dbgW2WriteNonZero := true.B
-    }
     corePending := false.B
     when(w2WBuf === 0.U) {
       val next0 = Wire(Vec(7, Bool()))
@@ -964,7 +911,6 @@ class ToomCook43 extends Module {
       when(d.orR) { w2ReadAnyNonZero := true.B }
       w2Local(p) := unpackVec(d, 16, 36)
     }
-    when(w2ReadAnyNonZero) { dbgW2ReadNonZero := true.B }
     i1State := i1Start
   }.elsewhen(i1State === i1Start) {
     interp16Seq.io.start := true.B
@@ -972,10 +918,6 @@ class ToomCook43 extends Module {
   }.elsewhen(i1State === i1Run) {
     when(interp16Seq.io.done) { i1State := i1WriteW1 }
   }.elsewhen(i1State === i1WriteW1) {
-    when(interp16Seq.io.cOut.asUInt.orR) {
-      dbgInterp16NonZero := true.B
-      dbgW1WriteNonZero := true.B
-    }
     val curBlock = Mux(i1Buf === 0.U, w2Pt0(0), w2Pt0(1))
     val curSub = Mux(i1Buf === 0.U, w2Pt1(0), w2Pt1(1))
     val hit0 = w1BufValid(0) && (w1BufBlock(0) === curBlock)
@@ -1015,7 +957,6 @@ class ToomCook43 extends Module {
       w2Empty(i1Buf) := true.B
       w2Full(i1Buf) := VecInit(Seq.fill(7)(false.B))
       dbgInterp1Count := dbgInterp1Count + 1.U
-      dbgInterp1LastCycle := dbgCycle
       i1State := i1Idle
     }
   }
@@ -1041,7 +982,6 @@ class ToomCook43 extends Module {
       when(d.orR) { w1ReadAnyNonZero := true.B }
       w1Local(s) := unpackVec(d, 64, 33)
     }
-    when(w1ReadAnyNonZero) { dbgW1ReadNonZero := true.B }
     i2State := i2Start
   }.elsewhen(i2State === i2Start) {
     interp64Seq.io.start := true.B
@@ -1050,53 +990,21 @@ class ToomCook43 extends Module {
     when(interp64Seq.io.done) { i2State := i2WriteW0 }
   }.elsewhen(i2State === i2WriteW0) {
     val blk = Mux(i2Buf === 0.U, w1BufBlock(0), w1BufBlock(1))
-    when(interp64Seq.io.cOut.asUInt.orR) {
-      dbgInterp64NonZero := true.B
-      dbgW0WriteNonZero := true.B
-      dbgW0RegNonZero := true.B
-    }
-    when(blk === 0.U && interp64Seq.io.cOut.asUInt.orR) { dbgW0BlockNonZero(0) := true.B }
-    when(blk === 1.U && interp64Seq.io.cOut.asUInt.orR) { dbgW0BlockNonZero(1) := true.B }
-    when(blk === 2.U && interp64Seq.io.cOut.asUInt.orR) { dbgW0BlockNonZero(2) := true.B }
-    when(blk === 3.U && interp64Seq.io.cOut.asUInt.orR) { dbgW0BlockNonZero(3) := true.B }
-    when(blk === 4.U && interp64Seq.io.cOut.asUInt.orR) { dbgW0BlockNonZero(4) := true.B }
-    when(blk === 5.U && interp64Seq.io.cOut.asUInt.orR) { dbgW0BlockNonZero(5) := true.B }
-    when(blk === 6.U && interp64Seq.io.cOut.asUInt.orR) { dbgW0BlockNonZero(6) := true.B }
     for (i <- 0 until 256) w0Reg(blk)(i) := interp64Seq.io.cOut(i)
     w0Ready(blk) := true.B
     w1BlockReady(i2Buf) := false.B
     w1SubReady(i2Buf) := VecInit(Seq.fill(7)(false.B))
     w1BufValid(i2Buf) := false.B
     dbgInterp2Count := dbgInterp2Count + 1.U
-    dbgInterp2LastCycle := dbgCycle
     i2State := i2Idle
-  }
-
-  val w0RegAnyNonZero = WireDefault(false.B)
-  val w0BlockNZ = Wire(Vec(7, Bool()))
-  for (g <- 0 until 7) {
-    w0BlockNZ(g) := w0Reg(g).asUInt.orR
-    when(w0Reg(g).asUInt.orR) {
-      w0RegAnyNonZero := true.B
-    }
   }
 
   when(i3State === i3Idle && busy && w0Ready.asUInt.andR) {
     i3State := i3Start
   }.elsewhen(i3State === i3Start) {
-    dbgI3StartCycle := dbgCycle
-    when(w0RegAnyNonZero) {
-      dbgW0RegNonZero := true.B
-    }
-    dbgW0BlockNonZero := w0BlockNZ
     interp256Seq.io.start := true.B
     i3State := i3Run
   }.elsewhen(i3State === i3Run && interp256Seq.io.done) {
-    dbgI3DoneCycle := dbgCycle
-    when(interp256Seq.io.cOut.asUInt.orR) {
-      dbgInterp256NonZero := true.B
-      dbgFinalNonZero := true.B
-    }
     for (i <- 0 until 1024) regC(i) := mask(interp256Seq.io.cOut(i), 24)
     i3State := i3OutValid
   }.elsewhen(i3State === i3OutValid) {
@@ -1126,57 +1034,12 @@ class ToomCook43 extends Module {
     w0Ready := VecInit(Seq.fill(7)(false.B))
     i1State := i1Idle; i2State := i2Idle; i3State := i3Idle
     w2WBuf := 0.U
-    dbgCoreNonZero := false.B
-    dbgW2WriteNonZero := false.B
-    dbgW2ReadNonZero := false.B
-    dbgInterp16NonZero := false.B
-    dbgW1WriteNonZero := false.B
-    dbgW1ReadNonZero := false.B
-    dbgInterp64NonZero := false.B
-    dbgW0WriteNonZero := false.B
-    dbgInterp256NonZero := false.B
-    dbgFinalNonZero := false.B
     dbgCoreWriteCount := 0.U
     dbgInterp1Count := 0.U
     dbgInterp2Count := 0.U
-    dbgCycle := 0.U
-    dbgCoreLastCycle := 0.U
-    dbgInterp1LastCycle := 0.U
-    dbgInterp2LastCycle := 0.U
-    dbgI3StartCycle := 0.U
-    dbgI3DoneCycle := 0.U
-    dbgW0RegNonZero := false.B
-    dbgW0BlockNonZero := VecInit(Seq.fill(7)(false.B))
   }
 
-  io.dbg_core_nonzero := dbgCoreNonZero
-  io.dbg_w2_write_nonzero := dbgW2WriteNonZero
-  io.dbg_w2_read_nonzero := dbgW2ReadNonZero
-  io.dbg_interp16_nonzero := dbgInterp16NonZero
-  io.dbg_w1_write_nonzero := dbgW1WriteNonZero
-  io.dbg_w1_read_nonzero := dbgW1ReadNonZero
-  io.dbg_interp64_nonzero := dbgInterp64NonZero
-  io.dbg_w0_write_nonzero := dbgW0WriteNonZero
-  io.dbg_interp256_nonzero := dbgInterp256NonZero
-  io.dbg_final_nonzero := dbgFinalNonZero
-  io.dbg_w0_reg_nonzero := dbgW0RegNonZero
-  io.dbg_w0_block_nonzero := dbgW0BlockNonZero.asUInt
   io.dbg_core_write_count := dbgCoreWriteCount
   io.dbg_interp1_group_count := dbgInterp1Count
   io.dbg_interp2_block_count := dbgInterp2Count
-  io.dbg_i1_state := i1State.asUInt
-  io.dbg_i2_state := i2State.asUInt
-  io.dbg_i3_state := i3State.asUInt
-  io.dbg_w2_ready := w2Ready.asUInt
-  io.dbg_w2_empty := w2Empty.asUInt
-  io.dbg_w2_reading := w2Reading.asUInt
-  io.dbg_w2_writing := w2Writing.asUInt
-  io.dbg_w1_block_ready := w1BlockReady.asUInt
-  io.dbg_w0_ready := w0Ready.asUInt
-  io.dbg_cycle := dbgCycle
-  io.dbg_core_last_cycle := dbgCoreLastCycle
-  io.dbg_interp1_last_cycle := dbgInterp1LastCycle
-  io.dbg_interp2_last_cycle := dbgInterp2LastCycle
-  io.dbg_i3_start_cycle := dbgI3StartCycle
-  io.dbg_i3_done_cycle := dbgI3DoneCycle
 }
