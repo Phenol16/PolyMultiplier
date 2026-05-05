@@ -701,14 +701,6 @@ class ToomCook43IO extends Bundle {
   val dbg_final_nonzero = Output(Bool())
   val dbg_w0_reg_nonzero = Output(Bool())
   val dbg_w0_block_nonzero = Output(UInt(7.W))
-  val dbg_interp256_comb_nonzero = Output(Bool())
-  val dbg_interp256_comb_c0 = Output(UInt(24.W))
-  val dbg_interp256_seq_c0 = Output(UInt(24.W))
-  val dbg_i3_seq_started = Output(Bool())
-  val dbg_i3_seq_ran_any = Output(Bool())
-  val dbg_i3_seq_core_any_nonzero = Output(Bool())
-  val dbg_i3_seq_c0_before_fix = Output(UInt(24.W))
-  val dbg_i3_seq_c0_after_fix = Output(UInt(24.W))
   val dbg_core_write_count = Output(UInt(16.W))
   val dbg_interp1_group_count = Output(UInt(16.W))
   val dbg_interp2_block_count = Output(UInt(16.W))
@@ -752,9 +744,7 @@ class ToomCook43 extends Module {
   val core = Module(new Core16TC43)
   val interp16Seq = Module(new InterpLayerSeqTC43(16, 1, 36, 33))
   val interp64Seq = Module(new InterpLayerSeqTC43(64, 2, 33, 27))
-  private val USE_INTERP3_2COL = false
   val interp256Seq = Module(new InterpLayerSeqTC43(256, 3, 27, 24))
-  val interp256Comb = Module(new InterpLayerTC43(stride = 256, pidx = 3, inW = 27, outW = 24))
   interp16Seq.io.start := false.B
   interp64Seq.io.start := false.B
   interp256Seq.io.start := false.B
@@ -772,9 +762,6 @@ class ToomCook43 extends Module {
   val dbgFinalNonZero = RegInit(false.B)
   val dbgW0RegNonZero = RegInit(false.B)
   val dbgW0BlockNonZero = RegInit(VecInit(Seq.fill(7)(false.B)))
-  val dbgInterp256CombNonZero = RegInit(false.B)
-  val dbgInterp256CombC0 = RegInit(0.U(24.W))
-  val dbgInterp256SeqC0 = RegInit(0.U(24.W))
   val dbgCoreWriteCount = RegInit(0.U(16.W))
   val dbgInterp1Count = RegInit(0.U(16.W))
   val dbgInterp2Count = RegInit(0.U(16.W))
@@ -825,7 +812,6 @@ class ToomCook43 extends Module {
   for (i <- 0 until 7 * 64) interp64Seq.io.wIn(i) := w1Local(i / 64)(i % 64)
   for (g <- 0 until 7; k <- 0 until 256) {
     interp256Seq.io.wIn(g * 256 + k) := w0Reg(g)(k)
-    interp256Comb.io.wIn(g * 256 + k) := w0Reg(g)(k)
   }
 
   for (b <- 0 until 2; p <- 0 until 7) {
@@ -1057,14 +1043,9 @@ class ToomCook43 extends Module {
       dbgW0RegNonZero := true.B
     }
     dbgW0BlockNonZero := w0BlockNZ
-    when(interp256Comb.io.cOut.asUInt.orR) {
-      dbgInterp256CombNonZero := true.B
-    }
-    dbgInterp256CombC0 := interp256Comb.io.cOut(0)
     interp256Seq.io.start := true.B
     i3State := i3Run
   }.elsewhen(i3State === i3Run && interp256Seq.io.done) {
-    dbgInterp256SeqC0 := interp256Seq.io.cOut(0)
     when(interp256Seq.io.cOut.asUInt.orR) {
       dbgInterp256NonZero := true.B
       dbgFinalNonZero := true.B
@@ -1112,9 +1093,6 @@ class ToomCook43 extends Module {
     dbgInterp2Count := 0.U
     dbgW0RegNonZero := false.B
     dbgW0BlockNonZero := VecInit(Seq.fill(7)(false.B))
-    dbgInterp256CombNonZero := false.B
-    dbgInterp256CombC0 := 0.U
-    dbgInterp256SeqC0 := 0.U
   }
 
   io.dbg_core_nonzero := dbgCoreNonZero
@@ -1129,14 +1107,6 @@ class ToomCook43 extends Module {
   io.dbg_final_nonzero := dbgFinalNonZero
   io.dbg_w0_reg_nonzero := dbgW0RegNonZero
   io.dbg_w0_block_nonzero := dbgW0BlockNonZero.asUInt
-  io.dbg_interp256_comb_nonzero := dbgInterp256CombNonZero
-  io.dbg_interp256_comb_c0 := dbgInterp256CombC0
-  io.dbg_interp256_seq_c0 := dbgInterp256SeqC0
-  io.dbg_i3_seq_started := interp256Seq.io.dbg_started
-  io.dbg_i3_seq_ran_any := interp256Seq.io.dbg_ran_any
-  io.dbg_i3_seq_core_any_nonzero := interp256Seq.io.dbg_core_any_nonzero
-  io.dbg_i3_seq_c0_before_fix := interp256Seq.io.dbg_c0_before_fix
-  io.dbg_i3_seq_c0_after_fix := interp256Seq.io.dbg_c0_after_fix
   io.dbg_core_write_count := dbgCoreWriteCount
   io.dbg_interp1_group_count := dbgInterp1Count
   io.dbg_interp2_block_count := dbgInterp2Count
