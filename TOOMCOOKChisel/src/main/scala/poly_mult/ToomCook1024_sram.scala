@@ -329,12 +329,6 @@ class InterpLayerSeqTC4(stride: Int, pidx: Int, inW: Int, outW: Int) extends Mod
   val c2Reg = Reg(Vec(stride, UInt(outW.W)))
   val c3Reg = Reg(Vec(stride, UInt(outW.W)))
 
-  val dbgStarted = RegInit(false.B)
-  val dbgRanAny = RegInit(false.B)
-  val dbgCoreAnyNonZero = RegInit(false.B)
-  val dbgC0BeforeFix = RegInit(0.U(outW.W))
-  val dbgC0AfterFix = RegInit(0.U(outW.W))
-
   for (pt <- 0 until 7) {
     val row = Wire(Vec(stride, UInt(inW.W)))
     for (i <- 0 until stride) {
@@ -347,11 +341,13 @@ class InterpLayerSeqTC4(stride: Int, pidx: Int, inW: Int, outW: Int) extends Mod
   core.io.pr2 := prevR2
 
   io.done := doneReg
-  io.dbg_started := dbgStarted
-  io.dbg_ran_any := dbgRanAny
-  io.dbg_core_any_nonzero := dbgCoreAnyNonZero
-  io.dbg_c0_before_fix := dbgC0BeforeFix
-  io.dbg_c0_after_fix := dbgC0AfterFix
+  // Debug 端口保留以兼容既有测试接口，但默认不再为其分配寄存器。
+  // 插值结果只在 done 后被消费，运行过程中的 debug 历史寄存没有功能必要。
+  io.dbg_started := false.B
+  io.dbg_ran_any := false.B
+  io.dbg_core_any_nonzero := false.B
+  io.dbg_c0_before_fix := 0.U
+  io.dbg_c0_after_fix := 0.U
 
   for (i <- 0 until stride) {
     io.cOut(4 * i + 0) := c0Reg(i)
@@ -371,25 +367,9 @@ class InterpLayerSeqTC4(stride: Int, pidx: Int, inW: Int, outW: Int) extends Mod
     prevR0   := 0.U
     prevR1   := 0.U
     prevR2   := 0.U
-    dbgStarted := true.B
-    dbgRanAny := false.B
-    dbgCoreAnyNonZero := false.B
-    dbgC0BeforeFix := 0.U
-    dbgC0AfterFix := 0.U
-    for (i <- 0 until stride) {
-      c0Reg(i) := 0.U
-      c1Reg(i) := 0.U
-      c2Reg(i) := 0.U
-      c3Reg(i) := 0.U
-    }
+    // c0/c1/c2/c3 在一次 run 内会被完整覆盖；done 前不会读取，
+    // 因此 start 时不清零，避免生成大规模无意义写入 mux 和翻转。
   }.elsewhen(running) {
-    dbgRanAny := true.B
-    when(core.io.c0part.orR || core.io.c1part.orR || core.io.c2part.orR || core.io.c3.orR) {
-      dbgCoreAnyNonZero := true.B
-    }
-    when(colCnt === 0.U) {
-      dbgC0BeforeFix := mask(core.io.c0part, outW)
-    }
     c0Reg(colCnt) := mask(core.io.c0part, outW)
     c1Reg(colCnt) := mask(core.io.c1part, outW)
     c2Reg(colCnt) := mask(core.io.c2part, outW)
@@ -407,7 +387,6 @@ class InterpLayerSeqTC4(stride: Int, pidx: Int, inW: Int, outW: Int) extends Mod
     }
   }.elsewhen(fixStage) {
     // 末尾修正：c[0] -= pr2, c[1] -= pr1, c[2] -= pr0
-    dbgC0AfterFix := mask(c0Reg(0) - prevR2, outW)
     c0Reg(0) := mask(c0Reg(0) - prevR2, outW)
     c1Reg(0) := mask(c1Reg(0) - prevR1, outW)
     c2Reg(0) := mask(c2Reg(0) - prevR0, outW)
@@ -470,12 +449,7 @@ class InterpLayerSeq2ColTC4(stride: Int, pidx: Int, inW: Int, outW: Int) extends
     colCnt := 0.U
     running := true.B
     prevR0 := 0.U; prevR1 := 0.U; prevR2 := 0.U
-    for (i <- 0 until stride) {
-      c0Reg(i) := 0.U
-      c1Reg(i) := 0.U
-      c2Reg(i) := 0.U
-      c3Reg(i) := 0.U
-    }
+    // c0/c1/c2/c3 在每次 run 中被完整覆盖，done 前不被使用，start 时无需清零。
   }.elsewhen(running) {
     c0Reg(colCnt) := mask(core0.io.c0part, outW)
     c1Reg(colCnt) := mask(core0.io.c1part, outW)
@@ -490,6 +464,314 @@ class InterpLayerSeq2ColTC4(stride: Int, pidx: Int, inW: Int, outW: Int) extends
     prevR2 := core1.io.nr2
     when(colCnt === (stride - 2).U) { running := false.B; fixStage := true.B }
       .otherwise { colCnt := colCnt + 2.U }
+  }.elsewhen(fixStage) {
+    c0Reg(0) := mask(c0Reg(0) - prevR2, outW)
+    c1Reg(0) := mask(c1Reg(0) - prevR1, outW)
+    c2Reg(0) := mask(c2Reg(0) - prevR0, outW)
+    fixStage := false.B
+    doneReg := true.B
+  }
+}
+
+
+
+// =============================================================================
+//  InterpLayerSeqStreamTC4：单列流式输出版本
+//  每拍复用 1 个 InterpCoreTC4 处理一列；普通列立即输出 4 个系数。
+//  第 0 列需要等待末尾 prevR 修正，因此只用 4 个小寄存器暂存，不再分配
+//  stride 深度的 c0/c1/c2/c3 结果缓存。
+// =============================================================================
+class InterpLayerSeqStreamTC4(stride: Int, pidx: Int, inW: Int, outW: Int) extends Module {
+  private val p = InterpParamTable.params(pidx)
+  private val mk2 = p.mk2
+
+  val io = IO(new Bundle {
+    val start = Input(Bool())
+    val wIn = Input(Vec(7 * stride, UInt(inW.W)))
+    val outValid = Output(Bool())
+    val outBase = Output(UInt(log2Ceil(4 * stride).W))
+    val outData = Output(Vec(4, UInt(outW.W)))
+    val done = Output(Bool())
+  })
+
+  val core = Module(new InterpCoreTC4(pidx, inW))
+  val colCnt = RegInit(0.U(log2Ceil(stride).W))
+  val running = RegInit(false.B)
+  val fixStage = RegInit(false.B)
+
+  val prevR0 = RegInit(0.U(mk2.W))
+  val prevR1 = RegInit(0.U(mk2.W))
+  val prevR2 = RegInit(0.U(mk2.W))
+  val firstC0 = Reg(UInt(outW.W))
+  val firstC1 = Reg(UInt(outW.W))
+  val firstC2 = Reg(UInt(outW.W))
+  val firstC3 = Reg(UInt(outW.W))
+
+  for (pt <- 0 until 7) {
+    val row = Wire(Vec(stride, UInt(inW.W)))
+    for (i <- 0 until stride) row(i) := io.wIn(pt * stride + i)
+    core.io.pIn(pt) := row(colCnt)
+  }
+  core.io.pr0 := prevR0
+  core.io.pr1 := prevR1
+  core.io.pr2 := prevR2
+
+  io.outValid := false.B
+  io.outBase := 0.U
+  io.outData(0) := 0.U
+  io.outData(1) := 0.U
+  io.outData(2) := 0.U
+  io.outData(3) := 0.U
+  io.done := false.B
+
+  when(io.start && !running && !fixStage) {
+    colCnt := 0.U
+    running := true.B
+    fixStage := false.B
+    prevR0 := 0.U
+    prevR1 := 0.U
+    prevR2 := 0.U
+  }.elsewhen(running) {
+    when(colCnt === 0.U) {
+      firstC0 := mask(core.io.c0part, outW)
+      firstC1 := mask(core.io.c1part, outW)
+      firstC2 := mask(core.io.c2part, outW)
+      firstC3 := mask(core.io.c3, outW)
+    }.otherwise {
+      io.outValid := true.B
+      io.outBase := (colCnt << 2).asUInt
+      io.outData(0) := mask(core.io.c0part, outW)
+      io.outData(1) := mask(core.io.c1part, outW)
+      io.outData(2) := mask(core.io.c2part, outW)
+      io.outData(3) := mask(core.io.c3, outW)
+    }
+
+    prevR0 := core.io.nr0
+    prevR1 := core.io.nr1
+    prevR2 := core.io.nr2
+    when(colCnt === (stride - 1).U) {
+      running := false.B
+      fixStage := true.B
+    }.otherwise {
+      colCnt := colCnt + 1.U
+    }
+  }.elsewhen(fixStage) {
+    io.outValid := true.B
+    io.outBase := 0.U
+    io.outData(0) := mask(firstC0 - prevR2, outW)
+    io.outData(1) := mask(firstC1 - prevR1, outW)
+    io.outData(2) := mask(firstC2 - prevR0, outW)
+    io.outData(3) := firstC3
+    io.done := true.B
+    fixStage := false.B
+  }
+}
+
+
+
+// =============================================================================
+//  InterpLayerSeqPairStreamTC4：面向单端口 SRAM 写入的 packed-pair 流式输出
+//  每个输出拍给出两个连续系数 Cat(odd, even)，地址为 outIndex / 2。
+//  相比先保存完整 cOut 再写回，本模块只保留第 0 列和当前列第二个 pair 的
+//  少量寄存器，适合 interp64 -> w0 SRAM 路径。
+// =============================================================================
+class InterpLayerSeqPairStreamTC4(stride: Int, pidx: Int, inW: Int, outW: Int) extends Module {
+  private val p = InterpParamTable.params(pidx)
+  private val mk2 = p.mk2
+
+  val io = IO(new Bundle {
+    val start = Input(Bool())
+    val wIn = Input(Vec(7 * stride, UInt(inW.W)))
+    val outValid = Output(Bool())
+    val outIndex = Output(UInt(log2Ceil(4 * stride).W))
+    val outPair = Output(UInt((2 * outW).W))
+    val done = Output(Bool())
+  })
+
+  val core = Module(new InterpCoreTC4(pidx, inW))
+  val colCnt = RegInit(0.U(log2Ceil(stride).W))
+  val running = RegInit(false.B)
+  val emitSecond = RegInit(false.B)
+  val fixEmit0 = RegInit(false.B)
+  val fixEmit1 = RegInit(false.B)
+
+  val prevR0 = RegInit(0.U(mk2.W))
+  val prevR1 = RegInit(0.U(mk2.W))
+  val prevR2 = RegInit(0.U(mk2.W))
+  val firstC0 = Reg(UInt(outW.W))
+  val firstC1 = Reg(UInt(outW.W))
+  val firstC2 = Reg(UInt(outW.W))
+  val firstC3 = Reg(UInt(outW.W))
+  val secondC2 = Reg(UInt(outW.W))
+  val secondC3 = Reg(UInt(outW.W))
+  val secondBase = Reg(UInt(log2Ceil(4 * stride).W))
+  val lastColumnSecond = RegInit(false.B)
+  val fixedC0 = Reg(UInt(outW.W))
+  val fixedC1 = Reg(UInt(outW.W))
+  val fixedC2 = Reg(UInt(outW.W))
+
+  for (pt <- 0 until 7) {
+    val row = Wire(Vec(stride, UInt(inW.W)))
+    for (i <- 0 until stride) row(i) := io.wIn(pt * stride + i)
+    core.io.pIn(pt) := row(colCnt)
+  }
+  core.io.pr0 := prevR0
+  core.io.pr1 := prevR1
+  core.io.pr2 := prevR2
+
+  io.outValid := false.B
+  io.outIndex := 0.U
+  io.outPair := 0.U
+  io.done := false.B
+
+  when(io.start && !running && !emitSecond && !fixEmit0 && !fixEmit1) {
+    colCnt := 0.U
+    running := true.B
+    prevR0 := 0.U
+    prevR1 := 0.U
+    prevR2 := 0.U
+  }.elsewhen(running) {
+    val base = (colCnt << 2).asUInt
+    val c0 = mask(core.io.c0part, outW)
+    val c1 = mask(core.io.c1part, outW)
+    val c2 = mask(core.io.c2part, outW)
+    val c3 = mask(core.io.c3, outW)
+
+    when(colCnt === 0.U) {
+      firstC0 := c0
+      firstC1 := c1
+      firstC2 := c2
+      firstC3 := c3
+      colCnt := colCnt + 1.U
+    }.otherwise {
+      io.outValid := true.B
+      io.outIndex := base
+      io.outPair := Cat(c1, c0)
+      secondC2 := c2
+      secondC3 := c3
+      secondBase := base
+      lastColumnSecond := colCnt === (stride - 1).U
+      running := false.B
+      emitSecond := true.B
+    }
+
+    prevR0 := core.io.nr0
+    prevR1 := core.io.nr1
+    prevR2 := core.io.nr2
+  }.elsewhen(emitSecond) {
+    io.outValid := true.B
+    io.outIndex := secondBase + 2.U
+    io.outPair := Cat(secondC3, secondC2)
+    emitSecond := false.B
+    when(lastColumnSecond) {
+      fixedC0 := mask(firstC0 - prevR2, outW)
+      fixedC1 := mask(firstC1 - prevR1, outW)
+      fixedC2 := mask(firstC2 - prevR0, outW)
+      fixEmit0 := true.B
+    }.otherwise {
+      colCnt := colCnt + 1.U
+      running := true.B
+    }
+  }.elsewhen(fixEmit0) {
+    io.outValid := true.B
+    io.outIndex := 0.U
+    io.outPair := Cat(fixedC1, fixedC0)
+    fixEmit0 := false.B
+    fixEmit1 := true.B
+  }.elsewhen(fixEmit1) {
+    io.outValid := true.B
+    io.outIndex := 2.U
+    io.outPair := Cat(firstC3, fixedC2)
+    io.done := true.B
+    fixEmit1 := false.B
+  }
+}
+
+// =============================================================================
+//  InterpLayerSeq2ColStreamInTC4：两列/拍、流式输入版本
+//  final stage 直接从 w0 SRAM 每拍读 7 个 54-bit pair 后喂入本模块，
+//  消除顶层 w0Reg(Vec(7, Vec(256, ...)))。输出缓存仍保留在模块内部，
+//  便于不改变 ToomCook43.io.c 的 Vec(1024, UInt(24.W)) 接口。
+// =============================================================================
+class InterpLayerSeq2ColStreamInTC4(stride: Int, pidx: Int, inW: Int, outW: Int) extends Module {
+  require(stride % 2 == 0, "2-column streaming interpolation requires even stride")
+  private val p = InterpParamTable.params(pidx)
+  private val mk2 = p.mk2
+
+  val io = IO(new Bundle {
+    val start = Input(Bool())
+    val inValid = Input(Bool())
+    val inPair = Input(Vec(7, UInt((2 * inW).W)))
+    val inReady = Output(Bool())
+    val done = Output(Bool())
+    val cOut = Output(Vec(4 * stride, UInt(outW.W)))
+  })
+
+  val core0 = Module(new InterpCoreTC4(pidx, inW))
+  val core1 = Module(new InterpCoreTC4(pidx, inW))
+  val colCnt = RegInit(0.U(log2Ceil(stride).W))
+  val running = RegInit(false.B)
+  val fixStage = RegInit(false.B)
+  val doneReg = RegInit(false.B)
+
+  val prevR0 = RegInit(0.U(mk2.W))
+  val prevR1 = RegInit(0.U(mk2.W))
+  val prevR2 = RegInit(0.U(mk2.W))
+
+  val c0Reg = Reg(Vec(stride, UInt(outW.W)))
+  val c1Reg = Reg(Vec(stride, UInt(outW.W)))
+  val c2Reg = Reg(Vec(stride, UInt(outW.W)))
+  val c3Reg = Reg(Vec(stride, UInt(outW.W)))
+
+  for (pt <- 0 until 7) {
+    val even = io.inPair(pt)(inW - 1, 0)
+    val odd = io.inPair(pt)(2 * inW - 1, inW)
+    core0.io.pIn(pt) := even
+    core1.io.pIn(pt) := odd
+  }
+  core0.io.pr0 := prevR0
+  core0.io.pr1 := prevR1
+  core0.io.pr2 := prevR2
+  core1.io.pr0 := core0.io.nr0
+  core1.io.pr1 := core0.io.nr1
+  core1.io.pr2 := core0.io.nr2
+
+  io.inReady := running
+  io.done := doneReg
+  when(doneReg) { doneReg := false.B }
+
+  for (i <- 0 until stride) {
+    io.cOut(4 * i + 0) := c0Reg(i)
+    io.cOut(4 * i + 1) := c1Reg(i)
+    io.cOut(4 * i + 2) := c2Reg(i)
+    io.cOut(4 * i + 3) := c3Reg(i)
+  }
+
+  when(io.start && !running && !fixStage && !doneReg) {
+    colCnt := 0.U
+    running := true.B
+    prevR0 := 0.U
+    prevR1 := 0.U
+    prevR2 := 0.U
+  }.elsewhen(running && io.inValid) {
+    val col1 = colCnt + 1.U
+    c0Reg(colCnt) := mask(core0.io.c0part, outW)
+    c1Reg(colCnt) := mask(core0.io.c1part, outW)
+    c2Reg(colCnt) := mask(core0.io.c2part, outW)
+    c3Reg(colCnt) := mask(core0.io.c3, outW)
+    c0Reg(col1) := mask(core1.io.c0part, outW)
+    c1Reg(col1) := mask(core1.io.c1part, outW)
+    c2Reg(col1) := mask(core1.io.c2part, outW)
+    c3Reg(col1) := mask(core1.io.c3, outW)
+    prevR0 := core1.io.nr0
+    prevR1 := core1.io.nr1
+    prevR2 := core1.io.nr2
+    when(colCnt === (stride - 2).U) {
+      running := false.B
+      fixStage := true.B
+    }.otherwise {
+      colCnt := colCnt + 2.U
+    }
   }.elsewhen(fixStage) {
     c0Reg(0) := mask(c0Reg(0) - prevR2, outW)
     c1Reg(0) := mask(c1Reg(0) - prevR1, outW)
@@ -680,16 +962,14 @@ class ToomCook43 extends Module {
 
   val regA = Reg(Vec(1024, UInt(24.W)))
   val regB = Reg(Vec(1024, UInt(8.W)))
-  val regC = Reg(Vec(1024, UInt(24.W)))
-  io.c := regC
   io.valid_out := false.B
 
   val evalLanesA = (0 until EVAL_LANES).map(l => Module(new EvalLaneFixed(24, A_EVAL_W, l, EVAL_LANES)))
   val evalLanesB = (0 until EVAL_LANES).map(l => Module(new EvalLaneFixed(8, B_EVAL_W, l, EVAL_LANES)))
   val core = Module(new Core16TC4)
   val interp16Seq = Module(new InterpLayerSeqTC4(16, 1, 36, 33))
-  val interp64Seq = Module(new InterpLayerSeqTC4(64, 2, 33, 27))
-  val interp256Seq = Module(new InterpLayerSeq2ColTC4(256, 3, 27, 24))
+  val interp64Seq = Module(new InterpLayerSeqPairStreamTC4(64, 2, 33, 27))
+  val interp256Seq = Module(new InterpLayerSeq2ColStreamInTC4(256, 3, 27, 24))
   interp16Seq.io.start := false.B
   interp64Seq.io.start := false.B
   interp256Seq.io.start := false.B
@@ -712,6 +992,9 @@ class ToomCook43 extends Module {
 
   val w2Ram = Seq.fill(2, 7)(Module(new SpRam(576, 2)))
   val w1Ram = Seq.fill(2, 7)(Module(new SpRam(2112, 2)))
+  // w0 使用 7 个单端口 SRAM bank，每个地址打包两个连续 column：Cat(odd, even)。
+  // 这替代原 w0Reg(7 * 256 * 27b)，大幅减少顶层触发器。
+  val w0Ram = Seq.fill(7)(Module(new SpRam(54, 128)))
   val w2Empty = RegInit(VecInit(Seq.fill(2)(true.B)))
   val w2Writing = RegInit(VecInit(Seq.fill(2)(false.B)))
   val w2Reading = RegInit(VecInit(Seq.fill(2)(false.B)))
@@ -724,29 +1007,33 @@ class ToomCook43 extends Module {
   val w1SubReady = RegInit(VecInit(Seq.fill(2) { VecInit(Seq.fill(7)(false.B)) }))
   val w1BlockReady = RegInit(VecInit(Seq.fill(2)(false.B)))
 
-  val w0Reg = Reg(Vec(7, Vec(256, UInt(27.W))))
   val w0Ready = RegInit(VecInit(Seq.fill(7)(false.B)))
 
   val i1Idle :: i1ReadReq :: i1ReadCap :: i1Start :: i1Run :: i1WriteW1 :: Nil = Enum(6)
-  val i2Idle :: i2ReadReq :: i2ReadCap :: i2Start :: i2Run :: i2WriteW0 :: Nil = Enum(6)
-  val i3Idle :: i3Start :: i3Run :: i3OutValid :: Nil = Enum(4)
+  val i2Idle :: i2ReadReq :: i2ReadCap :: i2Start :: i2Run :: Nil = Enum(5)
+  val i3Idle :: i3Start :: i3ReadReq :: i3ReadCap :: i3Run :: Nil = Enum(5)
   val i1State = RegInit(i1Idle)
   val i2State = RegInit(i2Idle)
   val i3State = RegInit(i3Idle)
   val i1Buf = RegInit(0.U(1.W))
   val i2Buf = RegInit(0.U(1.W))
+  val w0WriteBlock = RegInit(0.U(3.W))
+  val w0ReadAddr = RegInit(0.U(7.W))
 
   val w2Local = Reg(Vec(7, Vec(16, UInt(36.W))))
   val w1Local = Reg(Vec(7, Vec(64, UInt(33.W))))
   for (i <- 0 until 7 * 16) interp16Seq.io.wIn(i) := w2Local(i / 16)(i % 16)
   for (i <- 0 until 7 * 64) interp64Seq.io.wIn(i) := w1Local(i / 64)(i % 64)
-  for (g <- 0 until 7; k <- 0 until 256) {
-    interp256Seq.io.wIn(g * 256 + k) := w0Reg(g)(k)
-  }
+  interp256Seq.io.inValid := false.B
+  for (g <- 0 until 7) interp256Seq.io.inPair(g) := 0.U
+  for (i <- 0 until 1024) io.c(i) := mask(interp256Seq.io.cOut(i), 24)
 
   for (b <- 0 until 2; p <- 0 until 7) {
     w2Ram(b)(p).io.clk := clock; w2Ram(b)(p).io.en := false.B; w2Ram(b)(p).io.we := false.B; w2Ram(b)(p).io.addr := 0.U(1.W); w2Ram(b)(p).io.din := 0.U
     w1Ram(b)(p).io.clk := clock; w1Ram(b)(p).io.en := false.B; w1Ram(b)(p).io.we := false.B; w1Ram(b)(p).io.addr := 0.U(1.W); w1Ram(b)(p).io.din := 0.U
+  }
+  for (g <- 0 until 7) {
+    w0Ram(g).io.clk := clock; w0Ram(g).io.en := false.B; w0Ram(g).io.we := false.B; w0Ram(g).io.addr := 0.U(7.W); w0Ram(g).io.din := 0.U
   }
 
   for (l <- 0 until EVAL_LANES) {
@@ -935,29 +1222,54 @@ class ToomCook43 extends Module {
     i2State := i2Start
   }.elsewhen(i2State === i2Start) {
     interp64Seq.io.start := true.B
+    w0WriteBlock := Mux(i2Buf === 0.U, w1BufBlock(0), w1BufBlock(1))
     i2State := i2Run
   }.elsewhen(i2State === i2Run) {
-    when(interp64Seq.io.done) { i2State := i2WriteW0 }
-  }.elsewhen(i2State === i2WriteW0) {
-    val blk = Mux(i2Buf === 0.U, w1BufBlock(0), w1BufBlock(1))
-    for (i <- 0 until 256) w0Reg(blk)(i) := interp64Seq.io.cOut(i)
-    w0Ready(blk) := true.B
-    w1BlockReady(i2Buf) := false.B
-    w1SubReady(i2Buf) := VecInit(Seq.fill(7)(false.B))
-    w1BufValid(i2Buf) := false.B
-    dbgInterp2Count := dbgInterp2Count + 1.U
-    i2State := i2Idle
+    when(interp64Seq.io.outValid) {
+      for (blk <- 0 until 7) {
+        when(w0WriteBlock === blk.U) {
+          w0Ram(blk).io.en := true.B
+          w0Ram(blk).io.we := true.B
+          w0Ram(blk).io.addr := (interp64Seq.io.outIndex >> 1)(6, 0)
+          w0Ram(blk).io.din := interp64Seq.io.outPair
+        }
+      }
+    }
+    when(interp64Seq.io.done) {
+      w0Ready(w0WriteBlock) := true.B
+      w1BlockReady(i2Buf) := false.B
+      w1SubReady(i2Buf) := VecInit(Seq.fill(7)(false.B))
+      w1BufValid(i2Buf) := false.B
+      dbgInterp2Count := dbgInterp2Count + 1.U
+      i2State := i2Idle
+    }
   }
 
   when(i3State === i3Idle && busy && w0Ready.asUInt.andR) {
     i3State := i3Start
   }.elsewhen(i3State === i3Start) {
     interp256Seq.io.start := true.B
-    i3State := i3Run
+    w0ReadAddr := 0.U
+    i3State := i3ReadReq
+  }.elsewhen(i3State === i3ReadReq) {
+    // sp_ram 为同步读：本周期发起 7 个 bank 的同地址读，下一周期捕获 pair。
+    for (g <- 0 until 7) {
+      w0Ram(g).io.en := true.B
+      w0Ram(g).io.we := false.B
+      w0Ram(g).io.addr := w0ReadAddr
+    }
+    i3State := i3ReadCap
+  }.elsewhen(i3State === i3ReadCap) {
+    interp256Seq.io.inValid := true.B
+    for (g <- 0 until 7) interp256Seq.io.inPair(g) := w0Ram(g).io.dout
+    when(w0ReadAddr === 127.U) {
+      i3State := i3Run
+    }.otherwise {
+      w0ReadAddr := w0ReadAddr + 1.U
+      i3State := i3ReadReq
+    }
   }.elsewhen(i3State === i3Run && interp256Seq.io.done) {
-    for (i <- 0 until 1024) regC(i) := mask(interp256Seq.io.cOut(i), 24)
-    i3State := i3OutValid
-  }.elsewhen(i3State === i3OutValid) {
+    // interp256Seq 内部已保存完整输出；同周期直接拉高 valid_out，一拍后回到 idle。
     io.valid_out := true.B
     busy := false.B
     i3State := i3Idle
@@ -983,6 +1295,7 @@ class ToomCook43 extends Module {
     w1BufValid := VecInit(Seq.fill(2)(false.B))
     w0Ready := VecInit(Seq.fill(7)(false.B))
     i1State := i1Idle; i2State := i2Idle; i3State := i3Idle
+    w0WriteBlock := 0.U; w0ReadAddr := 0.U
     w2WBuf := 0.U
     dbgCoreWriteCount := 0.U
     dbgInterp1Count := 0.U
