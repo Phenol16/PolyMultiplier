@@ -689,6 +689,82 @@ class InterpLayerSeq2ColTC43(stride: Int, pidx: Int, inW: Int, outW: Int) extend
   }
 }
 
+
+class InterpLayerSeq2ColStreamTC43(stride: Int, pidx: Int, inW: Int, outW: Int) extends Module {
+  require(stride % 2 == 0, "2-column streaming interpolation requires even stride")
+  private val p = InterpParamTable.params(pidx)
+  private val mk2 = p.mk2
+  private val colW = log2Ceil(stride)
+
+  val io = IO(new Bundle {
+    val start = Input(Bool())
+    val clear = Input(Bool())
+    val inValid = Input(Bool())
+    val pIn0 = Input(Vec(7, UInt(inW.W)))
+    val pIn1 = Input(Vec(7, UInt(inW.W)))
+    val outValid = Output(Bool())
+    val outColBase = Output(UInt(colW.W))
+    val cOut = Output(Vec(8, UInt(outW.W)))
+    val fixR0 = Output(UInt(mk2.W))
+    val fixR1 = Output(UInt(mk2.W))
+    val fixR2 = Output(UInt(mk2.W))
+  })
+
+  val core0 = Module(new InterpCoreTC43(pidx, inW))
+  val core1 = Module(new InterpCoreTC43(pidx, inW))
+  val colCnt = RegInit(0.U(colW.W))
+  val running = RegInit(false.B)
+  val prevR0 = RegInit(0.U(mk2.W))
+  val prevR1 = RegInit(0.U(mk2.W))
+  val prevR2 = RegInit(0.U(mk2.W))
+
+  core0.io.pIn := io.pIn0
+  core1.io.pIn := io.pIn1
+  core0.io.pr0 := prevR0
+  core0.io.pr1 := prevR1
+  core0.io.pr2 := prevR2
+  core1.io.pr0 := core0.io.nr0
+  core1.io.pr1 := core0.io.nr1
+  core1.io.pr2 := core0.io.nr2
+
+  io.outValid := running && io.inValid
+  io.outColBase := colCnt
+  io.cOut(0) := mask(core0.io.c0part, outW)
+  io.cOut(1) := mask(core0.io.c1part, outW)
+  io.cOut(2) := mask(core0.io.c2part, outW)
+  io.cOut(3) := mask(core0.io.c3, outW)
+  io.cOut(4) := mask(core1.io.c0part, outW)
+  io.cOut(5) := mask(core1.io.c1part, outW)
+  io.cOut(6) := mask(core1.io.c2part, outW)
+  io.cOut(7) := mask(core1.io.c3, outW)
+  io.fixR0 := prevR0
+  io.fixR1 := prevR1
+  io.fixR2 := prevR2
+
+  when(io.clear) {
+    colCnt := 0.U
+    running := false.B
+    prevR0 := 0.U
+    prevR1 := 0.U
+    prevR2 := 0.U
+  }.elsewhen(io.start) {
+    colCnt := 0.U
+    running := true.B
+    prevR0 := 0.U
+    prevR1 := 0.U
+    prevR2 := 0.U
+  }.elsewhen(running && io.inValid) {
+    prevR0 := core1.io.nr0
+    prevR1 := core1.io.nr1
+    prevR2 := core1.io.nr2
+    when(colCnt === (stride - 2).U) {
+      running := false.B
+    }.otherwise {
+      colCnt := colCnt + 2.U
+    }
+  }
+}
+
 class EvalCoreJob(aW: Int, bW: Int) extends Bundle {
   val avec = Vec(16, UInt(aW.W))
   val bvec = Vec(16, UInt(bW.W))
@@ -738,10 +814,14 @@ class ToomCook43 extends Module {
   val core = Module(new Core16TC43)
   val interp16Seq = Module(new InterpLayerSeqTC43(16, 1, 36, 33))
   val interp64Seq = Module(new InterpLayerSeqTC43(64, 2, 33, 27))
-  val interp256Seq = Module(new InterpLayerSeq2ColTC43(256, 3, 27, 24))
+  val interp256Stream = Module(new InterpLayerSeq2ColStreamTC43(256, 3, 27, 24))
   interp16Seq.io.start := false.B
   interp64Seq.io.start := false.B
-  interp256Seq.io.start := false.B
+  interp256Stream.io.start := false.B
+  interp256Stream.io.clear := false.B
+  interp256Stream.io.inValid := false.B
+  interp256Stream.io.pIn0 := VecInit(Seq.fill(7)(0.U(27.W)))
+  interp256Stream.io.pIn1 := VecInit(Seq.fill(7)(0.U(27.W)))
 
   val busy = RegInit(false.B)
   val dbgCoreWriteCount = RegInit(0.U(16.W))
@@ -774,12 +854,14 @@ class ToomCook43 extends Module {
   val w1SubReady = RegInit(VecInit(Seq.fill(2) { VecInit(Seq.fill(7)(false.B)) }))
   val w1BlockReady = RegInit(VecInit(Seq.fill(2)(false.B)))
 
-  val w0Reg = Reg(Vec(7, Vec(256, UInt(27.W))))
+  val w0Ram = Seq.fill(7)(Module(new SpRam(54, 128)))
   val w0Ready = RegInit(VecInit(Seq.fill(7)(false.B)))
+  val w0WriteCnt = RegInit(0.U(7.W))
+  val finalReadAddr = RegInit(0.U(7.W))
 
   val i1Idle :: i1ReadReq :: i1ReadCap :: i1Start :: i1Run :: i1WriteW1 :: Nil = Enum(6)
   val i2Idle :: i2ReadReq :: i2ReadCap :: i2Start :: i2Run :: i2WriteW0 :: Nil = Enum(6)
-  val i3Idle :: i3Start :: i3Run :: i3OutValid :: Nil = Enum(4)
+  val i3Idle :: i3Start :: i3ReadReq :: i3ReadCap :: i3Fix :: i3OutValid :: Nil = Enum(6)
   val i1State = RegInit(i1Idle)
   val i2State = RegInit(i2Idle)
   val i3State = RegInit(i3Idle)
@@ -790,8 +872,13 @@ class ToomCook43 extends Module {
   val w1Local = Reg(Vec(7, Vec(64, UInt(33.W))))
   for (i <- 0 until 7 * 16) interp16Seq.io.wIn(i) := w2Local(i / 16)(i % 16)
   for (i <- 0 until 7 * 64) interp64Seq.io.wIn(i) := w1Local(i / 64)(i % 64)
-  for (g <- 0 until 7; k <- 0 until 256) {
-    interp256Seq.io.wIn(g * 256 + k) := w0Reg(g)(k)
+
+  for (g <- 0 until 7) {
+    w0Ram(g).io.clk := clock
+    w0Ram(g).io.en := false.B
+    w0Ram(g).io.we := false.B
+    w0Ram(g).io.addr := 0.U(7.W)
+    w0Ram(g).io.din := 0.U(54.W)
   }
 
   for (b <- 0 until 2; p <- 0 until 7) {
@@ -987,30 +1074,78 @@ class ToomCook43 extends Module {
     interp64Seq.io.start := true.B
     i2State := i2Run
   }.elsewhen(i2State === i2Run) {
-    when(interp64Seq.io.done) { i2State := i2WriteW0 }
+    when(interp64Seq.io.done) {
+      w0WriteCnt := 0.U
+      i2State := i2WriteW0
+    }
   }.elsewhen(i2State === i2WriteW0) {
     val blk = Mux(i2Buf === 0.U, w1BufBlock(0), w1BufBlock(1))
-    for (i <- 0 until 256) w0Reg(blk)(i) := interp64Seq.io.cOut(i)
-    w0Ready(blk) := true.B
-    w1BlockReady(i2Buf) := false.B
-    w1SubReady(i2Buf) := VecInit(Seq.fill(7)(false.B))
-    w1BufValid(i2Buf) := false.B
-    dbgInterp2Count := dbgInterp2Count + 1.U
-    i2State := i2Idle
+    val evenCol = w0WriteCnt << 1
+    val w0Packed = Cat(interp64Seq.io.cOut(evenCol + 1.U), interp64Seq.io.cOut(evenCol))
+    for (g <- 0 until 7) {
+      when(blk === g.U) {
+        w0Ram(g).io.en := true.B
+        w0Ram(g).io.we := true.B
+        w0Ram(g).io.addr := w0WriteCnt
+        w0Ram(g).io.din := w0Packed
+      }
+    }
+    when(w0WriteCnt === 127.U) {
+      w0Ready(blk) := true.B
+      w1BlockReady(i2Buf) := false.B
+      w1SubReady(i2Buf) := VecInit(Seq.fill(7)(false.B))
+      w1BufValid(i2Buf) := false.B
+      dbgInterp2Count := dbgInterp2Count + 1.U
+      i2State := i2Idle
+    }.otherwise {
+      w0WriteCnt := w0WriteCnt + 1.U
+    }
+  }
+
+  for (g <- 0 until 7) {
+    when(i3State === i3ReadReq) {
+      w0Ram(g).io.en := true.B
+      w0Ram(g).io.we := false.B
+      w0Ram(g).io.addr := finalReadAddr
+    }
   }
 
   when(i3State === i3Idle && busy && w0Ready.asUInt.andR) {
+    finalReadAddr := 0.U
     i3State := i3Start
   }.elsewhen(i3State === i3Start) {
-    interp256Seq.io.start := true.B
-    i3State := i3Run
-  }.elsewhen(i3State === i3Run && interp256Seq.io.done) {
-    for (i <- 0 until 1024) regC(i) := mask(interp256Seq.io.cOut(i), 24)
+    interp256Stream.io.start := true.B
+    i3State := i3ReadReq
+  }.elsewhen(i3State === i3ReadReq) {
+    i3State := i3ReadCap
+  }.elsewhen(i3State === i3ReadCap) {
+    interp256Stream.io.inValid := true.B
+    for (g <- 0 until 7) {
+      interp256Stream.io.pIn0(g) := w0Ram(g).io.dout(26, 0)
+      interp256Stream.io.pIn1(g) := w0Ram(g).io.dout(53, 27)
+    }
+    when(finalReadAddr === 127.U) {
+      i3State := i3Fix
+    }.otherwise {
+      finalReadAddr := finalReadAddr + 1.U
+      i3State := i3ReadReq
+    }
+  }.elsewhen(i3State === i3Fix) {
+    regC(0) := mask(regC(0) - interp256Stream.io.fixR2, 24)
+    regC(1) := mask(regC(1) - interp256Stream.io.fixR1, 24)
+    regC(2) := mask(regC(2) - interp256Stream.io.fixR0, 24)
     i3State := i3OutValid
   }.elsewhen(i3State === i3OutValid) {
     io.valid_out := true.B
     busy := false.B
     i3State := i3Idle
+  }
+
+  when(interp256Stream.io.outValid) {
+    val outBase = interp256Stream.io.outColBase << 2
+    for (i <- 0 until 8) {
+      regC(outBase + i.U) := interp256Stream.io.cOut(i)
+    }
   }
 
   // valid_in is accepted only when busy=false.
@@ -1032,6 +1167,9 @@ class ToomCook43 extends Module {
     w1SubReady := VecInit(Seq.fill(2) { VecInit(Seq.fill(7)(false.B)) })
     w1BufValid := VecInit(Seq.fill(2)(false.B))
     w0Ready := VecInit(Seq.fill(7)(false.B))
+    w0WriteCnt := 0.U
+    finalReadAddr := 0.U
+    interp256Stream.io.clear := true.B
     i1State := i1Idle; i2State := i2Idle; i3State := i3Idle
     w2WBuf := 0.U
     dbgCoreWriteCount := 0.U
