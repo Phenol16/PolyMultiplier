@@ -14,6 +14,8 @@ class ToomCook1024Test extends AnyFlatSpec with ChiselScalatestTester {
 
   private val N = 1024
   private val QMask: BigInt = (BigInt(1) << 24) - 1
+  private val ExpectedValidOutCycle = 1593
+  private val ValidOutCycleTolerance = 20
 
   /**
     * negacyclic convolution modulo x^1024 + 1, then modulo 2^24.
@@ -105,10 +107,10 @@ class ToomCook1024Test extends AnyFlatSpec with ChiselScalatestTester {
       s"[$label] Error: 等待 io.valid_out 超时！maxWaitCycles=$maxWaitCycles"
     )
 
-    println(
-      s"[$label DEBUG] coreWriteCount=${dut.io.dbg_core_write_count.peek().litValue}, " +
-        s"interp1GroupCount=${dut.io.dbg_interp1_group_count.peek().litValue}, " +
-        s"interp2BlockCount=${dut.io.dbg_interp2_block_count.peek().litValue}"
+    val cycleDelta = math.abs(outCycle - ExpectedValidOutCycle)
+    assert(
+      cycleDelta <= ValidOutCycleTolerance,
+      s"[$label] valid_out cycle=$outCycle, expected near $ExpectedValidOutCycle ± $ValidOutCycleTolerance"
     )
 
     println(s"[${now()}][$label] start checking outputs, outCycle=$outCycle")
@@ -146,15 +148,21 @@ class ToomCook1024Test extends AnyFlatSpec with ChiselScalatestTester {
       s"[$label] 计算错误：共有 $mismatchCount 个系数不匹配，最多已打印 $maxPrintMismatch 个。"
     )
 
+    dut.clock.step(1)
+    assert(
+      !dut.io.valid_out.peek().litToBoolean,
+      s"[$label] valid_out must be a one-cycle pulse"
+    )
+
     println(s"[${now()}][$label] PASS, valid_out cycle=$outCycle")
 
-    // 让 DUT 从 DONE 回到 IDLE，便于同一次 elaboration 内连续输入下一组 case
-    dut.clock.step(3)
+    // 让 DUT 回到 IDLE，便于同一次 elaboration 内连续输入下一组 case
+    dut.clock.step(2)
   }
 
   behavior of "ToomCook1024"
 
-  it should "debug deterministic cases before random test" in {
+  it should "pass deterministic cases and full_random_a24_b8" in {
     println(s"[${now()}] before test(new ToomCook1024)")
 
     test(new ToomCook43)
@@ -294,7 +302,7 @@ class ToomCook1024Test extends AnyFlatSpec with ChiselScalatestTester {
           )
         }
 
-        println(s"[${now()}] all debug cases passed")
+        println(s"[${now()}] all cases passed")
       }
   }
 }
