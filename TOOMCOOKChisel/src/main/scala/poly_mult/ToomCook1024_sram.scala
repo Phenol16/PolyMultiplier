@@ -941,7 +941,7 @@ class ToomCook43 extends Module {
   val evalLanesA = (0 until EVAL_LANES).map(l => Module(new EvalLaneFixed(24, A_EVAL_W, l, EVAL_LANES)))
   val evalLanesB = (0 until EVAL_LANES).map(l => Module(new EvalLaneFixed(8, B_EVAL_W, l, EVAL_LANES)))
   val core = Module(new Core16TC4)
-  val interp16Seq = Module(new InterpLayerSeqStreamTC4(16, 1, 36, 33))
+  val interp16Seq = Module(new InterpLayerSeqStreamInOutTC4(16, 1, 36, 33))
   val interp64Seq = Module(new InterpLayerSeqStreamInOutTC4(64, 2, 33, 27))
   val interp256Seq = Module(new InterpLayerSeq2ColStreamInTC4(256, 3, 27, 24))
   interp16Seq.io.start := false.B
@@ -964,7 +964,7 @@ class ToomCook43 extends Module {
   val outPt0 = Reg(UInt(3.W)); val outPt1 = Reg(UInt(3.W)); val outPt2 = Reg(UInt(3.W))
   val w2WBuf = RegInit(0.U(1.W))
 
-  val w2Ram = Seq.fill(2, 7)(Module(new SpRam(576, 2)))
+  val w2Ram = Seq.fill(2, 7)(Module(new SpRam(144, 4)))
   val w1Ram = Seq.fill(2, 7)(Module(new SpRam(132, 16)))
   // w0 使用 7 个单端口 SRAM bank，每个地址保存一整列 4 个 27-bit 系数：Cat(c3,c2,c1,c0)。
   // SRAM 总 bit 数与 54x128 相同，但 interp64 每列只需一拍写入，恢复写入吞吐。
@@ -983,7 +983,7 @@ class ToomCook43 extends Module {
 
   val w0Ready = RegInit(VecInit(Seq.fill(7)(false.B)))
 
-  val i1Idle :: i1ReadReq :: i1ReadCap :: i1Start :: i1Run :: Nil = Enum(5)
+  val i1Idle :: i1Start :: i1Run :: Nil = Enum(3)
   val i2Idle :: i2Start :: i2Run :: Nil = Enum(3)
   val i3Idle :: i3Start :: i3ReadPipe :: i3Run :: Nil = Enum(4)
   val i1State = RegInit(i1Idle)
@@ -991,18 +991,30 @@ class ToomCook43 extends Module {
   val i3State = RegInit(i3Idle)
   val i1Buf = RegInit(0.U(1.W))
   val i2Buf = RegInit(0.U(1.W))
+  val w2WritePending = RegInit(false.B)
+  val w2WriteGroup = RegInit(0.U(2.W))
+  val w2WriteBuf = RegInit(0.U(1.W))
+  val w2WritePt2 = RegInit(0.U(3.W))
+  val w2WritePt0 = RegInit(0.U(3.W))
+  val w2WritePt1 = RegInit(0.U(3.W))
+  val w2WriteData = Reg(Vec(16, UInt(36.W)))
+  val w2ReadCol = RegInit(0.U(5.W))
+  val w2ReadFeedValid = RegInit(false.B)
+  val w2ReadFeedSel = RegInit(0.U(2.W))
+  val w2ReadFeedCount = RegInit(0.U(5.W))
   val w1WriteBuf = RegInit(0.U(1.W))
   val w1WriteSub = RegInit(0.U(3.W))
   val w1ReadCol = RegInit(0.U(7.W))
   val w1ReadFeedValid = RegInit(false.B)
   val w1ReadFeedSel = RegInit(0.U(2.W))
+  val w1ReadFeedCount = RegInit(0.U(7.W))
   val w0WriteBlock = RegInit(0.U(3.W))
   val w0ReadPairIdx = RegInit(0.U(8.W))
   val w0ReadFeedValid = RegInit(false.B)
   val w0ReadFeedSel = RegInit(false.B)
 
-  val w2Local = Reg(Vec(7, Vec(16, UInt(36.W))))
-  for (i <- 0 until 7 * 16) interp16Seq.io.wIn(i) := w2Local(i / 16)(i % 16)
+  interp16Seq.io.inValid := false.B
+  for (p <- 0 until 7) interp16Seq.io.inData(p) := 0.U
   interp64Seq.io.inValid := false.B
   for (s <- 0 until 7) interp64Seq.io.inData(s) := 0.U
   interp256Seq.io.inValid := false.B
@@ -1010,7 +1022,7 @@ class ToomCook43 extends Module {
   for (i <- 0 until 1024) io.c(i) := mask(interp256Seq.io.cOut(i), 24)
 
   for (b <- 0 until 2; p <- 0 until 7) {
-    w2Ram(b)(p).io.clk := clock; w2Ram(b)(p).io.en := false.B; w2Ram(b)(p).io.we := false.B; w2Ram(b)(p).io.addr := 0.U(1.W); w2Ram(b)(p).io.din := 0.U
+    w2Ram(b)(p).io.clk := clock; w2Ram(b)(p).io.en := false.B; w2Ram(b)(p).io.we := false.B; w2Ram(b)(p).io.addr := 0.U(2.W); w2Ram(b)(p).io.din := 0.U
     w1Ram(b)(p).io.clk := clock; w1Ram(b)(p).io.en := false.B; w1Ram(b)(p).io.we := false.B; w1Ram(b)(p).io.addr := 0.U(4.W); w1Ram(b)(p).io.din := 0.U
   }
   for (g <- 0 until 7) {
@@ -1068,7 +1080,7 @@ class ToomCook43 extends Module {
   core.io.avec := evalCoreQ.io.deq.bits.avec
   core.io.bvec := evalCoreQ.io.deq.bits.bvec
   val canUseW2WriteBuf = (w2Empty(w2WBuf) || w2Writing(w2WBuf)) && !w2Reading(w2WBuf) && !w2Ready(w2WBuf)
-  val canCoreTake = busy && evalCoreQ.io.deq.valid && !corePending && canUseW2WriteBuf
+  val canCoreTake = busy && evalCoreQ.io.deq.valid && !corePending && !w2WritePending && canUseW2WriteBuf
   evalCoreQ.io.deq.ready := canCoreTake
   when(canCoreTake) {
     core.io.valid_in := true.B
@@ -1080,56 +1092,69 @@ class ToomCook43 extends Module {
     outPt2 := evalCoreQ.io.deq.bits.pt2
   }
 
-  for (buf <- 0 until 2; p <- 0 until 7) {
-    when(corePending && core.io.valid_out && w2WBuf === buf.U && outPt2 === p.U) {
-      w2Ram(buf)(p).io.en := true.B
-      w2Ram(buf)(p).io.we := true.B
-      w2Ram(buf)(p).io.din := packVec(core.io.cOut)
-    }
-  }
   when(corePending && core.io.valid_out) {
     dbgCoreWriteCount := dbgCoreWriteCount + 1.U
     corePending := false.B
-    when(w2WBuf === 0.U) {
-      val next0 = Wire(Vec(7, Bool()))
-      next0 := w2Full(0)
-      next0(outPt2) := true.B
-      w2Full(0) := next0
-      when(next0.asUInt.andR) {
-        w2Writing(0) := false.B
-        w2Ready(0) := true.B
-        w2Pt0(0) := outPt0
-        w2Pt1(0) := outPt1
-        w2WBuf := 1.U
+    w2WritePending := true.B
+    w2WriteGroup := 0.U
+    w2WriteBuf := w2WBuf
+    w2WritePt0 := outPt0
+    w2WritePt1 := outPt1
+    w2WritePt2 := outPt2
+    w2WriteData := core.io.cOut
+  }
+
+  when(w2WritePending) {
+    assert(w2WriteGroup <= 3.U, "w2WriteGroup must stay within grouped W2 SRAM depth")
+    assert(!((w2WriteBuf === 0.U && w2Reading(0)) || (w2WriteBuf === 1.U && w2Reading(1))),
+      "W2 grouped SRAM must not read and write the same buffer in one cycle")
+    val base = Cat(w2WriteGroup, 0.U(2.W))
+    for (buf <- 0 until 2; p <- 0 until 7) {
+      when(w2WriteBuf === buf.U && w2WritePt2 === p.U) {
+        w2Ram(buf)(p).io.en := true.B
+        w2Ram(buf)(p).io.we := true.B
+        w2Ram(buf)(p).io.addr := w2WriteGroup
+        w2Ram(buf)(p).io.din := Cat(
+          w2WriteData(base + 3.U), w2WriteData(base + 2.U),
+          w2WriteData(base + 1.U), w2WriteData(base + 0.U)
+        )
+      }
+    }
+    when(w2WriteGroup === 3.U) {
+      w2WritePending := false.B
+      when(w2WriteBuf === 0.U) {
+        val next0 = Wire(Vec(7, Bool()))
+        next0 := w2Full(0)
+        next0(w2WritePt2) := true.B
+        w2Full(0) := next0
+        when(next0.asUInt.andR) {
+          w2Writing(0) := false.B
+          w2Ready(0) := true.B
+          w2Pt0(0) := w2WritePt0
+          w2Pt1(0) := w2WritePt1
+          w2WBuf := 1.U
+        }
+      }.otherwise {
+        val next1 = Wire(Vec(7, Bool()))
+        next1 := w2Full(1)
+        next1(w2WritePt2) := true.B
+        w2Full(1) := next1
+        when(next1.asUInt.andR) {
+          w2Writing(1) := false.B
+          w2Ready(1) := true.B
+          w2Pt0(1) := w2WritePt0
+          w2Pt1(1) := w2WritePt1
+          w2WBuf := 0.U
+        }
       }
     }.otherwise {
-      val next1 = Wire(Vec(7, Bool()))
-      next1 := w2Full(1)
-      next1(outPt2) := true.B
-      w2Full(1) := next1
-      when(next1.asUInt.andR) {
-        w2Writing(1) := false.B
-        w2Ready(1) := true.B
-        w2Pt0(1) := outPt0
-        w2Pt1(1) := outPt1
-        w2WBuf := 0.U
-      }
+      w2WriteGroup := w2WriteGroup + 1.U
     }
   }
 
   when(i1State === i1Idle) {
-    when(w2Ready(0) && !w2Writing(0)) { i1Buf := 0.U; w2Reading(0) := true.B; i1State := i1ReadReq }
-      .elsewhen(w2Ready(1) && !w2Writing(1)) { i1Buf := 1.U; w2Reading(1) := true.B; i1State := i1ReadReq }
-  }.elsewhen(i1State === i1ReadReq) {
-    i1State := i1ReadCap
-  }.elsewhen(i1State === i1ReadCap) {
-    val w2ReadAnyNonZero = WireDefault(false.B)
-    for (p <- 0 until 7) {
-      val d = Mux(i1Buf === 0.U, w2Ram(0)(p).io.dout, w2Ram(1)(p).io.dout)
-      when(d.orR) { w2ReadAnyNonZero := true.B }
-      w2Local(p) := unpackVec(d, 16, 36)
-    }
-    i1State := i1Start
+    when(w2Ready(0) && !w2Writing(0)) { i1Buf := 0.U; w2Reading(0) := true.B; i1State := i1Start }
+      .elsewhen(w2Ready(1) && !w2Writing(1)) { i1Buf := 1.U; w2Reading(1) := true.B; i1State := i1Start }
   }.elsewhen(i1State === i1Start) {
     val curBlock = Mux(i1Buf === 0.U, w2Pt0(0), w2Pt0(1))
     val curSub = Mux(i1Buf === 0.U, w2Pt1(0), w2Pt1(1))
@@ -1149,9 +1174,49 @@ class ToomCook43 extends Module {
         when(!w1BufValid(1)) { w1BufValid(1) := true.B; w1BufBlock(1) := curBlock }
       }
       interp16Seq.io.start := true.B
+      // start 同周期发起 W2 col=0 的同步读，下一拍喂给 stream-in interp16。
+      for (buf <- 0 until 2; p <- 0 until 7) {
+        when(i1Buf === buf.U) {
+          w2Ram(buf)(p).io.en := true.B
+          w2Ram(buf)(p).io.we := false.B
+          w2Ram(buf)(p).io.addr := 0.U(2.W)
+        }
+      }
+      w2ReadCol := 1.U
+      w2ReadFeedValid := true.B
+      w2ReadFeedSel := 0.U
+      w2ReadFeedCount := 0.U
       i1State := i1Run
     }
   }.elsewhen(i1State === i1Run) {
+    assert(w2ReadCol <= 16.U, "W2 stream read column must not exceed 16")
+    when(w2ReadFeedValid) {
+      assert(interp16Seq.io.inReady, "interp16Seq must be ready whenever W2 stream drives inValid")
+      interp16Seq.io.inValid := true.B
+      for (p <- 0 until 7) {
+        val word = Mux(i1Buf === 0.U, w2Ram(0)(p).io.dout, w2Ram(1)(p).io.dout)
+        interp16Seq.io.inData(p) := MuxLookup(w2ReadFeedSel, word(35, 0))(Seq(
+          0.U -> word(35, 0),
+          1.U -> word(71, 36),
+          2.U -> word(107, 72),
+          3.U -> word(143, 108)
+        ))
+      }
+      w2ReadFeedCount := w2ReadFeedCount + 1.U
+    }
+    when(w2ReadCol === 16.U) {
+      w2ReadFeedValid := false.B
+    }.otherwise {
+      for (buf <- 0 until 2; p <- 0 until 7) {
+        when(i1Buf === buf.U) {
+          w2Ram(buf)(p).io.en := true.B
+          w2Ram(buf)(p).io.we := false.B
+          w2Ram(buf)(p).io.addr := (w2ReadCol >> 2)(1, 0)
+        }
+      }
+      w2ReadFeedSel := w2ReadCol(1, 0)
+      w2ReadCol := w2ReadCol + 1.U
+    }
     when(interp16Seq.io.outValid) {
       for (buf <- 0 until 2; sub <- 0 until 7) {
         when(w1WriteBuf === buf.U && w1WriteSub === sub.U) {
@@ -1167,6 +1232,7 @@ class ToomCook43 extends Module {
       }
     }
     when(interp16Seq.io.done) {
+      assert(w2ReadFeedCount === 16.U, "interp16 W2 stream should feed exactly 16 columns")
       val oldReady = Wire(Vec(7, Bool()))
       oldReady := Mux(w1WriteBuf === 0.U, w1SubReady(0), w1SubReady(1))
       val nextReady = Wire(Vec(7, Bool()))
@@ -1183,14 +1249,9 @@ class ToomCook43 extends Module {
       w2Reading(i1Buf) := false.B
       w2Empty(i1Buf) := true.B
       w2Full(i1Buf) := VecInit(Seq.fill(7)(false.B))
+      w2ReadFeedValid := false.B
       dbgInterp1Count := dbgInterp1Count + 1.U
       i1State := i1Idle
-    }
-  }
-
-  for (buf <- 0 until 2) {
-    when(i1Buf === buf.U && i1State === i1ReadReq) {
-      for (p <- 0 until 7) { w2Ram(buf)(p).io.en := true.B; w2Ram(buf)(p).io.we := false.B }
     }
   }
 
@@ -1211,9 +1272,12 @@ class ToomCook43 extends Module {
     w1ReadCol := 1.U
     w1ReadFeedValid := true.B
     w1ReadFeedSel := 0.U
+    w1ReadFeedCount := 0.U
     i2State := i2Run
   }.elsewhen(i2State === i2Run) {
+    assert(w1ReadCol <= 64.U, "W1 stream read column must not exceed 64")
     when(w1ReadFeedValid) {
+      assert(interp64Seq.io.inReady, "interp64Seq must be ready whenever W1 stream drives inValid")
       interp64Seq.io.inValid := true.B
       for (sub <- 0 until 7) {
         val word = Mux(i2Buf === 0.U, w1Ram(0)(sub).io.dout, w1Ram(1)(sub).io.dout)
@@ -1224,6 +1288,7 @@ class ToomCook43 extends Module {
           3.U -> word(131, 99)
         ))
       }
+      w1ReadFeedCount := w1ReadFeedCount + 1.U
     }
     when(w1ReadCol === 64.U) {
       w1ReadFeedValid := false.B
@@ -1253,6 +1318,7 @@ class ToomCook43 extends Module {
       }
     }
     when(interp64Seq.io.done) {
+      assert(w1ReadFeedCount === 64.U, "interp64 W1 stream should feed exactly 64 columns")
       w0Ready(w0WriteBlock) := true.B
       w1BlockReady(i2Buf) := false.B
       w1SubReady(i2Buf) := VecInit(Seq.fill(7)(false.B))
@@ -1326,7 +1392,9 @@ class ToomCook43 extends Module {
     w1BufValid := VecInit(Seq.fill(2)(false.B))
     w0Ready := VecInit(Seq.fill(7)(false.B))
     i1State := i1Idle; i2State := i2Idle; i3State := i3Idle
-    w1WriteBuf := 0.U; w1WriteSub := 0.U; w1ReadCol := 0.U; w1ReadFeedValid := false.B; w1ReadFeedSel := 0.U
+    w2WritePending := false.B; w2WriteGroup := 0.U; w2WriteBuf := 0.U; w2WritePt2 := 0.U; w2WritePt0 := 0.U; w2WritePt1 := 0.U
+    w2ReadCol := 0.U; w2ReadFeedValid := false.B; w2ReadFeedSel := 0.U; w2ReadFeedCount := 0.U
+    w1WriteBuf := 0.U; w1WriteSub := 0.U; w1ReadCol := 0.U; w1ReadFeedValid := false.B; w1ReadFeedSel := 0.U; w1ReadFeedCount := 0.U
     w0WriteBlock := 0.U; w0ReadPairIdx := 0.U; w0ReadFeedValid := false.B; w0ReadFeedSel := false.B
     w2WBuf := 0.U
     dbgCoreWriteCount := 0.U
