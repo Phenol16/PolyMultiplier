@@ -25,7 +25,7 @@ object Util {
 }
 import Util._
 
-object TC43EvalWidth {
+object TC4EvalWidth {
   val A_EVAL_W = 39
   val B_EVAL_W = 29
 }
@@ -50,9 +50,9 @@ object InterpParamTable {
 }
 
 // =============================================================================
-//  EvalLayerTC43：4个输入 -> 7个 Toom-Cook 求值点，纯组合硬件模块
+//  EvalLayerTC4：4个输入 -> 7个 Toom-Cook 求值点，纯组合硬件模块
 // =============================================================================
-class EvalLayerTC43(inW: Int, outW: Int) extends Module {
+class EvalLayerTC4(inW: Int, outW: Int) extends Module {
   val io = IO(new Bundle {
     val r   = Input(Vec(4, UInt(inW.W)))
     val out = Output(Vec(7, UInt(outW.W)))
@@ -118,47 +118,6 @@ class TC4EvalPoint(inW: Int, outW: Int) extends Module {
   ))
 }
 
-// =============================================================================
-//  BuildEvalVec16：三层 TC4 求值，1024输入 -> 16输出，纯组合硬件模块
-//  输入布局：in[64*l + 16*k + 4*j + i]
-// =============================================================================
-class BuildEvalVec16(memW: Int, outW: Int) extends Module {
-  val io = IO(new Bundle {
-    val in  = Input(Vec(1024, UInt(memW.W)))
-    val pt0 = Input(UInt(3.W))
-    val pt1 = Input(UInt(3.W))
-    val pt2 = Input(UInt(3.W))
-    val out = Output(Vec(16, UInt(outW.W)))
-  })
-
-  for (l <- 0 until 16) {
-    val lv2 = Wire(Vec(4, UInt(outW.W)))
-
-    for (k <- 0 until 4) {
-      val lv1 = Wire(Vec(4, UInt(outW.W)))
-
-      for (j <- 0 until 4) {
-        val eval0 = Module(new TC4EvalPoint(memW, outW))
-        eval0.io.r(0) := io.in(64 * l + 16 * k + 4 * j + 0)
-        eval0.io.r(1) := io.in(64 * l + 16 * k + 4 * j + 1)
-        eval0.io.r(2) := io.in(64 * l + 16 * k + 4 * j + 2)
-        eval0.io.r(3) := io.in(64 * l + 16 * k + 4 * j + 3)
-        eval0.io.pt   := io.pt0
-        lv1(j)        := eval0.io.out
-      }
-
-      val eval1 = Module(new TC4EvalPoint(outW, outW))
-      eval1.io.r := lv1
-      eval1.io.pt := io.pt1
-      lv2(k) := eval1.io.out
-    }
-
-    val eval2 = Module(new TC4EvalPoint(outW, outW))
-    eval2.io.r := lv2
-    eval2.io.pt := io.pt2
-    io.out(l) := eval2.io.out
-  }
-}
 
 // =============================================================================
 //  EvalLaneFixed：三层 TC4 求值的固定 lane 版本
@@ -216,9 +175,9 @@ class EvalLaneFixed(memW: Int, outW: Int, laneConst: Int, evalLanes: Int = 4) ex
 }
 
 // =============================================================================
-//  InterpCoreTC43：单列插值核心，纯组合硬件模块
+//  InterpCoreTC4：单列插值核心，纯组合硬件模块
 // =============================================================================
-class InterpCoreTC43(pidx: Int, inW: Int) extends Module {
+class InterpCoreTC4(pidx: Int, inW: Int) extends Module {
   private val p   = InterpParamTable.params(pidx)
   private val mk  = p.mk
   private val mk2 = p.mk2
@@ -281,11 +240,11 @@ class InterpCoreTC43(pidx: Int, inW: Int) extends Module {
 }
 
 // =============================================================================
-//  InterpLayerTC43：stride列插值层，纯组合硬件模块
+//  InterpLayerTC4：stride列插值层，纯组合硬件模块
 //  wIn 布局：wIn[pt*stride + col]
 //  cOut布局：cOut[4*col + k]
 // =============================================================================
-class InterpLayerTC43(stride: Int, pidx: Int, inW: Int, outW: Int) extends Module {
+class InterpLayerTC4(stride: Int, pidx: Int, inW: Int, outW: Int) extends Module {
   private val p   = InterpParamTable.params(pidx)
   private val mk2 = p.mk2
 
@@ -304,7 +263,7 @@ class InterpLayerTC43(stride: Int, pidx: Int, inW: Int, outW: Int) extends Modul
   prevR2(0) := 0.U
 
   for (i <- 0 until stride) {
-    val core = Module(new InterpCoreTC43(pidx, inW))
+    val core = Module(new InterpCoreTC4(pidx, inW))
 
     for (pt <- 0 until 7) {
       core.io.pIn(pt) := io.wIn(pt * stride + i)
@@ -335,10 +294,10 @@ class InterpLayerTC43(stride: Int, pidx: Int, inW: Int, outW: Int) extends Modul
 }
 
 // =============================================================================
-//  InterpLayerSeqTC43：时序复用插值层
-//  仅使用 1 个 InterpCoreTC43，每拍处理一列，总计 stride 列
+//  InterpLayerSeqTC4：时序复用插值层
+//  仅使用 1 个 InterpCoreTC4，每拍处理一列，总计 stride 列
 // =============================================================================
-class InterpLayerSeqTC43(stride: Int, pidx: Int, inW: Int, outW: Int) extends Module {
+class InterpLayerSeqTC4(stride: Int, pidx: Int, inW: Int, outW: Int) extends Module {
   private val p   = InterpParamTable.params(pidx)
   private val mk2 = p.mk2
 
@@ -354,7 +313,7 @@ class InterpLayerSeqTC43(stride: Int, pidx: Int, inW: Int, outW: Int) extends Mo
     val dbg_c0_after_fix = Output(UInt(outW.W))
   })
 
-  val core = Module(new InterpCoreTC43(pidx, inW))
+  val core = Module(new InterpCoreTC4(pidx, inW))
 
   val colCnt   = RegInit(0.U(log2Ceil(stride).W))
   val running  = RegInit(false.B)
@@ -456,156 +415,7 @@ class InterpLayerSeqTC43(stride: Int, pidx: Int, inW: Int, outW: Int) extends Mo
     doneReg := true.B
   }
 }
-
-// =============================================================================
-//  Product4TC43：4系数 × 4系数 -> 7系数，纯组合硬件模块
-// =============================================================================
-class Product4TC43 extends Module {
-  private val A_EVAL_W = TC43EvalWidth.A_EVAL_W
-  private val B_EVAL_W = TC43EvalWidth.B_EVAL_W
-  private val PROD_MUL_MOD_W = A_EVAL_W
-  private val PROD_OUT_W = 36
-
-  val io = IO(new Bundle {
-    val a4  = Input(Vec(4, UInt(A_EVAL_W.W)))
-    val b4  = Input(Vec(4, UInt(B_EVAL_W.W)))
-    val out = Output(Vec(7, UInt(PROD_OUT_W.W)))
-  })
-
-  val evalA = Module(new EvalLayerTC43(A_EVAL_W, A_EVAL_W))
-  val evalB = Module(new EvalLayerTC43(B_EVAL_W, B_EVAL_W))
-
-  evalA.io.r := io.a4
-  evalB.io.r := io.b4
-
-  val wMul = Wire(Vec(7, UInt(PROD_MUL_MOD_W.W)))
-
-  for (i <- 0 until 7) {
-    val bw     = evalB.io.out(i)(B_EVAL_W - 1, 0)
-    val bwSign = bw(B_EVAL_W - 1)
-    val bwSext = Cat(Fill(A_EVAL_W - B_EVAL_W, bwSign), bw).asSInt
-    val awInt  = evalA.io.out(i)(A_EVAL_W - 1, 0).asSInt
-    wMul(i) := mask((awInt * bwSext).asUInt, PROD_MUL_MOD_W)
-  }
-
-  val r5a = mask(wMul(5) - wMul(4), PROD_MUL_MOD_W)
-  val r3a = mask(mask(wMul(3) - wMul(2), PROD_MUL_MOD_W) >> 1, PROD_MUL_MOD_W)
-  val r4a = mask(wMul(4) - wMul(0), PROD_MUL_MOD_W)
-  val r4b = mask((r4a << 1) + r5a - (wMul(6) << 7), PROD_MUL_MOD_W)
-  val r2a = mask(wMul(2) + r3a, PROD_MUL_MOD_W)
-  val r1a = mask(wMul(1) + wMul(4) - (r2a << 6) - r2a, PROD_MUL_MOD_W)
-  val r2b = mask(r2a - wMul(6) - wMul(0), PROD_MUL_MOD_W)
-  val r1b = mask(r1a + r2b + (r2b << 2) + (r2b << 3) + (r2b << 5), PROD_MUL_MOD_W)
-
-  val r4c = mask(
-    mask(mask(r4b - (r2b << 3), PROD_MUL_MOD_W) >> 3, PROD_MUL_MOD_W) * "hAAAAAAAAB".U(42.W), PROD_OUT_W
-  )
-  val r5b = mask(
-    mask((r5a + r1b) >> 1, PROD_MUL_MOD_W) * "hEEEEEEEEF".U(42.W), 37
-  )
-  val r1c = mask(
-    mask(mask(r1b + (r3a << 4), PROD_MUL_MOD_W) >> 1, PROD_MUL_MOD_W) * "hE38E38E39".U(42.W), 37
-  )
-
-  val r2c = mask(r2b - r4c, PROD_OUT_W)
-  val r3b = mask(0.U - r3a - r1c, PROD_OUT_W)
-  val r5c = mask((r1c - r5b) >> 1, PROD_OUT_W)
-  val r1d = mask(r1c - r5c, PROD_OUT_W)
-
-  io.out(0) := mask(wMul(6) - r2c, PROD_OUT_W)
-  io.out(1) := mask(r5c - r1d, PROD_OUT_W)
-  io.out(2) := mask(r4c - wMul(0), PROD_OUT_W)
-  io.out(3) := r3b
-  io.out(4) := 0.U
-  io.out(5) := 0.U
-  io.out(6) := 0.U
-}
-
-// =============================================================================
-//  Core16TC43：16元素子核
-//  模块内部仍保留原设计的一拍寄存器切割：Product4输出 -> InterpLayer输入
-// =============================================================================
-class Core16TC43 extends Module {
-  private val A_EVAL_W = TC43EvalWidth.A_EVAL_W
-  private val B_EVAL_W = TC43EvalWidth.B_EVAL_W
-  private val CORE_OUT_W = 36
-
-  val io = IO(new Bundle {
-    val valid_in  = Input(Bool())
-    val avec      = Input(Vec(16, UInt(A_EVAL_W.W)))
-    val bvec      = Input(Vec(16, UInt(B_EVAL_W.W)))
-    val valid_out = Output(Bool())
-    val cOut      = Output(Vec(16, UInt(CORE_OUT_W.W)))
-  })
-
-  val ae = Wire(Vec(7 * 4, UInt(A_EVAL_W.W)))
-  val be = Wire(Vec(7 * 4, UInt(B_EVAL_W.W)))
-
-  for (seg <- 0 until 4) {
-    val evalA = Module(new EvalLayerTC43(A_EVAL_W, A_EVAL_W))
-    val evalB = Module(new EvalLayerTC43(B_EVAL_W, B_EVAL_W))
-
-    evalA.io.r(0) := io.avec(seg * 4 + 0)
-    evalA.io.r(1) := io.avec(seg * 4 + 1)
-    evalA.io.r(2) := io.avec(seg * 4 + 2)
-    evalA.io.r(3) := io.avec(seg * 4 + 3)
-
-    evalB.io.r(0) := io.bvec(seg * 4 + 0)
-    evalB.io.r(1) := io.bvec(seg * 4 + 1)
-    evalB.io.r(2) := io.bvec(seg * 4 + 2)
-    evalB.io.r(3) := io.bvec(seg * 4 + 3)
-
-    for (pt <- 0 until 7) {
-      ae(pt * 4 + seg) := evalA.io.out(pt)
-      be(pt * 4 + seg) := evalB.io.out(pt)
-    }
-  }
-
-  val wProd = Wire(Vec(7 * 4, UInt(CORE_OUT_W.W)))
-
-  for (pt <- 0 until 7) {
-    val prod = Module(new Product4TC43)
-
-    for (k <- 0 until 4) {
-      prod.io.a4(k) := ae(pt * 4 + k)
-      prod.io.b4(k) := be(pt * 4 + k)
-    }
-
-    for (k <- 0 until 4) {
-      wProd(pt * 4 + k) := prod.io.out(k)
-    }
-  }
-
-  val regW     = RegEnable(wProd, io.valid_in)
-  val regValid = RegNext(io.valid_in, false.B)
-
-  val interp = Module(new InterpLayerTC43(stride = 4, pidx = 0, inW = 36, outW = 36))
-  interp.io.wIn := regW
-
-  io.valid_out := regValid
-  io.cOut      := interp.io.cOut
-}
-
-// =============================================================================
-//  ToomCook43 顶层
-//  保留原本的整体流水结构：
-//  输入寄存 -> Core16内部寄存 -> W2寄存 -> W1寄存 -> W0寄存 -> 输出寄存
-// =============================================================================
-
-class SpRam(width: Int, depth: Int) extends BlackBox(Map("WIDTH" -> width, "DEPTH" -> depth)) with HasBlackBoxResource {
-  override def desiredName: String = "sp_ram"
-  val io = IO(new Bundle {
-    val clk = Input(Clock())
-    val en = Input(Bool())
-    val we = Input(Bool())
-    val addr = Input(UInt(log2Ceil(depth).W))
-    val din = Input(UInt(width.W))
-    val dout = Output(UInt(width.W))
-  })
-  addResource("/sp_ram.v")
-}
-
-class InterpLayerSeq2ColTC43(stride: Int, pidx: Int, inW: Int, outW: Int) extends Module {
+class InterpLayerSeq2ColTC4(stride: Int, pidx: Int, inW: Int, outW: Int) extends Module {
   require(stride % 2 == 0, "2-column interpolation requires even stride")
   private val p = InterpParamTable.params(pidx)
   private val mk2 = p.mk2
@@ -616,8 +426,8 @@ class InterpLayerSeq2ColTC43(stride: Int, pidx: Int, inW: Int, outW: Int) extend
     val cOut = Output(Vec(4 * stride, UInt(outW.W)))
   })
 
-  val core0 = Module(new InterpCoreTC43(pidx, inW))
-  val core1 = Module(new InterpCoreTC43(pidx, inW))
+  val core0 = Module(new InterpCoreTC4(pidx, inW))
+  val core1 = Module(new InterpCoreTC4(pidx, inW))
   val colCnt = RegInit(0.U(log2Ceil(stride).W))
   val running = RegInit(false.B)
   val fixStage = RegInit(false.B)
@@ -689,6 +499,148 @@ class InterpLayerSeq2ColTC43(stride: Int, pidx: Int, inW: Int, outW: Int) extend
   }
 }
 
+// =============================================================================
+//  Product4TC4：4系数 × 4系数 -> 7系数，纯组合硬件模块
+// =============================================================================
+class Product4TC4 extends Module {
+  private val A_EVAL_W = TC4EvalWidth.A_EVAL_W
+  private val B_EVAL_W = TC4EvalWidth.B_EVAL_W
+  private val PROD_MUL_MOD_W = A_EVAL_W
+  private val PROD_OUT_W = 36
+
+  val io = IO(new Bundle {
+    val a4  = Input(Vec(4, UInt(A_EVAL_W.W)))
+    val b4  = Input(Vec(4, UInt(B_EVAL_W.W)))
+    val out = Output(Vec(7, UInt(PROD_OUT_W.W)))
+  })
+
+  val evalA = Module(new EvalLayerTC4(A_EVAL_W, A_EVAL_W))
+  val evalB = Module(new EvalLayerTC4(B_EVAL_W, B_EVAL_W))
+
+  evalA.io.r := io.a4
+  evalB.io.r := io.b4
+
+  val wMul = Wire(Vec(7, UInt(PROD_MUL_MOD_W.W)))
+
+  for (i <- 0 until 7) {
+    val bw     = evalB.io.out(i)(B_EVAL_W - 1, 0)
+    val bwSign = bw(B_EVAL_W - 1)
+    val bwSext = Cat(Fill(A_EVAL_W - B_EVAL_W, bwSign), bw).asSInt
+    val awInt  = evalA.io.out(i)(A_EVAL_W - 1, 0).asSInt
+    wMul(i) := mask((awInt * bwSext).asUInt, PROD_MUL_MOD_W)
+  }
+
+  val r5a = mask(wMul(5) - wMul(4), PROD_MUL_MOD_W)
+  val r3a = mask(mask(wMul(3) - wMul(2), PROD_MUL_MOD_W) >> 1, PROD_MUL_MOD_W)
+  val r4a = mask(wMul(4) - wMul(0), PROD_MUL_MOD_W)
+  val r4b = mask((r4a << 1) + r5a - (wMul(6) << 7), PROD_MUL_MOD_W)
+  val r2a = mask(wMul(2) + r3a, PROD_MUL_MOD_W)
+  val r1a = mask(wMul(1) + wMul(4) - (r2a << 6) - r2a, PROD_MUL_MOD_W)
+  val r2b = mask(r2a - wMul(6) - wMul(0), PROD_MUL_MOD_W)
+  val r1b = mask(r1a + r2b + (r2b << 2) + (r2b << 3) + (r2b << 5), PROD_MUL_MOD_W)
+
+  val r4c = mask(
+    mask(mask(r4b - (r2b << 3), PROD_MUL_MOD_W) >> 3, PROD_MUL_MOD_W) * "hAAAAAAAAB".U(42.W), PROD_OUT_W
+  )
+  val r5b = mask(
+    mask((r5a + r1b) >> 1, PROD_MUL_MOD_W) * "hEEEEEEEEF".U(42.W), 37
+  )
+  val r1c = mask(
+    mask(mask(r1b + (r3a << 4), PROD_MUL_MOD_W) >> 1, PROD_MUL_MOD_W) * "hE38E38E39".U(42.W), 37
+  )
+
+  val r2c = mask(r2b - r4c, PROD_OUT_W)
+  val r3b = mask(0.U - r3a - r1c, PROD_OUT_W)
+  val r5c = mask((r1c - r5b) >> 1, PROD_OUT_W)
+  val r1d = mask(r1c - r5c, PROD_OUT_W)
+
+  io.out(0) := mask(wMul(6) - r2c, PROD_OUT_W)
+  io.out(1) := mask(r5c - r1d, PROD_OUT_W)
+  io.out(2) := mask(r4c - wMul(0), PROD_OUT_W)
+  io.out(3) := r3b
+  io.out(4) := 0.U
+  io.out(5) := 0.U
+  io.out(6) := 0.U
+}
+
+// =============================================================================
+//  Core16TC4：16元素子核
+//  模块内部仍保留原设计的一拍寄存器切割：Product4输出 -> InterpLayer输入
+// =============================================================================
+class Core16TC4 extends Module {
+  private val A_EVAL_W = TC4EvalWidth.A_EVAL_W
+  private val B_EVAL_W = TC4EvalWidth.B_EVAL_W
+  private val CORE_OUT_W = 36
+
+  val io = IO(new Bundle {
+    val valid_in  = Input(Bool())
+    val avec      = Input(Vec(16, UInt(A_EVAL_W.W)))
+    val bvec      = Input(Vec(16, UInt(B_EVAL_W.W)))
+    val valid_out = Output(Bool())
+    val cOut      = Output(Vec(16, UInt(CORE_OUT_W.W)))
+  })
+
+  val ae = Wire(Vec(7 * 4, UInt(A_EVAL_W.W)))
+  val be = Wire(Vec(7 * 4, UInt(B_EVAL_W.W)))
+
+  for (seg <- 0 until 4) {
+    val evalA = Module(new EvalLayerTC4(A_EVAL_W, A_EVAL_W))
+    val evalB = Module(new EvalLayerTC4(B_EVAL_W, B_EVAL_W))
+
+    evalA.io.r(0) := io.avec(seg * 4 + 0)
+    evalA.io.r(1) := io.avec(seg * 4 + 1)
+    evalA.io.r(2) := io.avec(seg * 4 + 2)
+    evalA.io.r(3) := io.avec(seg * 4 + 3)
+
+    evalB.io.r(0) := io.bvec(seg * 4 + 0)
+    evalB.io.r(1) := io.bvec(seg * 4 + 1)
+    evalB.io.r(2) := io.bvec(seg * 4 + 2)
+    evalB.io.r(3) := io.bvec(seg * 4 + 3)
+
+    for (pt <- 0 until 7) {
+      ae(pt * 4 + seg) := evalA.io.out(pt)
+      be(pt * 4 + seg) := evalB.io.out(pt)
+    }
+  }
+
+  val wProd = Wire(Vec(7 * 4, UInt(CORE_OUT_W.W)))
+
+  for (pt <- 0 until 7) {
+    val prod = Module(new Product4TC4)
+
+    for (k <- 0 until 4) {
+      prod.io.a4(k) := ae(pt * 4 + k)
+      prod.io.b4(k) := be(pt * 4 + k)
+    }
+
+    for (k <- 0 until 4) {
+      wProd(pt * 4 + k) := prod.io.out(k)
+    }
+  }
+
+  val regW     = RegEnable(wProd, io.valid_in)
+  val regValid = RegNext(io.valid_in, false.B)
+
+  val interp = Module(new InterpLayerTC4(stride = 4, pidx = 0, inW = 36, outW = 36))
+  interp.io.wIn := regW
+
+  io.valid_out := regValid
+  io.cOut      := interp.io.cOut
+}
+
+class SpRam(width: Int, depth: Int) extends BlackBox(Map("WIDTH" -> width, "DEPTH" -> depth)) with HasBlackBoxResource {
+  override def desiredName: String = "sp_ram"
+  val io = IO(new Bundle {
+    val clk = Input(Clock())
+    val en = Input(Bool())
+    val we = Input(Bool())
+    val addr = Input(UInt(log2Ceil(depth).W))
+    val din = Input(UInt(width.W))
+    val dout = Output(UInt(width.W))
+  })
+  addResource("/sp_ram.v")
+}
+
 class EvalCoreJob(aW: Int, bW: Int) extends Bundle {
   val avec = Vec(16, UInt(aW.W))
   val bvec = Vec(16, UInt(bW.W))
@@ -696,7 +648,11 @@ class EvalCoreJob(aW: Int, bW: Int) extends Bundle {
   val pt1 = UInt(3.W)
   val pt2 = UInt(3.W)
 }
-
+// =============================================================================
+//  ToomCook43 顶层
+//  保留原本的整体流水结构：
+//  输入寄存 -> Core16内部寄存 -> W2寄存 -> W1寄存 -> W0寄存 -> 输出寄存
+// =============================================================================
 class ToomCook43IO extends Bundle {
   val valid_in = Input(Bool())
   val a = Input(Vec(1024, UInt(24.W)))
@@ -718,15 +674,10 @@ class ToomCook43 extends Module {
   }
 
   val io = IO(new ToomCook43IO)
-  private val A_EVAL_W = TC43EvalWidth.A_EVAL_W
-  private val B_EVAL_W = TC43EvalWidth.B_EVAL_W
+  private val A_EVAL_W = TC4EvalWidth.A_EVAL_W
+  private val B_EVAL_W = TC4EvalWidth.B_EVAL_W
   private val EVAL_LANES = 4
 
-  // Current version keeps the original Vec(1024) input interface and stores
-  // the accepted frame in regA/regB.
-  // This version only SRAM-izes the Core->Interp W2 and Interp1->Interp2 W1
-  // intermediate buffers.
-  // External input SRAM + local tile cache is reserved for a later version.
   val regA = Reg(Vec(1024, UInt(24.W)))
   val regB = Reg(Vec(1024, UInt(8.W)))
   val regC = Reg(Vec(1024, UInt(24.W)))
@@ -735,10 +686,10 @@ class ToomCook43 extends Module {
 
   val evalLanesA = (0 until EVAL_LANES).map(l => Module(new EvalLaneFixed(24, A_EVAL_W, l, EVAL_LANES)))
   val evalLanesB = (0 until EVAL_LANES).map(l => Module(new EvalLaneFixed(8, B_EVAL_W, l, EVAL_LANES)))
-  val core = Module(new Core16TC43)
-  val interp16Seq = Module(new InterpLayerSeqTC43(16, 1, 36, 33))
-  val interp64Seq = Module(new InterpLayerSeqTC43(64, 2, 33, 27))
-  val interp256Seq = Module(new InterpLayerSeq2ColTC43(256, 3, 27, 24))
+  val core = Module(new Core16TC4)
+  val interp16Seq = Module(new InterpLayerSeqTC4(16, 1, 36, 33))
+  val interp64Seq = Module(new InterpLayerSeqTC4(64, 2, 33, 27))
+  val interp256Seq = Module(new InterpLayerSeq2ColTC4(256, 3, 27, 24))
   interp16Seq.io.start := false.B
   interp64Seq.io.start := false.B
   interp256Seq.io.start := false.B
@@ -754,7 +705,6 @@ class ToomCook43 extends Module {
   val evalCoreQ = Module(new Queue(new EvalCoreJob(A_EVAL_W, B_EVAL_W), 2, pipe = true, flow = false))
   val avecBuild = Reg(Vec(16, UInt(A_EVAL_W.W)))
   val bvecBuild = Reg(Vec(16, UInt(B_EVAL_W.W)))
-
 
   val corePending = RegInit(false.B)
   val outPt0 = Reg(UInt(3.W)); val outPt1 = Reg(UInt(3.W)); val outPt2 = Reg(UInt(3.W))
