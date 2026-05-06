@@ -742,6 +742,9 @@ class ToomCook43IO extends Bundle {
 }
 
 class ToomCook43 extends Module {
+  // ---------------------------------------------------------------------------
+  // Local helpers
+  // ---------------------------------------------------------------------------
   def packVec(xs: Seq[UInt]): UInt = Cat(xs.reverse)
   def unpackVec(x: UInt, n: Int, w: Int): Vec[UInt] = {
     val v = Wire(Vec(n, UInt(w.W)))
@@ -749,43 +752,62 @@ class ToomCook43 extends Module {
     v
   }
 
+  // ---------------------------------------------------------------------------
+  // IO and constants
+  // ---------------------------------------------------------------------------
   val io = IO(new ToomCook43IO)
+
   private val A_EVAL_W = TC4EvalWidth.A_EVAL_W
   private val B_EVAL_W = TC4EvalWidth.B_EVAL_W
   private val EVAL_LANES = 4
 
-  val regA = Reg(Vec(1024, UInt(24.W)))
-  val regB = Reg(Vec(1024, UInt(8.W)))
-  io.valid_out := false.B
-
+  // ---------------------------------------------------------------------------
+  // Submodules
+  // ---------------------------------------------------------------------------
   val evalLanesA = (0 until EVAL_LANES).map(l => Module(new EvalLaneFixed(24, A_EVAL_W, l, EVAL_LANES)))
   val evalLanesB = (0 until EVAL_LANES).map(l => Module(new EvalLaneFixed(8, B_EVAL_W, l, EVAL_LANES)))
+  val evalCoreQ = Module(new Queue(new EvalCoreJob(A_EVAL_W, B_EVAL_W), 2, pipe = true, flow = false))
   val core = Module(new Core16TC4)
   val interp16Seq = Module(new InterpLayerSeqStreamTC4(16, 1, 36, 33))
   val interp64Seq = Module(new InterpLayerSeqStreamInOutTC4(64, 2, 33, 27))
   val interp256Seq = Module(new InterpLayerSeq2ColStreamInTC4(256, 3, 27, 24))
-  interp16Seq.io.start := false.B
-  interp64Seq.io.start := false.B
-  interp256Seq.io.start := false.B
 
+  // ---------------------------------------------------------------------------
+  // Main storage resources
+  // ---------------------------------------------------------------------------
+  val regA = Reg(Vec(1024, UInt(24.W)))
+  val regB = Reg(Vec(1024, UInt(8.W)))
+
+  val w2Ram = Seq.fill(2, 7)(Module(new SpRam(576, 2)))
+  val w2Local = Reg(Vec(7, Vec(16, UInt(36.W))))
+
+  // W1 使用 grouped SRAM，每个 word 保存 4 个 33-bit 系数：Cat(c3,c2,c1,c0)。
+  val w1Ram = Seq.fill(2, 7)(Module(new SpRam(132, 16)))
+
+  // W0 使用 grouped SRAM，每个 word 保存 4 个 27-bit 系数：Cat(c3,c2,c1,c0)。
+  val w0Ram = Seq.fill(7)(Module(new SpRam(108, 64)))
+
+  // ---------------------------------------------------------------------------
+  // Global frame control
+  // ---------------------------------------------------------------------------
   val busy = RegInit(false.B)
+
+  // ---------------------------------------------------------------------------
+  // Eval/Core stage state
+  // ---------------------------------------------------------------------------
   val evalPhase = RegInit(0.U(2.W))
   val pt0 = RegInit(0.U(3.W)); val pt1 = RegInit(0.U(3.W)); val pt2 = RegInit(0.U(3.W))
   val evalDone = RegInit(false.B)
-
-  val evalCoreQ = Module(new Queue(new EvalCoreJob(A_EVAL_W, B_EVAL_W), 2, pipe = true, flow = false))
   val avecBuild = Reg(Vec(16, UInt(A_EVAL_W.W)))
   val bvecBuild = Reg(Vec(16, UInt(B_EVAL_W.W)))
 
   val corePending = RegInit(false.B)
   val outPt0 = Reg(UInt(3.W)); val outPt1 = Reg(UInt(3.W)); val outPt2 = Reg(UInt(3.W))
-  val w2WBuf = RegInit(0.U(1.W))
 
-  val w2Ram = Seq.fill(2, 7)(Module(new SpRam(576, 2)))
-  val w1Ram = Seq.fill(2, 7)(Module(new SpRam(132, 16)))
-  // w0 使用 7 个单端口 SRAM bank，每个地址保存一整列 4 个 27-bit 系数：Cat(c3,c2,c1,c0)。
-  // SRAM 总 bit 数与 54x128 相同，但 interp64 每列只需一拍写入，恢复写入吞吐。
-  val w0Ram = Seq.fill(7)(Module(new SpRam(108, 64)))
+  // ---------------------------------------------------------------------------
+  // W2 buffer and I1 state
+  // ---------------------------------------------------------------------------
+  val w2WBuf = RegInit(0.U(1.W))
   val w2Empty = RegInit(VecInit(Seq.fill(2)(true.B)))
   val w2Writing = RegInit(VecInit(Seq.fill(2)(false.B)))
   val w2Reading = RegInit(VecInit(Seq.fill(2)(false.B)))
@@ -793,39 +815,60 @@ class ToomCook43 extends Module {
   val w2Full = RegInit(VecInit(Seq.fill(2) { VecInit(Seq.fill(7)(false.B)) }))
   val w2Pt0 = Reg(Vec(2, UInt(3.W))); val w2Pt1 = Reg(Vec(2, UInt(3.W)))
 
+  val i1Idle :: i1ReadReq :: i1ReadCap :: i1Start :: i1Run :: Nil = Enum(5)
+  val i1State = RegInit(i1Idle)
+  val i1Buf = RegInit(0.U(1.W))
+  val w1WriteBuf = RegInit(0.U(1.W))
+  val w1WriteSub = RegInit(0.U(3.W))
+
+  // ---------------------------------------------------------------------------
+  // W1 buffer and I2 state
+  // ---------------------------------------------------------------------------
   val w1BufValid = RegInit(VecInit(Seq.fill(2)(false.B)))
   val w1BufBlock = Reg(Vec(2, UInt(3.W)))
   val w1SubReady = RegInit(VecInit(Seq.fill(2) { VecInit(Seq.fill(7)(false.B)) }))
   val w1BlockReady = RegInit(VecInit(Seq.fill(2)(false.B)))
 
-  val w0Ready = RegInit(VecInit(Seq.fill(7)(false.B)))
-
-  val i1Idle :: i1ReadReq :: i1ReadCap :: i1Start :: i1Run :: Nil = Enum(5)
   val i2Idle :: i2Start :: i2Run :: Nil = Enum(3)
-  val i3Idle :: i3Start :: i3ReadPipe :: i3Run :: Nil = Enum(4)
-  val i1State = RegInit(i1Idle)
   val i2State = RegInit(i2Idle)
-  val i3State = RegInit(i3Idle)
-  val i1Buf = RegInit(0.U(1.W))
   val i2Buf = RegInit(0.U(1.W))
-  val w1WriteBuf = RegInit(0.U(1.W))
-  val w1WriteSub = RegInit(0.U(3.W))
   val w1ReadCol = RegInit(0.U(7.W))
   val w1ReadFeedValid = RegInit(false.B)
   val w1ReadFeedSel = RegInit(0.U(2.W))
   val w0WriteBlock = RegInit(0.U(3.W))
+
+  // ---------------------------------------------------------------------------
+  // W0 readiness and I3 state
+  // ---------------------------------------------------------------------------
+  val w0Ready = RegInit(VecInit(Seq.fill(7)(false.B)))
+
+  val i3Idle :: i3Start :: i3ReadPipe :: i3Run :: Nil = Enum(4)
+  val i3State = RegInit(i3Idle)
   val w0ReadPairIdx = RegInit(0.U(8.W))
   val w0ReadFeedValid = RegInit(false.B)
   val w0ReadFeedSel = RegInit(false.B)
 
-  val w2Local = Reg(Vec(7, Vec(16, UInt(36.W))))
-  for (i <- 0 until 7 * 16) interp16Seq.io.wIn(i) := w2Local(i / 16)(i % 16)
-  interp64Seq.io.inValid := false.B
-  for (s <- 0 until 7) interp64Seq.io.inData(s) := 0.U
-  interp256Seq.io.inValid := false.B
-  for (g <- 0 until 7) interp256Seq.io.inPair(g) := 0.U
+  // ---------------------------------------------------------------------------
+  // Default outputs and child-module inputs
+  // ---------------------------------------------------------------------------
+  io.valid_out := false.B
+  // final interp256Seq 内部保留输出缓存，以维持 io.c = Vec(1024, UInt(24.W)) 的并行输出接口。
   for (i <- 0 until 1024) io.c(i) := mask(interp256Seq.io.cOut(i), 24)
 
+  interp16Seq.io.start := false.B
+  for (i <- 0 until 7 * 16) interp16Seq.io.wIn(i) := w2Local(i / 16)(i % 16)
+
+  interp64Seq.io.start := false.B
+  interp64Seq.io.inValid := false.B
+  for (s <- 0 until 7) interp64Seq.io.inData(s) := 0.U
+
+  interp256Seq.io.start := false.B
+  interp256Seq.io.inValid := false.B
+  for (g <- 0 until 7) interp256Seq.io.inPair(g) := 0.U
+
+  // ---------------------------------------------------------------------------
+  // Default SRAM ports
+  // ---------------------------------------------------------------------------
   for (b <- 0 until 2; p <- 0 until 7) {
     w2Ram(b)(p).io.clk := clock; w2Ram(b)(p).io.en := false.B; w2Ram(b)(p).io.we := false.B; w2Ram(b)(p).io.addr := 0.U(1.W); w2Ram(b)(p).io.din := 0.U
     w1Ram(b)(p).io.clk := clock; w1Ram(b)(p).io.en := false.B; w1Ram(b)(p).io.we := false.B; w1Ram(b)(p).io.addr := 0.U(4.W); w1Ram(b)(p).io.din := 0.U
@@ -834,11 +877,17 @@ class ToomCook43 extends Module {
     w0Ram(g).io.clk := clock; w0Ram(g).io.en := false.B; w0Ram(g).io.we := false.B; w0Ram(g).io.addr := 0.U(6.W); w0Ram(g).io.din := 0.U
   }
 
+  // ---------------------------------------------------------------------------
+  // Eval lane wiring
+  // ---------------------------------------------------------------------------
   for (l <- 0 until EVAL_LANES) {
     evalLanesA(l).io.in := regA; evalLanesA(l).io.pt0 := pt0; evalLanesA(l).io.pt1 := pt1; evalLanesA(l).io.pt2 := pt2; evalLanesA(l).io.phase := evalPhase
     evalLanesB(l).io.in := regB; evalLanesB(l).io.pt0 := pt0; evalLanesB(l).io.pt1 := pt1; evalLanesB(l).io.pt2 := pt2; evalLanesB(l).io.phase := evalPhase
   }
 
+  // ---------------------------------------------------------------------------
+  // Eval accumulation and queue enqueue
+  // ---------------------------------------------------------------------------
   val nextAvec = Wire(Vec(16, UInt(A_EVAL_W.W)))
   val nextBvec = Wire(Vec(16, UInt(B_EVAL_W.W)))
   nextAvec := avecBuild
@@ -881,6 +930,9 @@ class ToomCook43 extends Module {
       }
   }
 
+  // ---------------------------------------------------------------------------
+  // Core dequeue and W2 write
+  // ---------------------------------------------------------------------------
   core.io.valid_in := false.B
   core.io.avec := evalCoreQ.io.deq.bits.avec
   core.io.bvec := evalCoreQ.io.deq.bits.bvec
@@ -933,11 +985,19 @@ class ToomCook43 extends Module {
     }
   }
 
-  // I1：从完整 W2 group 读入 w2Local，并将 interp16 流式结果写入 grouped W1 SRAM。
+  // ---------------------------------------------------------------------------
+  // I1: W2 -> w2Local -> interp16 -> W1
+  // ---------------------------------------------------------------------------
   when(i1State === i1Idle) {
     when(w2Ready(0) && !w2Writing(0)) { i1Buf := 0.U; w2Reading(0) := true.B; i1State := i1ReadReq }
       .elsewhen(w2Ready(1) && !w2Writing(1)) { i1Buf := 1.U; w2Reading(1) := true.B; i1State := i1ReadReq }
   }.elsewhen(i1State === i1ReadReq) {
+    // i1ReadReq 发起同步 SRAM 读，i1ReadCap 捕获 dout 到 w2Local。
+    for (buf <- 0 until 2) {
+      when(i1Buf === buf.U) {
+        for (p <- 0 until 7) { w2Ram(buf)(p).io.en := true.B; w2Ram(buf)(p).io.we := false.B }
+      }
+    }
     i1State := i1ReadCap
   }.elsewhen(i1State === i1ReadCap) {
     for (p <- 0 until 7) {
@@ -972,7 +1032,7 @@ class ToomCook43 extends Module {
         when(w1WriteBuf === buf.U && w1WriteSub === sub.U) {
           w1Ram(buf)(sub).io.en := true.B
           w1Ram(buf)(sub).io.we := true.B
-          // W1 每个地址保存 interp16 输出的一整列 4 个 33-bit 系数，消除 w1Local 大寄存器。
+          // W1 每个地址保存 interp16 输出的一整列 4 个 33-bit 系数。
           w1Ram(buf)(sub).io.addr := (interp16Seq.io.outBase >> 2)(3, 0)
           w1Ram(buf)(sub).io.din := Cat(
             interp16Seq.io.outData(3), interp16Seq.io.outData(2),
@@ -1002,13 +1062,9 @@ class ToomCook43 extends Module {
     }
   }
 
-  for (buf <- 0 until 2) {
-    when(i1Buf === buf.U && i1State === i1ReadReq) {
-      for (p <- 0 until 7) { w2Ram(buf)(p).io.en := true.B; w2Ram(buf)(p).io.we := false.B }
-    }
-  }
-
-  // I2：等待 W1 block 集齐 7 个 sub，按列喂入 interp64 并写 W0 SRAM。
+  // ---------------------------------------------------------------------------
+  // I2: W1 -> interp64 -> W0
+  // ---------------------------------------------------------------------------
   when(i2State === i2Idle) {
     when(w1BlockReady(0)) { i2Buf := 0.U; i2State := i2Start }
       .elsewhen(w1BlockReady(1)) { i2Buf := 1.U; i2State := i2Start }
@@ -1077,7 +1133,9 @@ class ToomCook43 extends Module {
     }
   }
 
-  // I3：W0 七个 block 全部就绪后，流式喂入 final interp256 并产生单拍 valid_out。
+  // ---------------------------------------------------------------------------
+  // I3: W0 -> interp256 -> output
+  // ---------------------------------------------------------------------------
   when(i3State === i3Idle && busy && w0Ready.asUInt.andR) {
     i3State := i3Start
   }.elsewhen(i3State === i3Start) {
@@ -1121,6 +1179,9 @@ class ToomCook43 extends Module {
     i3State := i3Idle
   }
 
+  // ---------------------------------------------------------------------------
+  // New frame accept/reset
+  // ---------------------------------------------------------------------------
   // valid_in is accepted only when busy=false.
   // The caller/testbench must not assert valid_in while busy=true.
   // Future version may add ready_in for streaming multi-frame input.
@@ -1145,5 +1206,4 @@ class ToomCook43 extends Module {
     w0WriteBlock := 0.U; w0ReadPairIdx := 0.U; w0ReadFeedValid := false.B; w0ReadFeedSel := false.B
     w2WBuf := 0.U
   }
-
 }
