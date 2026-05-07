@@ -120,58 +120,68 @@ class TC4EvalPoint(inW: Int, outW: Int) extends Module {
 
 
 // =============================================================================
-//  EvalLaneFixed：三层 TC4 求值的固定 lane 版本
-//  laneConst 固定后，每拍用 phase 在静态地址集合内选择一个 l
-//  避免对 Vec(1024, ...) 使用动态 UInt 下标
+//  EvalFull16TC4：默认 1024 点输入的三层 TC4 全展开求值
+//  每拍根据 pt0/pt1/pt2 直接生成 16 个 Core16 输入元素，不再使用旧 lane/phase 拼接。
 // =============================================================================
-class EvalLaneFixed(memW: Int, outW: Int, laneConst: Int, evalLanes: Int = 4) extends Module {
-  require(evalLanes > 0 && 16 % evalLanes == 0, "evalLanes must be a positive divisor of 16")
-  require(laneConst >= 0 && laneConst < evalLanes, "laneConst must be within [0, evalLanes)")
-  private val evalPhases = 16 / evalLanes
+class EvalFull16TC4 extends Module {
+  private val N = 1024
+  private val A_IN_W = 24
+  private val B_IN_W = 8
+  private val A_EVAL_W = TC4EvalWidth.A_EVAL_W
+  private val B_EVAL_W = TC4EvalWidth.B_EVAL_W
+  private val CORE_SIZE = 16
 
   val io = IO(new Bundle {
-    val in    = Input(Vec(1024, UInt(memW.W)))
-    val pt0   = Input(UInt(3.W))
-    val pt1   = Input(UInt(3.W))
-    val pt2   = Input(UInt(3.W))
-    val phase = Input(UInt(log2Ceil(evalPhases).W))
-    val out   = Output(UInt(outW.W))
+    val a = Input(Vec(N, UInt(A_IN_W.W)))
+    val b = Input(Vec(N, UInt(B_IN_W.W)))
+
+    val pt0 = Input(UInt(3.W))
+    val pt1 = Input(UInt(3.W))
+    val pt2 = Input(UInt(3.W))
+
+    val aOut = Output(Vec(CORE_SIZE, UInt(A_EVAL_W.W)))
+    val bOut = Output(Vec(CORE_SIZE, UInt(B_EVAL_W.W)))
   })
 
-  def pickByPhase(offset: Int): UInt = {
-    val defaultIdx = laneConst * 64 + offset
-    val tbl = (0 until evalPhases).map { p =>
-      val l = laneConst + p * evalLanes
-      p.U -> io.in(l * 64 + offset)
+  private def eval64(
+      in: Vec[UInt],
+      inW: Int,
+      outW: Int,
+      base: Int
+  ): UInt = {
+    val level2 = Wire(Vec(4, UInt(outW.W)))
+
+    for (k <- 0 until 4) {
+      val level1 = Wire(Vec(4, UInt(outW.W)))
+
+      for (j <- 0 until 4) {
+        val eval0 = Module(new TC4EvalPoint(inW, outW))
+        val offset = base + 16 * k + 4 * j
+
+        eval0.io.r(0) := in(offset + 0)
+        eval0.io.r(1) := in(offset + 1)
+        eval0.io.r(2) := in(offset + 2)
+        eval0.io.r(3) := in(offset + 3)
+        eval0.io.pt := io.pt0
+        level1(j) := eval0.io.out
+      }
+
+      val eval1 = Module(new TC4EvalPoint(outW, outW))
+      eval1.io.r := level1
+      eval1.io.pt := io.pt1
+      level2(k) := eval1.io.out
     }
-    MuxLookup(io.phase, io.in(defaultIdx))(tbl)
+
+    val eval2 = Module(new TC4EvalPoint(outW, outW))
+    eval2.io.r := level2
+    eval2.io.pt := io.pt2
+    eval2.io.out
   }
 
-  val lv2 = Wire(Vec(4, UInt(outW.W)))
-
-  for (k <- 0 until 4) {
-    val lv1 = Wire(Vec(4, UInt(outW.W)))
-    for (j <- 0 until 4) {
-      val eval0 = Module(new TC4EvalPoint(memW, outW))
-      val offset = 16 * k + 4 * j
-      eval0.io.r(0) := pickByPhase(offset + 0)
-      eval0.io.r(1) := pickByPhase(offset + 1)
-      eval0.io.r(2) := pickByPhase(offset + 2)
-      eval0.io.r(3) := pickByPhase(offset + 3)
-      eval0.io.pt   := io.pt0
-      lv1(j)        := eval0.io.out
-    }
-
-    val eval1 = Module(new TC4EvalPoint(outW, outW))
-    eval1.io.r  := lv1
-    eval1.io.pt := io.pt1
-    lv2(k)      := eval1.io.out
+  for (i <- 0 until CORE_SIZE) {
+    io.aOut(i) := eval64(io.a, A_IN_W, A_EVAL_W, i * 64)
+    io.bOut(i) := eval64(io.b, B_IN_W, B_EVAL_W, i * 64)
   }
-
-  val eval2 = Module(new TC4EvalPoint(outW, outW))
-  eval2.io.r  := lv2
-  eval2.io.pt := io.pt2
-  io.out      := eval2.io.out
 }
 
 // =============================================================================
@@ -481,9 +491,8 @@ class InterpLayerSeqStreamInOutTC4(stride: Int, pidx: Int, inW: Int, outW: Int) 
 
 // =============================================================================
 //  InterpLayerSeq2ColStreamInTC4：两列/拍、流式输入版本
-//  final stage 直接从 w0 SRAM 每拍读 7 个 54-bit pair 后喂入本模块，
-//  消除顶层 w0Reg(Vec(7, Vec(256, ...)))。输出缓存仍保留在模块内部，
-//  便于不改变 ToomCook43.io.c 的 Vec(1024, UInt(24.W)) 接口。
+//  final stage 由顶层从 interp64OutRam 每拍读 7 个 54-bit pair 后喂入本模块。
+//  输出缓存保留在模块内部，便于不改变 ToomCook43.io.c 的 Vec(1024, UInt(24.W)) 接口。
 // =============================================================================
 class InterpLayerSeq2ColStreamInTC4(stride: Int, pidx: Int, inW: Int, outW: Int) extends Module {
   require(stride % 2 == 0, "2-column streaming interpolation requires even stride")
@@ -715,24 +724,6 @@ class SpRam(width: Int, depth: Int) extends BlackBox(Map("WIDTH" -> width, "DEPT
   addResource("/sp_ram.v")
 }
 
-class EvalCoreJob(aW: Int, bW: Int) extends Bundle {
-  val avec = Vec(16, UInt(aW.W))
-  val bvec = Vec(16, UInt(bW.W))
-  val pt0 = UInt(3.W)
-  val pt1 = UInt(3.W)
-  val pt2 = UInt(3.W)
-}
-// =============================================================================
-//  ToomCook43 顶层
-//  当前存储/调度结构：
-//  - valid_in 时将输入 a/b 锁存到 regA/regB。
-//  - EvalLaneFixed 生成 Core16 任务，Core16 输出写入 W2。
-//  - W2 使用 SpRam(576, 2) + w2Local，保证 W2 写入一拍完成。
-//  - interp16Seq 流式输出写 grouped W1 SRAM。
-//  - interp64Seq 从 grouped W1 SRAM 按列流式输入，输出写 W0 SRAM。
-//  - final interp256Seq 从 W0 SRAM 流式读取，内部保留最终输出缓存。
-//  - valid_out 拉高一拍时输出 io.c。
-// =============================================================================
 class ToomCook43IO extends Bundle {
   val valid_in = Input(Bool())
   val a = Input(Vec(1024, UInt(24.W)))
@@ -741,354 +732,409 @@ class ToomCook43IO extends Bundle {
   val c = Output(Vec(1024, UInt(24.W)))
 }
 
+// =============================================================================
+//  ToomCook43 顶层：Eval -> Eval/Core SRAM -> Core -> Core/Interp SRAM -> Interp
+//  第一阶段固定默认配置，重点是清晰的帧级三阶段流水和简单 banked SRAM。
+// =============================================================================
 class ToomCook43 extends Module {
   // ---------------------------------------------------------------------------
   // Local helpers
   // ---------------------------------------------------------------------------
-  def packVec(xs: Seq[UInt]): UInt = Cat(xs.reverse)
-  def unpackVec(x: UInt, n: Int, w: Int): Vec[UInt] = {
-    val v = Wire(Vec(n, UInt(w.W)))
-    for (i <- 0 until n) v(i) := x((i + 1) * w - 1, i * w)
-    v
+  private def packVec(xs: Seq[UInt]): UInt = Cat(xs.reverse)
+
+  private def constMul7(x: UInt): UInt = (x << 2) +& (x << 1) +& x
+
+  private def constMul49(x: UInt): UInt = (x << 5) +& (x << 4) +& x
+
+  private def evalAddrFromPoints(pt0: UInt, pt1: UInt, pt2: UInt): UInt = {
+    mask(constMul49(pt0) +& constMul7(pt1) +& pt2, EVAL_ADDR_W)
+  }
+
+  private def firstBankWithState(states: Vec[UInt], target: UInt): (Bool, UInt) = {
+    val hits = VecInit((0 until FRAME_BANKS).map(i => states(i) === target))
+    (hits.asUInt.orR, PriorityEncoder(hits))
   }
 
   // ---------------------------------------------------------------------------
-  // IO and constants
+  // IO/constants
   // ---------------------------------------------------------------------------
   val io = IO(new ToomCook43IO)
 
+  private val N = 1024
+  private val A_IN_W = 24
+  private val B_IN_W = 8
   private val A_EVAL_W = TC4EvalWidth.A_EVAL_W
   private val B_EVAL_W = TC4EvalWidth.B_EVAL_W
-  private val EVAL_LANES = 4
+  private val CORE_SIZE = 16
+  private val EVAL_JOB_COUNT = 343
+  private val CORE_OUT_W = 36
+  private val INTERP16_OUT_W = 33
+  private val INTERP64_OUT_W = 27
+  private val FINAL_OUT_W = 24
+  private val FRAME_BANKS = 2
+  private val EVAL_ADDR_W = log2Ceil(EVAL_JOB_COUNT)
+
+  val bankEmpty :: bankWriting :: bankFull :: bankReading :: Nil = Enum(4)
+
+  // ---------------------------------------------------------------------------
+  // Registers
+  // ---------------------------------------------------------------------------
+  val regA = Reg(Vec(N, UInt(A_IN_W.W)))
+  val regB = Reg(Vec(N, UInt(B_IN_W.W)))
+  val finalOutReg = RegInit(VecInit(Seq.fill(N)(0.U(FINAL_OUT_W.W))))
+
+  val evalCoreBankState = RegInit(VecInit(Seq.fill(FRAME_BANKS)(bankEmpty)))
+  val coreInterpBankState = RegInit(VecInit(Seq.fill(FRAME_BANKS)(bankEmpty)))
+
+  val evalIdle :: evalRun :: Nil = Enum(2)
+  val evalState = RegInit(evalIdle)
+  val evalWriteBank = RegInit(0.U(log2Ceil(FRAME_BANKS).W))
+  val evalAddr = RegInit(0.U(EVAL_ADDR_W.W))
+  val evalPt0 = RegInit(0.U(3.W))
+  val evalPt1 = RegInit(0.U(3.W))
+  val evalPt2 = RegInit(0.U(3.W))
+
+  val coreIdle :: coreReadReq :: coreStream :: coreDrain :: Nil = Enum(4)
+  val coreState = RegInit(coreIdle)
+  val coreReadBank = RegInit(0.U(log2Ceil(FRAME_BANKS).W))
+  val coreWriteBank = RegInit(0.U(log2Ceil(FRAME_BANKS).W))
+  val coreReadAddr = RegInit(0.U(EVAL_ADDR_W.W))
+  val coreRowsFed = RegInit(0.U(log2Ceil(EVAL_JOB_COUNT + 1).W))
+  val coreWriteAddr = RegInit(0.U(EVAL_ADDR_W.W))
+
+  val interpIdle :: interp16ReadReq :: interp16ReadCap :: interp16Start :: interp16Run ::
+    interp64Start :: interp64Run :: interp256Start :: interp256ReadPipe :: interp256Run :: Nil = Enum(10)
+  val interpState = RegInit(interpIdle)
+  val interpReadBank = RegInit(0.U(log2Ceil(FRAME_BANKS).W))
+  val interpPt0 = RegInit(0.U(3.W))
+  val interpPt1 = RegInit(0.U(3.W))
+  val interpPt2 = RegInit(0.U(3.W))
+  val interp16InBuf = Reg(Vec(7, Vec(CORE_SIZE, UInt(CORE_OUT_W.W))))
+  val interp16CapturePt = RegInit(0.U(3.W))
+  val interp16ReadAddr = RegInit(0.U(EVAL_ADDR_W.W))
+  val interp16OutPt0 = RegInit(0.U(3.W))
+  val interp16OutPt1 = RegInit(0.U(3.W))
+  val interp64ReadCol = RegInit(0.U(7.W))
+  val interp64FeedValid = RegInit(false.B)
+  val interp64FeedSel = RegInit(0.U(2.W))
+  val interp64WritePt0 = RegInit(0.U(3.W))
+  val interp256ReadPairIdx = RegInit(0.U(8.W))
+  val interp256FeedValid = RegInit(false.B)
+  val interp256FeedSel = RegInit(false.B)
+
+  // ---------------------------------------------------------------------------
+  // SRAM banks
+  // ---------------------------------------------------------------------------
+  val evalARam = Seq.fill(FRAME_BANKS, CORE_SIZE)(Module(new SpRam(A_EVAL_W, EVAL_JOB_COUNT)))
+  val evalBRam = Seq.fill(FRAME_BANKS, CORE_SIZE)(Module(new SpRam(B_EVAL_W, EVAL_JOB_COUNT)))
+  val coreOutRam = Seq.fill(FRAME_BANKS, CORE_SIZE)(Module(new SpRam(CORE_OUT_W, EVAL_JOB_COUNT)))
+
+  // interp16OutRam(pt0)(pt1)：每个 word 打包 4 个 33-bit 系数。
+  val interp16OutRam = Seq.fill(7, 7)(Module(new SpRam(4 * INTERP16_OUT_W, 16)))
+
+  // interp64OutRam(pt0)：每个 word 打包 4 个 27-bit 系数。
+  val interp64OutRam = Seq.fill(7)(Module(new SpRam(4 * INTERP64_OUT_W, 64)))
 
   // ---------------------------------------------------------------------------
   // Submodules
   // ---------------------------------------------------------------------------
-  val evalLanesA = (0 until EVAL_LANES).map(l => Module(new EvalLaneFixed(24, A_EVAL_W, l, EVAL_LANES)))
-  val evalLanesB = (0 until EVAL_LANES).map(l => Module(new EvalLaneFixed(8, B_EVAL_W, l, EVAL_LANES)))
-  val evalCoreQ = Module(new Queue(new EvalCoreJob(A_EVAL_W, B_EVAL_W), 2, pipe = true, flow = false))
+  val evalFull = Module(new EvalFull16TC4)
   val core = Module(new Core16TC4)
-  val interp16Seq = Module(new InterpLayerSeqStreamTC4(16, 1, 36, 33))
-  val interp64Seq = Module(new InterpLayerSeqStreamInOutTC4(64, 2, 33, 27))
-  val interp256Seq = Module(new InterpLayerSeq2ColStreamInTC4(256, 3, 27, 24))
+  val interp16Seq = Module(new InterpLayerSeqStreamTC4(16, 1, CORE_OUT_W, INTERP16_OUT_W))
+  val interp64Seq = Module(new InterpLayerSeqStreamInOutTC4(64, 2, INTERP16_OUT_W, INTERP64_OUT_W))
+  val interp256Seq = Module(new InterpLayerSeq2ColStreamInTC4(256, 3, INTERP64_OUT_W, FINAL_OUT_W))
 
   // ---------------------------------------------------------------------------
-  // Main storage resources
-  // ---------------------------------------------------------------------------
-  val regA = Reg(Vec(1024, UInt(24.W)))
-  val regB = Reg(Vec(1024, UInt(8.W)))
-
-  val w2Ram = Seq.fill(2, 7)(Module(new SpRam(576, 2)))
-  val w2Local = Reg(Vec(7, Vec(16, UInt(36.W))))
-
-  // W1 使用 grouped SRAM，每个 word 保存 4 个 33-bit 系数：Cat(c3,c2,c1,c0)。
-  val w1Ram = Seq.fill(2, 7)(Module(new SpRam(132, 16)))
-
-  // W0 使用 grouped SRAM，每个 word 保存 4 个 27-bit 系数：Cat(c3,c2,c1,c0)。
-  val w0Ram = Seq.fill(7)(Module(new SpRam(108, 64)))
-
-  // ---------------------------------------------------------------------------
-  // Global frame control
-  // ---------------------------------------------------------------------------
-  val busy = RegInit(false.B)
-
-  // ---------------------------------------------------------------------------
-  // Eval/Core stage state
-  // ---------------------------------------------------------------------------
-  val evalPhase = RegInit(0.U(2.W))
-  val pt0 = RegInit(0.U(3.W)); val pt1 = RegInit(0.U(3.W)); val pt2 = RegInit(0.U(3.W))
-  val evalDone = RegInit(false.B)
-  val avecBuild = Reg(Vec(16, UInt(A_EVAL_W.W)))
-  val bvecBuild = Reg(Vec(16, UInt(B_EVAL_W.W)))
-
-  val corePending = RegInit(false.B)
-  val outPt0 = Reg(UInt(3.W)); val outPt1 = Reg(UInt(3.W)); val outPt2 = Reg(UInt(3.W))
-
-  // ---------------------------------------------------------------------------
-  // W2 buffer and I1 state
-  // ---------------------------------------------------------------------------
-  val w2WBuf = RegInit(0.U(1.W))
-  val w2Empty = RegInit(VecInit(Seq.fill(2)(true.B)))
-  val w2Writing = RegInit(VecInit(Seq.fill(2)(false.B)))
-  val w2Reading = RegInit(VecInit(Seq.fill(2)(false.B)))
-  val w2Ready = RegInit(VecInit(Seq.fill(2)(false.B)))
-  val w2Full = RegInit(VecInit(Seq.fill(2) { VecInit(Seq.fill(7)(false.B)) }))
-  val w2Pt0 = Reg(Vec(2, UInt(3.W))); val w2Pt1 = Reg(Vec(2, UInt(3.W)))
-
-  val i1Idle :: i1ReadReq :: i1ReadCap :: i1Start :: i1Run :: Nil = Enum(5)
-  val i1State = RegInit(i1Idle)
-  val i1Buf = RegInit(0.U(1.W))
-  val w1WriteBuf = RegInit(0.U(1.W))
-  val w1WriteSub = RegInit(0.U(3.W))
-
-  // ---------------------------------------------------------------------------
-  // W1 buffer and I2 state
-  // ---------------------------------------------------------------------------
-  val w1BufValid = RegInit(VecInit(Seq.fill(2)(false.B)))
-  val w1BufBlock = Reg(Vec(2, UInt(3.W)))
-  val w1SubReady = RegInit(VecInit(Seq.fill(2) { VecInit(Seq.fill(7)(false.B)) }))
-  val w1BlockReady = RegInit(VecInit(Seq.fill(2)(false.B)))
-
-  val i2Idle :: i2Start :: i2Run :: Nil = Enum(3)
-  val i2State = RegInit(i2Idle)
-  val i2Buf = RegInit(0.U(1.W))
-  val w1ReadCol = RegInit(0.U(7.W))
-  val w1ReadFeedValid = RegInit(false.B)
-  val w1ReadFeedSel = RegInit(0.U(2.W))
-  val w0WriteBlock = RegInit(0.U(3.W))
-
-  // ---------------------------------------------------------------------------
-  // W0 readiness and I3 state
-  // ---------------------------------------------------------------------------
-  val w0Ready = RegInit(VecInit(Seq.fill(7)(false.B)))
-
-  val i3Idle :: i3Start :: i3ReadPipe :: i3Run :: Nil = Enum(4)
-  val i3State = RegInit(i3Idle)
-  val w0ReadPairIdx = RegInit(0.U(8.W))
-  val w0ReadFeedValid = RegInit(false.B)
-  val w0ReadFeedSel = RegInit(false.B)
-
-  // ---------------------------------------------------------------------------
-  // Default outputs and child-module inputs
+  // Default assignments
   // ---------------------------------------------------------------------------
   io.valid_out := false.B
-  // final interp256Seq 内部保留输出缓存，以维持 io.c = Vec(1024, UInt(24.W)) 的并行输出接口。
-  for (i <- 0 until 1024) io.c(i) := mask(interp256Seq.io.cOut(i), 24)
+  io.c := finalOutReg
+
+  evalFull.io.a := regA
+  evalFull.io.b := regB
+  evalFull.io.pt0 := evalPt0
+  evalFull.io.pt1 := evalPt1
+  evalFull.io.pt2 := evalPt2
+
+  core.io.valid_in := false.B
+  for (i <- 0 until CORE_SIZE) {
+    core.io.avec(i) := Mux1H(
+      (0 until FRAME_BANKS).map(b => (coreReadBank === b.U) -> evalARam(b)(i).io.dout)
+    )
+    core.io.bvec(i) := Mux1H(
+      (0 until FRAME_BANKS).map(b => (coreReadBank === b.U) -> evalBRam(b)(i).io.dout)
+    )
+  }
 
   interp16Seq.io.start := false.B
-  for (i <- 0 until 7 * 16) interp16Seq.io.wIn(i) := w2Local(i / 16)(i % 16)
+  for (pt <- 0 until 7; col <- 0 until CORE_SIZE) {
+    interp16Seq.io.wIn(pt * CORE_SIZE + col) := interp16InBuf(pt)(col)
+  }
 
   interp64Seq.io.start := false.B
   interp64Seq.io.inValid := false.B
-  for (s <- 0 until 7) interp64Seq.io.inData(s) := 0.U
+  interp64Seq.io.inData := VecInit(Seq.fill(7)(0.U(INTERP16_OUT_W.W)))
 
   interp256Seq.io.start := false.B
   interp256Seq.io.inValid := false.B
-  for (g <- 0 until 7) interp256Seq.io.inPair(g) := 0.U
+  interp256Seq.io.inPair := VecInit(Seq.fill(7)(0.U((2 * INTERP64_OUT_W).W)))
 
-  // ---------------------------------------------------------------------------
-  // Default SRAM ports
-  // ---------------------------------------------------------------------------
-  for (b <- 0 until 2; p <- 0 until 7) {
-    w2Ram(b)(p).io.clk := clock; w2Ram(b)(p).io.en := false.B; w2Ram(b)(p).io.we := false.B; w2Ram(b)(p).io.addr := 0.U(1.W); w2Ram(b)(p).io.din := 0.U
-    w1Ram(b)(p).io.clk := clock; w1Ram(b)(p).io.en := false.B; w1Ram(b)(p).io.we := false.B; w1Ram(b)(p).io.addr := 0.U(4.W); w1Ram(b)(p).io.din := 0.U
-  }
-  for (g <- 0 until 7) {
-    w0Ram(g).io.clk := clock; w0Ram(g).io.en := false.B; w0Ram(g).io.we := false.B; w0Ram(g).io.addr := 0.U(6.W); w0Ram(g).io.din := 0.U
-  }
+  for (b <- 0 until FRAME_BANKS; i <- 0 until CORE_SIZE) {
+    evalARam(b)(i).io.clk := clock
+    evalARam(b)(i).io.en := false.B
+    evalARam(b)(i).io.we := false.B
+    evalARam(b)(i).io.addr := 0.U
+    evalARam(b)(i).io.din := 0.U
 
-  // ---------------------------------------------------------------------------
-  // Eval lane wiring
-  // ---------------------------------------------------------------------------
-  for (l <- 0 until EVAL_LANES) {
-    evalLanesA(l).io.in := regA; evalLanesA(l).io.pt0 := pt0; evalLanesA(l).io.pt1 := pt1; evalLanesA(l).io.pt2 := pt2; evalLanesA(l).io.phase := evalPhase
-    evalLanesB(l).io.in := regB; evalLanesB(l).io.pt0 := pt0; evalLanesB(l).io.pt1 := pt1; evalLanesB(l).io.pt2 := pt2; evalLanesB(l).io.phase := evalPhase
-  }
+    evalBRam(b)(i).io.clk := clock
+    evalBRam(b)(i).io.en := false.B
+    evalBRam(b)(i).io.we := false.B
+    evalBRam(b)(i).io.addr := 0.U
+    evalBRam(b)(i).io.din := 0.U
 
-  // ---------------------------------------------------------------------------
-  // Eval accumulation and queue enqueue
-  // ---------------------------------------------------------------------------
-  val nextAvec = Wire(Vec(16, UInt(A_EVAL_W.W)))
-  val nextBvec = Wire(Vec(16, UInt(B_EVAL_W.W)))
-  nextAvec := avecBuild
-  nextBvec := bvecBuild
-  for (l <- 0 until EVAL_LANES) {
-    val idx = evalPhase * EVAL_LANES.U + l.U
-    nextAvec(idx) := evalLanesA(l).io.out
-    nextBvec(idx) := evalLanesB(l).io.out
+    coreOutRam(b)(i).io.clk := clock
+    coreOutRam(b)(i).io.en := false.B
+    coreOutRam(b)(i).io.we := false.B
+    coreOutRam(b)(i).io.addr := 0.U
+    coreOutRam(b)(i).io.din := 0.U
   }
 
-  val evalAtLastPhase = evalPhase === 3.U
-  val evalJobValid = busy && !evalDone && evalAtLastPhase
-  val evalNonLastStep = busy && !evalDone && !evalAtLastPhase
-
-  evalCoreQ.io.enq.valid := evalJobValid
-  evalCoreQ.io.enq.bits.avec := nextAvec
-  evalCoreQ.io.enq.bits.bvec := nextBvec
-  evalCoreQ.io.enq.bits.pt0 := pt0
-  evalCoreQ.io.enq.bits.pt1 := pt1
-  evalCoreQ.io.enq.bits.pt2 := pt2
-  evalCoreQ.io.deq.ready := false.B
-
-  when(evalNonLastStep) {
-    avecBuild := nextAvec
-    bvecBuild := nextBvec
-    evalPhase := evalPhase + 1.U
+  for (pt0 <- 0 until 7; pt1 <- 0 until 7) {
+    interp16OutRam(pt0)(pt1).io.clk := clock
+    interp16OutRam(pt0)(pt1).io.en := false.B
+    interp16OutRam(pt0)(pt1).io.we := false.B
+    interp16OutRam(pt0)(pt1).io.addr := 0.U
+    interp16OutRam(pt0)(pt1).io.din := 0.U
   }
 
-  when(evalJobValid && evalCoreQ.io.enq.fire) {
-    avecBuild := nextAvec
-    bvecBuild := nextBvec
-    evalPhase := 0.U
-    when(pt0 === 6.U && pt1 === 6.U && pt2 === 6.U) { evalDone := true.B }
-      .otherwise {
-        when(pt2 === 6.U) {
-          pt2 := 0.U
-          when(pt1 === 6.U) { pt1 := 0.U; pt0 := pt0 + 1.U }
-            .otherwise { pt1 := pt1 + 1.U }
-        }.otherwise { pt2 := pt2 + 1.U }
-      }
+  for (pt0 <- 0 until 7) {
+    interp64OutRam(pt0).io.clk := clock
+    interp64OutRam(pt0).io.en := false.B
+    interp64OutRam(pt0).io.we := false.B
+    interp64OutRam(pt0).io.addr := 0.U
+    interp64OutRam(pt0).io.din := 0.U
   }
 
   // ---------------------------------------------------------------------------
-  // Core dequeue and W2 write
+  // EvalStage
   // ---------------------------------------------------------------------------
-  core.io.valid_in := false.B
-  core.io.avec := evalCoreQ.io.deq.bits.avec
-  core.io.bvec := evalCoreQ.io.deq.bits.bvec
-  val canUseW2WriteBuf = (w2Empty(w2WBuf) || w2Writing(w2WBuf)) && !w2Reading(w2WBuf) && !w2Ready(w2WBuf)
-  val canCoreTake = busy && evalCoreQ.io.deq.valid && !corePending && canUseW2WriteBuf
-  evalCoreQ.io.deq.ready := canCoreTake
-  when(canCoreTake) {
-    core.io.valid_in := true.B
-    corePending := true.B
-    w2Empty(w2WBuf) := false.B
-    w2Writing(w2WBuf) := true.B
-    outPt0 := evalCoreQ.io.deq.bits.pt0
-    outPt1 := evalCoreQ.io.deq.bits.pt1
-    outPt2 := evalCoreQ.io.deq.bits.pt2
-  }
+  val (hasEmptyEvalCoreBank, nextEvalWriteBank) = firstBankWithState(evalCoreBankState, bankEmpty)
 
-  for (buf <- 0 until 2; p <- 0 until 7) {
-    when(corePending && core.io.valid_out && w2WBuf === buf.U && outPt2 === p.U) {
-      w2Ram(buf)(p).io.en := true.B
-      w2Ram(buf)(p).io.we := true.B
-      w2Ram(buf)(p).io.din := packVec(core.io.cOut)
+  when(evalState === evalIdle) {
+    when(io.valid_in && hasEmptyEvalCoreBank) {
+      regA := io.a
+      regB := io.b
+      evalWriteBank := nextEvalWriteBank
+      evalCoreBankState(nextEvalWriteBank) := bankWriting
+      evalAddr := 0.U
+      evalPt0 := 0.U
+      evalPt1 := 0.U
+      evalPt2 := 0.U
+      evalState := evalRun
     }
-  }
-  when(corePending && core.io.valid_out) {
-    corePending := false.B
-    when(w2WBuf === 0.U) {
-      val next0 = Wire(Vec(7, Bool()))
-      next0 := w2Full(0)
-      next0(outPt2) := true.B
-      w2Full(0) := next0
-      when(next0.asUInt.andR) {
-        w2Writing(0) := false.B
-        w2Ready(0) := true.B
-        w2Pt0(0) := outPt0
-        w2Pt1(0) := outPt1
-        w2WBuf := 1.U
+  }.elsewhen(evalState === evalRun) {
+    for (b <- 0 until FRAME_BANKS; i <- 0 until CORE_SIZE) {
+      when(evalWriteBank === b.U) {
+        evalARam(b)(i).io.en := true.B
+        evalARam(b)(i).io.we := true.B
+        evalARam(b)(i).io.addr := evalAddr
+        evalARam(b)(i).io.din := evalFull.io.aOut(i)
+
+        evalBRam(b)(i).io.en := true.B
+        evalBRam(b)(i).io.we := true.B
+        evalBRam(b)(i).io.addr := evalAddr
+        evalBRam(b)(i).io.din := evalFull.io.bOut(i)
       }
+    }
+
+    when(evalAddr === (EVAL_JOB_COUNT - 1).U) {
+      evalCoreBankState(evalWriteBank) := bankFull
+      evalState := evalIdle
     }.otherwise {
-      val next1 = Wire(Vec(7, Bool()))
-      next1 := w2Full(1)
-      next1(outPt2) := true.B
-      w2Full(1) := next1
-      when(next1.asUInt.andR) {
-        w2Writing(1) := false.B
-        w2Ready(1) := true.B
-        w2Pt0(1) := outPt0
-        w2Pt1(1) := outPt1
-        w2WBuf := 0.U
+      evalAddr := evalAddr + 1.U
+      when(evalPt2 === 6.U) {
+        evalPt2 := 0.U
+        when(evalPt1 === 6.U) {
+          evalPt1 := 0.U
+          evalPt0 := evalPt0 + 1.U
+        }.otherwise {
+          evalPt1 := evalPt1 + 1.U
+        }
+      }.otherwise {
+        evalPt2 := evalPt2 + 1.U
       }
     }
   }
 
   // ---------------------------------------------------------------------------
-  // I1: W2 -> w2Local -> interp16 -> W1
+  // CoreStage
+  // 第一版为保证正确性，仅做一条简单的同步 SRAM 读流水：每拍消费上一拍 dout，
+  // 同时（若有剩余行）发起下一行读；Core16TC4 自带 valid 对齐输出。
   // ---------------------------------------------------------------------------
-  when(i1State === i1Idle) {
-    when(w2Ready(0) && !w2Writing(0)) { i1Buf := 0.U; w2Reading(0) := true.B; i1State := i1ReadReq }
-      .elsewhen(w2Ready(1) && !w2Writing(1)) { i1Buf := 1.U; w2Reading(1) := true.B; i1State := i1ReadReq }
-  }.elsewhen(i1State === i1ReadReq) {
-    // i1ReadReq 发起同步 SRAM 读，i1ReadCap 捕获 dout 到 w2Local。
-    for (buf <- 0 until 2) {
-      when(i1Buf === buf.U) {
-        for (p <- 0 until 7) { w2Ram(buf)(p).io.en := true.B; w2Ram(buf)(p).io.we := false.B }
+  val (hasFullEvalCoreBank, nextCoreReadBank) = firstBankWithState(evalCoreBankState, bankFull)
+  val (hasEmptyCoreInterpBank, nextCoreWriteBank) = firstBankWithState(coreInterpBankState, bankEmpty)
+
+  when(coreState === coreIdle) {
+    when(hasFullEvalCoreBank && hasEmptyCoreInterpBank) {
+      coreReadBank := nextCoreReadBank
+      coreWriteBank := nextCoreWriteBank
+      evalCoreBankState(nextCoreReadBank) := bankReading
+      coreInterpBankState(nextCoreWriteBank) := bankWriting
+      coreReadAddr := 0.U
+      coreRowsFed := 0.U
+      coreWriteAddr := 0.U
+      coreState := coreReadReq
+    }
+  }.elsewhen(coreState === coreReadReq) {
+    for (b <- 0 until FRAME_BANKS; i <- 0 until CORE_SIZE) {
+      when(coreReadBank === b.U) {
+        evalARam(b)(i).io.en := true.B
+        evalARam(b)(i).io.we := false.B
+        evalARam(b)(i).io.addr := 0.U
+
+        evalBRam(b)(i).io.en := true.B
+        evalBRam(b)(i).io.we := false.B
+        evalBRam(b)(i).io.addr := 0.U
       }
     }
-    i1State := i1ReadCap
-  }.elsewhen(i1State === i1ReadCap) {
-    for (p <- 0 until 7) {
-      val d = Mux(i1Buf === 0.U, w2Ram(0)(p).io.dout, w2Ram(1)(p).io.dout)
-      w2Local(p) := unpackVec(d, 16, 36)
-    }
-    i1State := i1Start
-  }.elsewhen(i1State === i1Start) {
-    val curBlock = Mux(i1Buf === 0.U, w2Pt0(0), w2Pt0(1))
-    val curSub = Mux(i1Buf === 0.U, w2Pt1(0), w2Pt1(1))
-    val hit0 = w1BufValid(0) && (w1BufBlock(0) === curBlock)
-    val hit1 = w1BufValid(1) && (w1BufBlock(1) === curBlock)
-    val empty0 = !w1BufValid(0)
-    val empty1 = !w1BufValid(1)
-    val canAlloc = hit0 || hit1 || empty0 || empty1
-    when(canAlloc) {
-      val selBuf = Wire(UInt(1.W))
-      selBuf := Mux(hit0 || (!hit1 && empty0), 0.U, 1.U)
-      w1WriteBuf := selBuf
-      w1WriteSub := curSub
-      when(selBuf === 0.U) {
-        when(!w1BufValid(0)) { w1BufValid(0) := true.B; w1BufBlock(0) := curBlock }
-      }.otherwise {
-        when(!w1BufValid(1)) { w1BufValid(1) := true.B; w1BufBlock(1) := curBlock }
+    coreReadAddr := 1.U
+    coreState := coreStream
+  }.elsewhen(coreState === coreStream) {
+    core.io.valid_in := true.B
+
+    when(coreReadAddr < EVAL_JOB_COUNT.U) {
+      for (b <- 0 until FRAME_BANKS; i <- 0 until CORE_SIZE) {
+        when(coreReadBank === b.U) {
+          evalARam(b)(i).io.en := true.B
+          evalARam(b)(i).io.we := false.B
+          evalARam(b)(i).io.addr := coreReadAddr
+
+          evalBRam(b)(i).io.en := true.B
+          evalBRam(b)(i).io.we := false.B
+          evalBRam(b)(i).io.addr := coreReadAddr
+        }
       }
-      interp16Seq.io.start := true.B
-      i1State := i1Run
+      coreReadAddr := coreReadAddr + 1.U
     }
-  }.elsewhen(i1State === i1Run) {
+
+    coreRowsFed := coreRowsFed + 1.U
+    when(coreRowsFed === (EVAL_JOB_COUNT - 1).U) {
+      coreState := coreDrain
+    }
+  }.elsewhen(coreState === coreDrain) {
+    when(core.io.valid_out && coreWriteAddr === (EVAL_JOB_COUNT - 1).U) {
+      evalCoreBankState(coreReadBank) := bankEmpty
+      coreInterpBankState(coreWriteBank) := bankFull
+      coreState := coreIdle
+    }
+  }
+
+  when(core.io.valid_out) {
+    for (b <- 0 until FRAME_BANKS; i <- 0 until CORE_SIZE) {
+      when(coreWriteBank === b.U) {
+        coreOutRam(b)(i).io.en := true.B
+        coreOutRam(b)(i).io.we := true.B
+        coreOutRam(b)(i).io.addr := coreWriteAddr
+        coreOutRam(b)(i).io.din := core.io.cOut(i)
+      }
+    }
+
+    when(coreWriteAddr =/= (EVAL_JOB_COUNT - 1).U) {
+      coreWriteAddr := coreWriteAddr + 1.U
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // InterpStage
+  // 从 Core/Interp bank 读取完整一帧：先按 (pt0, pt1) 聚齐 7 个 pt2 行，
+  // 依次完成 16/64/256 三层流式插值，并在完成后释放 Core/Interp bank。
+  // ---------------------------------------------------------------------------
+  val (hasFullCoreInterpBank, nextInterpReadBank) = firstBankWithState(coreInterpBankState, bankFull)
+
+  when(interpState === interpIdle) {
+    when(hasFullCoreInterpBank) {
+      interpReadBank := nextInterpReadBank
+      coreInterpBankState(nextInterpReadBank) := bankReading
+      interpPt0 := 0.U
+      interpPt1 := 0.U
+      interpPt2 := 0.U
+      interpState := interp16ReadReq
+    }
+  }.elsewhen(interpState === interp16ReadReq) {
+    interp16ReadAddr := evalAddrFromPoints(interpPt0, interpPt1, interpPt2)
+    interp16CapturePt := interpPt2
+
+    for (b <- 0 until FRAME_BANKS; i <- 0 until CORE_SIZE) {
+      when(interpReadBank === b.U) {
+        coreOutRam(b)(i).io.en := true.B
+        coreOutRam(b)(i).io.we := false.B
+        coreOutRam(b)(i).io.addr := evalAddrFromPoints(interpPt0, interpPt1, interpPt2)
+      }
+    }
+    interpState := interp16ReadCap
+  }.elsewhen(interpState === interp16ReadCap) {
+    for (i <- 0 until CORE_SIZE) {
+      interp16InBuf(interp16CapturePt)(i) := Mux1H(
+        (0 until FRAME_BANKS).map(b => (interpReadBank === b.U) -> coreOutRam(b)(i).io.dout)
+      )
+    }
+
+    when(interpPt2 === 6.U) {
+      interp16OutPt0 := interpPt0
+      interp16OutPt1 := interpPt1
+      interpState := interp16Start
+    }.otherwise {
+      interpPt2 := interpPt2 + 1.U
+      interpState := interp16ReadReq
+    }
+  }.elsewhen(interpState === interp16Start) {
+    interp16Seq.io.start := true.B
+    interpState := interp16Run
+  }.elsewhen(interpState === interp16Run) {
     when(interp16Seq.io.outValid) {
-      for (buf <- 0 until 2; sub <- 0 until 7) {
-        when(w1WriteBuf === buf.U && w1WriteSub === sub.U) {
-          w1Ram(buf)(sub).io.en := true.B
-          w1Ram(buf)(sub).io.we := true.B
-          // W1 每个地址保存 interp16 输出的一整列 4 个 33-bit 系数。
-          w1Ram(buf)(sub).io.addr := (interp16Seq.io.outBase >> 2)(3, 0)
-          w1Ram(buf)(sub).io.din := Cat(
-            interp16Seq.io.outData(3), interp16Seq.io.outData(2),
-            interp16Seq.io.outData(1), interp16Seq.io.outData(0)
-          )
+      for (pt0 <- 0 until 7; pt1 <- 0 until 7) {
+        when(interp16OutPt0 === pt0.U && interp16OutPt1 === pt1.U) {
+          interp16OutRam(pt0)(pt1).io.en := true.B
+          interp16OutRam(pt0)(pt1).io.we := true.B
+          interp16OutRam(pt0)(pt1).io.addr := (interp16Seq.io.outBase >> 2)(3, 0)
+          interp16OutRam(pt0)(pt1).io.din := packVec(interp16Seq.io.outData)
         }
       }
     }
-    when(interp16Seq.io.done) {
-      val oldReady = Wire(Vec(7, Bool()))
-      oldReady := Mux(w1WriteBuf === 0.U, w1SubReady(0), w1SubReady(1))
-      val nextReady = Wire(Vec(7, Bool()))
-      nextReady := oldReady
-      nextReady(w1WriteSub) := true.B
-      when(w1WriteBuf === 0.U) {
-        w1SubReady(0) := nextReady
-        when(nextReady.asUInt.andR) { w1BlockReady(0) := true.B }
-      }.otherwise {
-        w1SubReady(1) := nextReady
-        when(nextReady.asUInt.andR) { w1BlockReady(1) := true.B }
-      }
-      w2Ready(i1Buf) := false.B
-      w2Reading(i1Buf) := false.B
-      w2Empty(i1Buf) := true.B
-      w2Full(i1Buf) := VecInit(Seq.fill(7)(false.B))
-      i1State := i1Idle
-    }
-  }
 
-  // ---------------------------------------------------------------------------
-  // I2: W1 -> interp64 -> W0
-  // ---------------------------------------------------------------------------
-  when(i2State === i2Idle) {
-    when(w1BlockReady(0)) { i2Buf := 0.U; i2State := i2Start }
-      .elsewhen(w1BlockReady(1)) { i2Buf := 1.U; i2State := i2Start }
-  }.elsewhen(i2State === i2Start) {
-    interp64Seq.io.start := true.B
-    w0WriteBlock := Mux(i2Buf === 0.U, w1BufBlock(0), w1BufBlock(1))
-    // start 同周期发起 col=0 的同步读，下一拍喂给 stream-in interp64。
-    for (buf <- 0 until 2; sub <- 0 until 7) {
-      when(i2Buf === buf.U) {
-        w1Ram(buf)(sub).io.en := true.B
-        w1Ram(buf)(sub).io.we := false.B
-        w1Ram(buf)(sub).io.addr := 0.U(4.W)
+    when(interp16Seq.io.done) {
+      when(interpPt1 === 6.U) {
+        interp64WritePt0 := interpPt0
+        interpState := interp64Start
+      }.otherwise {
+        interpPt1 := interpPt1 + 1.U
+        interpPt2 := 0.U
+        interpState := interp16ReadReq
       }
     }
-    w1ReadCol := 1.U
-    w1ReadFeedValid := true.B
-    w1ReadFeedSel := 0.U
-    i2State := i2Run
-  }.elsewhen(i2State === i2Run) {
-    when(w1ReadFeedValid) {
+  }.elsewhen(interpState === interp64Start) {
+    interp64Seq.io.start := true.B
+
+    for (pt0 <- 0 until 7; sub <- 0 until 7) {
+      when(interp64WritePt0 === pt0.U) {
+        interp16OutRam(pt0)(sub).io.en := true.B
+        interp16OutRam(pt0)(sub).io.we := false.B
+        interp16OutRam(pt0)(sub).io.addr := 0.U
+      }
+    }
+
+    interp64ReadCol := 1.U
+    interp64FeedValid := true.B
+    interp64FeedSel := 0.U
+    interpState := interp64Run
+  }.elsewhen(interpState === interp64Run) {
+    when(interp64FeedValid) {
       interp64Seq.io.inValid := true.B
       for (sub <- 0 until 7) {
-        val word = Mux(i2Buf === 0.U, w1Ram(0)(sub).io.dout, w1Ram(1)(sub).io.dout)
-        interp64Seq.io.inData(sub) := MuxLookup(w1ReadFeedSel, word(32, 0))(Seq(
+        val word = Mux1H(
+          (0 until 7).map(pt0 => (interp64WritePt0 === pt0.U) -> interp16OutRam(pt0)(sub).io.dout)
+        )
+        interp64Seq.io.inData(sub) := MuxLookup(interp64FeedSel, word(32, 0))(Seq(
           0.U -> word(32, 0),
           1.U -> word(65, 33),
           2.U -> word(98, 66),
@@ -1096,114 +1142,89 @@ class ToomCook43 extends Module {
         ))
       }
     }
-    when(w1ReadCol === 64.U) {
-      w1ReadFeedValid := false.B
+
+    when(interp64ReadCol === 64.U) {
+      interp64FeedValid := false.B
     }.otherwise {
-      for (buf <- 0 until 2; sub <- 0 until 7) {
-        when(i2Buf === buf.U) {
-          w1Ram(buf)(sub).io.en := true.B
-          w1Ram(buf)(sub).io.we := false.B
-          w1Ram(buf)(sub).io.addr := (w1ReadCol >> 2)(3, 0)
+      for (pt0 <- 0 until 7; sub <- 0 until 7) {
+        when(interp64WritePt0 === pt0.U) {
+          interp16OutRam(pt0)(sub).io.en := true.B
+          interp16OutRam(pt0)(sub).io.we := false.B
+          interp16OutRam(pt0)(sub).io.addr := (interp64ReadCol >> 2)(3, 0)
         }
       }
-      w1ReadFeedSel := w1ReadCol(1, 0)
-      w1ReadCol := w1ReadCol + 1.U
+      interp64FeedSel := interp64ReadCol(1, 0)
+      interp64ReadCol := interp64ReadCol + 1.U
     }
+
     when(interp64Seq.io.outValid) {
-      for (blk <- 0 until 7) {
-        when(w0WriteBlock === blk.U) {
-          w0Ram(blk).io.en := true.B
-          w0Ram(blk).io.we := true.B
-          // outBase = 4 * column，右移 2 位得到 64-depth SRAM 的列地址。
-          w0Ram(blk).io.addr := (interp64Seq.io.outBase >> 2)(5, 0)
-          w0Ram(blk).io.din := Cat(
-            interp64Seq.io.outData(3), interp64Seq.io.outData(2),
-            interp64Seq.io.outData(1), interp64Seq.io.outData(0)
-          )
+      for (pt0 <- 0 until 7) {
+        when(interp64WritePt0 === pt0.U) {
+          interp64OutRam(pt0).io.en := true.B
+          interp64OutRam(pt0).io.we := true.B
+          interp64OutRam(pt0).io.addr := (interp64Seq.io.outBase >> 2)(5, 0)
+          interp64OutRam(pt0).io.din := packVec(interp64Seq.io.outData)
         }
       }
     }
+
     when(interp64Seq.io.done) {
-      w0Ready(w0WriteBlock) := true.B
-      w1BlockReady(i2Buf) := false.B
-      w1SubReady(i2Buf) := VecInit(Seq.fill(7)(false.B))
-      w1BufValid(i2Buf) := false.B
-      w1ReadFeedValid := false.B
-      i2State := i2Idle
+      when(interp64WritePt0 === 6.U) {
+        interpState := interp256Start
+      }.otherwise {
+        interpPt0 := interp64WritePt0 + 1.U
+        interpPt1 := 0.U
+        interpPt2 := 0.U
+        interpState := interp16ReadReq
+      }
     }
-  }
-
-  // ---------------------------------------------------------------------------
-  // I3: W0 -> interp256 -> output
-  // ---------------------------------------------------------------------------
-  when(i3State === i3Idle && busy && w0Ready.asUInt.andR) {
-    i3State := i3Start
-  }.elsewhen(i3State === i3Start) {
+  }.elsewhen(interpState === interp256Start) {
     interp256Seq.io.start := true.B
-    // 启动 final 插值的同时发起 pairIdx=0 的同步读；下一拍即可喂入。
-    for (g <- 0 until 7) {
-      w0Ram(g).io.en := true.B
-      w0Ram(g).io.we := false.B
-      w0Ram(g).io.addr := 0.U(6.W)
+
+    for (pt0 <- 0 until 7) {
+      interp64OutRam(pt0).io.en := true.B
+      interp64OutRam(pt0).io.we := false.B
+      interp64OutRam(pt0).io.addr := 0.U
     }
-    w0ReadPairIdx := 1.U
-    w0ReadFeedValid := true.B
-    w0ReadFeedSel := false.B
-    i3State := i3ReadPipe
-  }.elsewhen(i3State === i3ReadPipe) {
-    // 流水读：本拍消费上一拍 dout，同时发起下一 pair 读。
-    // pairIdx even -> word(53,0)=Cat(c1,c0)，pairIdx odd -> word(107,54)=Cat(c3,c2)。
-    when(w0ReadFeedValid) {
+
+    interp256ReadPairIdx := 1.U
+    interp256FeedValid := true.B
+    interp256FeedSel := false.B
+    interpState := interp256ReadPipe
+  }.elsewhen(interpState === interp256ReadPipe) {
+    when(interp256FeedValid) {
       interp256Seq.io.inValid := true.B
-      for (g <- 0 until 7) {
-        val d = w0Ram(g).io.dout
-        interp256Seq.io.inPair(g) := Mux(w0ReadFeedSel, d(107, 54), d(53, 0))
+      for (pt0 <- 0 until 7) {
+        val word = interp64OutRam(pt0).io.dout
+        interp256Seq.io.inPair(pt0) := Mux(interp256FeedSel, word(107, 54), word(53, 0))
       }
     }
-    when(w0ReadPairIdx === 128.U) {
-      w0ReadFeedValid := false.B
-      i3State := i3Run
+
+    when(interp256ReadPairIdx === 128.U) {
+      interp256FeedValid := false.B
+      interpState := interp256Run
     }.otherwise {
-      for (g <- 0 until 7) {
-        w0Ram(g).io.en := true.B
-        w0Ram(g).io.we := false.B
-        w0Ram(g).io.addr := (w0ReadPairIdx >> 1)(5, 0)
+      for (pt0 <- 0 until 7) {
+        interp64OutRam(pt0).io.en := true.B
+        interp64OutRam(pt0).io.we := false.B
+        interp64OutRam(pt0).io.addr := (interp256ReadPairIdx >> 1)(5, 0)
       }
-      w0ReadFeedSel := w0ReadPairIdx(0)
-      w0ReadPairIdx := w0ReadPairIdx + 1.U
+      interp256FeedSel := interp256ReadPairIdx(0)
+      interp256ReadPairIdx := interp256ReadPairIdx + 1.U
     }
-  }.elsewhen(i3State === i3Run && interp256Seq.io.done) {
-    // interp256Seq 内部已保存完整输出；同周期直接拉高 valid_out，一拍后回到 idle。
-    io.valid_out := true.B
-    busy := false.B
-    i3State := i3Idle
+  }.elsewhen(interpState === interp256Run) {
+    when(interp256Seq.io.done) {
+      for (i <- 0 until N) {
+        finalOutReg(i) := mask(interp256Seq.io.cOut(i), FINAL_OUT_W)
+      }
+      io.valid_out := true.B
+      coreInterpBankState(interpReadBank) := bankEmpty
+      interpState := interpIdle
+    }
   }
 
   // ---------------------------------------------------------------------------
-  // New frame accept/reset
+  // Output logic
   // ---------------------------------------------------------------------------
-  // valid_in is accepted only when busy=false.
-  // The caller/testbench must not assert valid_in while busy=true.
-  // Future version may add ready_in for streaming multi-frame input.
-  when(io.valid_in && !busy) {
-    assert(!evalCoreQ.io.deq.valid, "evalCoreQ must be empty when accepting a new frame")
-    regA := io.a
-    regB := io.b
-    busy := true.B
-    pt0 := 0.U; pt1 := 0.U; pt2 := 0.U; evalPhase := 0.U; evalDone := false.B
-    corePending := false.B
-    w2Empty := VecInit(Seq.fill(2)(true.B))
-    w2Writing := VecInit(Seq.fill(2)(false.B))
-    w2Reading := VecInit(Seq.fill(2)(false.B))
-    w2Ready := VecInit(Seq.fill(2)(false.B))
-    w2Full := VecInit(Seq.fill(2) { VecInit(Seq.fill(7)(false.B)) })
-    w1BlockReady := VecInit(Seq.fill(2)(false.B))
-    w1SubReady := VecInit(Seq.fill(2) { VecInit(Seq.fill(7)(false.B)) })
-    w1BufValid := VecInit(Seq.fill(2)(false.B))
-    w0Ready := VecInit(Seq.fill(7)(false.B))
-    i1State := i1Idle; i2State := i2Idle; i3State := i3Idle
-    w1WriteBuf := 0.U; w1WriteSub := 0.U; w1ReadCol := 0.U; w1ReadFeedValid := false.B; w1ReadFeedSel := 0.U
-    w0WriteBlock := 0.U; w0ReadPairIdx := 0.U; w0ReadFeedValid := false.B; w0ReadFeedSel := false.B
-    w2WBuf := 0.U
-  }
+  // io.valid_out 仅在最终插值完成的周期拉高一拍；io.c 保持最近一帧结果。
 }
