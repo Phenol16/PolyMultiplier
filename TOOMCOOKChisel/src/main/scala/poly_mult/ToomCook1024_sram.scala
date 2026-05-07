@@ -2,6 +2,7 @@ package poly_mult_sram
 
 import chisel3._
 import chisel3.util._
+import chisel3.experimental.ChiselEnum
 
 
 object Util {
@@ -715,6 +716,160 @@ class SpRam(width: Int, depth: Int) extends BlackBox(Map("WIDTH" -> width, "DEPT
   addResource("/sp_ram.v")
 }
 
+
+// =============================================================================
+//  EvalPointVec1024：三层 TC4EvalPoint 的完整 16-lane 组合求值器。
+//  每个周期对一个 (pt0, pt1, pt2) 直接生成完整 Core16 任务。
+// =============================================================================
+class EvalPointVec1024(memW: Int, outW: Int) extends Module {
+  val io = IO(new Bundle {
+    val in  = Input(Vec(1024, UInt(memW.W)))
+    val pt0 = Input(UInt(3.W))
+    val pt1 = Input(UInt(3.W))
+    val pt2 = Input(UInt(3.W))
+    val out = Output(Vec(16, UInt(outW.W)))
+  })
+
+  for (l <- 0 until 16) {
+    val lv2 = Wire(Vec(4, UInt(outW.W)))
+
+    for (k <- 0 until 4) {
+      val lv1 = Wire(Vec(4, UInt(outW.W)))
+
+      for (j <- 0 until 4) {
+        val eval0 = Module(new TC4EvalPoint(memW, outW))
+        val base = l * 64 + 16 * k + 4 * j
+
+        eval0.io.r(0) := io.in(base + 0)
+        eval0.io.r(1) := io.in(base + 1)
+        eval0.io.r(2) := io.in(base + 2)
+        eval0.io.r(3) := io.in(base + 3)
+        eval0.io.pt   := io.pt0
+        lv1(j)        := eval0.io.out
+      }
+
+      val eval1 = Module(new TC4EvalPoint(outW, outW))
+      eval1.io.r  := lv1
+      eval1.io.pt := io.pt1
+      lv2(k)      := eval1.io.out
+    }
+
+    val eval2 = Module(new TC4EvalPoint(outW, outW))
+    eval2.io.r  := lv2
+    eval2.io.pt := io.pt2
+    io.out(l)   := eval2.io.out
+  }
+}
+
+class EvalCorePingPongSramIO(aW: Int, bW: Int) extends Bundle {
+  val wrEn    = Input(Bool())
+  val wrBuf   = Input(UInt(1.W))
+  val wrAddr  = Input(UInt(9.W))
+  val wrAvec  = Input(Vec(16, UInt(aW.W)))
+  val wrBvec  = Input(Vec(16, UInt(bW.W)))
+  val wrGroup = Input(UInt(6.W))
+  val wrPt2   = Input(UInt(3.W))
+
+  val rdEn    = Input(Bool())
+  val rdBuf   = Input(UInt(1.W))
+  val rdAddr  = Input(UInt(9.W))
+  val rdValid = Output(Bool())
+  val rdAvec  = Output(Vec(16, UInt(aW.W)))
+  val rdBvec  = Output(Vec(16, UInt(bW.W)))
+  val rdGroup = Output(UInt(6.W))
+  val rdPt2   = Output(UInt(3.W))
+}
+
+// =============================================================================
+//  EvalCorePingPongSram：Eval->Core 的 banked ping-pong SRAM 边界。
+//  当前 ToomCook43 单帧接口下采用先 fill 后 drain；内部仍保留 wrBuf/rdBuf，
+//  因而未来 ready_in 多帧接口可以扩展为一个 buffer drain、另一个 buffer fill。
+// =============================================================================
+class EvalCorePingPongSram(aW: Int, bW: Int) extends Module {
+  private val JOB_COUNT = 7 * 7 * 7
+  val io = IO(new EvalCorePingPongSramIO(aW, bW))
+
+  val aBanks = Seq.fill(2, 16)(Module(new SpRam(aW, JOB_COUNT)))
+  val bBanks = Seq.fill(2, 16)(Module(new SpRam(bW, JOB_COUNT)))
+  val mBanks = Seq.fill(2)(Module(new SpRam(9, JOB_COUNT)))
+
+  when(io.wrEn && io.rdEn) {
+    assert(io.wrBuf =/= io.rdBuf, "Ping-pong SRAM cannot read and write the same buffer in the same cycle")
+  }
+
+  for (b <- 0 until 2) {
+    for (i <- 0 until 16) {
+      aBanks(b)(i).io.clk := clock
+      aBanks(b)(i).io.en := false.B
+      aBanks(b)(i).io.we := false.B
+      aBanks(b)(i).io.addr := 0.U
+      aBanks(b)(i).io.din := 0.U
+
+      bBanks(b)(i).io.clk := clock
+      bBanks(b)(i).io.en := false.B
+      bBanks(b)(i).io.we := false.B
+      bBanks(b)(i).io.addr := 0.U
+      bBanks(b)(i).io.din := 0.U
+    }
+
+    mBanks(b).io.clk := clock
+    mBanks(b).io.en := false.B
+    mBanks(b).io.we := false.B
+    mBanks(b).io.addr := 0.U
+    mBanks(b).io.din := 0.U
+  }
+
+  def writeBuffer(buf: Int): Unit = {
+    for (i <- 0 until 16) {
+      aBanks(buf)(i).io.en := true.B
+      aBanks(buf)(i).io.we := true.B
+      aBanks(buf)(i).io.addr := io.wrAddr
+      aBanks(buf)(i).io.din := io.wrAvec(i)
+
+      bBanks(buf)(i).io.en := true.B
+      bBanks(buf)(i).io.we := true.B
+      bBanks(buf)(i).io.addr := io.wrAddr
+      bBanks(buf)(i).io.din := io.wrBvec(i)
+    }
+    mBanks(buf).io.en := true.B
+    mBanks(buf).io.we := true.B
+    mBanks(buf).io.addr := io.wrAddr
+    mBanks(buf).io.din := Cat(io.wrGroup, io.wrPt2)
+  }
+
+  def readBuffer(buf: Int): Unit = {
+    for (i <- 0 until 16) {
+      aBanks(buf)(i).io.en := true.B
+      aBanks(buf)(i).io.we := false.B
+      aBanks(buf)(i).io.addr := io.rdAddr
+
+      bBanks(buf)(i).io.en := true.B
+      bBanks(buf)(i).io.we := false.B
+      bBanks(buf)(i).io.addr := io.rdAddr
+    }
+    mBanks(buf).io.en := true.B
+    mBanks(buf).io.we := false.B
+    mBanks(buf).io.addr := io.rdAddr
+  }
+
+  when(io.wrEn) {
+    when(io.wrBuf === 0.U) { writeBuffer(0) }.otherwise { writeBuffer(1) }
+  }
+  when(io.rdEn) {
+    when(io.rdBuf === 0.U) { readBuffer(0) }.otherwise { readBuffer(1) }
+  }
+
+  val rdBufReg = RegNext(io.rdBuf, 0.U)
+  for (i <- 0 until 16) {
+    io.rdAvec(i) := Mux(rdBufReg === 0.U, aBanks(0)(i).io.dout, aBanks(1)(i).io.dout)
+    io.rdBvec(i) := Mux(rdBufReg === 0.U, bBanks(0)(i).io.dout, bBanks(1)(i).io.dout)
+  }
+  val metaOut = Mux(rdBufReg === 0.U, mBanks(0).io.dout, mBanks(1).io.dout)
+  io.rdGroup := metaOut(8, 3)
+  io.rdPt2 := metaOut(2, 0)
+  io.rdValid := RegNext(io.rdEn, false.B)
+}
+
 class EvalCoreJob(aW: Int, bW: Int) extends Bundle {
   val avec = Vec(16, UInt(aW.W))
   val bvec = Vec(16, UInt(bW.W))
@@ -759,14 +914,16 @@ class ToomCook43 extends Module {
 
   private val A_EVAL_W = TC4EvalWidth.A_EVAL_W
   private val B_EVAL_W = TC4EvalWidth.B_EVAL_W
-  private val EVAL_LANES = 4
+  private val CORE_OUT_W = 36
+  private val JOB_COUNT = 7 * 7 * 7
+  private val CORE16_LATENCY = 1
 
   // ---------------------------------------------------------------------------
   // Submodules
   // ---------------------------------------------------------------------------
-  val evalLanesA = (0 until EVAL_LANES).map(l => Module(new EvalLaneFixed(24, A_EVAL_W, l, EVAL_LANES)))
-  val evalLanesB = (0 until EVAL_LANES).map(l => Module(new EvalLaneFixed(8, B_EVAL_W, l, EVAL_LANES)))
-  val evalCoreQ = Module(new Queue(new EvalCoreJob(A_EVAL_W, B_EVAL_W), 2, pipe = true, flow = false))
+  val evalA = Module(new EvalPointVec1024(24, A_EVAL_W))
+  val evalB = Module(new EvalPointVec1024(8, B_EVAL_W))
+  val evalCoreBuf = Module(new EvalCorePingPongSram(A_EVAL_W, B_EVAL_W))
   val core = Module(new Core16TC4)
   val interp16Seq = Module(new InterpLayerSeqStreamTC4(16, 1, 36, 33))
   val interp64Seq = Module(new InterpLayerSeqStreamInOutTC4(64, 2, 33, 27))
@@ -778,8 +935,10 @@ class ToomCook43 extends Module {
   val regA = Reg(Vec(1024, UInt(24.W)))
   val regB = Reg(Vec(1024, UInt(8.W)))
 
-  val w2Ram = Seq.fill(2, 7)(Module(new SpRam(576, 2)))
-  val w2Local = Reg(Vec(7, Vec(16, UInt(36.W))))
+  // W2 以 group=(pt0*7+pt1) 为第一维、pt2*16+lane 为第二维。
+  // Core16 输出写入时使用从 Eval-Core SRAM 读出的 metadata，并通过 CORE16_LATENCY 对齐。
+  val w2Reg = Reg(Vec(49, Vec(7 * 16, UInt(CORE_OUT_W.W))))
+  val w2Local = Reg(Vec(7, Vec(16, UInt(CORE_OUT_W.W))))
 
   // W1 使用 grouped SRAM，每个 word 保存 4 个 33-bit 系数：Cat(c3,c2,c1,c0)。
   val w1Ram = Seq.fill(2, 7)(Module(new SpRam(132, 16)))
@@ -795,29 +954,30 @@ class ToomCook43 extends Module {
   // ---------------------------------------------------------------------------
   // Eval/Core stage state
   // ---------------------------------------------------------------------------
-  val evalPhase = RegInit(0.U(2.W))
+  object State extends ChiselEnum {
+    val IDLE, EVAL_FILL, CORE_DRAIN, INTERP1_START, INTERP1_WAIT,
+        INTERP2_START, INTERP2_WAIT, INTERP3_START, INTERP3_WAIT, DONE = Value
+  }
+  val state = RegInit(State.IDLE)
+
   val pt0 = RegInit(0.U(3.W)); val pt1 = RegInit(0.U(3.W)); val pt2 = RegInit(0.U(3.W))
-  val evalDone = RegInit(false.B)
-  val avecBuild = Reg(Vec(16, UInt(A_EVAL_W.W)))
-  val bvecBuild = Reg(Vec(16, UInt(B_EVAL_W.W)))
+  val evalJobCnt = RegInit(0.U(9.W))
+  val coreReadReqCnt = RegInit(0.U(9.W))
+  val coreInCnt = RegInit(0.U(9.W))
+  val coreOutCnt = RegInit(0.U(9.W))
+  val allCoreOutDone = RegInit(false.B)
 
-  val corePending = RegInit(false.B)
-  val outPt0 = Reg(UInt(3.W)); val outPt1 = Reg(UInt(3.W)); val outPt2 = Reg(UInt(3.W))
+  val wrBuf = RegInit(0.U(1.W))
+  val rdBuf = RegInit(0.U(1.W))
+  val bufFull = RegInit(VecInit(Seq.fill(2)(false.B)))
+  val bufEmpty = RegInit(VecInit(Seq.fill(2)(true.B)))
+  val interpGroupCnt = RegInit(0.U(6.W))
 
   // ---------------------------------------------------------------------------
-  // W2 buffer and I1 state
+  // W2 -> I1 state
   // ---------------------------------------------------------------------------
-  val w2WBuf = RegInit(0.U(1.W))
-  val w2Empty = RegInit(VecInit(Seq.fill(2)(true.B)))
-  val w2Writing = RegInit(VecInit(Seq.fill(2)(false.B)))
-  val w2Reading = RegInit(VecInit(Seq.fill(2)(false.B)))
-  val w2Ready = RegInit(VecInit(Seq.fill(2)(false.B)))
-  val w2Full = RegInit(VecInit(Seq.fill(2) { VecInit(Seq.fill(7)(false.B)) }))
-  val w2Pt0 = Reg(Vec(2, UInt(3.W))); val w2Pt1 = Reg(Vec(2, UInt(3.W)))
-
-  val i1Idle :: i1ReadReq :: i1ReadCap :: i1Start :: i1Run :: Nil = Enum(5)
+  val i1Idle :: i1Start :: i1Run :: Nil = Enum(3)
   val i1State = RegInit(i1Idle)
-  val i1Buf = RegInit(0.U(1.W))
   val w1WriteBuf = RegInit(0.U(1.W))
   val w1WriteSub = RegInit(0.U(3.W))
 
@@ -870,7 +1030,6 @@ class ToomCook43 extends Module {
   // Default SRAM ports
   // ---------------------------------------------------------------------------
   for (b <- 0 until 2; p <- 0 until 7) {
-    w2Ram(b)(p).io.clk := clock; w2Ram(b)(p).io.en := false.B; w2Ram(b)(p).io.we := false.B; w2Ram(b)(p).io.addr := 0.U(1.W); w2Ram(b)(p).io.din := 0.U
     w1Ram(b)(p).io.clk := clock; w1Ram(b)(p).io.en := false.B; w1Ram(b)(p).io.we := false.B; w1Ram(b)(p).io.addr := 0.U(4.W); w1Ram(b)(p).io.din := 0.U
   }
   for (g <- 0 until 7) {
@@ -878,136 +1037,116 @@ class ToomCook43 extends Module {
   }
 
   // ---------------------------------------------------------------------------
-  // Eval lane wiring
+  // EvalPointVec1024 -> banked ping-pong SRAM -> Core16 -> W2
   // ---------------------------------------------------------------------------
-  for (l <- 0 until EVAL_LANES) {
-    evalLanesA(l).io.in := regA; evalLanesA(l).io.pt0 := pt0; evalLanesA(l).io.pt1 := pt1; evalLanesA(l).io.pt2 := pt2; evalLanesA(l).io.phase := evalPhase
-    evalLanesB(l).io.in := regB; evalLanesB(l).io.pt0 := pt0; evalLanesB(l).io.pt1 := pt1; evalLanesB(l).io.pt2 := pt2; evalLanesB(l).io.phase := evalPhase
-  }
+  evalA.io.in := regA
+  evalB.io.in := regB
+  evalA.io.pt0 := pt0
+  evalA.io.pt1 := pt1
+  evalA.io.pt2 := pt2
+  evalB.io.pt0 := pt0
+  evalB.io.pt1 := pt1
+  evalB.io.pt2 := pt2
 
-  // ---------------------------------------------------------------------------
-  // Eval accumulation and queue enqueue
-  // ---------------------------------------------------------------------------
-  val nextAvec = Wire(Vec(16, UInt(A_EVAL_W.W)))
-  val nextBvec = Wire(Vec(16, UInt(B_EVAL_W.W)))
-  nextAvec := avecBuild
-  nextBvec := bvecBuild
-  for (l <- 0 until EVAL_LANES) {
-    val idx = evalPhase * EVAL_LANES.U + l.U
-    nextAvec(idx) := evalLanesA(l).io.out
-    nextBvec(idx) := evalLanesB(l).io.out
-  }
+  val curGroup = Wire(UInt(6.W))
+  curGroup := pt0 * 7.U + pt1
 
-  val evalAtLastPhase = evalPhase === 3.U
-  val evalJobValid = busy && !evalDone && evalAtLastPhase
-  val evalNonLastStep = busy && !evalDone && !evalAtLastPhase
+  evalCoreBuf.io.wrEn := false.B
+  evalCoreBuf.io.wrBuf := wrBuf
+  evalCoreBuf.io.wrAddr := evalJobCnt
+  evalCoreBuf.io.wrAvec := evalA.io.out
+  evalCoreBuf.io.wrBvec := evalB.io.out
+  evalCoreBuf.io.wrGroup := curGroup
+  evalCoreBuf.io.wrPt2 := pt2
+  evalCoreBuf.io.rdEn := false.B
+  evalCoreBuf.io.rdBuf := rdBuf
+  evalCoreBuf.io.rdAddr := coreReadReqCnt
 
-  evalCoreQ.io.enq.valid := evalJobValid
-  evalCoreQ.io.enq.bits.avec := nextAvec
-  evalCoreQ.io.enq.bits.bvec := nextBvec
-  evalCoreQ.io.enq.bits.pt0 := pt0
-  evalCoreQ.io.enq.bits.pt1 := pt1
-  evalCoreQ.io.enq.bits.pt2 := pt2
-  evalCoreQ.io.deq.ready := false.B
+  core.io.valid_in := evalCoreBuf.io.rdValid
+  core.io.avec := evalCoreBuf.io.rdAvec
+  core.io.bvec := evalCoreBuf.io.rdBvec
 
-  when(evalNonLastStep) {
-    avecBuild := nextAvec
-    bvecBuild := nextBvec
-    evalPhase := evalPhase + 1.U
-  }
+  val coreMetaValid = ShiftRegister(evalCoreBuf.io.rdValid, CORE16_LATENCY)
+  val coreMetaGroup = ShiftRegister(evalCoreBuf.io.rdGroup, CORE16_LATENCY, enable = evalCoreBuf.io.rdValid)
+  val coreMetaPt2 = ShiftRegister(evalCoreBuf.io.rdPt2, CORE16_LATENCY, enable = evalCoreBuf.io.rdValid)
 
-  when(evalJobValid && evalCoreQ.io.enq.fire) {
-    avecBuild := nextAvec
-    bvecBuild := nextBvec
-    evalPhase := 0.U
-    when(pt0 === 6.U && pt1 === 6.U && pt2 === 6.U) { evalDone := true.B }
-      .otherwise {
-        when(pt2 === 6.U) {
-          pt2 := 0.U
-          when(pt1 === 6.U) { pt1 := 0.U; pt0 := pt0 + 1.U }
-            .otherwise { pt1 := pt1 + 1.U }
-        }.otherwise { pt2 := pt2 + 1.U }
-      }
-  }
-
-  // ---------------------------------------------------------------------------
-  // Core dequeue and W2 write
-  // ---------------------------------------------------------------------------
-  core.io.valid_in := false.B
-  core.io.avec := evalCoreQ.io.deq.bits.avec
-  core.io.bvec := evalCoreQ.io.deq.bits.bvec
-  val canUseW2WriteBuf = (w2Empty(w2WBuf) || w2Writing(w2WBuf)) && !w2Reading(w2WBuf) && !w2Ready(w2WBuf)
-  val canCoreTake = busy && evalCoreQ.io.deq.valid && !corePending && canUseW2WriteBuf
-  evalCoreQ.io.deq.ready := canCoreTake
-  when(canCoreTake) {
-    core.io.valid_in := true.B
-    corePending := true.B
-    w2Empty(w2WBuf) := false.B
-    w2Writing(w2WBuf) := true.B
-    outPt0 := evalCoreQ.io.deq.bits.pt0
-    outPt1 := evalCoreQ.io.deq.bits.pt1
-    outPt2 := evalCoreQ.io.deq.bits.pt2
-  }
-
-  for (buf <- 0 until 2; p <- 0 until 7) {
-    when(corePending && core.io.valid_out && w2WBuf === buf.U && outPt2 === p.U) {
-      w2Ram(buf)(p).io.en := true.B
-      w2Ram(buf)(p).io.we := true.B
-      w2Ram(buf)(p).io.din := packVec(core.io.cOut)
-    }
-  }
-  when(corePending && core.io.valid_out) {
-    corePending := false.B
-    when(w2WBuf === 0.U) {
-      val next0 = Wire(Vec(7, Bool()))
-      next0 := w2Full(0)
-      next0(outPt2) := true.B
-      w2Full(0) := next0
-      when(next0.asUInt.andR) {
-        w2Writing(0) := false.B
-        w2Ready(0) := true.B
-        w2Pt0(0) := outPt0
-        w2Pt1(0) := outPt1
-        w2WBuf := 1.U
+  when(state === State.EVAL_FILL) {
+    evalCoreBuf.io.wrEn := true.B
+    when(pt2 === 6.U) {
+      pt2 := 0.U
+      when(pt1 === 6.U) {
+        pt1 := 0.U
+        when(pt0 =/= 6.U) { pt0 := pt0 + 1.U }
+      }.otherwise {
+        pt1 := pt1 + 1.U
       }
     }.otherwise {
-      val next1 = Wire(Vec(7, Bool()))
-      next1 := w2Full(1)
-      next1(outPt2) := true.B
-      w2Full(1) := next1
-      when(next1.asUInt.andR) {
-        w2Writing(1) := false.B
-        w2Ready(1) := true.B
-        w2Pt0(1) := outPt0
-        w2Pt1(1) := outPt1
-        w2WBuf := 0.U
-      }
+      pt2 := pt2 + 1.U
+    }
+
+    when(evalJobCnt === (JOB_COUNT - 1).U) {
+      bufFull(wrBuf) := true.B
+      bufEmpty(wrBuf) := false.B
+      rdBuf := wrBuf
+      wrBuf := ~wrBuf
+      coreReadReqCnt := 0.U
+      coreInCnt := 0.U
+      coreOutCnt := 0.U
+      allCoreOutDone := false.B
+      state := State.CORE_DRAIN
+    }.otherwise {
+      evalJobCnt := evalJobCnt + 1.U
+    }
+  }
+
+  when(state === State.CORE_DRAIN) {
+    when(coreReadReqCnt < JOB_COUNT.U) {
+      evalCoreBuf.io.rdEn := true.B
+      coreReadReqCnt := coreReadReqCnt + 1.U
+    }
+    when(evalCoreBuf.io.rdValid) {
+      coreInCnt := coreInCnt + 1.U
+    }
+  }
+
+  when(core.io.valid_out) {
+    assert(coreMetaValid, "Core16 output metadata must be valid")
+    switch(coreMetaPt2) {
+      is(0.U) { for (t <- 0 until 16) { w2Reg(coreMetaGroup)(0 * 16 + t) := core.io.cOut(t) } }
+      is(1.U) { for (t <- 0 until 16) { w2Reg(coreMetaGroup)(1 * 16 + t) := core.io.cOut(t) } }
+      is(2.U) { for (t <- 0 until 16) { w2Reg(coreMetaGroup)(2 * 16 + t) := core.io.cOut(t) } }
+      is(3.U) { for (t <- 0 until 16) { w2Reg(coreMetaGroup)(3 * 16 + t) := core.io.cOut(t) } }
+      is(4.U) { for (t <- 0 until 16) { w2Reg(coreMetaGroup)(4 * 16 + t) := core.io.cOut(t) } }
+      is(5.U) { for (t <- 0 until 16) { w2Reg(coreMetaGroup)(5 * 16 + t) := core.io.cOut(t) } }
+      is(6.U) { for (t <- 0 until 16) { w2Reg(coreMetaGroup)(6 * 16 + t) := core.io.cOut(t) } }
+    }
+
+    when(coreOutCnt === (JOB_COUNT - 1).U) {
+      allCoreOutDone := true.B
+      bufFull(rdBuf) := false.B
+      bufEmpty(rdBuf) := true.B
+      state := State.INTERP1_START
+    }.otherwise {
+      coreOutCnt := coreOutCnt + 1.U
     }
   }
 
   // ---------------------------------------------------------------------------
-  // I1: W2 -> w2Local -> interp16 -> W1
+  // I1: W2 register file -> interp16 -> W1
   // ---------------------------------------------------------------------------
-  when(i1State === i1Idle) {
-    when(w2Ready(0) && !w2Writing(0)) { i1Buf := 0.U; w2Reading(0) := true.B; i1State := i1ReadReq }
-      .elsewhen(w2Ready(1) && !w2Writing(1)) { i1Buf := 1.U; w2Reading(1) := true.B; i1State := i1ReadReq }
-  }.elsewhen(i1State === i1ReadReq) {
-    // i1ReadReq 发起同步 SRAM 读，i1ReadCap 捕获 dout 到 w2Local。
-    for (buf <- 0 until 2) {
-      when(i1Buf === buf.U) {
-        for (p <- 0 until 7) { w2Ram(buf)(p).io.en := true.B; w2Ram(buf)(p).io.we := false.B }
-      }
-    }
-    i1State := i1ReadCap
-  }.elsewhen(i1State === i1ReadCap) {
-    for (p <- 0 until 7) {
-      val d = Mux(i1Buf === 0.U, w2Ram(0)(p).io.dout, w2Ram(1)(p).io.dout)
-      w2Local(p) := unpackVec(d, 16, 36)
-    }
+  when(state === State.INTERP1_START && allCoreOutDone) {
+    interpGroupCnt := 0.U
     i1State := i1Start
-  }.elsewhen(i1State === i1Start) {
-    val curBlock = Mux(i1Buf === 0.U, w2Pt0(0), w2Pt0(1))
-    val curSub = Mux(i1Buf === 0.U, w2Pt1(0), w2Pt1(1))
+    state := State.INTERP1_WAIT
+  }
+
+  when(i1State === i1Start) {
+    val curBlock = (interpGroupCnt / 7.U)(2, 0)
+    val curSub = (interpGroupCnt - (curBlock * 7.U))(2, 0)
+    for (p <- 0 until 7; t <- 0 until 16) {
+      w2Local(p)(t) := w2Reg(interpGroupCnt)(p * 16 + t)
+    }
+
     val hit0 = w1BufValid(0) && (w1BufBlock(0) === curBlock)
     val hit1 = w1BufValid(1) && (w1BufBlock(1) === curBlock)
     val empty0 = !w1BufValid(0)
@@ -1054,11 +1193,12 @@ class ToomCook43 extends Module {
         w1SubReady(1) := nextReady
         when(nextReady.asUInt.andR) { w1BlockReady(1) := true.B }
       }
-      w2Ready(i1Buf) := false.B
-      w2Reading(i1Buf) := false.B
-      w2Empty(i1Buf) := true.B
-      w2Full(i1Buf) := VecInit(Seq.fill(7)(false.B))
-      i1State := i1Idle
+      when(interpGroupCnt === 48.U) {
+        i1State := i1Idle
+      }.otherwise {
+        interpGroupCnt := interpGroupCnt + 1.U
+        i1State := i1Start
+      }
     }
   }
 
@@ -1176,6 +1316,7 @@ class ToomCook43 extends Module {
     // interp256Seq 内部已保存完整输出；同周期直接拉高 valid_out，一拍后回到 idle。
     io.valid_out := true.B
     busy := false.B
+    state := State.DONE
     i3State := i3Idle
   }
 
@@ -1186,17 +1327,23 @@ class ToomCook43 extends Module {
   // The caller/testbench must not assert valid_in while busy=true.
   // Future version may add ready_in for streaming multi-frame input.
   when(io.valid_in && !busy) {
-    assert(!evalCoreQ.io.deq.valid, "evalCoreQ must be empty when accepting a new frame")
     regA := io.a
     regB := io.b
     busy := true.B
-    pt0 := 0.U; pt1 := 0.U; pt2 := 0.U; evalPhase := 0.U; evalDone := false.B
-    corePending := false.B
-    w2Empty := VecInit(Seq.fill(2)(true.B))
-    w2Writing := VecInit(Seq.fill(2)(false.B))
-    w2Reading := VecInit(Seq.fill(2)(false.B))
-    w2Ready := VecInit(Seq.fill(2)(false.B))
-    w2Full := VecInit(Seq.fill(2) { VecInit(Seq.fill(7)(false.B)) })
+    state := State.EVAL_FILL
+
+    pt0 := 0.U; pt1 := 0.U; pt2 := 0.U
+    evalJobCnt := 0.U
+    coreReadReqCnt := 0.U
+    coreInCnt := 0.U
+    coreOutCnt := 0.U
+    allCoreOutDone := false.B
+    wrBuf := Mux(bufEmpty(0), 0.U, 1.U)
+    rdBuf := 0.U
+    bufFull := VecInit(Seq.fill(2)(false.B))
+    bufEmpty := VecInit(Seq.fill(2)(true.B))
+    interpGroupCnt := 0.U
+
     w1BlockReady := VecInit(Seq.fill(2)(false.B))
     w1SubReady := VecInit(Seq.fill(2) { VecInit(Seq.fill(7)(false.B)) })
     w1BufValid := VecInit(Seq.fill(2)(false.B))
@@ -1204,6 +1351,6 @@ class ToomCook43 extends Module {
     i1State := i1Idle; i2State := i2Idle; i3State := i3Idle
     w1WriteBuf := 0.U; w1WriteSub := 0.U; w1ReadCol := 0.U; w1ReadFeedValid := false.B; w1ReadFeedSel := 0.U
     w0WriteBlock := 0.U; w0ReadPairIdx := 0.U; w0ReadFeedValid := false.B; w0ReadFeedSel := false.B
-    w2WBuf := 0.U
   }
+
 }
