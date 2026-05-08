@@ -198,6 +198,48 @@ class Interp4ColsTC4(pidx: Int, inW: Int, outW: Int) extends Module {
   io.out(2) := mask(raw(2) - prevR0(4), outW)
 }
 
+class Interp8ColsStepTC4(pidx: Int, inW: Int, outW: Int) extends Module {
+  private val mk2 = InterpParamTable.params(pidx).mk2
+
+  val io = IO(new Bundle {
+    val in = Input(Vec(7 * 8, UInt(inW.W)))
+    val pr0 = Input(UInt(mk2.W))
+    val pr1 = Input(UInt(mk2.W))
+    val pr2 = Input(UInt(mk2.W))
+    val out = Output(Vec(8 * 4, UInt(outW.W)))
+    val nr0 = Output(UInt(mk2.W))
+    val nr1 = Output(UInt(mk2.W))
+    val nr2 = Output(UInt(mk2.W))
+  })
+
+  val carry0 = Wire(Vec(9, UInt(mk2.W)))
+  val carry1 = Wire(Vec(9, UInt(mk2.W)))
+  val carry2 = Wire(Vec(9, UInt(mk2.W)))
+  carry0(0) := io.pr0
+  carry1(0) := io.pr1
+  carry2(0) := io.pr2
+
+  for (col <- 0 until 8) {
+    val core = Module(new InterpCoreTC4(pidx, inW))
+    for (pt <- 0 until 7) core.io.pIn(pt) := io.in(pt * 8 + col)
+    core.io.pr0 := carry0(col)
+    core.io.pr1 := carry1(col)
+    core.io.pr2 := carry2(col)
+
+    io.out(col * 4 + 0) := mask(core.io.c0part, outW)
+    io.out(col * 4 + 1) := mask(core.io.c1part, outW)
+    io.out(col * 4 + 2) := mask(core.io.c2part, outW)
+    io.out(col * 4 + 3) := mask(core.io.c3, outW)
+    carry0(col + 1) := core.io.nr0
+    carry1(col + 1) := core.io.nr1
+    carry2(col + 1) := core.io.nr2
+  }
+
+  io.nr0 := carry0(8)
+  io.nr1 := carry1(8)
+  io.nr2 := carry2(8)
+}
+
 class Product4TC4 extends Module {
   private val A_EVAL_W = TC4EvalWidth.A_EVAL_W
   private val B_EVAL_W = TC4EvalWidth.B_EVAL_W
@@ -320,19 +362,26 @@ class ToomCook43Clean extends Module {
 
   private val A_EVAL_W = TC4EvalWidth.A_EVAL_W
   private val B_EVAL_W = TC4EvalWidth.B_EVAL_W
-  private val EVAL_DEPTH = 343 * 16
-  private val CORE_DEPTH = 343 * 16
-  private val W1_DEPTH = 7 * 7 * 64
-  private val W0_DEPTH = 7 * 256
 
-  val aInRam = Module(new SpRam(24, 1024))
-  val bInRam = Module(new SpRam(8, 1024))
-  val evalARam = Module(new SpRam(A_EVAL_W, EVAL_DEPTH))
-  val evalBRam = Module(new SpRam(B_EVAL_W, EVAL_DEPTH))
-  val coreRam = Module(new SpRam(36, CORE_DEPTH))
-  val w1Ram = Module(new SpRam(33, W1_DEPTH))
-  val w0Ram = Module(new SpRam(27, W0_DEPTH))
-  val outRam = Module(new SpRam(24, 1024))
+  private def packVec(xs: Seq[UInt]): UInt = Cat(xs.reverse)
+  private def unpackVec(x: UInt, n: Int, w: Int): Vec[UInt] = {
+    val out = Wire(Vec(n, UInt(w.W)))
+    for (i <- 0 until n) out(i) := x((i + 1) * w - 1, i * w)
+    out
+  }
+
+  private def split64(x: UInt, w: Int): Vec[UInt] = unpackVec(x, 64, w)
+  private def split16(x: UInt, w: Int): Vec[UInt] = unpackVec(x, 16, w)
+  private def split32(x: UInt, w: Int): Vec[UInt] = unpackVec(x, 32, w)
+
+  val aLaneRam = Seq.fill(16)(Module(new SpRam(64 * 24, 2)))
+  val bLaneRam = Seq.fill(16)(Module(new SpRam(64 * 8, 2)))
+  val evalARam = Module(new SpRam(16 * A_EVAL_W, 343))
+  val evalBRam = Module(new SpRam(16 * B_EVAL_W, 343))
+  val coreRam = Seq.fill(7)(Module(new SpRam(16 * 36, 49)))
+  val w1Ram = Seq.fill(7)(Module(new SpRam(32 * 33, 7 * 2)))
+  val w0Ram = Seq.fill(7)(Module(new SpRam(32 * 27, 8)))
+  val outRam = Module(new SpRam(32 * 24, 32))
 
   private def ramDefaults(ram: SpRam, width: Int): Unit = {
     ram.io.clk := clock
@@ -341,88 +390,125 @@ class ToomCook43Clean extends Module {
     ram.io.addr := 0.U
     ram.io.din := 0.U(width.W)
   }
-  ramDefaults(aInRam, 24)
-  ramDefaults(bInRam, 8)
-  ramDefaults(evalARam, A_EVAL_W)
-  ramDefaults(evalBRam, B_EVAL_W)
-  ramDefaults(coreRam, 36)
-  ramDefaults(w1Ram, 33)
-  ramDefaults(w0Ram, 27)
-  ramDefaults(outRam, 24)
+  aLaneRam.foreach(ramDefaults(_, 64 * 24))
+  bLaneRam.foreach(ramDefaults(_, 64 * 8))
+  ramDefaults(evalARam, 16 * A_EVAL_W)
+  ramDefaults(evalBRam, 16 * B_EVAL_W)
+  coreRam.foreach(ramDefaults(_, 16 * 36))
+  w1Ram.foreach(ramDefaults(_, 32 * 33))
+  w0Ram.foreach(ramDefaults(_, 32 * 27))
+  ramDefaults(outRam, 32 * 24)
 
-  val sIdle :: sLoadInput :: sEval :: sCore :: sInter1 :: sInter2 :: sInter3 :: sReadOutput :: sDone :: Nil = Enum(9)
+  val sIdle :: sLoadInput :: sEvalPreRead :: sEvalCapture :: sEval :: sCore :: sInter1 :: sInter2 :: sInter3 :: sReadOutput :: sDone :: Nil = Enum(11)
   val state = RegInit(sIdle)
 
-  val loadCount = RegInit(0.U(11.W))       // reaches 1024
-  val evalCount = RegInit(0.U(13.W))       // reaches 343 * 16 lane evaluations
-  val coreCount = RegInit(0.U(9.W))        // reaches 343 jobs
-  val inter1Count = RegInit(0.U(8.W))      // reaches 49 * 4 groups
-  val inter2Count = RegInit(0.U(7.W))      // reaches 7 * 16 groups
-  val inter3Count = RegInit(0.U(7.W))      // reaches 64 groups
-  val outputReadCount = RegInit(0.U(11.W)) // reaches 1024
+  val loadCount = RegInit(0.U(2.W))       // reaches 1 packed 16-lane input load
+  val evalCount = RegInit(0.U(9.W))       // reaches 343 job-wide evaluations
+  val coreCount = RegInit(0.U(9.W))       // reaches 343 job-wide core writes
+  val inter1Count = RegInit(0.U(8.W))     // reaches 49 * (2 steps + 1 correction) = 147
+  val inter2Count = RegInit(0.U(7.W))     // reaches 7 * (8 steps + 1 correction) = 63
+  val inter3Count = RegInit(0.U(6.W))     // reaches 32 steps + 1 correction = 33
+  val outputReadCount = RegInit(0.U(6.W)) // reaches 32 packed output reads
 
-  // Final parallel IO mirror only; all stored output data is first written to outRam.
   val outReg = Reg(Vec(1024, UInt(24.W)))
   io.c := outReg
   io.valid_out := state === sDone
 
+  val laneAWord = Reg(Vec(16, UInt((64 * 24).W)))
+  val laneBWord = Reg(Vec(16, UInt((64 * 8).W)))
+
   val evalPt0 = RegInit(0.U(3.W))
   val evalPt1 = RegInit(0.U(3.W))
   val evalPt2 = RegInit(0.U(3.W))
-  val evalLane = RegInit(0.U(4.W))
-  val evalCoeff = RegInit(0.U(6.W))
-  val evalSub = RegInit(0.U(2.W))
-  val localA64 = Reg(Vec(64, UInt(24.W)))
-  val localB64 = Reg(Vec(64, UInt(8.W)))
-  val evalA = Module(new Eval64Point(24, A_EVAL_W))
-  val evalB = Module(new Eval64Point(8, B_EVAL_W))
-  evalA.io.in := localA64
-  evalB.io.in := localB64
-  evalA.io.pt0 := evalPt0
-  evalA.io.pt1 := evalPt1
-  evalA.io.pt2 := evalPt2
-  evalB.io.pt0 := evalPt0
-  evalB.io.pt1 := evalPt1
-  evalB.io.pt2 := evalPt2
+  val evalJobIdx = evalPt0 * 49.U + evalPt1 * 7.U + evalPt2 // jobIdx = pt0 * 49 + pt1 * 7 + pt2.
 
-  val coreSub = RegInit(0.U(3.W))
-  val coreCoeff = RegInit(0.U(4.W))
-  val coreA16 = Reg(Vec(16, UInt(A_EVAL_W.W)))
-  val coreB16 = Reg(Vec(16, UInt(B_EVAL_W.W)))
-  val coreOut16 = Reg(Vec(16, UInt(36.W)))
+  val evalA = Seq.fill(16)(Module(new Eval64Point(24, A_EVAL_W)))
+  val evalB = Seq.fill(16)(Module(new Eval64Point(8, B_EVAL_W)))
+  val evalAVec = Wire(Vec(16, UInt(A_EVAL_W.W)))
+  val evalBVec = Wire(Vec(16, UInt(B_EVAL_W.W)))
+  for (lane <- 0 until 16) {
+    evalA(lane).io.in := split64(laneAWord(lane), 24)
+    evalB(lane).io.in := split64(laneBWord(lane), 8)
+    evalA(lane).io.pt0 := evalPt0
+    evalA(lane).io.pt1 := evalPt1
+    evalA(lane).io.pt2 := evalPt2
+    evalB(lane).io.pt0 := evalPt0
+    evalB(lane).io.pt1 := evalPt1
+    evalB(lane).io.pt2 := evalPt2
+    evalAVec(lane) := evalA(lane).io.out
+    evalBVec(lane) := evalB(lane).io.out
+  }
+
   val core = Module(new Core16TC4)
   core.io.valid_in := false.B
-  core.io.avec := coreA16
-  core.io.bvec := coreB16
+  core.io.avec := split16(evalARam.io.dout, A_EVAL_W)
+  core.io.bvec := split16(evalBRam.io.dout, B_EVAL_W)
 
-  val interSub = RegInit(0.U(2.W))
-  val interRead = RegInit(0.U(5.W))
-  val interWrite = RegInit(0.U(4.W))
+  val coreReqIdx = RegInit(0.U(9.W))
+  val coreReadValid = RegInit(false.B)
+  val coreFeedJob = RegInit(0.U(9.W))
+  val coreWriteJob = RegInit(0.U(9.W))
+  val coreWritePt2 = coreWriteJob % 7.U
+  val coreWritePage = coreWriteJob / 7.U // page = pt0 * 7 + pt1, bank = pt2.
+
   val iPt0 = RegInit(0.U(3.W))
   val iPt1 = RegInit(0.U(3.W))
-  val iColBase = RegInit(0.U(8.W))
-  val interIn36 = Reg(Vec(28, UInt(36.W)))
-  val interIn33 = Reg(Vec(28, UInt(33.W)))
-  val interIn27 = Reg(Vec(28, UInt(27.W)))
-  val interp1 = Module(new Interp4ColsTC4(pidx = 1, inW = 36, outW = 33))
-  val interp2 = Module(new Interp4ColsTC4(pidx = 2, inW = 33, outW = 27))
-  val interp3 = Module(new Interp4ColsTC4(pidx = 3, inW = 27, outW = 24))
-  interp1.io.in := interIn36
-  interp2.io.in := interIn33
-  interp3.io.in := interIn27
+  val iStep = RegInit(0.U(5.W))
+  val interSub = RegInit(0.U(2.W))
 
-  val outReadSub = RegInit(0.U(1.W))
+  val i1Pr0 = RegInit(0.U(30.W)); val i1Pr1 = RegInit(0.U(30.W)); val i1Pr2 = RegInit(0.U(30.W))
+  val i2Pr0 = RegInit(0.U(27.W)); val i2Pr1 = RegInit(0.U(27.W)); val i2Pr2 = RegInit(0.U(27.W))
+  val i3Pr0 = RegInit(0.U(24.W)); val i3Pr1 = RegInit(0.U(24.W)); val i3Pr2 = RegInit(0.U(24.W))
+  val firstW1 = Reg(Vec(32, UInt(33.W)))
+  val firstW0 = Reg(Vec(32, UInt(27.W)))
+  val firstOut = Reg(Vec(32, UInt(24.W)))
 
-  // jobIdx = pt0 * 49 + pt1 * 7 + pt2.
-  val evalJobIdx = evalPt0 * 49.U + evalPt1 * 7.U + evalPt2
-  // evalAddr = jobIdx * 16 + lane.
-  val evalAddr = (evalJobIdx << 4) + evalLane
-  // coreAddr = jobIdx * 16 + coeff.
-  val coreAddr = (coreCount << 4) + coreCoeff
-  // w1Addr = (pt0 * 7 + pt1) * 64 + col.
-  val w1BaseAddr = ((iPt0 * 7.U + iPt1) << 6)
-  // w0Addr = pt0 * 256 + col.
-  val w0BaseAddr = (iPt0 << 8)
+  val interp1 = Module(new Interp8ColsStepTC4(pidx = 1, inW = 36, outW = 33))
+  val interp2 = Module(new Interp8ColsStepTC4(pidx = 2, inW = 33, outW = 27))
+  val interp3 = Module(new Interp8ColsStepTC4(pidx = 3, inW = 27, outW = 24))
+
+  val inter1In = Wire(Vec(7 * 8, UInt(36.W)))
+  val inter2In = Wire(Vec(7 * 8, UInt(33.W)))
+  val inter3In = Wire(Vec(7 * 8, UInt(27.W)))
+  for (pt <- 0 until 7) {
+    val coreWord = split16(coreRam(pt).io.dout, 36)
+    val w1Word = split32(w1Ram(pt).io.dout, 33)
+    val w0Word = split32(w0Ram(pt).io.dout, 27)
+    val coreOffset = Cat(iStep(0), 0.U(3.W))
+    val inBlockOffset = Cat(iStep(1, 0), 0.U(3.W))
+    for (col <- 0 until 8) {
+      inter1In(pt * 8 + col) := coreWord(coreOffset + col.U)
+      inter2In(pt * 8 + col) := w1Word(inBlockOffset + col.U)
+      inter3In(pt * 8 + col) := w0Word(inBlockOffset + col.U)
+    }
+  }
+  interp1.io.in := inter1In
+  interp1.io.pr0 := i1Pr0; interp1.io.pr1 := i1Pr1; interp1.io.pr2 := i1Pr2
+  interp2.io.in := inter2In
+  interp2.io.pr0 := i2Pr0; interp2.io.pr1 := i2Pr1; interp2.io.pr2 := i2Pr2
+  interp3.io.in := inter3In
+  interp3.io.pr0 := i3Pr0; interp3.io.pr1 := i3Pr1; interp3.io.pr2 := i3Pr2
+
+  val correctedW1Vec = Wire(Vec(32, UInt(33.W)))
+  correctedW1Vec := firstW1
+  correctedW1Vec(0) := mask(firstW1(0) - i1Pr2, 33)
+  correctedW1Vec(1) := mask(firstW1(1) - i1Pr1, 33)
+  correctedW1Vec(2) := mask(firstW1(2) - i1Pr0, 33)
+  val correctedW1Word = packVec(correctedW1Vec)
+
+  val correctedW0Vec = Wire(Vec(32, UInt(27.W)))
+  correctedW0Vec := firstW0
+  correctedW0Vec(0) := mask(firstW0(0) - i2Pr2, 27)
+  correctedW0Vec(1) := mask(firstW0(1) - i2Pr1, 27)
+  correctedW0Vec(2) := mask(firstW0(2) - i2Pr0, 27)
+  val correctedW0Word = packVec(correctedW0Vec)
+
+  val correctedOutVec = Wire(Vec(32, UInt(24.W)))
+  correctedOutVec := firstOut
+  correctedOutVec(0) := mask(firstOut(0) - i3Pr2, 24)
+  correctedOutVec(1) := mask(firstOut(1) - i3Pr1, 24)
+  correctedOutVec(2) := mask(firstOut(2) - i3Pr0, 24)
+  val correctedOutWord = packVec(correctedOutVec)
 
   when(state === sIdle) {
     when(io.valid_in) {
@@ -436,227 +522,253 @@ class ToomCook43Clean extends Module {
       outputReadCount := 0.U
     }
   }.elsewhen(state === sLoadInput) {
-    aInRam.io.en := true.B
-    aInRam.io.we := true.B
-    val loadIdx = loadCount(9, 0)
-    aInRam.io.addr := loadIdx
-    aInRam.io.din := io.a(loadIdx)
-    bInRam.io.en := true.B
-    bInRam.io.we := true.B
-    bInRam.io.addr := loadIdx
-    bInRam.io.din := io.b(loadIdx)
-    when(loadCount === 1023.U) {
-      loadCount := loadCount + 1.U
-      state := sEval
-      evalPt0 := 0.U
-      evalPt1 := 0.U
-      evalPt2 := 0.U
-      evalLane := 0.U
-      evalCoeff := 0.U
-      evalSub := 0.U
-    }.otherwise {
-      loadCount := loadCount + 1.U
+    for (lane <- 0 until 16) {
+      aLaneRam(lane).io.en := true.B
+      aLaneRam(lane).io.we := true.B
+      aLaneRam(lane).io.addr := 0.U
+      aLaneRam(lane).io.din := packVec((0 until 64).map(i => io.a(lane * 64 + i)))
+      bLaneRam(lane).io.en := true.B
+      bLaneRam(lane).io.we := true.B
+      bLaneRam(lane).io.addr := 0.U
+      bLaneRam(lane).io.din := packVec((0 until 64).map(i => io.b(lane * 64 + i)))
     }
+    loadCount := 1.U
+    state := sEvalPreRead
+  }.elsewhen(state === sEvalPreRead) {
+    for (lane <- 0 until 16) {
+      aLaneRam(lane).io.en := true.B
+      aLaneRam(lane).io.addr := 0.U
+      bLaneRam(lane).io.en := true.B
+      bLaneRam(lane).io.addr := 0.U
+    }
+    state := sEvalCapture
+  }.elsewhen(state === sEvalCapture) {
+    for (lane <- 0 until 16) {
+      laneAWord(lane) := aLaneRam(lane).io.dout
+      laneBWord(lane) := bLaneRam(lane).io.dout
+    }
+    evalPt0 := 0.U
+    evalPt1 := 0.U
+    evalPt2 := 0.U
+    evalCount := 0.U
+    state := sEval
   }.elsewhen(state === sEval) {
-    val inputAddr = (evalLane << 6) + evalCoeff // input coefficient address = lane * 64 + coefficient.
-    when(evalSub === 0.U) {
-      aInRam.io.en := true.B
-      aInRam.io.addr := inputAddr
-      bInRam.io.en := true.B
-      bInRam.io.addr := inputAddr
-      evalSub := 1.U
-    }.elsewhen(evalSub === 1.U) {
-      localA64(evalCoeff) := aInRam.io.dout
-      localB64(evalCoeff) := bInRam.io.dout
-      when(evalCoeff === 63.U) {
-        evalSub := 2.U
-      }.otherwise {
-        evalCoeff := evalCoeff + 1.U
-        evalSub := 0.U
-      }
+    evalARam.io.en := true.B
+    evalARam.io.we := true.B
+    evalARam.io.addr := evalJobIdx
+    evalARam.io.din := packVec(evalAVec)
+    evalBRam.io.en := true.B
+    evalBRam.io.we := true.B
+    evalBRam.io.addr := evalJobIdx
+    evalBRam.io.din := packVec(evalBVec)
+    evalCount := evalCount + 1.U
+
+    when(evalPt0 === 6.U && evalPt1 === 6.U && evalPt2 === 6.U) {
+      state := sCore
+      coreReqIdx := 0.U
+      coreReadValid := false.B
+      coreFeedJob := 0.U
+      coreWriteJob := 0.U
+      coreCount := 0.U
     }.otherwise {
-      evalARam.io.en := true.B
-      evalARam.io.we := true.B
-      evalARam.io.addr := evalAddr
-      evalARam.io.din := evalA.io.out
-      evalBRam.io.en := true.B
-      evalBRam.io.we := true.B
-      evalBRam.io.addr := evalAddr
-      evalBRam.io.din := evalB.io.out
-      evalCount := evalCount + 1.U
-      evalCoeff := 0.U
-      evalSub := 0.U
-      when(evalPt0 === 6.U && evalPt1 === 6.U && evalPt2 === 6.U && evalLane === 15.U) {
-        state := sCore
-        coreCount := 0.U
-        coreCoeff := 0.U
-        coreSub := 0.U
-      }.otherwise {
-        when(evalLane === 15.U) {
-          evalLane := 0.U
-          when(evalPt2 === 6.U) {
-            evalPt2 := 0.U
-            when(evalPt1 === 6.U) {
-              evalPt1 := 0.U
-              evalPt0 := evalPt0 + 1.U
-            }.otherwise { evalPt1 := evalPt1 + 1.U }
-          }.otherwise { evalPt2 := evalPt2 + 1.U }
-        }.otherwise { evalLane := evalLane + 1.U }
-      }
+      when(evalPt2 === 6.U) {
+        evalPt2 := 0.U
+        when(evalPt1 === 6.U) { evalPt1 := 0.U; evalPt0 := evalPt0 + 1.U }
+          .otherwise { evalPt1 := evalPt1 + 1.U }
+      }.otherwise { evalPt2 := evalPt2 + 1.U }
     }
   }.elsewhen(state === sCore) {
-    when(coreSub === 0.U) {
+    val doCoreRead = coreReqIdx < 343.U
+    when(doCoreRead) {
       evalARam.io.en := true.B
-      evalARam.io.addr := coreAddr
+      evalARam.io.addr := coreReqIdx // evalAddr = jobIdx, one packed 16-lane job per word.
       evalBRam.io.en := true.B
-      evalBRam.io.addr := coreAddr
-      coreSub := 1.U
-    }.elsewhen(coreSub === 1.U) {
-      coreA16(coreCoeff) := evalARam.io.dout
-      coreB16(coreCoeff) := evalBRam.io.dout
-      when(coreCoeff === 15.U) {
-        coreSub := 2.U
-      }.otherwise {
-        coreCoeff := coreCoeff + 1.U
-        coreSub := 0.U
-      }
-    }.elsewhen(coreSub === 2.U) {
-      core.io.valid_in := true.B
-      coreSub := 3.U
-    }.elsewhen(coreSub === 3.U) {
-      when(core.io.valid_out) {
-        coreOut16 := core.io.cOut
-        coreCoeff := 0.U
-        coreSub := 4.U
-      }
-    }.otherwise {
-      coreRam.io.en := true.B
-      coreRam.io.we := true.B
-      coreRam.io.addr := (coreCount << 4) + coreCoeff // coreAddr = jobIdx * 16 + coeff.
-      coreRam.io.din := coreOut16(coreCoeff)
-      when(coreCoeff === 15.U) {
-        coreCount := coreCount + 1.U
-        coreCoeff := 0.U
-        coreSub := 0.U
-        when(coreCount === 342.U) {
-          state := sInter1
-          iPt0 := 0.U
-          iPt1 := 0.U
-          iColBase := 0.U
-          interRead := 0.U
-          interWrite := 0.U
-          interSub := 0.U
+      evalBRam.io.addr := coreReqIdx
+      coreReqIdx := coreReqIdx + 1.U
+    }
+
+    core.io.valid_in := coreReadValid
+    when(coreReadValid) {
+      coreWriteJob := coreFeedJob
+    }
+    coreReadValid := doCoreRead
+    coreFeedJob := coreReqIdx
+
+    when(core.io.valid_out) {
+      for (pt2 <- 0 until 7) {
+        when(coreWritePt2 === pt2.U) {
+          coreRam(pt2).io.en := true.B
+          coreRam(pt2).io.we := true.B
+          coreRam(pt2).io.addr := coreWritePage // coreRam(pt2)(page), page = pt0 * 7 + pt1.
+          coreRam(pt2).io.din := packVec(core.io.cOut)
         }
-      }.otherwise { coreCoeff := coreCoeff + 1.U }
+      }
+      coreCount := coreCount + 1.U
+      when(coreWriteJob === 342.U) {
+        state := sInter1
+        iPt0 := 0.U
+        iPt1 := 0.U
+        iStep := 0.U
+        interSub := 0.U
+        i1Pr0 := 0.U; i1Pr1 := 0.U; i1Pr2 := 0.U
+      }
     }
   }.elsewhen(state === sInter1) {
-    val pt2 = interRead >> 2
-    val col = iColBase + interRead(1, 0)
-    val readJob = iPt0 * 49.U + iPt1 * 7.U + pt2 // jobIdx = pt0 * 49 + pt1 * 7 + pt2.
+    val page = iPt0 * 7.U + iPt1 // page = pt0 * 7 + pt1.
     when(interSub === 0.U) {
-      coreRam.io.en := true.B
-      coreRam.io.addr := (readJob << 4) + col // coreAddr = jobIdx * 16 + col.
+      for (pt2 <- 0 until 7) {
+        coreRam(pt2).io.en := true.B
+        coreRam(pt2).io.addr := page // Read coreRam(pt2)(page) from all seven pt2 banks in parallel.
+      }
       interSub := 1.U
     }.elsewhen(interSub === 1.U) {
-      interIn36(interRead) := coreRam.io.dout
-      when(interRead === 27.U) { interSub := 2.U; interWrite := 0.U }
-      .otherwise { interRead := interRead + 1.U; interSub := 0.U }
+      val outWord = packVec(interp1.io.out)
+      when(iStep === 0.U) { firstW1 := interp1.io.out }
+      for (pt1 <- 0 until 7) {
+        when(iPt1 === pt1.U) {
+          w1Ram(pt1).io.en := true.B
+          w1Ram(pt1).io.we := true.B
+          w1Ram(pt1).io.addr := iPt0 * 2.U + iStep // w1Ram(pt1)(pt0 * 2 + block32).
+          w1Ram(pt1).io.din := outWord
+        }
+      }
+      inter1Count := inter1Count + 1.U
+      i1Pr0 := interp1.io.nr0; i1Pr1 := interp1.io.nr1; i1Pr2 := interp1.io.nr2
+      when(iStep === 0.U) {
+        for (pt2 <- 0 until 7) {
+          coreRam(pt2).io.en := true.B
+          coreRam(pt2).io.addr := page
+        }
+        iStep := 1.U
+      }.otherwise {
+        interSub := 2.U
+      }
     }.otherwise {
-      w1Ram.io.en := true.B
-      w1Ram.io.we := true.B
-      w1Ram.io.addr := w1BaseAddr + (iColBase << 2) + interWrite // w1Addr = (pt0 * 7 + pt1) * 64 + colBase * 4 + outIdx.
-      w1Ram.io.din := interp1.io.out(interWrite)
-      when(interWrite === 15.U) {
-        inter1Count := inter1Count + 1.U
-        interRead := 0.U
-        interWrite := 0.U
-        interSub := 0.U
-        when(iPt0 === 6.U && iPt1 === 6.U && iColBase === 12.U) {
-          state := sInter2
-          iPt0 := 0.U
-          iPt1 := 0.U
-          iColBase := 0.U
-        }.elsewhen(iColBase === 12.U) {
-          iColBase := 0.U
-          when(iPt1 === 6.U) { iPt1 := 0.U; iPt0 := iPt0 + 1.U }
-          .otherwise { iPt1 := iPt1 + 1.U }
-        }.otherwise { iColBase := iColBase + 4.U }
-      }.otherwise { interWrite := interWrite + 1.U }
+      for (pt1 <- 0 until 7) {
+        when(iPt1 === pt1.U) {
+          w1Ram(pt1).io.en := true.B
+          w1Ram(pt1).io.we := true.B
+          w1Ram(pt1).io.addr := iPt0 * 2.U // Correction rewrite for W1 block32 0.
+          w1Ram(pt1).io.din := correctedW1Word
+        }
+      }
+      inter1Count := inter1Count + 1.U
+      i1Pr0 := 0.U; i1Pr1 := 0.U; i1Pr2 := 0.U
+      iStep := 0.U
+      interSub := 0.U
+      when(iPt0 === 6.U && iPt1 === 6.U) {
+        state := sInter2
+        iPt0 := 0.U
+        iStep := 0.U
+        i2Pr0 := 0.U; i2Pr1 := 0.U; i2Pr2 := 0.U
+      }.elsewhen(iPt1 === 6.U) {
+        iPt1 := 0.U
+        iPt0 := iPt0 + 1.U
+      }.otherwise { iPt1 := iPt1 + 1.U }
     }
   }.elsewhen(state === sInter2) {
-    val pt1 = interRead >> 2
-    val col = iColBase + interRead(1, 0)
     when(interSub === 0.U) {
-      w1Ram.io.en := true.B
-      w1Ram.io.addr := ((iPt0 * 7.U + pt1) << 6) + col // w1Addr = (pt0 * 7 + pt1) * 64 + col.
+      val sourceBlock32 = iStep >> 2
+      for (pt1 <- 0 until 7) {
+        w1Ram(pt1).io.en := true.B
+        w1Ram(pt1).io.addr := iPt0 * 2.U + sourceBlock32 // w1Ram(pt1)(pt0 * 2 + input block32).
+      }
       interSub := 1.U
     }.elsewhen(interSub === 1.U) {
-      interIn33(interRead) := w1Ram.io.dout
-      when(interRead === 27.U) { interSub := 2.U; interWrite := 0.U }
-      .otherwise { interRead := interRead + 1.U; interSub := 0.U }
+      val outWord = packVec(interp2.io.out)
+      when(iStep === 0.U) { firstW0 := interp2.io.out }
+      for (pt0 <- 0 until 7) {
+        when(iPt0 === pt0.U) {
+          w0Ram(pt0).io.en := true.B
+          w0Ram(pt0).io.we := true.B
+          w0Ram(pt0).io.addr := iStep // w0Ram(pt0)(block32).
+          w0Ram(pt0).io.din := outWord
+        }
+      }
+      inter2Count := inter2Count + 1.U
+      i2Pr0 := interp2.io.nr0; i2Pr1 := interp2.io.nr1; i2Pr2 := interp2.io.nr2
+      when(iStep === 7.U) {
+        interSub := 2.U
+      }.otherwise {
+        val nextBlock32 = (iStep + 1.U) >> 2
+        for (pt1 <- 0 until 7) {
+          w1Ram(pt1).io.en := true.B
+          w1Ram(pt1).io.addr := iPt0 * 2.U + nextBlock32
+        }
+        iStep := iStep + 1.U
+      }
     }.otherwise {
-      w0Ram.io.en := true.B
-      w0Ram.io.we := true.B
-      w0Ram.io.addr := w0BaseAddr + (iColBase << 2) + interWrite // w0Addr = pt0 * 256 + colBase * 4 + outIdx.
-      w0Ram.io.din := interp2.io.out(interWrite)
-      when(interWrite === 15.U) {
-        inter2Count := inter2Count + 1.U
-        interRead := 0.U
-        interWrite := 0.U
-        interSub := 0.U
-        when(iPt0 === 6.U && iColBase === 60.U) {
-          state := sInter3
-          iPt0 := 0.U
-          iColBase := 0.U
-        }.elsewhen(iColBase === 60.U) {
-          iColBase := 0.U
-          iPt0 := iPt0 + 1.U
-        }.otherwise { iColBase := iColBase + 4.U }
-      }.otherwise { interWrite := interWrite + 1.U }
+      for (pt0 <- 0 until 7) {
+        when(iPt0 === pt0.U) {
+          w0Ram(pt0).io.en := true.B
+          w0Ram(pt0).io.we := true.B
+          w0Ram(pt0).io.addr := 0.U // Correction rewrite for W0 block32 0.
+          w0Ram(pt0).io.din := correctedW0Word
+        }
+      }
+      inter2Count := inter2Count + 1.U
+      i2Pr0 := 0.U; i2Pr1 := 0.U; i2Pr2 := 0.U
+      iStep := 0.U
+      interSub := 0.U
+      when(iPt0 === 6.U) {
+        state := sInter3
+        iStep := 0.U
+        i3Pr0 := 0.U; i3Pr1 := 0.U; i3Pr2 := 0.U
+      }.otherwise { iPt0 := iPt0 + 1.U }
     }
   }.elsewhen(state === sInter3) {
-    val pt0 = interRead >> 2
-    val col = iColBase + interRead(1, 0)
     when(interSub === 0.U) {
-      w0Ram.io.en := true.B
-      w0Ram.io.addr := (pt0 << 8) + col // w0Addr = pt0 * 256 + col.
+      val sourceBlock32 = iStep >> 2
+      for (pt0 <- 0 until 7) {
+        w0Ram(pt0).io.en := true.B
+        w0Ram(pt0).io.addr := sourceBlock32 // w0Ram(pt0)(input block32).
+      }
       interSub := 1.U
     }.elsewhen(interSub === 1.U) {
-      interIn27(interRead) := w0Ram.io.dout
-      when(interRead === 27.U) { interSub := 2.U; interWrite := 0.U }
-      .otherwise { interRead := interRead + 1.U; interSub := 0.U }
+      val outWord = packVec(interp3.io.out)
+      when(iStep === 0.U) { firstOut := interp3.io.out }
+      outRam.io.en := true.B
+      outRam.io.we := true.B
+      outRam.io.addr := iStep // outRam(block32), each word holds 32 final coefficients.
+      outRam.io.din := outWord
+      inter3Count := inter3Count + 1.U
+      i3Pr0 := interp3.io.nr0; i3Pr1 := interp3.io.nr1; i3Pr2 := interp3.io.nr2
+      when(iStep === 31.U) {
+        interSub := 2.U
+      }.otherwise {
+        val nextBlock32 = (iStep + 1.U) >> 2
+        for (pt0 <- 0 until 7) {
+          w0Ram(pt0).io.en := true.B
+          w0Ram(pt0).io.addr := nextBlock32
+        }
+        iStep := iStep + 1.U
+      }
     }.otherwise {
       outRam.io.en := true.B
       outRam.io.we := true.B
-      outRam.io.addr := (iColBase << 2) + interWrite // outAddr = colBase * 4 + outIdx.
-      outRam.io.din := interp3.io.out(interWrite)
-      when(interWrite === 15.U) {
-        inter3Count := inter3Count + 1.U
-        interRead := 0.U
-        interWrite := 0.U
-        interSub := 0.U
-        when(iColBase === 252.U) {
-          state := sReadOutput
-          outputReadCount := 0.U
-          outReadSub := 0.U
-        }.otherwise { iColBase := iColBase + 4.U }
-      }.otherwise { interWrite := interWrite + 1.U }
+      outRam.io.addr := 0.U // Correction rewrite for output block32 0.
+      outRam.io.din := correctedOutWord
+      inter3Count := inter3Count + 1.U
+      outputReadCount := 0.U
+      interSub := 0.U
+      state := sReadOutput
     }
   }.elsewhen(state === sReadOutput) {
-    when(outReadSub === 0.U) {
+    when(interSub === 0.U) {
       outRam.io.en := true.B
-      val outIdx = outputReadCount(9, 0)
-      outRam.io.addr := outIdx // outAddr = col.
-      outReadSub := 1.U
+      outRam.io.addr := outputReadCount(4, 0) // outAddr = packed block32.
+      interSub := 1.U
     }.otherwise {
-      val outIdx = outputReadCount(9, 0)
-      outReg(outIdx) := outRam.io.dout
-      when(outputReadCount === 1023.U) {
+      val word = split32(outRam.io.dout, 24)
+      for (i <- 0 until 32) outReg(outputReadCount * 32.U + i.U) := word(i)
+      when(outputReadCount === 31.U) {
         outputReadCount := outputReadCount + 1.U
         state := sDone
+        interSub := 0.U
       }.otherwise {
         outputReadCount := outputReadCount + 1.U
-        outReadSub := 0.U
+        outRam.io.en := true.B
+        outRam.io.addr := (outputReadCount + 1.U)(4, 0)
       }
     }
   }.elsewhen(state === sDone) {
