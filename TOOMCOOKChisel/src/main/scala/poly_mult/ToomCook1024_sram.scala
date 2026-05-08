@@ -399,15 +399,15 @@ class ToomCook43Clean extends Module {
   w0Ram.foreach(ramDefaults(_, 32 * 27))
   ramDefaults(outRam, 32 * 24)
 
-  val sIdle :: sLoadInput :: sEvalPreRead :: sEvalCapture :: sEval :: sCore :: sInter1 :: sInter2 :: sInter3 :: sReadOutput :: sDone :: Nil = Enum(11)
+  val sIdle :: sEvalPreRead :: sEvalCapture :: sEval :: sCore :: sInter1 :: sInter2 :: sInter3 :: sReadOutput :: sDone :: Nil = Enum(10)
   val state = RegInit(sIdle)
 
   val loadCount = RegInit(0.U(2.W))       // reaches 1 packed 16-lane input load
   val evalCount = RegInit(0.U(9.W))       // reaches 343 job-wide evaluations
   val coreCount = RegInit(0.U(9.W))       // reaches 343 job-wide core writes
-  val inter1Count = RegInit(0.U(8.W))     // reaches 49 * (2 steps + 1 correction) = 147
-  val inter2Count = RegInit(0.U(7.W))     // reaches 7 * (8 steps + 1 correction) = 63
-  val inter3Count = RegInit(0.U(6.W))     // reaches 32 steps + 1 correction = 33
+  val inter1Count = RegInit(0.U(8.W))     // reaches 147 step/correction writes; actual sync-read schedule is about 49 * 4 = 196 cycles
+  val inter2Count = RegInit(0.U(7.W))     // reaches 63 step/correction writes; actual sync-read schedule is about 7 * 10 = 70 cycles
+  val inter3Count = RegInit(0.U(6.W))     // reaches 33 step/correction writes; actual sync-read schedule is about 34 cycles
   val outputReadCount = RegInit(0.U(6.W)) // reaches 32 packed output reads
 
   val outReg = Reg(Vec(1024, UInt(24.W)))
@@ -441,8 +441,13 @@ class ToomCook43Clean extends Module {
 
   val core = Module(new Core16TC4)
   core.io.valid_in := false.B
-  core.io.avec := split16(evalARam.io.dout, A_EVAL_W)
-  core.io.bvec := split16(evalBRam.io.dout, B_EVAL_W)
+
+  val coreAWordReg = Reg(UInt((16 * A_EVAL_W).W))
+  val coreBWordReg = Reg(UInt((16 * B_EVAL_W).W))
+  val coreWordValid = RegInit(false.B)
+  val coreWordJob = RegInit(0.U(9.W))
+  core.io.avec := split16(coreAWordReg, A_EVAL_W)
+  core.io.bvec := split16(coreBWordReg, B_EVAL_W)
 
   val coreReqIdx = RegInit(0.U(9.W))
   val coreReadValid = RegInit(false.B)
@@ -456,9 +461,16 @@ class ToomCook43Clean extends Module {
   val iStep = RegInit(0.U(5.W))
   val interSub = RegInit(0.U(2.W))
 
+  // i1Pr/i2Pr/i3Pr carry the running interpolation state across 8-column steps.
+  // After the final step of a complete stride, they hold the final carry used by
+  // the correction stage.
   val i1Pr0 = RegInit(0.U(30.W)); val i1Pr1 = RegInit(0.U(30.W)); val i1Pr2 = RegInit(0.U(30.W))
   val i2Pr0 = RegInit(0.U(27.W)); val i2Pr1 = RegInit(0.U(27.W)); val i2Pr2 = RegInit(0.U(27.W))
   val i3Pr0 = RegInit(0.U(24.W)); val i3Pr1 = RegInit(0.U(24.W)); val i3Pr2 = RegInit(0.U(24.W))
+
+  // firstW1/firstW0/firstOut hold raw block0. At the end of each complete
+  // stride, the correction stage rewrites block0 with coeff 0/1/2 adjusted by
+  // the final carry above.
   val firstW1 = Reg(Vec(32, UInt(33.W)))
   val firstW0 = Reg(Vec(32, UInt(27.W)))
   val firstOut = Reg(Vec(32, UInt(24.W)))
@@ -489,6 +501,7 @@ class ToomCook43Clean extends Module {
   interp3.io.in := inter3In
   interp3.io.pr0 := i3Pr0; interp3.io.pr1 := i3Pr1; interp3.io.pr2 := i3Pr2
 
+  // Correction words overwrite only block0 after the full stride is complete.
   val correctedW1Vec = Wire(Vec(32, UInt(33.W)))
   correctedW1Vec := firstW1
   correctedW1Vec(0) := mask(firstW1(0) - i1Pr2, 33)
@@ -512,8 +525,18 @@ class ToomCook43Clean extends Module {
 
   when(state === sIdle) {
     when(io.valid_in) {
-      state := sLoadInput
-      loadCount := 0.U
+      for (lane <- 0 until 16) {
+        aLaneRam(lane).io.en := true.B
+        aLaneRam(lane).io.we := true.B
+        aLaneRam(lane).io.addr := 0.U
+        aLaneRam(lane).io.din := packVec((0 until 64).map(i => io.a(lane * 64 + i)))
+        bLaneRam(lane).io.en := true.B
+        bLaneRam(lane).io.we := true.B
+        bLaneRam(lane).io.addr := 0.U
+        bLaneRam(lane).io.din := packVec((0 until 64).map(i => io.b(lane * 64 + i)))
+      }
+      state := sEvalPreRead
+      loadCount := 1.U
       evalCount := 0.U
       coreCount := 0.U
       inter1Count := 0.U
@@ -521,19 +544,6 @@ class ToomCook43Clean extends Module {
       inter3Count := 0.U
       outputReadCount := 0.U
     }
-  }.elsewhen(state === sLoadInput) {
-    for (lane <- 0 until 16) {
-      aLaneRam(lane).io.en := true.B
-      aLaneRam(lane).io.we := true.B
-      aLaneRam(lane).io.addr := 0.U
-      aLaneRam(lane).io.din := packVec((0 until 64).map(i => io.a(lane * 64 + i)))
-      bLaneRam(lane).io.en := true.B
-      bLaneRam(lane).io.we := true.B
-      bLaneRam(lane).io.addr := 0.U
-      bLaneRam(lane).io.din := packVec((0 until 64).map(i => io.b(lane * 64 + i)))
-    }
-    loadCount := 1.U
-    state := sEvalPreRead
   }.elsewhen(state === sEvalPreRead) {
     for (lane <- 0 until 16) {
       aLaneRam(lane).io.en := true.B
@@ -567,7 +577,9 @@ class ToomCook43Clean extends Module {
       state := sCore
       coreReqIdx := 0.U
       coreReadValid := false.B
+      coreWordValid := false.B
       coreFeedJob := 0.U
+      coreWordJob := 0.U
       coreWriteJob := 0.U
       coreCount := 0.U
     }.otherwise {
@@ -587,10 +599,20 @@ class ToomCook43Clean extends Module {
       coreReqIdx := coreReqIdx + 1.U
     }
 
-    core.io.valid_in := coreReadValid
-    when(coreReadValid) {
-      coreWriteJob := coreFeedJob
+    // Keep the eval SRAM synchronous-read boundary explicit: cycle N issues
+    // evalARam/evalBRam read; cycle N+1 captures dout into coreAWordReg/
+    // coreBWordReg. Core16TC4 only sees these registered words, preserving
+    // one-job-per-cycle throughput after the pipeline fills.
+    core.io.valid_in := coreWordValid
+    when(coreWordValid) {
+      coreWriteJob := coreWordJob
     }
+    when(coreReadValid) {
+      coreAWordReg := evalARam.io.dout
+      coreBWordReg := evalBRam.io.dout
+      coreWordJob := coreFeedJob
+    }
+    coreWordValid := coreReadValid
     coreReadValid := doCoreRead
     coreFeedJob := coreReqIdx
 
