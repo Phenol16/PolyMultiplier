@@ -174,6 +174,51 @@ class EvalLaneFixed(memW: Int, outW: Int, laneConst: Int, evalLanes: Int = 4) ex
   io.out      := eval2.io.out
 }
 
+
+// =============================================================================
+//  EvalBlock16TC4：一次性生成 Core16TC4 所需的 16 路三层 TC4 估值
+//  - 不再使用 phase；每个 {pt0, pt1, pt2} 组合在组合逻辑中产生完整 16-lane job。
+//  - 地址映射为 lane l -> in(l * 64 + offset)，与 EvalLaneFixed(l % 4, phase = l / 4) 等价。
+// =============================================================================
+class EvalBlock16TC4(memW: Int, outW: Int) extends Module {
+  val io = IO(new Bundle {
+    val in  = Input(Vec(1024, UInt(memW.W)))
+    val pt0 = Input(UInt(3.W))
+    val pt1 = Input(UInt(3.W))
+    val pt2 = Input(UInt(3.W))
+    val out = Output(Vec(16, UInt(outW.W)))
+  })
+
+  for (l <- 0 until 16) {
+    val lv2 = Wire(Vec(4, UInt(outW.W)))
+
+    for (k <- 0 until 4) {
+      val lv1 = Wire(Vec(4, UInt(outW.W)))
+
+      for (j <- 0 until 4) {
+        val eval0 = Module(new TC4EvalPoint(memW, outW))
+        val base = l * 64 + 16 * k + 4 * j
+        eval0.io.r(0) := io.in(base + 0)
+        eval0.io.r(1) := io.in(base + 1)
+        eval0.io.r(2) := io.in(base + 2)
+        eval0.io.r(3) := io.in(base + 3)
+        eval0.io.pt   := io.pt0
+        lv1(j)        := eval0.io.out
+      }
+
+      val eval1 = Module(new TC4EvalPoint(outW, outW))
+      eval1.io.r  := lv1
+      eval1.io.pt := io.pt1
+      lv2(k)      := eval1.io.out
+    }
+
+    val eval2 = Module(new TC4EvalPoint(outW, outW))
+    eval2.io.r  := lv2
+    eval2.io.pt := io.pt2
+    io.out(l)   := eval2.io.out
+  }
+}
+
 // =============================================================================
 //  InterpCoreTC4：单列插值核心，纯组合硬件模块
 // =============================================================================
@@ -722,6 +767,25 @@ class EvalCoreJob(aW: Int, bW: Int) extends Bundle {
   val pt1 = UInt(3.W)
   val pt2 = UInt(3.W)
 }
+
+
+class W2BlockDesc(bankW: Int) extends Bundle {
+  val bank = UInt(bankW.W)
+  val pt0  = UInt(3.W)
+  val pt1  = UInt(3.W)
+}
+
+class W1BlockDesc(bankW: Int) extends Bundle {
+  val bank = UInt(bankW.W)
+  val pt0  = UInt(3.W)
+}
+
+class I1OutWord extends Bundle {
+  val pt0  = UInt(3.W)
+  val pt1  = UInt(3.W)
+  val addr = UInt(4.W)
+  val data = UInt(132.W)
+}
 // =============================================================================
 //  ToomCook43 顶层
 //  当前存储/调度结构：
@@ -741,7 +805,7 @@ class ToomCook43IO extends Bundle {
   val c = Output(Vec(1024, UInt(24.W)))
 }
 
-class ToomCook43 extends Module {
+class ToomCook43Baseline extends Module {
   // ---------------------------------------------------------------------------
   // Local helpers
   // ---------------------------------------------------------------------------
@@ -1205,5 +1269,394 @@ class ToomCook43 extends Module {
     w1WriteBuf := 0.U; w1WriteSub := 0.U; w1ReadCol := 0.U; w1ReadFeedValid := false.B; w1ReadFeedSel := 0.U
     w0WriteBlock := 0.U; w0ReadPairIdx := 0.U; w0ReadFeedValid := false.B; w0ReadFeedSel := false.B
     w2WBuf := 0.U
+  }
+}
+// =============================================================================
+//  ToomCook43 新数据流顶层
+//  EvalBlock16TC4 -> evalCoreQ -> Core16TC4 pipeline -> W2 bank pool
+//  -> W2 descriptor queue -> 3 x I1 lanes -> I1 FIFOs -> W1 bank pool
+//  -> W1 descriptor queue -> I2 -> W0 -> I3 -> output
+// =============================================================================
+class ToomCook43 extends Module {
+  private def packVec(xs: Seq[UInt]): UInt = Cat(xs.reverse)
+
+  val io = IO(new ToomCook43IO)
+
+  private val A_EVAL_W = TC4EvalWidth.A_EVAL_W
+  private val B_EVAL_W = TC4EvalWidth.B_EVAL_W
+  private val W2_BANKS = 16
+  private val W1_BANKS = 8
+  private val I1_LANES = 3
+  private val W2_BANK_W = log2Ceil(W2_BANKS)
+  private val W1_BANK_W = log2Ceil(W1_BANKS)
+
+  // Debug / latency counters are intentionally left as public Chisel vals so
+  // local chiseltest specs can peek them without changing ToomCook43IO.
+  val evalJobsIssued = RegInit(0.U(10.W))
+  val coreJobsAccepted = RegInit(0.U(10.W))
+  val coreJobsCompleted = RegInit(0.U(10.W))
+  val w2BlocksCompleted = RegInit(0.U(6.W))
+  val w1BlocksCompleted = RegInit(0.U(4.W))
+  val w0BlocksCompleted = RegInit(0.U(4.W))
+
+  val regA = Reg(Vec(1024, UInt(24.W)))
+  val regB = Reg(Vec(1024, UInt(8.W)))
+  val busy = RegInit(false.B)
+
+  // ---------------------------------------------------------------------------
+  // Eval stage: no phase/build registers; one enqueue opportunity per point triplet.
+  // ---------------------------------------------------------------------------
+  val pt0 = RegInit(0.U(3.W))
+  val pt1 = RegInit(0.U(3.W))
+  val pt2 = RegInit(0.U(3.W))
+  val evalDone = RegInit(false.B)
+
+  val evalAllA = Module(new EvalBlock16TC4(24, A_EVAL_W))
+  val evalAllB = Module(new EvalBlock16TC4(8, B_EVAL_W))
+  val evalCoreQ = Module(new Queue(new EvalCoreJob(A_EVAL_W, B_EVAL_W), 8, pipe = true, flow = false))
+
+  evalAllA.io.in := regA
+  evalAllA.io.pt0 := pt0
+  evalAllA.io.pt1 := pt1
+  evalAllA.io.pt2 := pt2
+  evalAllB.io.in := regB
+  evalAllB.io.pt0 := pt0
+  evalAllB.io.pt1 := pt1
+  evalAllB.io.pt2 := pt2
+
+  val evalJobValid = busy && !evalDone
+  evalCoreQ.io.enq.valid := evalJobValid
+  evalCoreQ.io.enq.bits.avec := evalAllA.io.out
+  evalCoreQ.io.enq.bits.bvec := evalAllB.io.out
+  evalCoreQ.io.enq.bits.pt0 := pt0
+  evalCoreQ.io.enq.bits.pt1 := pt1
+  evalCoreQ.io.enq.bits.pt2 := pt2
+
+  when(evalCoreQ.io.enq.fire) {
+    evalJobsIssued := evalJobsIssued + 1.U
+    when(pt0 === 6.U && pt1 === 6.U && pt2 === 6.U) {
+      evalDone := true.B
+    }.elsewhen(pt2 === 6.U) {
+      pt2 := 0.U
+      when(pt1 === 6.U) { pt1 := 0.U; pt0 := pt0 + 1.U }
+        .otherwise { pt1 := pt1 + 1.U }
+    }.otherwise {
+      pt2 := pt2 + 1.U
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // W2 bank pool and Core pipeline metadata.
+  // ---------------------------------------------------------------------------
+  val core = Module(new Core16TC4)
+  val w2ReadyQ = Module(new Queue(new W2BlockDesc(W2_BANK_W), W2_BANKS, pipe = true, flow = false))
+  val w2Data = Reg(Vec(W2_BANKS, Vec(7, Vec(16, UInt(36.W)))))
+  val w2Valid = RegInit(VecInit(Seq.fill(W2_BANKS)(false.B)))
+  val w2Consuming = RegInit(VecInit(Seq.fill(W2_BANKS)(false.B)))
+  val w2Pt0 = Reg(Vec(W2_BANKS, UInt(3.W)))
+  val w2Pt1 = Reg(Vec(W2_BANKS, UInt(3.W)))
+  val w2SubReady = RegInit(VecInit(Seq.fill(W2_BANKS) { VecInit(Seq.fill(7)(false.B)) }))
+
+  val w2HitVec = Wire(Vec(W2_BANKS, Bool()))
+  val w2FreeVec = Wire(Vec(W2_BANKS, Bool()))
+  for (b <- 0 until W2_BANKS) {
+    w2HitVec(b) := w2Valid(b) && !w2Consuming(b) && w2Pt0(b) === evalCoreQ.io.deq.bits.pt0 && w2Pt1(b) === evalCoreQ.io.deq.bits.pt1
+    w2FreeVec(b) := !w2Valid(b) && !w2Consuming(b)
+  }
+  val w2HasHit = w2HitVec.asUInt.orR
+  val w2HasFree = w2FreeVec.asUInt.orR
+  val w2HitOH = PriorityEncoderOH(w2HitVec)
+  val w2FreeOH = PriorityEncoderOH(w2FreeVec)
+  val allocatedW2Bank = OHToUInt(Mux(w2HasHit, w2HitOH, w2FreeOH))
+  val w2NeedsReadyDesc = evalCoreQ.io.deq.bits.pt2 === 6.U
+  val w2CanAcceptThisJob = evalCoreQ.io.deq.valid && (w2HasHit || w2HasFree) && (!w2NeedsReadyDesc || w2ReadyQ.io.enq.ready)
+  val canCoreTake = busy && w2CanAcceptThisJob
+
+  core.io.valid_in := canCoreTake
+  core.io.avec := evalCoreQ.io.deq.bits.avec
+  core.io.bvec := evalCoreQ.io.deq.bits.bvec
+  evalCoreQ.io.deq.ready := canCoreTake
+
+  val coreMetaValid = RegNext(canCoreTake, false.B)
+  val coreMetaPt0 = RegEnable(evalCoreQ.io.deq.bits.pt0, canCoreTake)
+  val coreMetaPt1 = RegEnable(evalCoreQ.io.deq.bits.pt1, canCoreTake)
+  val coreMetaPt2 = RegEnable(evalCoreQ.io.deq.bits.pt2, canCoreTake)
+  val coreMetaBank = RegEnable(allocatedW2Bank, canCoreTake)
+
+  when(canCoreTake) {
+    coreJobsAccepted := coreJobsAccepted + 1.U
+    w2Valid(allocatedW2Bank) := true.B
+    w2Pt0(allocatedW2Bank) := evalCoreQ.io.deq.bits.pt0
+    w2Pt1(allocatedW2Bank) := evalCoreQ.io.deq.bits.pt1
+    when(!w2HasHit) {
+      w2SubReady(allocatedW2Bank) := VecInit(Seq.fill(7)(false.B))
+    }
+  }
+
+  val w2Completes = WireDefault(false.B)
+  val w2CompleteBank = WireDefault(0.U(W2_BANK_W.W))
+  val w2CompletePt0 = WireDefault(0.U(3.W))
+  val w2CompletePt1 = WireDefault(0.U(3.W))
+
+  when(core.io.valid_out && coreMetaValid) {
+    coreJobsCompleted := coreJobsCompleted + 1.U
+    for (i <- 0 until 16) {
+      w2Data(coreMetaBank)(coreMetaPt2)(i) := core.io.cOut(i)
+    }
+    val nextReady = Wire(Vec(7, Bool()))
+    nextReady := w2SubReady(coreMetaBank)
+    nextReady(coreMetaPt2) := true.B
+    w2SubReady(coreMetaBank) := nextReady
+    when(nextReady.asUInt.andR) {
+      w2Completes := true.B
+      w2CompleteBank := coreMetaBank
+      w2CompletePt0 := coreMetaPt0
+      w2CompletePt1 := coreMetaPt1
+      w2BlocksCompleted := w2BlocksCompleted + 1.U
+    }
+  }
+
+  w2ReadyQ.io.enq.valid := w2Completes
+  w2ReadyQ.io.enq.bits.bank := w2CompleteBank
+  w2ReadyQ.io.enq.bits.pt0 := w2CompletePt0
+  w2ReadyQ.io.enq.bits.pt1 := w2CompletePt1
+
+  // ---------------------------------------------------------------------------
+  // W1 bank pool: one bank per pt0 block, seven pt1 sub-blocks per bank.
+  // ---------------------------------------------------------------------------
+  val w1ReadyQ = Module(new Queue(new W1BlockDesc(W1_BANK_W), W1_BANKS, pipe = true, flow = false))
+  val w1Data = Reg(Vec(W1_BANKS, Vec(7, Vec(16, UInt(132.W)))))
+  val w1Valid = RegInit(VecInit(Seq.fill(W1_BANKS)(false.B)))
+  val w1Reading = RegInit(VecInit(Seq.fill(W1_BANKS)(false.B)))
+  val w1Pt0 = Reg(Vec(W1_BANKS, UInt(3.W)))
+  val w1SubReady = RegInit(VecInit(Seq.fill(W1_BANKS) { VecInit(Seq.fill(7)(false.B)) }))
+
+  def w1CanHold(pt: UInt): Bool = {
+    val hit = Wire(Vec(W1_BANKS, Bool()))
+    val free = Wire(Vec(W1_BANKS, Bool()))
+    for (b <- 0 until W1_BANKS) {
+      hit(b) := w1Valid(b) && !w1Reading(b) && w1Pt0(b) === pt
+      free(b) := !w1Valid(b) && !w1Reading(b)
+    }
+    hit.asUInt.orR || free.asUInt.orR
+  }
+
+  def w1SelectBank(pt: UInt): UInt = {
+    val hit = Wire(Vec(W1_BANKS, Bool()))
+    val free = Wire(Vec(W1_BANKS, Bool()))
+    for (b <- 0 until W1_BANKS) {
+      hit(b) := w1Valid(b) && !w1Reading(b) && w1Pt0(b) === pt
+      free(b) := !w1Valid(b) && !w1Reading(b)
+    }
+    OHToUInt(Mux(hit.asUInt.orR, PriorityEncoderOH(hit), PriorityEncoderOH(free)))
+  }
+
+  // ---------------------------------------------------------------------------
+  // I1 lanes and output FIFOs.
+  // ---------------------------------------------------------------------------
+  val interp16 = Seq.fill(I1_LANES)(Module(new InterpLayerSeqStreamTC4(16, 1, 36, 33)))
+  val i1OutQs = Seq.fill(I1_LANES)(Module(new Queue(new I1OutWord, 32, pipe = true, flow = false)))
+  val i1Idle :: i1Run :: Nil = Enum(2)
+  val i1State = RegInit(VecInit(Seq.fill(I1_LANES)(i1Idle)))
+  val i1Bank = Reg(Vec(I1_LANES, UInt(W2_BANK_W.W)))
+  val i1Pt0 = Reg(Vec(I1_LANES, UInt(3.W)))
+  val i1Pt1 = Reg(Vec(I1_LANES, UInt(3.W)))
+
+  for (l <- 0 until I1_LANES) {
+    interp16(l).io.start := false.B
+    for (p <- 0 until 7; i <- 0 until 16) {
+      interp16(l).io.wIn(p * 16 + i) := w2Data(i1Bank(l))(p)(i)
+    }
+
+    i1OutQs(l).io.enq.valid := interp16(l).io.outValid
+    i1OutQs(l).io.enq.bits.pt0 := i1Pt0(l)
+    i1OutQs(l).io.enq.bits.pt1 := i1Pt1(l)
+    i1OutQs(l).io.enq.bits.addr := (interp16(l).io.outBase >> 2)(3, 0)
+    i1OutQs(l).io.enq.bits.data := Cat(interp16(l).io.outData(3), interp16(l).io.outData(2), interp16(l).io.outData(1), interp16(l).io.outData(0))
+    assert(!interp16(l).io.outValid || i1OutQs(l).io.enq.ready, "I1 output FIFO overflow; increase depth or add decoupled I1 backpressure")
+
+    when(i1State(l) === i1Run && interp16(l).io.done) {
+      w2Valid(i1Bank(l)) := false.B
+      w2Consuming(i1Bank(l)) := false.B
+      w2SubReady(i1Bank(l)) := VecInit(Seq.fill(7)(false.B))
+      i1State(l) := i1Idle
+    }
+  }
+
+  val idleLaneVec = Wire(Vec(I1_LANES, Bool()))
+  for (l <- 0 until I1_LANES) idleLaneVec(l) := i1State(l) === i1Idle
+  val hasIdleLane = idleLaneVec.asUInt.orR
+  val takeI1Desc = busy && w2ReadyQ.io.deq.valid && hasIdleLane && w1CanHold(w2ReadyQ.io.deq.bits.pt0)
+  val i1SelLane = OHToUInt(PriorityEncoderOH(idleLaneVec))
+  w2ReadyQ.io.deq.ready := takeI1Desc
+
+  when(takeI1Desc) {
+    val w1BankForLane = w1SelectBank(w2ReadyQ.io.deq.bits.pt0)
+    i1State(i1SelLane) := i1Run
+    i1Bank(i1SelLane) := w2ReadyQ.io.deq.bits.bank
+    i1Pt0(i1SelLane) := w2ReadyQ.io.deq.bits.pt0
+    i1Pt1(i1SelLane) := w2ReadyQ.io.deq.bits.pt1
+    w2Consuming(w2ReadyQ.io.deq.bits.bank) := true.B
+    when(!w1Valid(w1BankForLane)) {
+      w1Valid(w1BankForLane) := true.B
+      w1Pt0(w1BankForLane) := w2ReadyQ.io.deq.bits.pt0
+      w1SubReady(w1BankForLane) := VecInit(Seq.fill(7)(false.B))
+    }
+    for (l <- 0 until I1_LANES) {
+      when(i1SelLane === l.U) { interp16(l).io.start := true.B }
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // W1 writer: one unified writer arbitrates I1 lane FIFOs and emits W1 descriptors.
+  // ---------------------------------------------------------------------------
+  for (l <- 0 until I1_LANES) i1OutQs(l).io.deq.ready := false.B
+
+  val w1WriteValidVec = Wire(Vec(I1_LANES, Bool()))
+  for (l <- 0 until I1_LANES) w1WriteValidVec(l) := i1OutQs(l).io.deq.valid
+  val w1WriterHasWord = w1WriteValidVec.asUInt.orR
+  val w1WriterSelOH = PriorityEncoderOH(w1WriteValidVec)
+  val w1WriterSel = OHToUInt(w1WriterSelOH)
+  val w1Word = Wire(new I1OutWord)
+  w1Word := Mux1H(w1WriterSelOH, i1OutQs.map(_.io.deq.bits))
+
+  val w1WriterBank = w1SelectBank(w1Word.pt0)
+  val w1CompletingSub = w1Word.addr === 0.U
+  val w1NextSubReady = Wire(Vec(7, Bool()))
+  w1NextSubReady := w1SubReady(w1WriterBank)
+  w1NextSubReady(w1Word.pt1) := true.B
+  val w1CompletingBlock = w1CompletingSub && w1NextSubReady.asUInt.andR
+  val w1WriterCanCommit = w1WriterHasWord && w1CanHold(w1Word.pt0) && (!w1CompletingBlock || w1ReadyQ.io.enq.ready)
+
+  w1ReadyQ.io.enq.valid := w1WriterCanCommit && w1CompletingBlock
+  w1ReadyQ.io.enq.bits.bank := w1WriterBank
+  w1ReadyQ.io.enq.bits.pt0 := w1Word.pt0
+
+  when(w1WriterCanCommit) {
+    for (l <- 0 until I1_LANES) {
+      when(w1WriterSel === l.U) { i1OutQs(l).io.deq.ready := true.B }
+    }
+    w1Data(w1WriterBank)(w1Word.pt1)(w1Word.addr) := w1Word.data
+    when(w1CompletingSub) {
+      w1SubReady(w1WriterBank) := w1NextSubReady
+      when(w1NextSubReady.asUInt.andR) {
+        w1BlocksCompleted := w1BlocksCompleted + 1.U
+      }
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // I2: descriptorized W1 -> interp64 -> W0 register bank.
+  // ---------------------------------------------------------------------------
+  val interp64Seq = Module(new InterpLayerSeqStreamInOutTC4(64, 2, 33, 27))
+  val w0Data = Reg(Vec(7, Vec(64, UInt(108.W))))
+  val w0Ready = RegInit(VecInit(Seq.fill(7)(false.B)))
+  val i2Idle :: i2Start :: i2Run :: Nil = Enum(3)
+  val i2State = RegInit(i2Idle)
+  val i2Bank = Reg(UInt(W1_BANK_W.W))
+  val i2Pt0 = Reg(UInt(3.W))
+  val i2Col = RegInit(0.U(7.W))
+
+  interp64Seq.io.start := false.B
+  interp64Seq.io.inValid := false.B
+  for (p <- 0 until 7) interp64Seq.io.inData(p) := 0.U
+  w1ReadyQ.io.deq.ready := false.B
+
+  when(i2State === i2Idle) {
+    w1ReadyQ.io.deq.ready := busy && w1ReadyQ.io.deq.valid
+    when(w1ReadyQ.io.deq.fire) {
+      i2Bank := w1ReadyQ.io.deq.bits.bank
+      i2Pt0 := w1ReadyQ.io.deq.bits.pt0
+      w1Reading(w1ReadyQ.io.deq.bits.bank) := true.B
+      i2State := i2Start
+    }
+  }.elsewhen(i2State === i2Start) {
+    interp64Seq.io.start := true.B
+    i2Col := 0.U
+    i2State := i2Run
+  }.elsewhen(i2State === i2Run) {
+    when(i2Col < 64.U && interp64Seq.io.inReady) {
+      interp64Seq.io.inValid := true.B
+      for (sub <- 0 until 7) {
+        val word = w1Data(i2Bank)(sub)((i2Col >> 2)(3, 0))
+        interp64Seq.io.inData(sub) := MuxLookup(i2Col(1, 0), word(32, 0))(Seq(
+          0.U -> word(32, 0),
+          1.U -> word(65, 33),
+          2.U -> word(98, 66),
+          3.U -> word(131, 99)
+        ))
+      }
+      i2Col := i2Col + 1.U
+    }
+    when(interp64Seq.io.outValid) {
+      w0Data(i2Pt0)((interp64Seq.io.outBase >> 2)(5, 0)) := Cat(interp64Seq.io.outData(3), interp64Seq.io.outData(2), interp64Seq.io.outData(1), interp64Seq.io.outData(0))
+    }
+    when(interp64Seq.io.done) {
+      w0Ready(i2Pt0) := true.B
+      w0BlocksCompleted := w0BlocksCompleted + 1.U
+      w1Valid(i2Bank) := false.B
+      w1Reading(i2Bank) := false.B
+      w1SubReady(i2Bank) := VecInit(Seq.fill(7)(false.B))
+      i2State := i2Idle
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // I3: final interpolation from W0 once all seven pt0 blocks are ready.
+  // ---------------------------------------------------------------------------
+  val interp256Seq = Module(new InterpLayerSeq2ColStreamInTC4(256, 3, 27, 24))
+  val i3Idle :: i3Start :: i3Run :: Nil = Enum(3)
+  val i3State = RegInit(i3Idle)
+  val i3Pair = RegInit(0.U(8.W))
+
+  interp256Seq.io.start := false.B
+  interp256Seq.io.inValid := false.B
+  for (g <- 0 until 7) interp256Seq.io.inPair(g) := 0.U
+
+  io.valid_out := false.B
+  for (i <- 0 until 1024) io.c(i) := mask(interp256Seq.io.cOut(i), 24)
+
+  when(i3State === i3Idle && busy && w0Ready.asUInt.andR) {
+    i3State := i3Start
+  }.elsewhen(i3State === i3Start) {
+    interp256Seq.io.start := true.B
+    i3Pair := 0.U
+    i3State := i3Run
+  }.elsewhen(i3State === i3Run) {
+    when(i3Pair < 128.U && interp256Seq.io.inReady) {
+      interp256Seq.io.inValid := true.B
+      for (g <- 0 until 7) {
+        val word = w0Data(g)((i3Pair >> 1)(5, 0))
+        interp256Seq.io.inPair(g) := Mux(i3Pair(0), word(107, 54), word(53, 0))
+      }
+      i3Pair := i3Pair + 1.U
+    }
+    when(interp256Seq.io.done) {
+      io.valid_out := true.B
+      busy := false.B
+      i3State := i3Idle
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Frame reset / accept. Top-level IO remains unchanged; one frame in flight.
+  // ---------------------------------------------------------------------------
+  when(io.valid_in && !busy) {
+    regA := io.a
+    regB := io.b
+    busy := true.B
+    pt0 := 0.U; pt1 := 0.U; pt2 := 0.U; evalDone := false.B
+    evalJobsIssued := 0.U; coreJobsAccepted := 0.U; coreJobsCompleted := 0.U
+    w2BlocksCompleted := 0.U; w1BlocksCompleted := 0.U; w0BlocksCompleted := 0.U
+    w2Valid := VecInit(Seq.fill(W2_BANKS)(false.B))
+    w2Consuming := VecInit(Seq.fill(W2_BANKS)(false.B))
+    w2SubReady := VecInit(Seq.fill(W2_BANKS) { VecInit(Seq.fill(7)(false.B)) })
+    w1Valid := VecInit(Seq.fill(W1_BANKS)(false.B))
+    w1Reading := VecInit(Seq.fill(W1_BANKS)(false.B))
+    w1SubReady := VecInit(Seq.fill(W1_BANKS) { VecInit(Seq.fill(7)(false.B)) })
+    w0Ready := VecInit(Seq.fill(7)(false.B))
+    for (l <- 0 until I1_LANES) i1State(l) := i1Idle
+    i2State := i2Idle
+    i3State := i3Idle
   }
 }
