@@ -14,8 +14,7 @@ class ToomCook1024Test extends AnyFlatSpec with ChiselScalatestTester {
 
   private val N = 1024
   private val QMask: BigInt = (BigInt(1) << 24) - 1
-  private val ExpectedValidOutCycle = 1593
-  private val ValidOutCycleTolerance = 20
+  private val BaselineValidOutCycle = 1593 // previous EVAL_LANES=4 / single-pending Core16 latency
 
   /**
     * negacyclic convolution modulo x^1024 + 1, then modulo 2^24.
@@ -107,10 +106,12 @@ class ToomCook1024Test extends AnyFlatSpec with ChiselScalatestTester {
       s"[$label] Error: 等待 io.valid_out 超时！maxWaitCycles=$maxWaitCycles"
     )
 
-    val cycleDelta = math.abs(outCycle - ExpectedValidOutCycle)
+    val improvement = BaselineValidOutCycle - outCycle
+    val pct = improvement.toDouble * 100.0 / BaselineValidOutCycle.toDouble
+    println(f"[${now()}][$label] latency cycles: optimized=$outCycle baseline=$BaselineValidOutCycle improvement=$improvement ($pct%.2f%%)")
     assert(
-      cycleDelta <= ValidOutCycleTolerance,
-      s"[$label] valid_out cycle=$outCycle, expected near $ExpectedValidOutCycle ± $ValidOutCycleTolerance"
+      outCycle < BaselineValidOutCycle,
+      s"[$label] optimized latency=$outCycle must improve over baseline=$BaselineValidOutCycle"
     )
 
     println(s"[${now()}][$label] start checking outputs, outCycle=$outCycle")
@@ -190,7 +191,24 @@ class ToomCook1024Test extends AnyFlatSpec with ChiselScalatestTester {
         }
 
         // ---------------------------------------------------------------------
-        // Case 2: a(0)=1, b(0)=1
+        // Case 2: 全 1
+        // ---------------------------------------------------------------------
+        {
+          val a = Seq.fill(N)(BigInt(1))
+          val b = Seq.fill(N)(BigInt(1))
+          val exp = schoolbookNegacyclic(a, b)
+          runCase(
+            dut = dut,
+            label = "all_ones",
+            aVals = a,
+            bVals = b,
+            expected = exp,
+            printNonZero = false
+          )
+        }
+
+        // ---------------------------------------------------------------------
+        // Case 3: a(0)=1, b(0)=1
         // 理论：c(0)=1
         // ---------------------------------------------------------------------
         {
@@ -283,23 +301,41 @@ class ToomCook1024Test extends AnyFlatSpec with ChiselScalatestTester {
         }
 
         // ---------------------------------------------------------------------
-        // Case 7: 完整随机
-        // 只有前面 case 都通过后，这个才有诊断意义。
+        // Case 7: 随机稀疏向量
+        // ---------------------------------------------------------------------
+        {
+          val rng = new Random(99)
+          val aArr = Array.fill(N)(BigInt(0))
+          val bArr = Array.fill(N)(BigInt(0))
+          for (_ <- 0 until 32) {
+            aArr(rng.nextInt(N)) = BigInt(rng.nextInt() & 0xffffff)
+            bArr(rng.nextInt(N)) = BigInt(rng.nextInt() & 0xff)
+          }
+          val a = aArr.toSeq
+          val b = bArr.toSeq
+          val exp = schoolbookNegacyclic(a, b)
+          runCase(dut, "random_sparse", a, b, exp, printNonZero = false)
+        }
+
+        // ---------------------------------------------------------------------
+        // Case 8: 随机密集向量
         // ---------------------------------------------------------------------
         {
           val rng = new Random(42)
           val a = Seq.fill(N)(BigInt(rng.nextInt() & 0xffffff))
           val b = Seq.fill(N)(BigInt(rng.nextInt() & 0xff))
           val exp = schoolbookNegacyclic(a, b)
+          runCase(dut, "random_dense_a24_b8", a, b, exp, printNonZero = false)
+        }
 
-          runCase(
-            dut = dut,
-            label = "full_random_a24_b8",
-            aVals = a,
-            bVals = b,
-            expected = exp,
-            printNonZero = false
-          )
+        // ---------------------------------------------------------------------
+        // Case 9: 接近 24-bit / 8-bit 上限的边界值
+        // ---------------------------------------------------------------------
+        {
+          val a = (0 until N).map(i => if ((i & 1) == 0) QMask else QMask - BigInt(i & 15))
+          val b = (0 until N).map(i => if ((i & 1) == 0) BigInt(0xff) else BigInt(0xff - (i & 7)))
+          val exp = schoolbookNegacyclic(a, b)
+          runCase(dut, "edge_values_limits", a, b, exp, printNonZero = false)
         }
 
         println(s"[${now()}] all cases passed")
