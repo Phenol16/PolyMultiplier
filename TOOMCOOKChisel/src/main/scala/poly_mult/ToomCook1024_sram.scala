@@ -369,17 +369,25 @@ class ToomCook43Clean extends Module {
     for (i <- 0 until n) out(i) := x((i + 1) * w - 1, i * w)
     out
   }
-
   private def split64(x: UInt, w: Int): Vec[UInt] = unpackVec(x, 64, w)
   private def split16(x: UInt, w: Int): Vec[UInt] = unpackVec(x, 16, w)
   private def split32(x: UInt, w: Int): Vec[UInt] = unpackVec(x, 32, w)
 
+  private def evalBank(job: UInt): UInt = job(0)
+  private def evalAddr(job: UInt): UInt = job >> 1
+  private def pageOf(job: UInt): UInt = job / 7.U
+  private def pt2Of(job: UInt): UInt = job - pageOf(job) * 7.U
+  private def pageBuf(page: UInt): UInt = page(0)
+  private def pageAddr(page: UInt): UInt = page >> 1
+  private def pt0OfPage(page: UInt): UInt = page / 7.U
+  private def pt1OfPage(page: UInt): UInt = page - pt0OfPage(page) * 7.U
+
   val aLaneRam = Seq.fill(16)(Module(new SpRam(64 * 24, 2)))
   val bLaneRam = Seq.fill(16)(Module(new SpRam(64 * 8, 2)))
-  val evalARam = Module(new SpRam(16 * A_EVAL_W, 343))
-  val evalBRam = Module(new SpRam(16 * B_EVAL_W, 343))
-  val coreRam = Seq.fill(7)(Module(new SpRam(16 * 36, 49)))
-  val w1Ram = Seq.fill(7)(Module(new SpRam(32 * 33, 7 * 2)))
+  val evalARam = Seq.fill(2)(Module(new SpRam(16 * A_EVAL_W, 172)))
+  val evalBRam = Seq.fill(2)(Module(new SpRam(16 * B_EVAL_W, 172)))
+  val coreRam = Seq.fill(2, 7)(Module(new SpRam(16 * 36, 25)))
+  val w1Ram = Seq.fill(2, 7)(Module(new SpRam(32 * 33, 2)))
   val w0Ram = Seq.fill(7)(Module(new SpRam(32 * 27, 8)))
   val outRam = Module(new SpRam(32 * 24, 32))
 
@@ -392,31 +400,36 @@ class ToomCook43Clean extends Module {
   }
   aLaneRam.foreach(ramDefaults(_, 64 * 24))
   bLaneRam.foreach(ramDefaults(_, 64 * 8))
-  ramDefaults(evalARam, 16 * A_EVAL_W)
-  ramDefaults(evalBRam, 16 * B_EVAL_W)
-  coreRam.foreach(ramDefaults(_, 16 * 36))
-  w1Ram.foreach(ramDefaults(_, 32 * 33))
+  evalARam.foreach(ramDefaults(_, 16 * A_EVAL_W))
+  evalBRam.foreach(ramDefaults(_, 16 * B_EVAL_W))
+  for (buf <- 0 until 2; pt2 <- 0 until 7) ramDefaults(coreRam(buf)(pt2), 16 * 36)
+  for (buf <- 0 until 2; pt1 <- 0 until 7) ramDefaults(w1Ram(buf)(pt1), 32 * 33)
   w0Ram.foreach(ramDefaults(_, 32 * 27))
   ramDefaults(outRam, 32 * 24)
 
-  val sIdle :: sEvalPreRead :: sEvalCapture :: sEval :: sCore :: sInter1 :: sInter2 :: sInter3 :: sReadOutput :: sDone :: Nil = Enum(10)
-  val state = RegInit(sIdle)
-
-  val loadCount = RegInit(0.U(2.W))       // reaches 1 packed 16-lane input load
-  val evalCount = RegInit(0.U(9.W))       // reaches 343 job-wide evaluations
-  val coreCount = RegInit(0.U(9.W))       // reaches 343 job-wide core writes
-  val inter1Count = RegInit(0.U(8.W))     // reaches 147 step/correction writes; actual sync-read schedule is about 49 * 4 = 196 cycles
-  val inter2Count = RegInit(0.U(7.W))     // reaches 63 step/correction writes; actual sync-read schedule is about 7 * 10 = 70 cycles
-  val inter3Count = RegInit(0.U(6.W))     // reaches 33 step/correction writes; actual sync-read schedule is about 34 cycles
-  val outputReadCount = RegInit(0.U(6.W)) // reaches 32 packed output reads
-
   val outReg = Reg(Vec(1024, UInt(24.W)))
+  val validOutPulse = RegInit(false.B)
+  validOutPulse := false.B
+  io.valid_out := validOutPulse
   io.c := outReg
-  io.valid_out := state === sDone
+
+  // Debug/progress counters. These count useful work, not necessarily wall-clock cycles.
+  val loadCount = RegInit(0.U(2.W))       // reaches 1 packed 16-lane input load
+  val evalCount = RegInit(0.U(9.W))       // reaches 343 job-wide eval writes
+  val coreCount = RegInit(0.U(9.W))       // reaches 343 job-wide core writes
+  val inter1Count = RegInit(0.U(8.W))     // reaches 147 step/correction writes; wall time overlaps core
+  val inter2Count = RegInit(0.U(7.W))     // reaches 63 step/correction writes; wall time overlaps Inter1
+  val inter3Count = RegInit(0.U(6.W))     // reaches 33 step/correction writes; output readback removed
+  val outputReadCount = RegInit(0.U(6.W)) // unused in pipelined mode; outReg is written by Inter3
 
   val laneAWord = Reg(Vec(16, UInt((64 * 24).W)))
   val laneBWord = Reg(Vec(16, UInt((64 * 8).W)))
+  val evalPreRead = RegInit(false.B)
+  val evalCapture = RegInit(false.B)
 
+  val evalActive = RegInit(false.B)
+  val evalDone = RegInit(false.B)
+  val evalProduced = RegInit(0.U(9.W))
   val evalPt0 = RegInit(0.U(3.W))
   val evalPt1 = RegInit(0.U(3.W))
   val evalPt2 = RegInit(0.U(3.W))
@@ -441,7 +454,6 @@ class ToomCook43Clean extends Module {
 
   val core = Module(new Core16TC4)
   core.io.valid_in := false.B
-
   val coreAWordReg = Reg(UInt((16 * A_EVAL_W).W))
   val coreBWordReg = Reg(UInt((16 * B_EVAL_W).W))
   val coreWordValid = RegInit(false.B)
@@ -449,30 +461,36 @@ class ToomCook43Clean extends Module {
   core.io.avec := split16(coreAWordReg, A_EVAL_W)
   core.io.bvec := split16(coreBWordReg, B_EVAL_W)
 
+  val coreActive = RegInit(false.B)
   val coreReqIdx = RegInit(0.U(9.W))
   val coreReadValid = RegInit(false.B)
   val coreFeedJob = RegInit(0.U(9.W))
   val coreWriteJob = RegInit(0.U(9.W))
-  val coreWritePt2 = coreWriteJob % 7.U
-  val coreWritePage = coreWriteJob / 7.U // page = pt0 * 7 + pt1, bank = pt2.
+  val coreDone = RegInit(false.B)
+  val corePageReady = RegInit(VecInit(Seq.fill(49)(false.B)))
 
-  val iPt0 = RegInit(0.U(3.W))
-  val iPt1 = RegInit(0.U(3.W))
-  val iStep = RegInit(0.U(5.W))
-  val interSub = RegInit(0.U(2.W))
-
-  // i1Pr/i2Pr/i3Pr carry the running interpolation state across 8-column steps.
-  // After the final step of a complete stride, they hold the final carry used by
-  // the correction stage.
+  val i1Active = RegInit(false.B)
+  val i1Page = RegInit(0.U(6.W))
+  val i1Step = RegInit(0.U(1.W))
+  val i1Sub = RegInit(0.U(2.W))
   val i1Pr0 = RegInit(0.U(30.W)); val i1Pr1 = RegInit(0.U(30.W)); val i1Pr2 = RegInit(0.U(30.W))
-  val i2Pr0 = RegInit(0.U(27.W)); val i2Pr1 = RegInit(0.U(27.W)); val i2Pr2 = RegInit(0.U(27.W))
-  val i3Pr0 = RegInit(0.U(24.W)); val i3Pr1 = RegInit(0.U(24.W)); val i3Pr2 = RegInit(0.U(24.W))
-
-  // firstW1/firstW0/firstOut hold raw block0. At the end of each complete
-  // stride, the correction stage rewrites block0 with coeff 0/1/2 adjusted by
-  // the final carry above.
   val firstW1 = Reg(Vec(32, UInt(33.W)))
+  val w1PageReady = RegInit(VecInit(Seq.fill(49)(false.B)))
+  val w1GroupReady = RegInit(VecInit(Seq.fill(7)(false.B)))
+
+  val i2Active = RegInit(false.B)
+  val i2Pt0 = RegInit(0.U(3.W))
+  val i2Step = RegInit(0.U(3.W))
+  val i2Sub = RegInit(0.U(2.W))
+  val i2Pr0 = RegInit(0.U(27.W)); val i2Pr1 = RegInit(0.U(27.W)); val i2Pr2 = RegInit(0.U(27.W))
   val firstW0 = Reg(Vec(32, UInt(27.W)))
+  val w0BlockReady = RegInit(VecInit(Seq.fill(7)(false.B)))
+
+  val i3Active = RegInit(false.B)
+  val i3Done = RegInit(false.B)
+  val i3Step = RegInit(0.U(5.W))
+  val i3Sub = RegInit(0.U(2.W))
+  val i3Pr0 = RegInit(0.U(24.W)); val i3Pr1 = RegInit(0.U(24.W)); val i3Pr2 = RegInit(0.U(24.W))
   val firstOut = Reg(Vec(32, UInt(24.W)))
 
   val interp1 = Module(new Interp8ColsStepTC4(pidx = 1, inW = 36, outW = 33))
@@ -482,16 +500,19 @@ class ToomCook43Clean extends Module {
   val inter1In = Wire(Vec(7 * 8, UInt(36.W)))
   val inter2In = Wire(Vec(7 * 8, UInt(33.W)))
   val inter3In = Wire(Vec(7 * 8, UInt(27.W)))
+  val i1CoreOffset = Cat(i1Step, 0.U(3.W))
+  val i2BlockOffset = Cat(i2Step(1, 0), 0.U(3.W))
+  val i3BlockOffset = Cat(i3Step(1, 0), 0.U(3.W))
   for (pt <- 0 until 7) {
-    val coreWord = split16(coreRam(pt).io.dout, 36)
-    val w1Word = split32(w1Ram(pt).io.dout, 33)
-    val w0Word = split32(w0Ram(pt).io.dout, 27)
-    val coreOffset = Cat(iStep(0), 0.U(3.W))
-    val inBlockOffset = Cat(iStep(1, 0), 0.U(3.W))
+    val i1Packed = Mux(pageBuf(i1Page).asBool, coreRam(1)(pt).io.dout, coreRam(0)(pt).io.dout)
+    val i2Packed = Mux(i2Pt0(0), w1Ram(1)(pt).io.dout, w1Ram(0)(pt).io.dout)
+    val i1Word = split16(i1Packed, 36)
+    val i2Word = split32(i2Packed, 33)
+    val i3Word = split32(w0Ram(pt).io.dout, 27)
     for (col <- 0 until 8) {
-      inter1In(pt * 8 + col) := coreWord(coreOffset + col.U)
-      inter2In(pt * 8 + col) := w1Word(inBlockOffset + col.U)
-      inter3In(pt * 8 + col) := w0Word(inBlockOffset + col.U)
+      inter1In(pt * 8 + col) := i1Word(i1CoreOffset + col.U)
+      inter2In(pt * 8 + col) := i2Word(i2BlockOffset + col.U)
+      inter3In(pt * 8 + col) := i3Word(i3BlockOffset + col.U)
     }
   }
   interp1.io.in := inter1In
@@ -501,7 +522,9 @@ class ToomCook43Clean extends Module {
   interp3.io.in := inter3In
   interp3.io.pr0 := i3Pr0; interp3.io.pr1 := i3Pr1; interp3.io.pr2 := i3Pr2
 
-  // Correction words overwrite only block0 after the full stride is complete.
+  // firstW1/firstW0/firstOut hold raw block0. After the final 8-column step of
+  // a full stride, i1Pr/i2Pr/i3Pr hold final carry; the correction stage then
+  // overwrites block0 coeff 0/1/2 using those final carries.
   val correctedW1Vec = Wire(Vec(32, UInt(33.W)))
   correctedW1Vec := firstW1
   correctedW1Vec(0) := mask(firstW1(0) - i1Pr2, 33)
@@ -523,65 +546,90 @@ class ToomCook43Clean extends Module {
   correctedOutVec(2) := mask(firstOut(2) - i3Pr0, 24)
   val correctedOutWord = packVec(correctedOutVec)
 
-  when(state === sIdle) {
-    when(io.valid_in) {
-      for (lane <- 0 until 16) {
-        aLaneRam(lane).io.en := true.B
-        aLaneRam(lane).io.we := true.B
-        aLaneRam(lane).io.addr := 0.U
-        aLaneRam(lane).io.din := packVec((0 until 64).map(i => io.a(lane * 64 + i)))
-        bLaneRam(lane).io.en := true.B
-        bLaneRam(lane).io.we := true.B
-        bLaneRam(lane).io.addr := 0.U
-        bLaneRam(lane).io.din := packVec((0 until 64).map(i => io.b(lane * 64 + i)))
-      }
-      state := sEvalPreRead
-      loadCount := 1.U
-      evalCount := 0.U
-      coreCount := 0.U
-      inter1Count := 0.U
-      inter2Count := 0.U
-      inter3Count := 0.U
-      outputReadCount := 0.U
+  when(io.valid_in && !evalActive && !coreActive && !i1Active && !i2Active && !i3Active) {
+    for (lane <- 0 until 16) {
+      aLaneRam(lane).io.en := true.B
+      aLaneRam(lane).io.we := true.B
+      aLaneRam(lane).io.addr := 0.U
+      aLaneRam(lane).io.din := packVec((0 until 64).map(i => io.a(lane * 64 + i)))
+      bLaneRam(lane).io.en := true.B
+      bLaneRam(lane).io.we := true.B
+      bLaneRam(lane).io.addr := 0.U
+      bLaneRam(lane).io.din := packVec((0 until 64).map(i => io.b(lane * 64 + i)))
     }
-  }.elsewhen(state === sEvalPreRead) {
+    evalPreRead := true.B
+    evalCapture := false.B
+    evalActive := false.B
+    evalDone := false.B
+    evalProduced := 0.U
+    evalPt0 := 0.U; evalPt1 := 0.U; evalPt2 := 0.U
+    coreActive := false.B
+    coreReqIdx := 0.U
+    coreReadValid := false.B
+    coreWordValid := false.B
+    coreFeedJob := 0.U
+    coreWordJob := 0.U
+    coreWriteJob := 0.U
+    coreDone := false.B
+    i1Active := false.B; i1Page := 0.U; i1Step := 0.U; i1Sub := 0.U
+    i2Active := false.B; i2Pt0 := 0.U; i2Step := 0.U; i2Sub := 0.U
+    i3Active := false.B; i3Done := false.B; i3Step := 0.U; i3Sub := 0.U
+    i1Pr0 := 0.U; i1Pr1 := 0.U; i1Pr2 := 0.U
+    i2Pr0 := 0.U; i2Pr1 := 0.U; i2Pr2 := 0.U
+    i3Pr0 := 0.U; i3Pr1 := 0.U; i3Pr2 := 0.U
+    corePageReady := VecInit(Seq.fill(49)(false.B))
+    w1PageReady := VecInit(Seq.fill(49)(false.B))
+    w1GroupReady := VecInit(Seq.fill(7)(false.B))
+    w0BlockReady := VecInit(Seq.fill(7)(false.B))
+    loadCount := 1.U
+    evalCount := 0.U
+    coreCount := 0.U
+    inter1Count := 0.U
+    inter2Count := 0.U
+    inter3Count := 0.U
+    outputReadCount := 0.U
+  }
+
+  // EvalController: preload all 16 lane words once, then write one job-wide eval
+  // word per cycle for 343 cycles.
+  when(evalPreRead) {
     for (lane <- 0 until 16) {
       aLaneRam(lane).io.en := true.B
       aLaneRam(lane).io.addr := 0.U
       bLaneRam(lane).io.en := true.B
       bLaneRam(lane).io.addr := 0.U
     }
-    state := sEvalCapture
-  }.elsewhen(state === sEvalCapture) {
+    evalPreRead := false.B
+    evalCapture := true.B
+  }.elsewhen(evalCapture) {
     for (lane <- 0 until 16) {
       laneAWord(lane) := aLaneRam(lane).io.dout
       laneBWord(lane) := bLaneRam(lane).io.dout
     }
-    evalPt0 := 0.U
-    evalPt1 := 0.U
-    evalPt2 := 0.U
-    evalCount := 0.U
-    state := sEval
-  }.elsewhen(state === sEval) {
-    evalARam.io.en := true.B
-    evalARam.io.we := true.B
-    evalARam.io.addr := evalJobIdx
-    evalARam.io.din := packVec(evalAVec)
-    evalBRam.io.en := true.B
-    evalBRam.io.we := true.B
-    evalBRam.io.addr := evalJobIdx
-    evalBRam.io.din := packVec(evalBVec)
+    evalCapture := false.B
+    evalActive := true.B
+    coreActive := true.B
+  }
+
+  when(evalActive) {
+    for (bank <- 0 until 2) {
+      when(evalBank(evalJobIdx) === bank.U) {
+        evalARam(bank).io.en := true.B
+        evalARam(bank).io.we := true.B
+        evalARam(bank).io.addr := evalAddr(evalJobIdx)
+        evalARam(bank).io.din := packVec(evalAVec)
+        evalBRam(bank).io.en := true.B
+        evalBRam(bank).io.we := true.B
+        evalBRam(bank).io.addr := evalAddr(evalJobIdx)
+        evalBRam(bank).io.din := packVec(evalBVec)
+      }
+    }
+    evalProduced := evalProduced + 1.U
     evalCount := evalCount + 1.U
 
     when(evalPt0 === 6.U && evalPt1 === 6.U && evalPt2 === 6.U) {
-      state := sCore
-      coreReqIdx := 0.U
-      coreReadValid := false.B
-      coreWordValid := false.B
-      coreFeedJob := 0.U
-      coreWordJob := 0.U
-      coreWriteJob := 0.U
-      coreCount := 0.U
+      evalActive := false.B
+      evalDone := true.B
     }.otherwise {
       when(evalPt2 === 6.U) {
         evalPt2 := 0.U
@@ -589,27 +637,34 @@ class ToomCook43Clean extends Module {
           .otherwise { evalPt1 := evalPt1 + 1.U }
       }.otherwise { evalPt2 := evalPt2 + 1.U }
     }
-  }.elsewhen(state === sCore) {
-    val doCoreRead = coreReqIdx < 343.U
+  }
+
+  // CoreController: read job k after eval has written it. While Eval writes job
+  // k+1 in bank (k+1)%2, Core reads job k from bank k%2, so no single-port SRAM
+  // read/write conflict occurs.
+  when(coreActive) {
+    val doCoreRead = coreReqIdx < evalProduced
     when(doCoreRead) {
-      evalARam.io.en := true.B
-      evalARam.io.addr := coreReqIdx // evalAddr = jobIdx, one packed 16-lane job per word.
-      evalBRam.io.en := true.B
-      evalBRam.io.addr := coreReqIdx
+      for (bank <- 0 until 2) {
+        when(evalBank(coreReqIdx) === bank.U) {
+          evalARam(bank).io.en := true.B
+          evalARam(bank).io.addr := evalAddr(coreReqIdx)
+          evalBRam(bank).io.en := true.B
+          evalBRam(bank).io.addr := evalAddr(coreReqIdx)
+        }
+      }
       coreReqIdx := coreReqIdx + 1.U
     }
 
-    // Keep the eval SRAM synchronous-read boundary explicit: cycle N issues
-    // evalARam/evalBRam read; cycle N+1 captures dout into coreAWordReg/
-    // coreBWordReg. Core16TC4 only sees these registered words, preserving
-    // one-job-per-cycle throughput after the pipeline fills.
     core.io.valid_in := coreWordValid
-    when(coreWordValid) {
-      coreWriteJob := coreWordJob
-    }
+    when(coreWordValid) { coreWriteJob := coreWordJob }
     when(coreReadValid) {
-      coreAWordReg := evalARam.io.dout
-      coreBWordReg := evalBRam.io.dout
+      for (bank <- 0 until 2) {
+        when(evalBank(coreFeedJob) === bank.U) {
+          coreAWordReg := evalARam(bank).io.dout
+          coreBWordReg := evalBRam(bank).io.dout
+        }
+      }
       coreWordJob := coreFeedJob
     }
     coreWordValid := coreReadValid
@@ -617,111 +672,131 @@ class ToomCook43Clean extends Module {
     coreFeedJob := coreReqIdx
 
     when(core.io.valid_out) {
-      for (pt2 <- 0 until 7) {
-        when(coreWritePt2 === pt2.U) {
-          coreRam(pt2).io.en := true.B
-          coreRam(pt2).io.we := true.B
-          coreRam(pt2).io.addr := coreWritePage // coreRam(pt2)(page), page = pt0 * 7 + pt1.
-          coreRam(pt2).io.din := packVec(core.io.cOut)
+      val wrPage = pageOf(coreWriteJob)
+      val wrPt2 = pt2Of(coreWriteJob)
+      for (buf <- 0 until 2; pt2 <- 0 until 7) {
+        when(pageBuf(wrPage) === buf.U && wrPt2 === pt2.U) {
+          coreRam(buf)(pt2).io.en := true.B
+          coreRam(buf)(pt2).io.we := true.B
+          coreRam(buf)(pt2).io.addr := pageAddr(wrPage) // coreRam(page%2)(pt2)(page/2).
+          coreRam(buf)(pt2).io.din := packVec(core.io.cOut)
         }
       }
       coreCount := coreCount + 1.U
-      when(coreWriteJob === 342.U) {
-        state := sInter1
-        iPt0 := 0.U
-        iPt1 := 0.U
-        iStep := 0.U
-        interSub := 0.U
-        i1Pr0 := 0.U; i1Pr1 := 0.U; i1Pr2 := 0.U
+      when(wrPt2 === 6.U) { corePageReady(wrPage) := true.B }
+      when(coreWriteJob === 342.U) { coreDone := true.B; coreActive := false.B }
+    }
+  }
+
+  // Inter1Controller: consume each core page as soon as its seven pt2 banks are
+  // ready. Core writes page p+1 while Inter1 reads page p; page%2 ping-ponging
+  // avoids coreRam single-port conflicts.
+  when(!i1Active && corePageReady(i1Page) && !w1PageReady(i1Page)) {
+    val rdBuf = pageBuf(i1Page)
+    val rdAddr = pageAddr(i1Page)
+    for (pt2 <- 0 until 7) {
+      for (buf <- 0 until 2) {
+        when(rdBuf === buf.U) {
+          coreRam(buf)(pt2).io.en := true.B
+          coreRam(buf)(pt2).io.addr := rdAddr
+        }
       }
     }
-  }.elsewhen(state === sInter1) {
-    val page = iPt0 * 7.U + iPt1 // page = pt0 * 7 + pt1.
-    when(interSub === 0.U) {
-      for (pt2 <- 0 until 7) {
-        coreRam(pt2).io.en := true.B
-        coreRam(pt2).io.addr := page // Read coreRam(pt2)(page) from all seven pt2 banks in parallel.
-      }
-      interSub := 1.U
-    }.elsewhen(interSub === 1.U) {
+    i1Active := true.B
+    i1Sub := 1.U
+    i1Step := 0.U
+    i1Pr0 := 0.U; i1Pr1 := 0.U; i1Pr2 := 0.U
+  }.elsewhen(i1Active) {
+    val pt0 = pt0OfPage(i1Page)
+    val pt1 = pt1OfPage(i1Page)
+    val wrBuf = pt0(0)
+    when(i1Sub === 1.U) {
       val outWord = packVec(interp1.io.out)
-      when(iStep === 0.U) { firstW1 := interp1.io.out }
-      for (pt1 <- 0 until 7) {
-        when(iPt1 === pt1.U) {
-          w1Ram(pt1).io.en := true.B
-          w1Ram(pt1).io.we := true.B
-          w1Ram(pt1).io.addr := iPt0 * 2.U + iStep // w1Ram(pt1)(pt0 * 2 + block32).
-          w1Ram(pt1).io.din := outWord
+      when(i1Step === 0.U) { firstW1 := interp1.io.out }
+      for (buf <- 0 until 2; bank <- 0 until 7) {
+        when(wrBuf === buf.U && pt1 === bank.U) {
+          w1Ram(buf)(bank).io.en := true.B
+          w1Ram(buf)(bank).io.we := true.B
+          w1Ram(buf)(bank).io.addr := i1Step // w1Ram(pt0%2)(pt1)(block32).
+          w1Ram(buf)(bank).io.din := outWord
         }
       }
       inter1Count := inter1Count + 1.U
       i1Pr0 := interp1.io.nr0; i1Pr1 := interp1.io.nr1; i1Pr2 := interp1.io.nr2
-      when(iStep === 0.U) {
-        for (pt2 <- 0 until 7) {
-          coreRam(pt2).io.en := true.B
-          coreRam(pt2).io.addr := page
+      when(i1Step === 0.U) {
+        val rdBuf = pageBuf(i1Page)
+        val rdAddr = pageAddr(i1Page)
+        for (pt2 <- 0 until 7; buf <- 0 until 2) {
+          when(rdBuf === buf.U) {
+            coreRam(buf)(pt2).io.en := true.B
+            coreRam(buf)(pt2).io.addr := rdAddr
+          }
         }
-        iStep := 1.U
-      }.otherwise {
-        interSub := 2.U
-      }
+        i1Step := 1.U
+      }.otherwise { i1Sub := 2.U }
     }.otherwise {
-      for (pt1 <- 0 until 7) {
-        when(iPt1 === pt1.U) {
-          w1Ram(pt1).io.en := true.B
-          w1Ram(pt1).io.we := true.B
-          w1Ram(pt1).io.addr := iPt0 * 2.U // Correction rewrite for W1 block32 0.
-          w1Ram(pt1).io.din := correctedW1Word
+      for (buf <- 0 until 2; bank <- 0 until 7) {
+        when(wrBuf === buf.U && pt1 === bank.U) {
+          w1Ram(buf)(bank).io.en := true.B
+          w1Ram(buf)(bank).io.we := true.B
+          w1Ram(buf)(bank).io.addr := 0.U // Correction rewrite for W1 block32 0.
+          w1Ram(buf)(bank).io.din := correctedW1Word
         }
       }
       inter1Count := inter1Count + 1.U
+      w1PageReady(i1Page) := true.B
+      when(pt1 === 6.U) { w1GroupReady(pt0) := true.B }
+      i1Active := false.B
       i1Pr0 := 0.U; i1Pr1 := 0.U; i1Pr2 := 0.U
-      iStep := 0.U
-      interSub := 0.U
-      when(iPt0 === 6.U && iPt1 === 6.U) {
-        state := sInter2
-        iPt0 := 0.U
-        iStep := 0.U
-        i2Pr0 := 0.U; i2Pr1 := 0.U; i2Pr2 := 0.U
-      }.elsewhen(iPt1 === 6.U) {
-        iPt1 := 0.U
-        iPt0 := iPt0 + 1.U
-      }.otherwise { iPt1 := iPt1 + 1.U }
+      when(i1Page =/= 48.U) { i1Page := i1Page + 1.U }
     }
-  }.elsewhen(state === sInter2) {
-    when(interSub === 0.U) {
-      val sourceBlock32 = iStep >> 2
-      for (pt1 <- 0 until 7) {
-        w1Ram(pt1).io.en := true.B
-        w1Ram(pt1).io.addr := iPt0 * 2.U + sourceBlock32 // w1Ram(pt1)(pt0 * 2 + input block32).
+  }
+
+  // Inter2Controller: consume a complete pt0 group after all seven W1 pt1 banks
+  // are ready. Inter1 writes pt0+1 into the opposite pt0%2 W1 buffer while
+  // Inter2 reads pt0.
+  when(!i2Active && w1GroupReady(i2Pt0) && !w0BlockReady(i2Pt0)) {
+    val rdBuf = i2Pt0(0)
+    for (pt1 <- 0 until 7; buf <- 0 until 2) {
+      when(rdBuf === buf.U) {
+        w1Ram(buf)(pt1).io.en := true.B
+        w1Ram(buf)(pt1).io.addr := 0.U
       }
-      interSub := 1.U
-    }.elsewhen(interSub === 1.U) {
+    }
+    i2Active := true.B
+    i2Sub := 1.U
+    i2Step := 0.U
+    i2Pr0 := 0.U; i2Pr1 := 0.U; i2Pr2 := 0.U
+  }.elsewhen(i2Active) {
+    when(i2Sub === 1.U) {
       val outWord = packVec(interp2.io.out)
-      when(iStep === 0.U) { firstW0 := interp2.io.out }
+      when(i2Step === 0.U) { firstW0 := interp2.io.out }
       for (pt0 <- 0 until 7) {
-        when(iPt0 === pt0.U) {
+        when(i2Pt0 === pt0.U) {
           w0Ram(pt0).io.en := true.B
           w0Ram(pt0).io.we := true.B
-          w0Ram(pt0).io.addr := iStep // w0Ram(pt0)(block32).
+          w0Ram(pt0).io.addr := i2Step // w0Ram(pt0)(block32).
           w0Ram(pt0).io.din := outWord
         }
       }
       inter2Count := inter2Count + 1.U
       i2Pr0 := interp2.io.nr0; i2Pr1 := interp2.io.nr1; i2Pr2 := interp2.io.nr2
-      when(iStep === 7.U) {
-        interSub := 2.U
+      when(i2Step === 7.U) {
+        i2Sub := 2.U
       }.otherwise {
-        val nextBlock32 = (iStep + 1.U) >> 2
-        for (pt1 <- 0 until 7) {
-          w1Ram(pt1).io.en := true.B
-          w1Ram(pt1).io.addr := iPt0 * 2.U + nextBlock32
+        val nextBlock32 = (i2Step + 1.U) >> 2
+        val rdBuf = i2Pt0(0)
+        for (pt1 <- 0 until 7; buf <- 0 until 2) {
+          when(rdBuf === buf.U) {
+            w1Ram(buf)(pt1).io.en := true.B
+            w1Ram(buf)(pt1).io.addr := nextBlock32
+          }
         }
-        iStep := iStep + 1.U
+        i2Step := i2Step + 1.U
       }
     }.otherwise {
       for (pt0 <- 0 until 7) {
-        when(iPt0 === pt0.U) {
+        when(i2Pt0 === pt0.U) {
           w0Ram(pt0).io.en := true.B
           w0Ram(pt0).io.we := true.B
           w0Ram(pt0).io.addr := 0.U // Correction rewrite for W0 block32 0.
@@ -729,72 +804,57 @@ class ToomCook43Clean extends Module {
         }
       }
       inter2Count := inter2Count + 1.U
+      w0BlockReady(i2Pt0) := true.B
+      i2Active := false.B
       i2Pr0 := 0.U; i2Pr1 := 0.U; i2Pr2 := 0.U
-      iStep := 0.U
-      interSub := 0.U
-      when(iPt0 === 6.U) {
-        state := sInter3
-        iStep := 0.U
-        i3Pr0 := 0.U; i3Pr1 := 0.U; i3Pr2 := 0.U
-      }.otherwise { iPt0 := iPt0 + 1.U }
+      when(i2Pt0 =/= 6.U) { i2Pt0 := i2Pt0 + 1.U }
     }
-  }.elsewhen(state === sInter3) {
-    when(interSub === 0.U) {
-      val sourceBlock32 = iStep >> 2
-      for (pt0 <- 0 until 7) {
-        w0Ram(pt0).io.en := true.B
-        w0Ram(pt0).io.addr := sourceBlock32 // w0Ram(pt0)(input block32).
-      }
-      interSub := 1.U
-    }.elsewhen(interSub === 1.U) {
+  }
+
+  // Inter3Controller: wait until all W0 pt0 banks are complete, then produce the
+  // final 32-wide output blocks. Each Inter3 write also updates outReg directly,
+  // so there is no output readback state on the critical path.
+  when(!i3Active && !i3Done && w0BlockReady.asUInt.andR) {
+    for (pt0 <- 0 until 7) {
+      w0Ram(pt0).io.en := true.B
+      w0Ram(pt0).io.addr := 0.U
+    }
+    i3Active := true.B
+    i3Sub := 1.U
+    i3Step := 0.U
+    i3Pr0 := 0.U; i3Pr1 := 0.U; i3Pr2 := 0.U
+  }.elsewhen(i3Active) {
+    when(i3Sub === 1.U) {
       val outWord = packVec(interp3.io.out)
-      when(iStep === 0.U) { firstOut := interp3.io.out }
+      when(i3Step === 0.U) { firstOut := interp3.io.out }
       outRam.io.en := true.B
       outRam.io.we := true.B
-      outRam.io.addr := iStep // outRam(block32), each word holds 32 final coefficients.
+      outRam.io.addr := i3Step
       outRam.io.din := outWord
+      for (i <- 0 until 32) outReg(i3Step * 32.U + i.U) := interp3.io.out(i)
       inter3Count := inter3Count + 1.U
       i3Pr0 := interp3.io.nr0; i3Pr1 := interp3.io.nr1; i3Pr2 := interp3.io.nr2
-      when(iStep === 31.U) {
-        interSub := 2.U
+      when(i3Step === 31.U) {
+        i3Sub := 2.U
       }.otherwise {
-        val nextBlock32 = (iStep + 1.U) >> 2
+        val nextBlock32 = (i3Step + 1.U) >> 2
         for (pt0 <- 0 until 7) {
           w0Ram(pt0).io.en := true.B
           w0Ram(pt0).io.addr := nextBlock32
         }
-        iStep := iStep + 1.U
+        i3Step := i3Step + 1.U
       }
     }.otherwise {
       outRam.io.en := true.B
       outRam.io.we := true.B
-      outRam.io.addr := 0.U // Correction rewrite for output block32 0.
+      outRam.io.addr := 0.U
       outRam.io.din := correctedOutWord
+      for (i <- 0 until 32) outReg(i) := correctedOutVec(i)
       inter3Count := inter3Count + 1.U
-      outputReadCount := 0.U
-      interSub := 0.U
-      state := sReadOutput
+      validOutPulse := true.B
+      i3Done := true.B
+      i3Active := false.B
     }
-  }.elsewhen(state === sReadOutput) {
-    when(interSub === 0.U) {
-      outRam.io.en := true.B
-      outRam.io.addr := outputReadCount(4, 0) // outAddr = packed block32.
-      interSub := 1.U
-    }.otherwise {
-      val word = split32(outRam.io.dout, 24)
-      for (i <- 0 until 32) outReg(outputReadCount * 32.U + i.U) := word(i)
-      when(outputReadCount === 31.U) {
-        outputReadCount := outputReadCount + 1.U
-        state := sDone
-        interSub := 0.U
-      }.otherwise {
-        outputReadCount := outputReadCount + 1.U
-        outRam.io.en := true.B
-        outRam.io.addr := (outputReadCount + 1.U)(4, 0)
-      }
-    }
-  }.elsewhen(state === sDone) {
-    state := sIdle
   }
 }
 
