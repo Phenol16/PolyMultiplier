@@ -37,23 +37,6 @@ class ToomCook44 extends Module {
   B_eval(4) := (b13(0) << 3) + (b13(1) << 2) + (b13(2) << 1) + b13(3)
   B_eval(5) := (b13(0) << 3) - (b13(1) << 2) + (b13(2) << 1) - b13(3)
   B_eval(6) := b13(0)
-  /*   val A_eval=Wire (Vec(7, UInt(24.W)))
-  A_eval(0) := s0_a(3)
-  A_eval(1) := s0_a(0)+(s0_a(1)<<1)+(s0_a(2)<<2)+(s0_a(3)<<3)
-  A_eval(2) := s0_a(0)+s0_a(1)+s0_a(2)+s0_a(3)
-  A_eval(3) := s0_a(0)-s0_a(1)+s0_a(2)-s0_a(3)
-  A_eval(4) := (s0_a(0)<<3)+(s0_a(1)<<2)+(s0_a(2)<<1)+s0_a(3)
-  A_eval(5) := (s0_a(0)<<3)-(s0_a(1)<<2)+(s0_a(2)<<1)-s0_a(3)
-  A_eval(6) := s0_a(0)
-
-  val B_eval=Wire (Vec(7, UInt(12.W)))
-  B_eval(0) := s0_b(3)
-  B_eval(1) := s0_b(0)+(s0_b(1)<<1)+(s0_b(2)<<2)+(s0_b(3)<<3)
-  B_eval(2) := s0_b(0)+s0_b(1)+s0_b(2)+s0_b(3)
-  B_eval(3) := s0_b(0)-s0_b(1)+s0_b(2)-s0_b(3)
-  B_eval(4) := (s0_b(0)<<3)+(s0_b(1)<<2)+(s0_b(2)<<1)+s0_b(3)
-  B_eval(5) := (s0_b(0)<<3)-(s0_b(1)<<2)+(s0_b(2)<<1)-s0_b(3)
-  B_eval(6) := s0_b(0) */
 
   val s1_valid = RegNext(s0_valid, false.B)
   val s1_A = RegNext(A_eval)
@@ -86,12 +69,7 @@ class ToomCook44 extends Module {
   val s2_valid = RegNext(s1_valid, false.B)
   val s2_w = RegNext(w_comb)
 
-  /* when(s2_valid) {
-  printf("--- Stage 2 Pointwise multiplication ---\n")
-  for (i <- 0 until 7) {
-    printf("Point %d: w_comb = 0x%x\n", i.U, s2_w(i))
-  }
-} */
+
 
   // Stage 3 : Interpolation
   val w = s2_w

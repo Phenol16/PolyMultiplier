@@ -1,6 +1,6 @@
 # Synopsys Reference Methodology 笔记
 
-在 yuxinglong 的28nm工作目录 `/export4/Home/yvxinglong/Work/BackFlow28/4Backend/` 下，可见 `2RtlCode`，`4Backend`，`5PostSyn` 三个子目录，分别用来存放 ② RTL 及 Testbench 前端设计代码，④ 后端流程脚本，⑤ 设计仿真验证脚本。事实上，可以多保留 `1Document` 和 `3FPGA` 两个子目录以保证整个芯片项目的完整性与可读性。
+在 yuxinglong 的28nm工作目录 `/export4/Home/yvxinglong/Work/BackFlow28` 下，可见 `2RtlCode`，`4Backend`，`5PostSyn` 三个子目录，分别用来存放 ② RTL 及 Testbench 前端设计代码，④ 后端流程脚本，⑤ 设计仿真验证脚本。事实上，可以多保留 `1Document` 和 `3FPGA` 两个子目录以保证整个芯片项目的完整性与可读性。
 
 本文档着重分析介绍 `4Backend` 和 `5PostSyn` 两个子目录的工作流程。
 

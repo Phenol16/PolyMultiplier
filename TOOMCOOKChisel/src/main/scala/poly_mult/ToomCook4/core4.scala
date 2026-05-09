@@ -13,7 +13,7 @@ class SignedMulUnit extends Module {
   io.c := (aSigned * bSigned).asUInt(29, 0)
 }
 
-class dotIO extends Bundle {
+class core4IO extends Bundle {
   val valid_in = Input(Bool())
   val a = Input(Vec(4, UInt(30.W)))
   val b = Input(Vec(4, UInt(16.W)))
@@ -21,8 +21,8 @@ class dotIO extends Bundle {
   val c = Output(Vec(4, UInt(27.W)))
 }
 
-class dot_product extends Module {
-  val io = IO(new dotIO)
+class core4 extends Module {
+  val io = IO(new core4IO)
 
   private def fillMsb(value: UInt, targetWidth: Int): UInt = {
     if (value.getWidth >= targetWidth) value(targetWidth - 1, 0)

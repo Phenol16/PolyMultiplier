@@ -11,4 +11,5 @@ object generator extends App {
   // emitVerilog(new interpolation(),Array("--target-dir", "generated/interpolation"))
   //emitVerilog(new top(), Array("--target-dir", "generated/top"))
 // emitVerilog(new ToomCook1024()  , Array("--target-dir", "generated/ToomCook1024"))
+ //emitVerilog(new ToomCook43Clean()  , Array("--target-dir", "generated/ToomCook43Clean"))
 }

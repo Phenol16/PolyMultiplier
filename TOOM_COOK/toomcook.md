@@ -14,24 +14,6 @@
 + a:24+3+3+3+3+3=39
 + b:8+4+4+4+4+4+1=29
 
-```C
-uint32_t acoeff[4][4][4][16], bcoeff[4][4][4][16];
-for (int i = 0; i < 4; i++)
-{
-    for (int j = 0; j < 4; j++)
-    {
-        for (int k = 0; k < 4; k++)
-        {
-            for (int l = 0; l < 16; l++)
-            {
-                acoeff[i][j][k][l] = a[4 * (4 * (4 * l + k) + j) + i]; // acoeff[256*i + 64*j + 16*k + l]=a[64*l + 16*k + 4*j + i]
-                bcoeff[i][j][k][l] = b[4 * (4 * (4 * l + k) + j) + i];
-            }
-        }
-    }
-}
-```
-
 + cycle
 + 优化sram减少周期
 + reg -> sram
@@ -44,34 +26,9 @@ for (int i = 0; i < 4; i++)
 + DC 功耗 面积
 + 不同bit(24,8)的功耗，core大小
 
-```
-full_random_a24_b8 PASS
-valid_out cycle = 1600
++ 24-36 4
++ 8-16 2
 
-coreWriteCount    = 343
-interp1GroupCount = 49
-interp2BlockCount = 7
++ 4 16 64
 
-coreLast   = 1373
-interp1Last= 1396
-interp2Last= 1467
-i3Start    = 1469
-i3Done     = 1599
-valid_out  = 1600
-
-Eval/Core:
-|==============================================================| done @1373
-
-Interp1:
-         |=======================================================| done @1396
-
-Interp2:
-                       |==========================================| done @1467
-
-Interp3:
-                                                        |=========| done @1599
-
-Output:
-                                                                  | valid @1600
-
-```
++ 28nm工艺
