@@ -22,4 +22,7 @@ object CoreModConst {
 
   // Modular inverse of 9 modulo 2^width, generated at elaboration time.
   def inv9(width: Int): BigInt = invModPow2Odd(9, width)
+
+  // Modular inverse of 15 modulo 2^width, used by the scaled +/-1/2 interpolation point.
+  def inv15(width: Int): BigInt = invModPow2Odd(15, width)
 }

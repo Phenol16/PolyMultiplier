@@ -7,7 +7,10 @@ class ParamCore4(cfg: CoreConfig) extends Module {
 
   val io = IO(new ParamCoreIO(cfg))
 
-  // First-stage baseline: parameterized signed schoolbook negacyclic hardware
-  // for a(x) * b(x) mod (x^4 + 1), modulo 2^coreOutW per coefficient.
-  ParamSchoolbookBaseline.connect(io, cfg)
+  val core = Module(new ParamToomCook4(cfg.aInW, cfg.bInW, cfg.coreOutW))
+  core.io.valid_in := io.valid_in
+  core.io.a := io.a
+  core.io.b := io.b
+  io.valid_out := core.io.valid_out
+  io.c := core.io.c
 }

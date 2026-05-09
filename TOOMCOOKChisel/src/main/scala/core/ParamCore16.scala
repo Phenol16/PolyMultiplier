@@ -7,8 +7,10 @@ class ParamCore16(cfg: CoreConfig) extends Module {
 
   val io = IO(new ParamCoreIO(cfg))
 
-  // First-stage baseline: parameterized signed schoolbook negacyclic hardware.
-  // The module boundary is intentionally separate so this body can later be
-  // replaced by a parameterized Toom-Cook-16 datapath without changing tests.
-  ParamSchoolbookBaseline.connect(io, cfg)
+  val core = Module(new ParamToomCook16Block(cfg.aInW, cfg.bInW, cfg.coreOutW))
+  core.io.valid_in := io.valid_in
+  core.io.a := io.a
+  core.io.b := io.b
+  io.valid_out := core.io.valid_out
+  io.c := core.io.c
 }

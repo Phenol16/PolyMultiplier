@@ -22,7 +22,7 @@
 - `bEvalW = bInW + 4`
 - `coreOutW = aInW + bInW + log2Ceil(coreN) + 4`
 
-其中 4 个 guard bit 是保守设置：evaluation 点可能包含加法、减法和移位后的系数和，后续 Toom-Cook 插值也可能产生临时增长。当前 schoolbook baseline 的每个输出系数最多累加 `coreN` 个 signed product，因此 `aInW + bInW + log2Ceil(coreN)` 是基础需求，额外 guard bit 用于保持实验框架安全并方便后续替换为 Toom-Cook datapath。
+其中 4 个 guard bit 是保守设置：evaluation 点可能包含加法、减法和移位后的系数和，后续 Toom-Cook 插值也可能产生临时增长。最终 negacyclic 输出的每个系数最多累加 `coreN` 个 signed product，因此 `aInW + bInW + log2Ceil(coreN)` 是基础需求，额外 guard bit 用于保持实验框架安全并覆盖 Toom-Cook interpolation 的模运算余量。
 
 ## `CoreModConst` 模逆魔术数
 
@@ -31,20 +31,23 @@
 - `CoreModConst.invModPow2Odd(x, width)` 计算奇数 `x` 在模 `2^width` 下的乘法逆元。
 - `CoreModConst.inv3(width)` 生成 `3^-1 mod 2^width`。
 - `CoreModConst.inv9(width)` 生成 `9^-1 mod 2^width`。
+- `CoreModConst.inv15(width)` 生成 `15^-1 mod 2^width`，用于旧 Toom-Cook-4 中 scaled `±1/2` 点对应的插值除法。
 
 偶数在模 `2^m` 下没有乘法逆元，因此工具函数会拒绝偶数。若后续插值公式需要除以 6 或 18，应保留“先右移除以 2，再乘以 3 或 9 的模逆”的算法结构。
 
 ## 当前硬件实现
 
-`ParamCore4`、`ParamCore16` 和 `ParamCore64` 当前都采用参数化 signed schoolbook negacyclic baseline：
+当前实现不再使用上一版的整 core schoolbook baseline，而是显式加入 `ParamEval4`、`ParamInterp4` 和参数化 Toom-Cook block。
+
+`ParamCore4`、`ParamCore16` 和 `ParamCore64` 当前都采用参考旧 `ToomCook16` 数据流的参数化 Toom-Cook-4 baseline：
 
 ```text
 c(x) = a(x) * b(x) mod (x^N + 1)
 ```
 
-输入端口仍为 `UInt`，但每个系数按二进制补码解释为 signed 值参与乘法和累加；输出系数按 `2^coreOutW` 截断后以 `UInt` 输出。baseline 目前是组合式系数计算加一拍输出寄存，`valid_out` 相对 `valid_in` 固定延迟一拍。
+输入端口仍为 `UInt`，但每个系数按二进制补码解释为 signed 值参与乘法和累加；输出系数按 `2^coreOutW` 截断后以 `UInt` 输出。`ParamCore4` 使用 7 点 evaluation、7 个 signed pointwise multiplication 和 interpolation；`ParamCore16/64` 将输入拆成 4 个 block，对 block 维度做 7 点 evaluation，每个点上做参数化 full-convolution pointwise multiplication，再用同一套 interpolation 系数恢复并按 `x^N = -1` 折叠输出。
 
-该结构优先保证正确性、参数化、可测试和可生成 Verilog。后续可以在不改变 `ParamCore` 对外 IO 的前提下，将 `ParamCore16` 或 `ParamCore64` 内部替换为 Toom-Cook 优化结构。
+该结构优先保证正确性、参数化、可测试和可生成 Verilog。后续可以在不改变 `ParamCore` 对外 IO 的前提下，将当前 pointwise full-convolution 部分替换为更深层次或更流水化的 Toom-Cook 优化结构。
 
 ## 测试 reference
 

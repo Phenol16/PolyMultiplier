@@ -7,8 +7,10 @@ class ParamCore64(cfg: CoreConfig) extends Module {
 
   val io = IO(new ParamCoreIO(cfg))
 
-  // First-stage baseline: clear combinational schoolbook negacyclic hardware.
-  // This is intentionally correct-before-fast; future work can replace it with
-  // a pipelined hierarchy of Toom-Cook cores while preserving this IO contract.
-  ParamSchoolbookBaseline.connect(io, cfg)
+  val core = Module(new ParamToomCook64Block(cfg.aInW, cfg.bInW, cfg.coreOutW))
+  core.io.valid_in := io.valid_in
+  core.io.a := io.a
+  core.io.b := io.b
+  io.valid_out := core.io.valid_out
+  io.c := core.io.c
 }
