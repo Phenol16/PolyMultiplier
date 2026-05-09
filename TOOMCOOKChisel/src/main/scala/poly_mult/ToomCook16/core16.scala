@@ -2,7 +2,7 @@ package poly_mult
 import chisel3._
 import chisel3.util._
 
-class kernelIO extends Bundle {
+class core16IO extends Bundle {
   val valid_in = Input(Bool())
   val a = Input(Vec(16, UInt(24.W)))
   val b = Input(Vec(16, UInt(8.W)))
@@ -10,8 +10,8 @@ class kernelIO extends Bundle {
   val c = Output(Vec(16, UInt(24.W)))
 }
 
-class kernel extends Module {
-  val io = IO(new kernelIO)
+class core16 extends Module {
+  val io = IO(new core16IO)
 
   // ========== evaluation ==========
   val eval = Module(new evaluation)
@@ -20,7 +20,7 @@ class kernel extends Module {
   eval.io.b := io.b
 
   // ========== 7x dot_product (parallel) ==========
-  val dots = Seq.fill(7)(Module(new dot_product))
+  val dots = Seq.fill(7)(Module(new core4))
   for (i <- 0 until 7) {
     dots(i).io.valid_in := eval.io.valid_out
     for (j <- 0 until 4) {
