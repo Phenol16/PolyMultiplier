@@ -2,17 +2,33 @@ package poly_mult
 import chisel3._
 import chisel3.util._
 
-class evalIO extends Bundle {
+class evalIO(
+    aWidth: Int = 24,
+    bWidth: Int = 8,
+    aEvalWidth: Int = 30,
+    bEvalWidth: Int = 16
+) extends Bundle {
   val valid_in = Input(Bool())
-  val a = Input(Vec(16, UInt(24.W)))
-  val b = Input(Vec(16, UInt(8.W)))
+  val a = Input(Vec(16, UInt(aWidth.W)))
+  val b = Input(Vec(16, UInt(bWidth.W)))
   val valid_out = Output(Bool())
-  val A_eval = Output(Vec(28, UInt(30.W))) // 24 + 3 + 3
-  val B_eval = Output(Vec(28, UInt(16.W))) // 8 + 4 + 4
+  val A_eval = Output(Vec(28, UInt(aEvalWidth.W)))
+  val B_eval = Output(Vec(28, UInt(bEvalWidth.W)))
 }
 
-class evaluation extends Module {
-  val io = IO(new evalIO)
+class evaluation(
+    aWidth: Int = 24,
+    bWidth: Int = 8,
+    aEvalWidth: Int = 30,
+    bEvalWidth: Int = 16
+) extends Module {
+  val io = IO(new evalIO(aWidth, bWidth, aEvalWidth, bEvalWidth))
+
+  private def mask(value: UInt, targetWidth: Int): UInt = {
+    if (value.getWidth >= targetWidth) value(targetWidth - 1, 0)
+    else Cat(Fill(targetWidth - value.getWidth, 0.U), value)
+  }
+
   private def fillMsb(value: UInt, targetWidth: Int): UInt = {
     if (value.getWidth >= targetWidth) {
       value(targetWidth - 1, 0)
@@ -20,8 +36,9 @@ class evaluation extends Module {
       Cat(Fill(targetWidth - value.getWidth, value(value.getWidth - 1)), value)
     }
   }
+
   for (j <- 0 until 4) {
-    // ===== A eval (24bit input, 30bit output) =====
+    // ===== A eval =====
     val ar0 = io.a(j * 4)
     val ar1 = io.a(j * 4 + 1)
     val ar2 = io.a(j * 4 + 2)
@@ -36,17 +53,18 @@ class evaluation extends Module {
     val ah1 = ar1 +& Cat(ah0, 0.U(1.W))
     val ah2 = ar0 +& Cat(ah1, 0.U(1.W))
 
-    io.A_eval(j + 0) := ar3
-    io.A_eval(j + 4) := ah2
-    io.A_eval(j + 8) := a_even +& a_odd
-    io.A_eval(j + 12) := fillMsb(a_even -& a_odd, 30)
-    io.A_eval(j + 16) := Cat(a_scaled_even, 0.U(1.W)) +& a_scaled_odd
+    io.A_eval(j + 0) := mask(ar3, aEvalWidth)
+    io.A_eval(j + 4) := mask(ah2, aEvalWidth)
+    io.A_eval(j + 8) := mask(a_even +& a_odd, aEvalWidth)
+    io.A_eval(j + 12) := fillMsb(a_even -& a_odd, aEvalWidth)
+    io.A_eval(j + 16) := mask(Cat(a_scaled_even, 0.U(1.W)) +& a_scaled_odd, aEvalWidth)
     io.A_eval(j + 20) := fillMsb(
       Cat(a_scaled_even, 0.U(1.W)) -& a_scaled_odd,
-      30
+      aEvalWidth
     )
-    io.A_eval(j + 24) := ar0
-    // ===== B eval (8bit input, 16bit output) =====
+    io.A_eval(j + 24) := mask(ar0, aEvalWidth)
+
+    // ===== B eval =====
     val br0 = io.b(j * 4)
     val br1 = io.b(j * 4 + 1)
     val br2 = io.b(j * 4 + 2)
@@ -61,16 +79,16 @@ class evaluation extends Module {
     val bh1 = br1 +& Cat(bh0, 0.U(1.W))
     val bh2 = br0 +& Cat(bh1, 0.U(1.W))
 
-    io.B_eval(j + 0) := br3
-    io.B_eval(j + 4) := bh2
-    io.B_eval(j + 8) := b_even +& b_odd
-    io.B_eval(j + 12) := fillMsb(b_even -& b_odd, 16)
-    io.B_eval(j + 16) := Cat(b_scaled_even, 0.U(1.W)) +& b_scaled_odd
+    io.B_eval(j + 0) := mask(br3, bEvalWidth)
+    io.B_eval(j + 4) := mask(bh2, bEvalWidth)
+    io.B_eval(j + 8) := mask(b_even +& b_odd, bEvalWidth)
+    io.B_eval(j + 12) := fillMsb(b_even -& b_odd, bEvalWidth)
+    io.B_eval(j + 16) := mask(Cat(b_scaled_even, 0.U(1.W)) +& b_scaled_odd, bEvalWidth)
     io.B_eval(j + 20) := fillMsb(
       Cat(b_scaled_even, 0.U(1.W)) -& b_scaled_odd,
-      16
+      bEvalWidth
     )
-    io.B_eval(j + 24) := br0
+    io.B_eval(j + 24) := mask(br0, bEvalWidth)
   }
   io.valid_out := io.valid_in
 }
