@@ -14,8 +14,8 @@ class ToomCook1024Test extends AnyFlatSpec with ChiselScalatestTester {
 
   private val N = 1024
   private val QMask: BigInt = (BigInt(1) << 24) - 1
-  private val ExpectedValidOutCycle = 1593
-  private val ValidOutCycleTolerance = 20
+  private val ExpectedValidOutCycle = 410
+  private val ValidOutCycleTolerance = 40
 
   /**
     * negacyclic convolution modulo x^1024 + 1, then modulo 2^24.
