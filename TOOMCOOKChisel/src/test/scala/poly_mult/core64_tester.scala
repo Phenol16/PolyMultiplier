@@ -3,7 +3,7 @@ package core
 import chisel3._
 import chiseltest._
 import org.scalatest.flatspec.AnyFlatSpec
-
+import chiseltest.simulator.VerilatorBackendAnnotation
 import scala.util.Random
 
 object Core64TestParams {
@@ -89,9 +89,10 @@ class core64Test extends AnyFlatSpec with ChiselScalatestTester {
   behavior of "core64"
 
   it should "match the negacyclic schoolbook reference" in {
-    test(Core64TestParams.dut) { dut =>
-      dut.clock.setTimeout(0)
-      dut.io.valid_in.poke(false.B)
+test(Core64TestParams.dut)
+  .withAnnotations(Seq(VerilatorBackendAnnotation)) { dut =>
+    dut.clock.setTimeout(0)
+    dut.io.valid_in.poke(false.B)
 
       runCase(
         dut,
