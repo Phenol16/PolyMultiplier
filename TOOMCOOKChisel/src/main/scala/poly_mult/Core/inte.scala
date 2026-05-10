@@ -74,7 +74,7 @@ class InterpolationComb(
       outWidth
     )
     val r5c = ParaMath.mask(
-      ParaMath.mask((r5a + r1c) >> 1, mk) * inv15.U,
+      ParaMath.mask((r5a + r1c) >> 1, inWidth - 2) * inv15.U,
       inWidth-2
     )
     val r1e = ParaMath.mask(

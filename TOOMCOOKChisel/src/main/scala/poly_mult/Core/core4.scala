@@ -23,7 +23,7 @@ class core4(
   val w = Wire(Vec(7, UInt(aWidth+inteGrowth.W)))
   for (i <- 0 until 7) {
     val bSigned = Cat(evalB.io.out(i)(bWidth+evalGrowth-1), evalB.io.out(i)).asSInt
-    w(i) := (evalA.io.out(i).asSInt * bw).asUInt
+    w(i) := (evalA.io.out(i).asSInt * bSigned).asUInt
   }
 
   val s_valid = RegNext(io.valid_in, false.B)
