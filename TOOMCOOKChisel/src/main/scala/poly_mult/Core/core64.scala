@@ -2,15 +2,14 @@ package core
 import chisel3._
 import chisel3.util._
 class core64(
-    k=3,  //top_Module需要的分解层数
+    t:Int=0,  //是否为top_Module
+    k:Int=3,  //top_Module需要的分解层数
+    sign:Int=1,
     aWidth: Int,
     bWidth: Int,
     evalGrowth:Int=4,
     inteGrowth:Int=3,
-    aEvalWidth:Int=(aWidth+inteGrowth*k),
-    bEvalWidth:Int=(bWidth+evalGrowth*k+1),
-    InteWidth:Int=cWidth+inteGrowth,
-    cWidth:Int=aWidth
+    cWidth:Int
 ) extends Module {
   val io = IO(new Bundle {
     val valid_in = Input(Bool())
@@ -19,6 +18,12 @@ class core64(
     val valid_out = Output(Bool())
     val c = Output(Vec(64, UInt(cWidth.W)))
   })
+
+
+  private val aEvalWidth = aWidth + (inteGrowth * k)*t
+  private val bEvalWidth = bWidth + (evalGrowth * k + sign)*t
+  private val InteWidth  = cWidth + inteGrowth
+
 
   val A_eval = Wire(Vec(7 * 16, UInt(aEvalWidth.W)))
   val B_eval = Wire(Vec(7 * 16, UInt(bEvalWidth.W)))

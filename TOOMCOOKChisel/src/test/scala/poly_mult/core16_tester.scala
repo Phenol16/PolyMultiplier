@@ -10,7 +10,11 @@ object Core16TestParams {
   val AWidth = 24
   val BWidth = 8
 
-  def dut: core16 = new core16(aWidth = AWidth, bWidth = BWidth)
+  def dut: core16 = new core16(
+  aWidth = AWidth,
+  bWidth = BWidth,
+  cWidth = AWidth
+)
 }
 
 class core16Test extends AnyFlatSpec with ChiselScalatestTester {

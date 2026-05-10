@@ -2,14 +2,13 @@ package core
 import chisel3._
 import chisel3.util._
 class core16(
-    k=3,
+    t:Int=1,  //是否为top_Module
+    k:Int=2,  //top_Module需要的分解层数
+    sign:Int=1,
     aWidth: Int,
     bWidth: Int,
     evalGrowth:Int=4,
     inteGrowth:Int=3,
-    aEvalWidth:Int=aWidth,
-    bEvalWidth:Int=bWidth,
-    InteWidth:Int=cWidth+inteGrowth,
     cWidth:Int
 ) extends Module {
   val io = IO(new Bundle {
@@ -17,8 +16,12 @@ class core16(
     val a = Input(Vec(16, UInt(aWidth.W)))
     val b = Input(Vec(16, UInt(bWidth.W)))
     val valid_out = Output(Bool())
-    val c = Output(Vec(16, UInt(aWidth.W)))
+    val c = Output(Vec(16, UInt(cWidth.W)))
   })
+
+  private val aEvalWidth = aWidth + (inteGrowth * k)*t
+  private val bEvalWidth = bWidth + (evalGrowth * k + sign)*t
+  private val InteWidth  = cWidth + inteGrowth
 
     val A_eval = Wire(Vec(7 * 4, UInt(aEvalWidth.W)))
     val B_eval = Wire(Vec(7 * 4, UInt(bEvalWidth.W)))
