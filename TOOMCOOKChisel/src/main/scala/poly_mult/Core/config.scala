@@ -3,11 +3,9 @@ import chisel3._
 import chisel3.util._
 object MagicNumber {
   private def modulus(width: Int): BigInt = BigInt(1) << width
-
   def inverseOdd(value: Int, width: Int): BigInt = {
     BigInt(value).modInverse(modulus(width))
   }
-
   def inv3(width: Int): BigInt = inverseOdd(3, width)
   def inv9(width: Int): BigInt = inverseOdd(9, width)
   def inv15(width: Int): BigInt = inverseOdd(15, width)
@@ -22,11 +20,5 @@ object ParaMath {
   def fillMsb(value: UInt, targetWidth: Int): UInt = {
     if (value.getWidth >= targetWidth) value(targetWidth - 1, 0)
     else Cat(Fill(targetWidth - value.getWidth, value(value.getWidth - 1)), value)
-  }
-
-  def signedMulMod(a: UInt, aWidth: Int, b: UInt, bWidth: Int, outWidth: Int): UInt = {
-    val aSigned = fillMsb(a, aWidth + 1).asSInt
-    val bSigned = fillMsb(b, bWidth + 1).asSInt
-    mask((aSigned * bSigned).asUInt, outWidth)
   }
 }

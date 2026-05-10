@@ -6,10 +6,35 @@ import org.scalatest.flatspec.AnyFlatSpec
 
 import scala.util.Random
 
+object Core64TestParams {
+  val AWidth = 24
+  val BWidth = 8
+  val AEvalWidth = 39
+  val BEvalWidth = 29
+  val Core16OutWidth = 36
+  val OutWidth = 24
+
+  def dut: core64 = new core64(
+    aWidth = AWidth,
+    bWidth = BWidth,
+    aEvalWidth = AEvalWidth,
+    bEvalWidth = BEvalWidth,
+    core16OutWidth = Core16OutWidth,
+    outWidth = OutWidth,
+    core16Core4InterpMk2 = 37,
+    core16Core4InterpMk3 = 37,
+    core16InterpMk = Core16OutWidth,
+    core16InterpMk2 = 33,
+    core16InterpMk3 = 34,
+    interpMk = 33,
+    interpMk2 = 30,
+    interpMk3 = 31
+  )
+}
 class core64Test extends AnyFlatSpec with ChiselScalatestTester {
   private val N = 64
-  private val QMask: BigInt = (BigInt(1) << 24) - 1
-  private val BMask: BigInt = (BigInt(1) << 8) - 1
+  private val QMask: BigInt = (BigInt(1) << Core64TestParams.OutWidth) - 1
+  private val BMask: BigInt = (BigInt(1) << Core64TestParams.BWidth) - 1
 
   private def schoolbookNegacyclic(a: Seq[BigInt], b: Seq[BigInt]): Seq[BigInt] = {
     require(a.length == N)
@@ -73,7 +98,7 @@ class core64Test extends AnyFlatSpec with ChiselScalatestTester {
   behavior of "core64"
 
   it should "match the negacyclic software reference" in {
-    test(new core64) { dut =>
+    test(Core64TestParams.dut) { dut =>
       dut.clock.setTimeout(0)
 
       runCase(dut, "all_zero", Seq.fill(N)(BigInt(0)), Seq.fill(N)(BigInt(0)))
@@ -81,15 +106,15 @@ class core64Test extends AnyFlatSpec with ChiselScalatestTester {
       runCase(
         dut,
         "alternating",
-        Seq.tabulate(N)(i => if (i % 2 == 0) BigInt("ffffff", 16) else BigInt(0)),
-        Seq.tabulate(N)(i => if (i % 2 == 0) BigInt("ff", 16) else BigInt(0))
+        Seq.tabulate(N)(i => if (i % 2 == 0) QMask else BigInt(0)),
+        Seq.tabulate(N)(i => if (i % 2 == 0) BMask else BigInt(0))
       )
       runCase(dut, "maximum", Seq.fill(N)(QMask), Seq.fill(N)(BMask))
 
       val rand = new Random(64)
       for (trial <- 0 until 10) {
-        val a = Seq.fill(N)(BigInt(24, rand))
-        val b = Seq.fill(N)(BigInt(8, rand))
+        val a = Seq.fill(N)(BigInt(Core64TestParams.OutWidth, rand))
+        val b = Seq.fill(N)(BigInt(Core64TestParams.BWidth, rand))
         runCase(dut, s"random_$trial", a, b)
       }
     }
