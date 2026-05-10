@@ -1,4 +1,4 @@
-package poly_mult
+/* package poly_mult
 
 import chisel3._
 import chiseltest._
@@ -144,3 +144,4 @@ class DotTest extends AnyFlatSpec with ChiselScalatestTester {
     }
   }*/
 }
+ */

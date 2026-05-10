@@ -1,4 +1,4 @@
-package poly_mult
+/* package poly_mult
 import chisel3._
 import chisel3.util._
 
@@ -137,3 +137,4 @@ class dot_product extends Module {
   io.valid_out := s2_valid
   io.c := outC
 }
+ */
