@@ -2,24 +2,29 @@ package core
 import chisel3._
 import chisel3.util._
 class core64(
+    k=3,  //top_Module需要的分解层数
     aWidth: Int,
     bWidth: Int,
     evalGrowth:Int=4,
     inteGrowth:Int=3,
+    aEvalWidth:Int=(aWidth+inteGrowth*k),
+    bEvalWidth:Int=(bWidth+evalGrowth*k+1),
+    InteWidth:Int=cWidth+inteGrowth,
+    cWidth:Int=aWidth
 ) extends Module {
   val io = IO(new Bundle {
     val valid_in = Input(Bool())
     val a = Input(Vec(64, UInt(aWidth.W)))
     val b = Input(Vec(64, UInt(bWidth.W)))
     val valid_out = Output(Bool())
-    val c = Output(Vec(64, UInt(aWidth.W)))
+    val c = Output(Vec(64, UInt(cWidth.W)))
   })
 
-  val A_eval = Wire(Vec(7 * 16, UInt((aWidth + inteGrowth).W)))
-  val B_eval = Wire(Vec(7 * 16, UInt((bWidth + evalGrowth).W)))
+  val A_eval = Wire(Vec(7 * 16, UInt(aEvalWidth.W)))
+  val B_eval = Wire(Vec(7 * 16, UInt(bEvalWidth.W)))
   for (j <- 0 until 16) {
-  val evalA = Module(new Eval(inWidth = aWidth, outWidth = (aWidth+inteGrowth)))
-  val evalB = Module(new Eval(inWidth = bWidth, outWidth = (bWidth+evalGrowth)))
+  val evalA = Module(new Eval(inWidth = aWidth, outWidth = aEvalWidth))
+  val evalB = Module(new Eval(inWidth = bWidth, outWidth = bEvalWidth))
     for (i <- 0 until 4) {
       evalA.io.in(i) := io.a(j * 4 + i)
       evalB.io.in(i) := io.b(j * 4 + i)
@@ -31,7 +36,7 @@ class core64(
   }
 
   val core16 = Seq.fill(7)(
-    Module(new core16(aWidth = (aWidth+inteGrowth),bWidth = (bWidth+evalGrowth)))
+    Module(new core16(aWidth = aEvalWidth,bWidth = bEvalWidth,cWidth = InteWidth))
     )
   for (pt <- 0 until 7) {
     core16(pt).io.valid_in := io.valid_in
@@ -42,7 +47,7 @@ class core64(
   }
 
   val core_valid = VecInit(core16.map(_.io.valid_out)).asUInt.andR
-  val core_c_wire = Wire(Vec(7 * 16, UInt((aWidth+inteGrowth).W)))
+  val core_c_wire = Wire(Vec(7 * 16, UInt(InteWidth.W)))
   for (pt <- 0 until 7) {
     for (i <- 0 until 16) {
       core_c_wire(pt * 16 + i) := core16(pt).io.c(i)
@@ -54,8 +59,8 @@ class core64(
 
   val interp = Module(new Interpolation(
     stride = 16, 
-    inWidth = (aWidth+inteGrowth), 
-    outWidth = aWidth))
+    inWidth = InteWidth, 
+    outWidth = cWidth))
     
   interp.io.valid_in := s_valid
   interp.io.w := s_w

@@ -2,10 +2,15 @@ package core
 import chisel3._
 import chisel3.util._
 class core4(
+    k=3,
     aWidth: Int,
     bWidth: Int,
-    evalGrowth:Int=5,
+    evalGrowth:Int=4,
     inteGrowth:Int=3,
+    aEvalWidth:Int=aWidth,
+    bEvalWidth:Int=bWidth,
+    InteWidth:Int=cWidth+inteGrowth,
+    cWidth:Int
 ) extends Module {
   val io = IO(new Bundle {
     val valid_in = Input(Bool())
@@ -15,12 +20,12 @@ class core4(
     val c = Output(Vec(4, UInt(aWidth.W)))
   })
 
-  val evalA = Module(new Eval(inWidth = aWidth, outWidth = (aWidth+inteGrowth)))
-  val evalB = Module(new Eval(inWidth = bWidth, outWidth = (bWidth+evalGrowth)))
+  val evalA = Module(new Eval(inWidth = aWidth, outWidth = aEvalWidth))
+  val evalB = Module(new Eval(inWidth = bWidth, outWidth = bEvalWidth))
   evalA.io.in := io.a
   evalB.io.in := io.b
 
-  val w = Wire(Vec(7, UInt((aWidth+inteGrowth).W)))
+  val w = Wire(Vec(7, UInt(InteWidth.W)))
   for (i <- 0 until 7) {
     val aSigned = evalA.io.out(i).asSInt
     //val bSigned = Cat(evalB.io.out(i)((bWidth+evalGrowth)-1), evalB.io.out(i)).asSInt
@@ -33,8 +38,8 @@ class core4(
 
   val interp = Module(new Interpolation(
   stride = 1, 
-  inWidth = (aWidth+inteGrowth), 
-  outWidth = aWidth))
+  inWidth = InteWidth,  
+  outWidth = cWidth))
 
   interp.io.valid_in := s_valid
   interp.io.w := s_w

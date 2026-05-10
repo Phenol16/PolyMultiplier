@@ -2,10 +2,15 @@ package core
 import chisel3._
 import chisel3.util._
 class core16(
+    k=3,
     aWidth: Int,
     bWidth: Int,
     evalGrowth:Int=4,
     inteGrowth:Int=3,
+    aEvalWidth:Int=aWidth,
+    bEvalWidth:Int=bWidth,
+    InteWidth:Int=cWidth+inteGrowth,
+    cWidth:Int
 ) extends Module {
   val io = IO(new Bundle {
     val valid_in = Input(Bool())
@@ -15,11 +20,11 @@ class core16(
     val c = Output(Vec(16, UInt(aWidth.W)))
   })
 
-    val A_eval = Wire(Vec(7 * 4, UInt((aWidth + inteGrowth).W)))
-    val B_eval = Wire(Vec(7 * 4, UInt((bWidth + evalGrowth).W)))
+    val A_eval = Wire(Vec(7 * 4, UInt(aEvalWidth.W)))
+    val B_eval = Wire(Vec(7 * 4, UInt(bEvalWidth.W)))
     for (j <- 0 until 4) {
-  val evalA = Module(new Eval(inWidth = aWidth, outWidth = (aWidth+inteGrowth)))
-  val evalB = Module(new Eval(inWidth = bWidth, outWidth = (bWidth+evalGrowth)))
+  val evalA = Module(new Eval(inWidth = aWidth, outWidth = aEvalWidth))
+  val evalB = Module(new Eval(inWidth = bWidth, outWidth = bEvalWidth))
 
     for (i <- 0 until 4) {
       evalA.io.in(i) := io.a(j * 4 + i)
@@ -32,7 +37,7 @@ class core16(
   }
 
   val core4 = Seq.fill(7)(
-    Module(new core4(aWidth = (aWidth+inteGrowth),bWidth = (bWidth+evalGrowth)))
+    Module(new core4(aWidth = aEvalWidth,bWidth = bEvalWidth,cWidth = InteWidth))
     )
   for (pt <- 0 until 7) {
     core4(pt).io.valid_in := io.valid_in
@@ -42,7 +47,7 @@ class core16(
     }
   }
   val core_valid = VecInit(core4.map(_.io.valid_out)).asUInt.andR
-  val core_c_wire = Wire(Vec(7 * 4, UInt((aWidth+inteGrowth).W)))
+  val core_c_wire = Wire(Vec(7 * 4, UInt(InteWidth.W)))
   for (pt <- 0 until 7) {
     for (i <- 0 until 4) {
       core_c_wire(pt * 4 + i) := core4(pt).io.c(i)
@@ -53,8 +58,8 @@ class core16(
 
   val interp = Module(new Interpolation(
     stride = 4, 
-    inWidth = (aWidth+inteGrowth), 
-    outWidth = aWidth))
+    inWidth = InteWidth, 
+    outWidth = cWidth))
 
   interp.io.valid_in := s_valid
   interp.io.w := s_w
