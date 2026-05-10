@@ -2,7 +2,7 @@ package core
 import chisel3._
 import chisel3.util._
 class core4(
-    t:Int=0,  //是否为top_Module
+    t:Int=1,  //是否为top_Module
     k:Int=1,
     sign:Int=1,
     aWidth: Int,
@@ -32,7 +32,6 @@ class core4(
   val w = Wire(Vec(7, UInt(InteWidth.W)))
   for (i <- 0 until 7) {
     val aSigned = evalA.io.out(i).asSInt
-    //val bSigned = Cat(evalB.io.out(i)((bWidth+evalGrowth)-1), evalB.io.out(i)).asSInt
     val bSigned = evalB.io.out(i).asSInt
     w(i) := (aSigned *bSigned).asUInt
   }

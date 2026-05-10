@@ -50,20 +50,20 @@ object generator extends App {
    * 用法：
    *
    * 1. 生成全部 4/16/64：
-   *    sbt "runMain poly_mult.generator"
+   *    sbt "runMain core.generator"
    *
    * 2. 只生成 4 阶：
-   *    sbt "runMain poly_mult.generator 4"
+   *    sbt "runMain core.generator 4"
    *
    * 3. 只生成 16 阶：
-   *    sbt "runMain poly_mult.generator 16"
+   *    sbt "runMain core.generator 16"
    *
    * 4. 只生成 64 阶：
-   *    sbt "runMain poly_mult.generator 64"
+   *    sbt "runMain core.generator 64"
    *
    * 5. 生成多个指定阶数：
-   *    sbt "runMain poly_mult.generator 4 64"
-   *    sbt "runMain poly_mult.generator 4 16 64"
+   *    sbt "runMain core.generator 4 64"
+   *    sbt "runMain core.generator 4 16 64"
    */
 
   val selectedNs: Seq[Int] =
@@ -86,7 +86,7 @@ object generator extends App {
   } {
     val cW = aW
     val name = s"core${n}_a${aW}_b${bW}_c${cW}"
-    val targetDir = s"generated/$name"
+    val targetDir = s"generated/core${n}/$name"
 
     println(s"Generating $name into $targetDir")
 
