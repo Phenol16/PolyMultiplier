@@ -15,15 +15,16 @@ class core4(
     val c = Output(Vec(4, UInt(aWidth.W)))
   })
 
-  val evalA = Module(new Eval(inWidth = aWidth, outWidth = aWidth+inteGrowth))
-  val evalB = Module(new Eval(inWidth = bWidth, outWidth = bWidth+evalGrowth))
+  val evalA = Module(new Eval(inWidth = aWidth, outWidth = (aWidth+inteGrowth)))
+  val evalB = Module(new Eval(inWidth = bWidth, outWidth = (bWidth+evalGrowth)))
   evalA.io.in := io.a
   evalB.io.in := io.b
 
-  val w = Wire(Vec(7, UInt(aWidth+inteGrowth.W)))
+  val w = Wire(Vec(7, UInt((aWidth+inteGrowth).W)))
   for (i <- 0 until 7) {
-    val bSigned = Cat(evalB.io.out(i)(bWidth+evalGrowth-1), evalB.io.out(i)).asSInt
-    w(i) := (evalA.io.out(i).asSInt * bw).asUInt
+    val aSigned = Cat(evalA.io.out(i)((aWidth+inteGrowth)-1), evalA.io.out(i)).asSInt
+    val bSigned = Cat(evalB.io.out(i)((bWidth+evalGrowth)-1), evalB.io.out(i)).asSInt
+    w(i) := (aSigned *bSigned).asUInt
   }
 
   val s_valid = RegNext(io.valid_in, false.B)
@@ -31,7 +32,7 @@ class core4(
 
   val interp = Module(new Interpolation(
   stride = 1, 
-  inWidth = aWidth+inteGrowth, 
+  inWidth = (aWidth+inteGrowth), 
   outWidth = aWidth))
 
   interp.io.valid_in := s_valid

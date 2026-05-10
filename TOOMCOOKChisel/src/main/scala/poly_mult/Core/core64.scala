@@ -15,14 +15,14 @@ class core64(
     val c = Output(Vec(64, UInt(aWidth.W)))
   })
 
-  val A_eval = Wire(Vec(7 * 16, UInt(aEvalWidth.W)))
-  val B_eval = Wire(Vec(7 * 16, UInt(bEvalWidth.W)))
+  val A_eval = Wire(Vec(7 * 16, UInt((aWidth + inteGrowth).W)))
+  val B_eval = Wire(Vec(7 * 16, UInt((bWidth + evalGrowth).W)))
   for (j <- 0 until 16) {
-  val evalA = Module(new Eval(inWidth = aWidth, outWidth = aWidth+inteGrowth))
-  val evalB = Module(new Eval(inWidth = bWidth, outWidth = bWidth+evalGrowth))
+  val evalA = Module(new Eval(inWidth = aWidth, outWidth = (aWidth+inteGrowth)))
+  val evalB = Module(new Eval(inWidth = bWidth, outWidth = (bWidth+evalGrowth)))
     for (i <- 0 until 4) {
-      evalA.io.in(i) := io.a(j * 16 + i)
-      evalB.io.in(i) := io.b(j * 16 + i)
+      evalA.io.in(i) := io.a(j * 4 + i)
+      evalB.io.in(i) := io.b(j * 4 + i)
     }
     for (pt <- 0 until 7) {
       A_eval(pt * 16 + j) := evalA.io.out(pt)
@@ -31,7 +31,7 @@ class core64(
   }
 
   val core16 = Seq.fill(7)(
-    Module(new core16(aWidth = aWidth+inteGrowth,bWidth = bWidth+evalGrowth))
+    Module(new core16(aWidth = (aWidth+inteGrowth),bWidth = (bWidth+evalGrowth)))
     )
   for (pt <- 0 until 7) {
     core16(pt).io.valid_in := io.valid_in
@@ -42,7 +42,7 @@ class core64(
   }
 
   val core_valid = VecInit(core16.map(_.io.valid_out)).asUInt.andR
-  val core_c_wire = Wire(Vec(7 * 16, UInt(aWidth+inteGrowth.W)))
+  val core_c_wire = Wire(Vec(7 * 16, UInt((aWidth+inteGrowth).W)))
   for (pt <- 0 until 7) {
     for (i <- 0 until 16) {
       core_c_wire(pt * 16 + i) := core16(pt).io.c(i)
@@ -54,7 +54,7 @@ class core64(
 
   val interp = Module(new Interpolation(
     stride = 16, 
-    inWidth = aWidth+inteGrowth, 
+    inWidth = (aWidth+inteGrowth), 
     outWidth = aWidth))
     
   interp.io.valid_in := s_valid
