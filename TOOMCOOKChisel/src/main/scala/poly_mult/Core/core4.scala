@@ -4,8 +4,8 @@ import chisel3.util._
 class core4(
     aWidth: Int,
     bWidth: Int,
-    evalGrowth:Int=3,
-    inteGrowth:Int=4,
+    evalGrowth:Int=4,
+    inteGrowth:Int=3,
 ) extends Module {
   val io = IO(new Bundle {
     val valid_in = Input(Bool())
@@ -22,7 +22,7 @@ class core4(
 
   val w = Wire(Vec(7, UInt((aWidth+inteGrowth).W)))
   for (i <- 0 until 7) {
-    val aSigned = Cat(evalA.io.out(i)((aWidth+inteGrowth)-1), evalA.io.out(i)).asSInt
+    val aSigned = evalA.io.out(i).asSInt
     val bSigned = Cat(evalB.io.out(i)((bWidth+evalGrowth)-1), evalB.io.out(i)).asSInt
     w(i) := (aSigned *bSigned).asUInt
   }

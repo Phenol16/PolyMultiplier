@@ -37,10 +37,10 @@ class InterpolationComb(
     val c = Output(Vec(4 * stride, UInt(outWidth.W)))
   })
 
-  private val inv3 = MagicNumber.inv3(outWidth)
-  private val inv9 = MagicNumber.inv9(inWidth-2)
-  private val inv15 = MagicNumber.inv15(inWidth-2)
 
+private val inv3  = MagicNumber.inv3(outWidth).U(outWidth.W)
+private val inv9  = MagicNumber.inv9(inWidth - 2).U((inWidth - 2).W)
+private val inv15 = MagicNumber.inv15(inWidth - 2).U((inWidth - 2).W)
   val cRaw = Wire(Vec(4 * stride, UInt(outWidth.W)))
   val prevR0 = Wire(Vec(stride + 1, UInt(outWidth.W)))
   val prevR1 = Wire(Vec(stride + 1, UInt(outWidth.W)))
@@ -70,15 +70,15 @@ class InterpolationComb(
     val r1c = ParaMath.mask(r1b + r2b + (r2b << 2) + (r2b << 3) + (r2b << 5), inWidth)
 
     val r4d = ParaMath.mask(
-      ParaMath.mask(ParaMath.mask(r4b - (r2b << 3), inWidth) >> 3, inWidth) * inv3.U,
+      ParaMath.mask(ParaMath.mask(r4b - (r2b << 3), inWidth) >> 3, inWidth) * inv3,
       outWidth
     )
     val r5c = ParaMath.mask(
-      ParaMath.mask((r5a + r1c) >> 1, inWidth) * inv15.U,
+      ParaMath.mask((r5a + r1c) >> 1, inWidth) * inv15,
       inWidth-2
     )
     val r1e = ParaMath.mask(
-      ParaMath.mask(ParaMath.mask(r1c + (r3a << 4), inWidth) >> 1, inWidth) * inv9.U,
+      ParaMath.mask(ParaMath.mask(r1c + (r3a << 4), inWidth) >> 1, inWidth) * inv9,
       inWidth-2
     )
 

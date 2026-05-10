@@ -4,8 +4,8 @@ import chisel3.util._
 class core16(
     aWidth: Int,
     bWidth: Int,
-    evalGrowth:Int=3,
-    inteGrowth:Int=4,
+    evalGrowth:Int=4,
+    inteGrowth:Int=3,
 ) extends Module {
   val io = IO(new Bundle {
     val valid_in = Input(Bool())
