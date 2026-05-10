@@ -15,8 +15,8 @@ class core16(
     val c = Output(Vec(16, UInt(aWidth.W)))
   })
 
-    val A_eval = Wire(Vec(7 * 4, UInt(aEvalWidth.W)))
-    val B_eval = Wire(Vec(7 * 4, UInt(bEvalWidth.W)))
+    val A_eval = Wire(Vec(7 * 4, UInt((aWidth + inteGrowth).W)))
+    val B_eval = Wire(Vec(7 * 4, UInt((bWidth + evalGrowth).W)))
     for (j <- 0 until 4) {
   val evalA = Module(new Eval(inWidth = aWidth, outWidth = aWidth+inteGrowth))
   val evalB = Module(new Eval(inWidth = bWidth, outWidth = bWidth+evalGrowth))
