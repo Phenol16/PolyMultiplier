@@ -4,7 +4,7 @@ import chisel3.util._
 class core4(
     t:Int=0,  //是否为top_Module
     k:Int=1,
-    sign:Int=1
+    sign:Int=1,
     aWidth: Int,
     bWidth: Int,
     evalGrowth:Int=4,

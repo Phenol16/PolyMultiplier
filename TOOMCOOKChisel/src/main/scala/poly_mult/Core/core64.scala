@@ -2,7 +2,7 @@ package core
 import chisel3._
 import chisel3.util._
 class core64(
-    t:Int=0,  //是否为top_Module
+    t:Int=1,  //是否为top_Module
     k:Int=3,  //top_Module需要的分解层数
     sign:Int=1,
     aWidth: Int,
