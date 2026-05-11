@@ -17,11 +17,8 @@ class Interpolation(
   interp.io.w := io.w
 
   val validReg = RegNext(io.valid_in, false.B)
-  val cReg = RegInit(VecInit(Seq.fill(4 * stride)(0.U(outWidth.W))))
-
-  when (io.valid_in) {
-    cReg := interp.io.c
-  }
+  val cReg = Reg(Vec(4 * stride, UInt(outWidth.W)))
+  cReg := interp.io.c
 
   io.valid_out := validReg
   io.c := cReg

@@ -8,7 +8,7 @@ import scala.util.Random
 
 object Core4TestParams {
   val AWidth = 24
-  val BWidth = 8
+  val BWidth = 10
 
   def dut: core4 = new core4(
     aWidth = AWidth,
