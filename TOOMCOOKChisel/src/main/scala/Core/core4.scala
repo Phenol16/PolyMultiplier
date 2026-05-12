@@ -2,7 +2,7 @@ package core
 import chisel3._
 import chisel3.util._
 class core4(
-    t:Int=1,  //是否为top_Module
+    t:Int=0,  //是否为top_Module
     k:Int=1,
     sign:Int=1,
     aWidth: Int,
