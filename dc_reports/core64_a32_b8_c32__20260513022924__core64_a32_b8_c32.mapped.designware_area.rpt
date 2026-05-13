@@ -1,0 +1,157 @@
+ 
+****************************************
+Report : area
+Design : core64_a32_b8_c32
+Version: O-2018.06-SP5
+Date   : Wed May 13 05:01:11 2026
+****************************************
+
+Library(s) Used:
+
+    tcbn28hpcplusbwp40p140lvtssg0p81vm40c_ccs (File: /export1/Library/TN28HPC+/STD_CELL_ext/track9_200824/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp40p140lvt_180a/tcbn28hpcplusbwp40p140lvtssg0p81vm40c_ccs.db)
+    tcbn28hpcplusbwp40p140ssg0p81vm40c_ccs (File: /export1/Library/TN28HPC+/STD_CELL_ext/track9_200824/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp40p140_180a/tcbn28hpcplusbwp40p140ssg0p81vm40c_ccs.db)
+    tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs (File: /export1/Library/TN28HPC+/STD_CELL_ext/track9_200824/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp40p140hvt_180a/tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs.db)
+
+Number of ports:                       365514
+Number of nets:                       1135041
+Number of cells:                       576400
+Number of combinational cells:         530462
+Number of sequential cells:             38550
+Number of macros/black boxes:               0
+Number of buf/inv:                      67731
+Number of references:                      45
+
+Combinational area:             680311.663259
+Buf/Inv area:                    18402.930140
+Noncombinational area:           77707.225246
+Macro/Black Box area:                0.000000
+Net Interconnect area:      undefined  (Wire load has zero net area)
+
+Total cell area:                758018.888506
+Total area:                 undefined
+
+Area of detected synthetic parts
+--------------------------------
+                                                     Perc. of
+  Module                Implem.  Count         Area cell area
+  --------------------- -------  ----- ------------ ---------
+  DP_OP_106J20_122_5359     str     28   77658.7881     10.2%
+  DP_OP_106J21_122_4710     str     21   56270.9666      7.4%
+  DP_OP_1681J3_122_8765     str      1   34532.5664      4.6%
+  DP_OP_421J11_122_5960     str      4   42392.2256      5.6%
+  DP_OP_421J12_122_1083     str      3   30304.8623      4.0%
+  DP_OP_52J19_122_1625      str     16    3386.8782      0.4%
+  DP_OP_52J22_125_102       str     16     942.3539      0.1%
+  DP_OP_53J19_123_9524      str     16    4555.9053      0.6%
+  DP_OP_53J21_123_9060      str     41   10114.6435      1.3%
+  DP_OP_53J22_126_6763      str     16    1250.9275      0.2%
+  DP_OP_53J27_122_4708      str     37    4058.9628      0.5%
+  DP_OP_54J15_122_2586      str      4     967.1754      0.1%
+  DP_OP_54J15_125_5131      str      1      57.8340      0.0%
+  DP_OP_54J16_122_4678      str      4     967.1754      0.1%
+  DP_OP_54J16_125_1287      str      1      58.0860      0.0%
+  DP_OP_54J17_122_576       str      1     246.0779      0.0%
+  DP_OP_54J17_125_2840      str      1     104.3280      0.0%
+  DP_OP_54J17_128_8975      str      1      59.5980      0.0%
+  DP_OP_54J18_122_3087      str      2     449.0638      0.1%
+  DP_OP_54J18_125_9213      str      1      59.0940      0.0%
+  DP_OP_54J19_124_6299      str     16    4666.0291      0.6%
+  DP_OP_54J19_125_2881      str      4     234.2340      0.0%
+  DP_OP_54J20_126_5405      str      4     965.1594      0.1%
+  DP_OP_54J20_129_194       str      4     290.3039      0.0%
+  DP_OP_54J21_124_1586      str     41   14459.4985      1.9%
+  DP_OP_54J21_126_7052      str      4     965.1594      0.1%
+  DP_OP_54J21_129_7149      str      4     231.7140      0.0%
+  DP_OP_54J22_122_3502      str      4     898.1275      0.1%
+  DP_OP_54J22_127_2528      str     16    1341.5217      0.2%
+  DP_OP_54J23_122_53        str      1     116.2980      0.0%
+  DP_OP_54J23_125_7977      str      4     376.8659      0.0%
+  DP_OP_54J24_122_1008      str      1     105.7140      0.0%
+  DP_OP_54J24_125_1053      str      4     373.3379      0.0%
+  DP_OP_54J25_122_2735      str      2     230.7059      0.0%
+  DP_OP_54J25_125_8201      str      4     360.8639      0.0%
+  DP_OP_54J26_125_5295      str      4     361.6199      0.0%
+  DP_OP_54J27_123_8292      str     37    6414.1531      0.8%
+  DP_OP_54J27_125_6879      str      2     142.6320      0.0%
+  DP_OP_54J28_122_5448      str      1     211.6799      0.0%
+  DP_OP_54J29_122_9544      str      1     211.6799      0.0%
+  DP_OP_54J30_122_1352      str      1     211.6799      0.0%
+  DP_OP_54J31_122_7223      str      1     211.6799      0.0%
+  DP_OP_54J32_122_7900      str      4     846.7195      0.1%
+  DP_OP_54J33_122_3084      str      4     846.7195      0.1%
+  DP_OP_55J15_123_4716      str      4    1317.4551      0.2%
+  DP_OP_55J15_126_393       str      1      80.3880      0.0%
+  DP_OP_55J16_123_8822      str      4    1317.4551      0.2%
+  DP_OP_55J16_126_1161      str      1      76.9860      0.0%
+  DP_OP_55J17_123_1642      str      1     346.2478      0.0%
+  DP_OP_55J17_126_7954      str      1     137.5919      0.0%
+  DP_OP_55J17_129_8568      str      1      82.2780      0.0%
+  DP_OP_55J18_123_1087      str      2     608.0756      0.1%
+  DP_OP_55J18_126_9848      str      1      79.1280      0.0%
+  DP_OP_55J19_126_9882      str      4     317.6459      0.0%
+  DP_OP_55J20_123_2333      str      1     247.0858      0.0%
+  DP_OP_55J20_127_5712      str      4    1327.5351      0.2%
+  DP_OP_55J20_130_6727      str      4     387.8279      0.1%
+  DP_OP_55J21_125_1337      str     41   13976.9189      1.8%
+  DP_OP_55J21_127_5900      str      4    1327.5351      0.2%
+  DP_OP_55J21_130_8220      str      4     317.6459      0.0%
+  DP_OP_55J22_123_4847      str      4    1216.1512      0.2%
+  DP_OP_55J23_123_8509      str      1     163.4219      0.0%
+  DP_OP_55J23_126_7780      str      4     504.1259      0.1%
+  DP_OP_55J24_123_2382      str      1     139.7339      0.0%
+  DP_OP_55J24_126_2451      str      4     490.1398      0.1%
+  DP_OP_55J25_123_575       str      2     329.1118      0.0%
+  DP_OP_55J25_126_1455      str      4     481.3198      0.1%
+  DP_OP_55J26_122_736       str      1     118.6919      0.0%
+  DP_OP_55J26_126_6412      str      4     489.8878      0.1%
+  DP_OP_55J27_124_8043      str     37    6001.7554      0.8%
+  DP_OP_55J27_126_3031      str      2     188.3699      0.0%
+  DP_OP_55J28_123_9770      str      1     287.1538      0.0%
+  DP_OP_55J29_123_7015      str      1     287.1538      0.0%
+  DP_OP_55J30_123_2558      str      1     287.1538      0.0%
+  DP_OP_55J31_123_5313      str      1     287.1538      0.0%
+  DP_OP_55J32_123_8116      str      4    1148.6154      0.2%
+  DP_OP_55J33_123_6116      str      4    1148.6154      0.2%
+  DP_OP_56J15_124_4901      str      4    1338.1191      0.2%
+  DP_OP_56J15_127_4961      str      1      84.4200      0.0%
+  DP_OP_56J16_124_406       str      4    1338.1191      0.2%
+  DP_OP_56J16_127_9194      str      1      83.7900      0.0%
+  DP_OP_56J17_124_4708      str      1     340.8298      0.0%
+  DP_OP_56J17_127_8379      str      1     143.7659      0.0%
+  DP_OP_56J17_130_7693      str      1      85.9320      0.0%
+  DP_OP_56J18_124_3086      str      2     621.3055      0.1%
+  DP_OP_56J18_127_3460      str      1      84.4200      0.0%
+  DP_OP_56J19_127_2673      str      4     336.4199      0.0%
+  DP_OP_56J20_124_438       str      1     346.8778      0.0%
+  DP_OP_56J20_128_4935      str      4    1324.0071      0.2%
+  DP_OP_56J20_131_4045      str      4     411.1379      0.1%
+  DP_OP_56J21_128_8178      str      4    1324.0071      0.2%
+  DP_OP_56J21_131_9312      str      4     336.9239      0.0%
+  DP_OP_56J22_124_7899      str      4    1240.0912      0.2%
+  DP_OP_56J23_124_9233      str      1     166.0679      0.0%
+  DP_OP_56J23_127_5098      str      4     501.6059      0.1%
+  DP_OP_56J24_124_6117      str      1     139.1039      0.0%
+  DP_OP_56J24_127_8683      str      4     487.1158      0.1%
+  DP_OP_56J25_124_2549      str      2     325.3319      0.0%
+  DP_OP_56J25_127_8740      str      4     501.7318      0.1%
+  DP_OP_56J26_123_5121      str      1     171.8639      0.0%
+  DP_OP_56J26_127_6732      str      4     516.5999      0.1%
+  DP_OP_56J27_127_9263      str      2     199.8359      0.0%
+  DP_OP_56J28_124_9585      str      1     293.0758      0.0%
+  DP_OP_56J29_124_6830      str      1     293.0758      0.0%
+  DP_OP_56J30_124_1320      str      1     293.0758      0.0%
+  DP_OP_56J31_124_4075      str      1     293.0758      0.0%
+  DP_OP_56J32_124_5825      str      4    1172.3032      0.2%
+  DP_OP_56J33_124_9559      str      4    1172.3032      0.2%
+  DP_OP_57J20_125_7650      str      1     339.8218      0.0%
+  DP_OP_57J26_124_6823      str      1     165.8159      0.0%
+  DW_mult_tc            apparch    274  265901.0620     35.1%
+  DW_mult_uns           apparch     69   54936.5238      7.2%
+  --------------------- -------  ----- ------------ ---------
+  DP_OP Subtotal:                  615  355499.9355     46.9%
+  Total:                           958  676337.5213     89.2%
+
+Subtotal of datapath(DP_OP) cell area:  355499.9355  46.9%  
+Total synthetic cell area:              676337.5213  89.2%  
+
+1

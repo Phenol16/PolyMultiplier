@@ -1,0 +1,18 @@
+ 
+****************************************
+Report : multibit
+Design : core16_a24_b12_c24
+Version: O-2018.06-SP5
+Date   : Tue May 12 03:45:58 2026
+****************************************
+
+Attributes:
+    b - black box (unknown)
+    h - hierarchical
+    n - noncombinational
+    r - removable
+    u - contains unmapped logic
+
+
+Total 0 Multibit Components
+1

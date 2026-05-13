@@ -1,0 +1,99 @@
+ 
+****************************************
+Report : power
+        -hier
+        -analysis_effort low
+Design : core4_a36_b10_c36
+Version: O-2018.06-SP5
+Date   : Tue May 12 07:57:14 2026
+****************************************
+
+
+Library(s) Used:
+
+    tcbn28hpcplusbwp40p140lvtssg0p81vm40c_ccs (File: /export1/Library/TN28HPC+/STD_CELL_ext/track9_200824/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp40p140lvt_180a/tcbn28hpcplusbwp40p140lvtssg0p81vm40c_ccs.db)
+    tcbn28hpcplusbwp40p140ssg0p81vm40c_ccs (File: /export1/Library/TN28HPC+/STD_CELL_ext/track9_200824/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp40p140_180a/tcbn28hpcplusbwp40p140ssg0p81vm40c_ccs.db)
+    tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs (File: /export1/Library/TN28HPC+/STD_CELL_ext/track9_200824/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp40p140hvt_180a/tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs.db)
+
+
+Operating Conditions: ssg0p81vm40c   Library: tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+Wire Load Model Mode: segmented
+
+Design        Wire Load Model            Library
+------------------------------------------------
+core4_a36_b10_c36      ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+core4_a36_b10_c36_DW_mult_uns_J2_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+core4_a36_b10_c36_DW_mult_tc_J2_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+core4_a36_b10_c36_DW_mult_tc_J2_1
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+core4_a36_b10_c36_DW_mult_tc_J2_2
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+core4_a36_b10_c36_DW_mult_uns_J2_1
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+core4_a36_b10_c36_DW_mult_tc_J2_3
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+core4_a36_b10_c36_DW_mult_uns_J2_2
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+Eval_DP_OP_54J2_124_3435_J2_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+Eval_DP_OP_53J2_123_7384_J2_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+Eval_DP_OP_52J2_122_3307_J2_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+Eval_1_DP_OP_54J3_125_4915_J3_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+Eval_1_DP_OP_53J3_124_9506_J3_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+Eval_1_DP_OP_52J3_123_4539_J3_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+InterpolationComb_DP_OP_106J3_122_6288_J3_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+
+Global Operating Voltage = 0.81 
+Power-specific unit information :
+    Voltage Units = 1V
+    Capacitance Units = 1.000000pf
+    Time Units = 1ns
+    Dynamic Power Units = 1mW    (derived from V,C,T units)
+    Leakage Power Units = 1nW
+
+
+--------------------------------------------------------------------------------
+                                       Switch   Int      Leak     Total
+Hierarchy                              Power    Power    Power    Power    %
+--------------------------------------------------------------------------------
+core4_a36_b10_c36                         0.614    1.086  278.797    1.700 100.0
+  mult_x_1 (core4_a36_b10_c36_DW_mult_uns_J2_2)
+                                       1.76e-02 2.77e-02   16.432 4.53e-02   2.7
+  mult_x_2 (core4_a36_b10_c36_DW_mult_tc_J2_3)
+                                       5.61e-02 8.06e-02   21.028    0.137   8.0
+  mult_x_3 (core4_a36_b10_c36_DW_mult_uns_J2_1)
+                                       5.56e-02 8.00e-02   20.885    0.136   8.0
+  mult_x_4 (core4_a36_b10_c36_DW_mult_tc_J2_2)
+                                       5.14e-02 7.49e-02   20.227    0.126   7.4
+  mult_x_5 (core4_a36_b10_c36_DW_mult_tc_J2_1)
+                                       6.06e-02 8.68e-02   24.404    0.147   8.7
+  mult_x_6 (core4_a36_b10_c36_DW_mult_tc_J2_0)
+                                       5.91e-02 8.47e-02   24.361    0.144   8.5
+  mult_x_7 (core4_a36_b10_c36_DW_mult_uns_J2_0)
+                                       1.77e-02 2.79e-02   16.433 4.56e-02   2.7
+  interp (Interpolation)                  0.169    0.333   81.160    0.502  29.5
+    interp (InterpolationComb)            0.169    0.219   69.585    0.388  22.8
+  evalB (Eval_1)                       2.07e-02 1.54e-02    8.078 3.61e-02   2.1
+    DP_OP_52J3_123_4539 (Eval_1_DP_OP_52J3_123_4539_J3_0)
+                                       4.08e-03 4.12e-03    2.309 8.21e-03   0.5
+    DP_OP_53J3_124_9506 (Eval_1_DP_OP_53J3_124_9506_J3_0)
+                                       7.53e-03 5.48e-03    2.577 1.30e-02   0.8
+    DP_OP_54J3_125_4915 (Eval_1_DP_OP_54J3_125_4915_J3_0)
+                                       7.80e-03 5.53e-03    2.912 1.33e-02   0.8
+  evalA (Eval)                         8.95e-02 5.61e-02   24.202    0.146   8.6
+    DP_OP_52J2_122_3307 (Eval_DP_OP_52J2_122_3307_J2_0)
+                                       1.75e-02 1.47e-02    6.318 3.21e-02   1.9
+    DP_OP_53J2_123_7384 (Eval_DP_OP_53J2_123_7384_J2_0)
+                                       3.43e-02 2.04e-02    8.415 5.47e-02   3.2
+    DP_OP_54J2_124_3435 (Eval_DP_OP_54J2_124_3435_J2_0)
+                                       3.38e-02 2.02e-02    8.610 5.40e-02   3.2
+1

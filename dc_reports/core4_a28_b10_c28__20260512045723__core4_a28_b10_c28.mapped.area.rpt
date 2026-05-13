@@ -1,0 +1,63 @@
+ 
+****************************************
+Report : area
+Design : core4_a28_b10_c28
+Version: O-2018.06-SP5
+Date   : Tue May 12 05:49:33 2026
+****************************************
+
+Library(s) Used:
+
+    tcbn28hpcplusbwp40p140lvtssg0p81vm40c_ccs (File: /export1/Library/TN28HPC+/STD_CELL_ext/track9_200824/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp40p140lvt_180a/tcbn28hpcplusbwp40p140lvtssg0p81vm40c_ccs.db)
+    tcbn28hpcplusbwp40p140ssg0p81vm40c_ccs (File: /export1/Library/TN28HPC+/STD_CELL_ext/track9_200824/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp40p140_180a/tcbn28hpcplusbwp40p140ssg0p81vm40c_ccs.db)
+    tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs (File: /export1/Library/TN28HPC+/STD_CELL_ext/track9_200824/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp40p140hvt_180a/tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs.db)
+
+Number of ports:                         3230
+Number of nets:                         10574
+Number of cells:                         5621
+Number of combinational cells:           5269
+Number of sequential cells:               328
+Number of macros/black boxes:               0
+Number of buf/inv:                        624
+Number of references:                      14
+
+Combinational area:               6504.497894
+Buf/Inv area:                      166.950002
+Noncombinational area:             661.248011
+Macro/Black Box area:                0.000000
+Net Interconnect area:      undefined  (Wire load has zero net area)
+
+Total cell area:                  7165.745904
+Total area:                 undefined
+
+Hierarchical area distribution
+------------------------------
+
+                                  Global cell area          Local cell area
+                                  ------------------  ---------------------------- 
+Hierarchical cell                 Absolute   Percent  Combi-     Noncombi-  Black-
+                                  Total      Total    national   national   boxes   Design
+--------------------------------  ---------  -------  ---------  ---------  ------  -------------------------------------------
+core4_a28_b10_c28                 7165.7459    100.0     1.0080   433.4400  0.0000  core4_a28_b10_c28
+evalA                              701.9460      9.8    22.0500     0.0000  0.0000  Eval
+evalA/DP_OP_52J2_123_5748          179.9280      2.5   179.9280     0.0000  0.0000  Eval_DP_OP_52J2_123_5748_J2_0
+evalA/DP_OP_53J2_124_6834          249.2280      3.5   249.2280     0.0000  0.0000  Eval_DP_OP_53J2_124_6834_J2_0
+evalA/DP_OP_54J2_125_4743          250.7400      3.5   250.7400     0.0000  0.0000  Eval_DP_OP_54J2_125_4743_J2_0
+evalB                              267.6240      3.7     9.7020     0.0000  0.0000  Eval_1
+evalB/DP_OP_52J3_122_4539           69.8040      1.0    69.8040     0.0000  0.0000  Eval_1_DP_OP_52J3_122_4539_J3_0
+evalB/DP_OP_53J3_123_9506           90.4680      1.3    90.4680     0.0000  0.0000  Eval_1_DP_OP_53J3_123_9506_J3_0
+evalB/DP_OP_54J3_124_4915           97.6500      1.4    97.6500     0.0000  0.0000  Eval_1_DP_OP_54J3_124_4915_J3_0
+interp                            2006.9280     28.0     0.7560   227.8080  0.0000  Interpolation
+interp/interp                     1778.3640     24.8     0.2520     0.0000  0.0000  InterpolationComb
+interp/interp/DP_OP_106J2_122_1947 1778.1120    24.8  1778.1120     0.0000  0.0000  InterpolationComb_DP_OP_106J2_122_1947_J2_0
+mult_x_1                           436.3380      6.1   436.3380     0.0000  0.0000  core4_a28_b10_c28_DW_mult_uns_J3_2
+mult_x_2                           551.3760      7.7   551.3760     0.0000  0.0000  core4_a28_b10_c28_DW_mult_tc_J3_3
+mult_x_3                           557.9280      7.8   557.9280     0.0000  0.0000  core4_a28_b10_c28_DW_mult_uns_J3_1
+mult_x_4                           540.2880      7.5   540.2880     0.0000  0.0000  core4_a28_b10_c28_DW_mult_tc_J3_2
+mult_x_5                           616.2660      8.6   616.2660     0.0000  0.0000  core4_a28_b10_c28_DW_mult_tc_J3_1
+mult_x_6                           616.2660      8.6   616.2660     0.0000  0.0000  core4_a28_b10_c28_DW_mult_tc_J3_0
+mult_x_7                           436.3380      6.1   436.3380     0.0000  0.0000  core4_a28_b10_c28_DW_mult_uns_J3_0
+--------------------------------  ---------  -------  ---------  ---------  ------  -------------------------------------------
+Total                                                 6504.4979   661.2480  0.0000
+
+1

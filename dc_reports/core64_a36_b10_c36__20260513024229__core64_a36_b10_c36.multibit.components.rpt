@@ -1,0 +1,18 @@
+ 
+****************************************
+Report : multibit
+Design : core64_a36_b10_c36
+Version: O-2018.06-SP5
+Date   : Wed May 13 02:44:53 2026
+****************************************
+
+Attributes:
+    b - black box (unknown)
+    h - hierarchical
+    n - noncombinational
+    r - removable
+    u - contains unmapped logic
+
+
+Total 0 Multibit Components
+1

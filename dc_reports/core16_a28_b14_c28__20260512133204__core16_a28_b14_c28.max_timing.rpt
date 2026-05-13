@@ -1,0 +1,427 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 3
+Design : core16_a28_b14_c28
+Version: O-2018.06-SP5
+Date   : Tue May 12 14:43:03 2026
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: ssg0p81vm40c   Library: tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+Wire Load Model Mode: segmented
+
+  Startpoint: io_b_12[2] (input port clocked by clk)
+  Endpoint: core4_3/s_w_4_reg_33_
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  core16_a28_b14_c28 ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_1_0_DP_OP_52J5_125_4593_J5_0_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_1_0_DP_OP_53J5_126_1321_J5_0_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_1_0_DP_OP_54J5_127_2501_J5_0_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_9_0_DP_OP_54J10_122_990_J10_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_9_0_DP_OP_55J10_123_6795_J10_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_9_0_DP_OP_56J10_124_568_J10_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_9_1_DP_OP_55J5_124_5235_J5_0_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_9_1_DP_OP_54J5_123_1582_J5_0_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_9_1_DP_OP_53J5_122_4467_J5_0_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_1_DW_mult_tc_J10_6_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_1_DW_mult_tc_J10_2_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  input external delay                                    0.50       0.50 f
+  io_b_12[2] (in)                                         0.00       0.50 f
+  evalB_3/io_in_0[2] (Eval_1_0)                           0.00       0.50 f
+  evalB_3/U2/ZN (INVD3BWP40P140LVT)                       0.00       0.50 r
+  evalB_3/U13/ZN (CKND0BWP40P140)                         0.08       0.59 f
+  evalB_3/DP_OP_53J5_126_1321/I2[2] (Eval_1_0_DP_OP_53J5_126_1321_J5_0_0)
+                                                          0.00       0.59 f
+  evalB_3/DP_OP_53J5_126_1321/U84/CO (FA1D1BWP40P140)     0.11       0.70 f
+  evalB_3/DP_OP_53J5_126_1321/U131/CO (FA1D0BWP40P140)
+                                                          0.07       0.77 f
+  evalB_3/DP_OP_53J5_126_1321/U132/CO (FA1D0BWP40P140)
+                                                          0.07       0.84 f
+  evalB_3/DP_OP_53J5_126_1321/U98/CO (FA1D1BWP40P140)     0.06       0.90 f
+  evalB_3/DP_OP_53J5_126_1321/U97/CO (FA1D1BWP40P140)     0.06       0.96 f
+  evalB_3/DP_OP_53J5_126_1321/U96/S (FA1D1BWP40P140)      0.11       1.07 r
+  evalB_3/DP_OP_53J5_126_1321/U135/CO (FA1D0BWP40P140)
+                                                          0.08       1.15 r
+  evalB_3/DP_OP_53J5_126_1321/U133/S (FA1D0BWP40P140)     0.11       1.25 f
+  evalB_3/DP_OP_53J5_126_1321/O2[8] (Eval_1_0_DP_OP_53J5_126_1321_J5_0_0)
+                                                          0.00       1.25 f
+  evalB_3/io_out_3[8] (Eval_1_0)                          0.00       1.25 f
+  core4_3/io_b_3[8] (core4_3)                             0.00       1.25 f
+  core4_3/evalB/io_in_3[8] (Eval_9_3)                     0.00       1.25 f
+  core4_3/evalB/U20/ZN (CKND1BWP40P140)                   0.02       1.27 r
+  core4_3/evalB/U11/ZN (INVD1BWP40P140LVT)                0.06       1.33 f
+  core4_3/evalB/DP_OP_55J5_124_5235/I3[8] (Eval_9_1_DP_OP_55J5_124_5235_J5_0_1)
+                                                          0.00       1.33 f
+  core4_3/evalB/DP_OP_55J5_124_5235/U182/CO (FA1D0BWP40P140)
+                                                          0.11       1.44 f
+  core4_3/evalB/DP_OP_55J5_124_5235/U155/S (FA1D0BWP40P140)
+                                                          0.12       1.56 r
+  core4_3/evalB/DP_OP_55J5_124_5235/U167/CO (FA1D0BWP40P140)
+                                                          0.08       1.64 r
+  core4_3/evalB/DP_OP_55J5_124_5235/U186/CO (FA1D0BWP40P140)
+                                                          0.07       1.71 r
+  core4_3/evalB/DP_OP_55J5_124_5235/U202/S (FA1D0BWP40P140)
+                                                          0.18       1.90 f
+  core4_3/evalB/DP_OP_55J5_124_5235/O1[11] (Eval_9_1_DP_OP_55J5_124_5235_J5_0_1)
+                                                          0.00       1.90 f
+  core4_3/evalB/io_out_4[11] (Eval_9_3)                   0.00       1.90 f
+  core4_3/mult_x_5/b[11] (core4_1_DW_mult_tc_J10_2_1)     0.00       1.90 f
+  core4_3/mult_x_5/U1101/ZN (INVD0P7BWP40P140)            0.14       2.04 r
+  core4_3/mult_x_5/U1435/ZN (MUX2ND0BWP40P140)            0.07       2.11 f
+  core4_3/mult_x_5/U1364/ZN (NR2D0BWP40P140)              0.20       2.30 r
+  core4_3/mult_x_5/U1661/ZN (AOI222D0BWP40P140)           0.09       2.39 f
+  core4_3/mult_x_5/U1662/ZN (MUX2ND0BWP40P140)            0.08       2.47 f
+  core4_3/mult_x_5/U1137/S (HA1D0BWP40P140)               0.07       2.54 f
+  core4_3/mult_x_5/U1251/S (FA1D0BWP40P140)               0.13       2.67 r
+  core4_3/mult_x_5/U1285/CO (FA1D0BWP40P140)              0.08       2.75 r
+  core4_3/mult_x_5/U1287/CO (FA1D0BWP40P140)              0.07       2.83 r
+  core4_3/mult_x_5/U1289/CO (FA1D0BWP40P140)              0.07       2.90 r
+  core4_3/mult_x_5/U1291/CO (FA1D0BWP40P140)              0.07       2.97 r
+  core4_3/mult_x_5/U1293/CO (FA1D0BWP40P140)              0.07       3.05 r
+  core4_3/mult_x_5/U1295/CO (FA1D0BWP40P140)              0.07       3.12 r
+  core4_3/mult_x_5/U1297/CO (FA1D0BWP40P140)              0.07       3.20 r
+  core4_3/mult_x_5/U1299/CO (FA1D0BWP40P140)              0.07       3.27 r
+  core4_3/mult_x_5/U1301/CO (FA1D0BWP40P140)              0.07       3.34 r
+  core4_3/mult_x_5/U1303/CO (FA1D0BWP40P140)              0.07       3.42 r
+  core4_3/mult_x_5/U1305/CO (FA1D0BWP40P140)              0.07       3.49 r
+  core4_3/mult_x_5/U1307/CO (FA1D0BWP40P140)              0.07       3.57 r
+  core4_3/mult_x_5/U1308/CO (FA1D0BWP40P140)              0.07       3.64 r
+  core4_3/mult_x_5/U1310/CO (FA1D0BWP40P140)              0.07       3.71 r
+  core4_3/mult_x_5/U1273/CO (FA1D0BWP40P140)              0.07       3.79 r
+  core4_3/mult_x_5/U1312/CO (FA1D0BWP40P140)              0.07       3.86 r
+  core4_3/mult_x_5/U1314/CO (FA1D0BWP40P140)              0.07       3.94 r
+  core4_3/mult_x_5/U1316/CO (FA1D0BWP40P140)              0.07       4.01 r
+  core4_3/mult_x_5/U1318/S (FA1D0BWP40P140)               0.11       4.13 f
+  core4_3/mult_x_5/U1351/CO (FA1D0BWP40P140)              0.08       4.21 f
+  core4_3/mult_x_5/U1352/CO (FA1D0BWP40P140)              0.07       4.28 f
+  core4_3/mult_x_5/U1060/CO (FA1D1BWP40P140)              0.06       4.34 f
+  core4_3/mult_x_5/U1059/CO (FA1D1BWP40P140)              0.06       4.40 f
+  core4_3/mult_x_5/U1106/CO (FA1D1BWP40P140LVT)           0.04       4.44 f
+  core4_3/mult_x_5/U1057/ZN (MUX2NUD1BWP40P140)           0.03       4.47 f
+  core4_3/mult_x_5/U1105/Z (XOR4D1BWP40P140LVT)           0.07       4.55 f
+  core4_3/mult_x_5/U1104/Z (XOR2UD1BWP40P140)             0.04       4.59 f
+  core4_3/mult_x_5/U1056/ZN (OAI21D0P7BWP40P140LVT)       0.02       4.61 r
+  core4_3/mult_x_5/U1246/ZN (OAI31D0BWP40P140LVT)         0.03       4.64 f
+  core4_3/mult_x_5/U1270/Z (XOR4D1BWP40P140)              0.11       4.74 r
+  core4_3/mult_x_5/U1054/Z (XOR3UD0BWP40P140)             0.06       4.80 r
+  core4_3/mult_x_5/U1325/Z (XOR4D1BWP40P140)              0.09       4.90 r
+  core4_3/mult_x_5/U1055/ZN (OAI21D0BWP40P140HVT)         0.04       4.94 f
+  core4_3/mult_x_5/U1353/ZN (OAI31D0BWP40P140LVT)         0.03       4.96 r
+  core4_3/mult_x_5/product[33] (core4_1_DW_mult_tc_J10_2_1)
+                                                          0.00       4.96 r
+  core4_3/s_w_4_reg_33_/D (DFQD1BWP40P140)                0.00       4.96 r
+  data arrival time                                                  4.96
+
+  clock clk (rise edge)                                   5.00       5.00
+  clock network delay (ideal)                             0.00       5.00
+  core4_3/s_w_4_reg_33_/CP (DFQD1BWP40P140)               0.00       5.00 r
+  library setup time                                     -0.04       4.96
+  data required time                                                 4.96
+  --------------------------------------------------------------------------
+  data required time                                                 4.96
+  data arrival time                                                 -4.96
+  --------------------------------------------------------------------------
+  slack (MET)                                                        0.00
+
+
+  Startpoint: io_b_15[2] (input port clocked by clk)
+  Endpoint: core4_5/s_w_5_reg_33_
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  core16_a28_b14_c28 ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_1_0_DP_OP_52J5_125_4593_J5_0_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_1_0_DP_OP_53J5_126_1321_J5_0_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_1_0_DP_OP_54J5_127_2501_J5_0_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_9_6_DP_OP_54J6_125_9182_J6_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_9_6_DP_OP_55J6_126_1285_J6_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_9_6_DP_OP_56J6_127_8200_J6_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_1_DW_mult_tc_J10_6_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_9_1_DP_OP_53J5_122_4467_J5_0_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_9_1_DP_OP_54J5_123_1582_J5_0_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_9_1_DP_OP_55J5_124_5235_J5_0_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_1_DW_mult_tc_J10_1_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  input external delay                                    0.50       0.50 r
+  io_b_15[2] (in)                                         0.00       0.50 r
+  evalB_3/io_in_3[2] (Eval_1_0)                           0.00       0.50 r
+  evalB_3/U43/ZN (CKND0BWP40P140)                         0.01       0.51 f
+  evalB_3/U14/ZN (INVD1BWP40P140LVT)                      0.05       0.56 r
+  evalB_3/DP_OP_54J5_127_2501/I3[2] (Eval_1_0_DP_OP_54J5_127_2501_J5_0_0)
+                                                          0.00       0.56 r
+  evalB_3/DP_OP_54J5_127_2501/U92/S (HA1D1BWP40P140)      0.07       0.63 f
+  evalB_3/DP_OP_54J5_127_2501/U159/ZN (CKND0BWP40P140)
+                                                          0.03       0.65 r
+  evalB_3/DP_OP_54J5_127_2501/U125/CO (FA1D0BWP40P140)
+                                                          0.08       0.73 r
+  evalB_3/DP_OP_54J5_127_2501/U121/CO (FA1D1BWP40P140LVT)
+                                                          0.05       0.78 r
+  evalB_3/DP_OP_54J5_127_2501/U141/CO (FA1D0BWP40P140)
+                                                          0.07       0.85 r
+  evalB_3/DP_OP_54J5_127_2501/U122/CO (FA1D0BWP40P140)
+                                                          0.07       0.92 r
+  evalB_3/DP_OP_54J5_127_2501/U168/CO (FA1D1BWP40P140)
+                                                          0.06       0.98 r
+  evalB_3/DP_OP_54J5_127_2501/U142/CO (FA1D0BWP40P140)
+                                                          0.07       1.05 r
+  evalB_3/DP_OP_54J5_127_2501/U167/S (FA1D1BWP40P140)     0.09       1.14 f
+  evalB_3/DP_OP_54J5_127_2501/O2[8] (Eval_1_0_DP_OP_54J5_127_2501_J5_0_0)
+                                                          0.00       1.14 f
+  evalB_3/io_out_5[8] (Eval_1_0)                          0.00       1.14 f
+  core4_5/io_b_3[8] (core4_1)                             0.00       1.14 f
+  core4_5/evalB/io_in_3[8] (Eval_9_1)                     0.00       1.14 f
+  core4_5/evalB/U50/ZN (CKND0BWP40P140)                   0.02       1.16 r
+  core4_5/evalB/U10/ZN (INVD1BWP40P140LVT)                0.06       1.22 f
+  core4_5/evalB/DP_OP_55J5_124_5235/I3[8] (Eval_9_1_DP_OP_55J5_124_5235_J5_0_0)
+                                                          0.00       1.22 f
+  core4_5/evalB/DP_OP_55J5_124_5235/U178/CO (FA1D0BWP40P140)
+                                                          0.11       1.33 f
+  core4_5/evalB/DP_OP_55J5_124_5235/U152/S (FA1D0BWP40P140)
+                                                          0.12       1.45 r
+  core4_5/evalB/DP_OP_55J5_124_5235/U225/ZN (CKND0BWP40P140)
+                                                          0.03       1.49 f
+  core4_5/evalB/DP_OP_55J5_124_5235/U159/CO (FA1D0BWP40P140)
+                                                          0.07       1.56 f
+  core4_5/evalB/DP_OP_55J5_124_5235/U171/CO (FA1D0BWP40P140)
+                                                          0.07       1.63 f
+  core4_5/evalB/DP_OP_55J5_124_5235/U192/S (FA1D0BWP40P140)
+                                                          0.20       1.83 r
+  core4_5/evalB/DP_OP_55J5_124_5235/O2[11] (Eval_9_1_DP_OP_55J5_124_5235_J5_0_0)
+                                                          0.00       1.83 r
+  core4_5/evalB/io_out_5[11] (Eval_9_1)                   0.00       1.83 r
+  core4_5/mult_x_6/b[11] (core4_1_DW_mult_tc_J10_1_0)     0.00       1.83 r
+  core4_5/mult_x_6/U1088/ZN (CKND0BWP40P140)              0.16       1.99 f
+  core4_5/mult_x_6/U1420/ZN (MUX2ND0BWP40P140)            0.11       2.10 r
+  core4_5/mult_x_6/U1422/ZN (INR2D0BWP40P140)             0.16       2.27 r
+  core4_5/mult_x_6/U1653/ZN (AOI222D0BWP40P140)           0.10       2.36 f
+  core4_5/mult_x_6/U1654/ZN (MUX2ND0BWP40P140)            0.07       2.43 r
+  core4_5/mult_x_6/U1117/CO (HA1D0BWP40P140)              0.06       2.49 r
+  core4_5/mult_x_6/U1115/CO (HA1D0BWP40P140)              0.05       2.54 r
+  core4_5/mult_x_6/U1207/CO (FA1D0BWP40P140)              0.07       2.61 r
+  core4_5/mult_x_6/U1208/CO (FA1D0BWP40P140)              0.07       2.69 r
+  core4_5/mult_x_6/U1209/CO (FA1D0BWP40P140)              0.07       2.76 r
+  core4_5/mult_x_6/U1210/CO (FA1D0BWP40P140)              0.07       2.84 r
+  core4_5/mult_x_6/U1211/CO (FA1D0BWP40P140)              0.07       2.91 r
+  core4_5/mult_x_6/U1212/CO (FA1D0BWP40P140)              0.07       2.98 r
+  core4_5/mult_x_6/U1213/CO (FA1D0BWP40P140)              0.07       3.06 r
+  core4_5/mult_x_6/U1214/CO (FA1D0BWP40P140)              0.07       3.13 r
+  core4_5/mult_x_6/U1206/CO (FA1D0BWP40P140)              0.07       3.21 r
+  core4_5/mult_x_6/U1215/CO (FA1D0BWP40P140)              0.07       3.28 r
+  core4_5/mult_x_6/U1216/CO (FA1D0BWP40P140)              0.07       3.35 r
+  core4_5/mult_x_6/U1217/CO (FA1D0BWP40P140)              0.07       3.43 r
+  core4_5/mult_x_6/U1218/CO (FA1D0BWP40P140)              0.07       3.50 r
+  core4_5/mult_x_6/U1219/CO (FA1D0BWP40P140)              0.07       3.58 r
+  core4_5/mult_x_6/U1220/CO (FA1D0BWP40P140)              0.07       3.65 r
+  core4_5/mult_x_6/U1221/CO (FA1D0BWP40P140)              0.07       3.72 r
+  core4_5/mult_x_6/U1222/CO (FA1D0BWP40P140)              0.07       3.80 r
+  core4_5/mult_x_6/U1223/CO (FA1D0BWP40P140)              0.07       3.87 r
+  core4_5/mult_x_6/U1224/CO (FA1D0BWP40P140)              0.07       3.95 r
+  core4_5/mult_x_6/U1225/CO (FA1D0BWP40P140)              0.07       4.02 r
+  core4_5/mult_x_6/U1226/S (FA1D0BWP40P140)               0.11       4.13 f
+  core4_5/mult_x_6/U1252/S (FA1D0BWP40P140)               0.13       4.27 r
+  core4_5/mult_x_6/U1057/S (FA1D1BWP40P140)               0.11       4.37 f
+  core4_5/mult_x_6/U1056/CO (FA1D1BWP40P140)              0.06       4.44 f
+  core4_5/mult_x_6/U1054/ZN (MUX2NUD1BWP40P140)           0.04       4.47 f
+  core4_5/mult_x_6/U1091/Z (XOR4D1BWP40P140LVT)           0.07       4.55 f
+  core4_5/mult_x_6/U1090/Z (XOR2UD1BWP40P140)             0.04       4.59 f
+  core4_5/mult_x_6/U1048/ZN (OAI21D0BWP40P140HVT)         0.03       4.62 r
+  core4_5/mult_x_6/U1227/ZN (OAI31D0BWP40P140LVT)         0.03       4.66 f
+  core4_5/mult_x_6/U1253/Z (XOR4D1BWP40P140)              0.11       4.76 r
+  core4_5/mult_x_6/U1050/Z (XOR3UD0BWP40P140)             0.06       4.82 r
+  core4_5/mult_x_6/U1307/Z (XOR4D1BWP40P140)              0.10       4.92 r
+  core4_5/mult_x_6/U1053/ZN (OAI21D1BWP40P140LVT)         0.02       4.94 f
+  core4_5/mult_x_6/U1334/ZN (OAI31D0BWP40P140LVT)         0.02       4.96 r
+  core4_5/mult_x_6/product[33] (core4_1_DW_mult_tc_J10_1_0)
+                                                          0.00       4.96 r
+  core4_5/s_w_5_reg_33_/D (DFQD1BWP40P140)                0.00       4.96 r
+  data arrival time                                                  4.96
+
+  clock clk (rise edge)                                   5.00       5.00
+  clock network delay (ideal)                             0.00       5.00
+  core4_5/s_w_5_reg_33_/CP (DFQD1BWP40P140)               0.00       5.00 r
+  library setup time                                     -0.04       4.96
+  data required time                                                 4.96
+  --------------------------------------------------------------------------
+  data required time                                                 4.96
+  data arrival time                                                 -4.96
+  --------------------------------------------------------------------------
+  slack (MET)                                                        0.00
+
+
+  Startpoint: io_b_3[0] (input port clocked by clk)
+  Endpoint: core4_3/s_w_3_reg_33_
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  core16_a28_b14_c28 ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_1_0_DP_OP_52J5_125_4593_J5_0_3
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_1_0_DP_OP_53J5_126_1321_J5_0_3
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_1_0_DP_OP_54J5_127_2501_J5_0_3
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_1_DW_mult_tc_J10_0_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_9_1_DP_OP_53J5_122_4467_J5_0_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_9_1_DP_OP_54J5_123_1582_J5_0_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_9_1_DP_OP_55J5_124_5235_J5_0_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_1_DW_mult_tc_J10_3_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  input external delay                                    0.50       0.50 f
+  io_b_3[0] (in)                                          0.00       0.50 f
+  evalB/io_in_3[0] (Eval_1_3)                             0.00       0.50 f
+  evalB/U4/ZN (INVD2BWP40P140LVT)                         0.00       0.50 r
+  evalB/U3/ZN (INVD1BWP40P140LVT)                         0.02       0.52 f
+  evalB/DP_OP_53J5_126_1321/I4[0] (Eval_1_0_DP_OP_53J5_126_1321_J5_0_3)
+                                                          0.00       0.52 f
+  evalB/DP_OP_53J5_126_1321/U93/CO (HA1D0BWP40P140)       0.03       0.55 f
+  evalB/DP_OP_53J5_126_1321/U125/CO (FA1D0BWP40P140)      0.07       0.62 f
+  evalB/DP_OP_53J5_126_1321/U112/CO (FA1D1BWP40P140)      0.06       0.68 f
+  evalB/DP_OP_53J5_126_1321/U113/CO (FA1D1BWP40P140LVT)
+                                                          0.04       0.73 f
+  evalB/DP_OP_53J5_126_1321/U119/S (FA1D0BWP40P140)       0.12       0.84 r
+  evalB/DP_OP_53J5_126_1321/U138/ZN (CKND0BWP40P140)      0.04       0.88 f
+  evalB/DP_OP_53J5_126_1321/U144/CO (FA1D1BWP40P140)      0.07       0.95 f
+  evalB/DP_OP_53J5_126_1321/U108/CO (FA1D1BWP40P140)      0.06       1.00 f
+  evalB/DP_OP_53J5_126_1321/U152/CO (FA1D1BWP40P140)      0.06       1.06 f
+  evalB/DP_OP_53J5_126_1321/U122/CO (FA1D0BWP40P140)      0.07       1.13 f
+  evalB/DP_OP_53J5_126_1321/U150/CO (FA1D1BWP40P140)      0.06       1.19 f
+  evalB/DP_OP_53J5_126_1321/U79/CO (FA1D1BWP40P140LVT)
+                                                          0.04       1.23 f
+  evalB/DP_OP_53J5_126_1321/U116/CO (FA1D0BWP40P140)      0.07       1.30 f
+  evalB/DP_OP_53J5_126_1321/U85/S (FA1D1BWP40P140)        0.10       1.40 r
+  evalB/DP_OP_53J5_126_1321/O2[11] (Eval_1_0_DP_OP_53J5_126_1321_J5_0_3)
+                                                          0.00       1.40 r
+  evalB/io_out_3[11] (Eval_1_3)                           0.00       1.40 r
+  core4_3/io_b_0[11] (core4_3)                            0.00       1.40 r
+  core4_3/evalB/io_in_0[11] (Eval_9_3)                    0.00       1.40 r
+  core4_3/evalB/U19/ZN (INVD1BWP40P140LVT)                0.01       1.41 f
+  core4_3/evalB/U8/ZN (CKND0BWP40P140)                    0.13       1.54 r
+  core4_3/evalB/DP_OP_54J5_123_1582/I1[11] (Eval_9_1_DP_OP_54J5_123_1582_J5_0_1)
+                                                          0.00       1.54 r
+  core4_3/evalB/DP_OP_54J5_123_1582/U185/CO (FA1D0BWP40P140)
+                                                          0.13       1.67 r
+  core4_3/evalB/DP_OP_54J5_123_1582/U188/CO (FA1D0BWP40P140)
+                                                          0.07       1.75 r
+  core4_3/evalB/DP_OP_54J5_123_1582/U190/CO (FA1D0BWP40P140)
+                                                          0.07       1.82 r
+  core4_3/evalB/DP_OP_54J5_123_1582/U163/S (FA1D0BWP40P140)
+                                                          0.13       1.95 f
+  core4_3/evalB/DP_OP_54J5_123_1582/U233/S (FA1D1BWP40P140)
+                                                          0.16       2.11 r
+  core4_3/evalB/DP_OP_54J5_123_1582/O2[14] (Eval_9_1_DP_OP_54J5_123_1582_J5_0_1)
+                                                          0.00       2.11 r
+  core4_3/evalB/io_out_3[14] (Eval_9_3)                   0.00       2.11 r
+  core4_3/mult_x_4/b[14] (core4_1_DW_mult_tc_J10_3_1)     0.00       2.11 r
+  core4_3/mult_x_4/U1099/ZN (INVD1BWP40P140)              0.09       2.20 f
+  core4_3/mult_x_4/U1337/ZN (MAOI22D0BWP40P140)           0.07       2.27 f
+  core4_3/mult_x_4/U1355/ZN (CKND0BWP40P140)              0.03       2.30 r
+  core4_3/mult_x_4/U1729/ZN (ND3D0BWP40P140)              0.18       2.48 f
+  core4_3/mult_x_4/U1544/ZN (OAI222D0BWP40P140)           0.15       2.62 r
+  core4_3/mult_x_4/U1545/ZN (AOI21D0BWP40P140)            0.04       2.66 f
+  core4_3/mult_x_4/U1328/ZN (MUX2ND0BWP40P140)            0.06       2.72 f
+  core4_3/mult_x_4/U1140/CO (HA1D0BWP40P140)              0.05       2.76 f
+  core4_3/mult_x_4/U1210/S (FA1D0BWP40P140)               0.12       2.88 r
+  core4_3/mult_x_4/U1223/CO (FA1D0BWP40P140)              0.08       2.96 r
+  core4_3/mult_x_4/U1224/S (FA1D0BWP40P140)               0.11       3.08 f
+  core4_3/mult_x_4/U1236/S (FA1D0BWP40P140)               0.13       3.21 r
+  core4_3/mult_x_4/U1264/CO (FA1D0BWP40P140)              0.08       3.29 r
+  core4_3/mult_x_4/U1266/S (FA1D0BWP40P140)               0.11       3.40 f
+  core4_3/mult_x_4/U1299/CO (FA1D0BWP40P140)              0.08       3.48 f
+  core4_3/mult_x_4/U1907/CO (FA1D0BWP40P140)              0.07       3.55 f
+  core4_3/mult_x_4/U1300/CO (FA1D0BWP40P140)              0.07       3.63 f
+  core4_3/mult_x_4/U1904/CO (FA1D0BWP40P140)              0.07       3.70 f
+  core4_3/mult_x_4/U1906/CO (FA1D1BWP40P140)              0.06       3.76 f
+  core4_3/mult_x_4/U1301/CO (FA1D0BWP40P140)              0.07       3.83 f
+  core4_3/mult_x_4/U1905/CO (FA1D1BWP40P140)              0.06       3.89 f
+  core4_3/mult_x_4/U1302/CO (FA1D0BWP40P140)              0.07       3.96 f
+  core4_3/mult_x_4/U1841/CO (FA1D0BWP40P140)              0.07       4.03 f
+  core4_3/mult_x_4/U1303/CO (FA1D0BWP40P140)              0.07       4.10 f
+  core4_3/mult_x_4/U1903/CO (FA1D1BWP40P140)              0.06       4.16 f
+  core4_3/mult_x_4/U1304/CO (FA1D0BWP40P140)              0.07       4.23 f
+  core4_3/mult_x_4/U1902/CO (FA1D1BWP40P140)              0.06       4.29 f
+  core4_3/mult_x_4/U1058/CO (FA1D1BWP40P140)              0.06       4.35 f
+  core4_3/mult_x_4/U1901/CO (FA1D1BWP40P140)              0.06       4.40 f
+  core4_3/mult_x_4/U1908/CO (FA1D0BWP40P140)              0.07       4.47 f
+  core4_3/mult_x_4/U1103/ZN (MUX2NUD1BWP40P140)           0.04       4.51 f
+  core4_3/mult_x_4/U1102/Z (XOR4D1BWP40P140LVT)           0.07       4.58 f
+  core4_3/mult_x_4/U1054/Z (XOR2UD1BWP40P140)             0.04       4.62 f
+  core4_3/mult_x_4/U1101/ZN (OAI21D0BWP40P140)            0.03       4.65 r
+  core4_3/mult_x_4/U1226/ZN (OAI31D0BWP40P140LVT)         0.03       4.68 f
+  core4_3/mult_x_4/U1047/Z (XOR4D1BWP40P140)              0.11       4.79 r
+  core4_3/mult_x_4/U1046/Z (XOR3UD0BWP40P140)             0.06       4.85 r
+  core4_3/mult_x_4/U1100/Z (XOR4D1BWP40P140LVT)           0.07       4.92 r
+  core4_3/mult_x_4/U1053/ZN (OAI21D0P7BWP40P140LVT)       0.02       4.94 f
+  core4_3/mult_x_4/U1305/ZN (OAI31D0BWP40P140LVT)         0.02       4.96 r
+  core4_3/mult_x_4/product[33] (core4_1_DW_mult_tc_J10_3_1)
+                                                          0.00       4.96 r
+  core4_3/s_w_3_reg_33_/D (DFQD1BWP40P140)                0.00       4.96 r
+  data arrival time                                                  4.96
+
+  clock clk (rise edge)                                   5.00       5.00
+  clock network delay (ideal)                             0.00       5.00
+  core4_3/s_w_3_reg_33_/CP (DFQD1BWP40P140)               0.00       5.00 r
+  library setup time                                     -0.04       4.96
+  data required time                                                 4.96
+  --------------------------------------------------------------------------
+  data required time                                                 4.96
+  data arrival time                                                 -4.96
+  --------------------------------------------------------------------------
+  slack (MET)                                                        0.00
+
+
+1

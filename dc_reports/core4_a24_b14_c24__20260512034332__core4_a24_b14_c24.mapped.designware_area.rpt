@@ -1,0 +1,54 @@
+ 
+****************************************
+Report : area
+Design : core4_a24_b14_c24
+Version: O-2018.06-SP5
+Date   : Tue May 12 05:01:30 2026
+****************************************
+
+Library(s) Used:
+
+    tcbn28hpcplusbwp40p140lvtssg0p81vm40c_ccs (File: /export1/Library/TN28HPC+/STD_CELL_ext/track9_200824/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp40p140lvt_180a/tcbn28hpcplusbwp40p140lvtssg0p81vm40c_ccs.db)
+    tcbn28hpcplusbwp40p140ssg0p81vm40c_ccs (File: /export1/Library/TN28HPC+/STD_CELL_ext/track9_200824/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp40p140_180a/tcbn28hpcplusbwp40p140ssg0p81vm40c_ccs.db)
+    tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs (File: /export1/Library/TN28HPC+/STD_CELL_ext/track9_200824/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp40p140hvt_180a/tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs.db)
+
+Number of ports:                         3054
+Number of nets:                         10315
+Number of cells:                         5616
+Number of combinational cells:           5308
+Number of sequential cells:               284
+Number of macros/black boxes:               0
+Number of buf/inv:                        694
+Number of references:                      14
+
+Combinational area:               6329.357899
+Buf/Inv area:                      183.960002
+Noncombinational area:             572.544009
+Macro/Black Box area:                0.000000
+Net Interconnect area:      undefined  (Wire load has zero net area)
+
+Total cell area:                  6901.901908
+Total area:                 undefined
+
+Area of detected synthetic parts
+--------------------------------
+                                                  Perc. of
+  Module               Implem.  Count       Area cell area
+  -------------------- -------  ----- ---------- ---------
+  DP_OP_106J2_122_5429     str      1  1510.4833     21.9%
+  DP_OP_52J2_123_5738      str      1   154.2239      2.2%
+  DP_OP_52J2_126_4543      str      1    95.5080      1.4%
+  DP_OP_53J2_124_3642      str      1   213.9478      3.1%
+  DP_OP_53J2_127_5215      str      1   125.7479      1.8%
+  DP_OP_54J2_125_276       str      1   215.4599      3.1%
+  DP_OP_54J2_128_1990      str      1   132.8039      1.9%
+  DW_mult_tc           apparch      4  2392.9965     34.7%
+  DW_mult_uns          apparch      3  1453.9174     21.1%
+  -------------------- -------  ----- ---------- ---------
+  DP_OP Subtotal:                   7  2448.1747     35.5%
+  Total:                           14  6295.0885     91.2%
+
+Subtotal of datapath(DP_OP) cell area:  2448.1747  35.5%  
+Total synthetic cell area:              6295.0885  91.2%  
+
+1

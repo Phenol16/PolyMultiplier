@@ -1,0 +1,120 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay min
+        -max_paths 3
+Design : core16_a28_b8_c28
+Version: O-2018.06-SP5
+Date   : Tue May 12 15:27:13 2026
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: ffg0p99v125c   Library: tcbn28hpcplusbwp40p140hvtffg0p99v125c_ccs
+Wire Load Model Mode: segmented
+
+  Startpoint: core4_6/interp/cReg_3_reg_29_
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: s_w_27_reg_29_
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: min
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  core16_a28_b8_c28  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  core4_6/interp/cReg_3_reg_29_/CP (DFKCNQD1BWP40P140)
+                                                          0.00 #     0.00 r
+  core4_6/interp/cReg_3_reg_29_/Q (DFKCNQD1BWP40P140)     0.05       0.05 f
+  core4_6/interp/io_c_3[29] (Interpolation_0)             0.00       0.05 f
+  core4_6/io_c_3[29] (core4_0)                            0.00       0.05 f
+  s_w_27_reg_29_/CN (DFKCNQD1BWP40P140)                   0.00       0.05 f
+  data arrival time                                                  0.05
+
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  s_w_27_reg_29_/CP (DFKCNQD1BWP40P140)                   0.00       0.00 r
+  library hold time                                       0.00       0.00
+  data required time                                                 0.00
+  --------------------------------------------------------------------------
+  data required time                                                 0.00
+  data arrival time                                                 -0.05
+  --------------------------------------------------------------------------
+  slack (MET)                                                        0.04
+
+
+  Startpoint: core4_0/interp/cReg_0_reg_1_
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: s_w_0_reg_1_
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: min
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  core16_a28_b8_c28  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  core4_0/interp/cReg_0_reg_1_/CP (DFKCNQD1BWP40P140)     0.00 #     0.00 r
+  core4_0/interp/cReg_0_reg_1_/Q (DFKCNQD1BWP40P140)      0.05       0.05 f
+  core4_0/interp/io_c_0[1] (Interpolation_6)              0.00       0.05 f
+  core4_0/io_c_0[1] (core4_6)                             0.00       0.05 f
+  s_w_0_reg_1_/D (DFKCNQD1BWP40P140)                      0.00       0.05 f
+  data arrival time                                                  0.05
+
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  s_w_0_reg_1_/CP (DFKCNQD1BWP40P140)                     0.00       0.00 r
+  library hold time                                       0.00       0.00
+  data required time                                                 0.00
+  --------------------------------------------------------------------------
+  data required time                                                 0.00
+  data arrival time                                                 -0.05
+  --------------------------------------------------------------------------
+  slack (MET)                                                        0.04
+
+
+  Startpoint: core4_0/interp/cReg_0_reg_0_
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: s_w_0_reg_0_
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: min
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  core16_a28_b8_c28  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  core4_0/interp/cReg_0_reg_0_/CP (DFKCNQD1BWP40P140)     0.00 #     0.00 r
+  core4_0/interp/cReg_0_reg_0_/Q (DFKCNQD1BWP40P140)      0.05       0.05 f
+  core4_0/interp/io_c_0[0] (Interpolation_6)              0.00       0.05 f
+  core4_0/io_c_0[0] (core4_6)                             0.00       0.05 f
+  s_w_0_reg_0_/D (DFKCNQD1BWP40P140)                      0.00       0.05 f
+  data arrival time                                                  0.05
+
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  s_w_0_reg_0_/CP (DFKCNQD1BWP40P140)                     0.00       0.00 r
+  library hold time                                       0.00       0.00
+  data required time                                                 0.00
+  --------------------------------------------------------------------------
+  data required time                                                 0.00
+  data arrival time                                                 -0.05
+  --------------------------------------------------------------------------
+  slack (MET)                                                        0.04
+
+
+1

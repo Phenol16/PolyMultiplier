@@ -1,0 +1,25 @@
+ 
+****************************************
+Report : clock_gating
+        -nosplit
+Design : core16_a32_b14_c32
+Version: O-2018.06-SP5
+Date   : Tue May 12 16:11:15 2026
+****************************************
+
+
+
+                             Clock Gating Summary
+          ------------------------------------------------------------
+          |    Number of Clock gating elements    |        0         |
+          |                                       |                  |
+          |    Number of Gated registers          |     0 (0.00%)    |
+          |                                       |                  |
+          |    Number of Ungated registers        |  4305 (100.00%)  |
+          |                                       |                  |
+          |    Total number of registers          |     4305         |
+          ------------------------------------------------------------
+
+
+
+1

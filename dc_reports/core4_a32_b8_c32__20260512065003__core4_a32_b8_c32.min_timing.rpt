@@ -1,0 +1,137 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay min
+        -max_paths 3
+Design : core4_a32_b8_c32
+Version: O-2018.06-SP5
+Date   : Tue May 12 07:49:30 2026
+****************************************
+
+Operating Conditions: ffg0p99v125c   Library: tcbn28hpcplusbwp40p140hvtffg0p99v125c_ccs
+Wire Load Model Mode: segmented
+
+  Startpoint: s_w_0_reg_0_
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: interp/cReg_2_reg_0_
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: min
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  core4_a32_b8_c32   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  InterpolationComb_DP_OP_106J3_122_9073_J3_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  s_w_0_reg_0_/CP (DFKCNQD1BWP40P140)                     0.00       0.00 r
+  s_w_0_reg_0_/Q (DFKCNQD1BWP40P140)                      0.04       0.04 r
+  interp/io_w_0[0] (Interpolation)                        0.00       0.04 r
+  interp/interp/io_w_0[0] (InterpolationComb)             0.00       0.04 r
+  interp/interp/DP_OP_106J3_122_9073/I7[0] (InterpolationComb_DP_OP_106J3_122_9073_J3_0)
+                                                          0.00       0.04 r
+  interp/interp/DP_OP_106J3_122_9073/U1999/ZN (AOI22D0BWP40P140)
+                                                          0.01       0.05 f
+  interp/interp/DP_OP_106J3_122_9073/O4[0] (InterpolationComb_DP_OP_106J3_122_9073_J3_0)
+                                                          0.00       0.05 f
+  interp/interp/io_c_2[0] (InterpolationComb)             0.00       0.05 f
+  interp/cReg_2_reg_0_/D (DFKCNQD1BWP40P140)              0.00       0.05 f
+  data arrival time                                                  0.05
+
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  interp/cReg_2_reg_0_/CP (DFKCNQD1BWP40P140)             0.00       0.00 r
+  library hold time                                       0.00       0.00
+  data required time                                                 0.00
+  --------------------------------------------------------------------------
+  data required time                                                 0.00
+  data arrival time                                                 -0.05
+  --------------------------------------------------------------------------
+  slack (MET)                                                        0.05
+
+
+  Startpoint: s_valid_reg
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: interp/validReg_reg
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: min
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  core4_a32_b8_c32   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  s_valid_reg/CP (DFKCNQD1BWP40P140)                      0.00       0.00 r
+  s_valid_reg/Q (DFKCNQD1BWP40P140)                       0.05       0.05 f
+  interp/io_valid_in (Interpolation)                      0.00       0.05 f
+  interp/U3/ZN (INR2D0BWP40P140)                          0.01       0.06 f
+  interp/validReg_reg/CN (DFKCNQD1BWP40P140)              0.00       0.06 f
+  data arrival time                                                  0.06
+
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  interp/validReg_reg/CP (DFKCNQD1BWP40P140)              0.00       0.00 r
+  library hold time                                       0.00       0.00
+  data required time                                                 0.00
+  --------------------------------------------------------------------------
+  data required time                                                 0.00
+  data arrival time                                                 -0.06
+  --------------------------------------------------------------------------
+  slack (MET)                                                        0.06
+
+
+  Startpoint: s_w_0_reg_31_
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: interp/cReg_2_reg_31_
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: min
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  core4_a32_b8_c32   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  InterpolationComb_DP_OP_106J3_122_9073_J3_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  s_w_0_reg_31_/CP (DFKCNQD1BWP40P140)                    0.00       0.00 r
+  s_w_0_reg_31_/Q (DFKCNQD1BWP40P140)                     0.04       0.04 r
+  interp/io_w_0[31] (Interpolation)                       0.00       0.04 r
+  interp/interp/io_w_0[31] (InterpolationComb)            0.00       0.04 r
+  interp/interp/DP_OP_106J3_122_9073/I7[31] (InterpolationComb_DP_OP_106J3_122_9073_J3_0)
+                                                          0.00       0.04 r
+  interp/interp/DP_OP_106J3_122_9073/U1973/ZN (MUX2ND0BWP40P140)
+                                                          0.01       0.05 f
+  interp/interp/DP_OP_106J3_122_9073/U1976/Z (XOR2UD0BWP40P140)
+                                                          0.03       0.08 f
+  interp/interp/DP_OP_106J3_122_9073/O4[31] (InterpolationComb_DP_OP_106J3_122_9073_J3_0)
+                                                          0.00       0.08 f
+  interp/interp/io_c_2[31] (InterpolationComb)            0.00       0.08 f
+  interp/cReg_2_reg_31_/D (DFKCNQD1BWP40P140)             0.00       0.08 f
+  data arrival time                                                  0.08
+
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  interp/cReg_2_reg_31_/CP (DFKCNQD1BWP40P140)            0.00       0.00 r
+  library hold time                                       0.00       0.00
+  data required time                                                 0.00
+  --------------------------------------------------------------------------
+  data required time                                                 0.00
+  data arrival time                                                 -0.08
+  --------------------------------------------------------------------------
+  slack (MET)                                                        0.07
+
+
+1
