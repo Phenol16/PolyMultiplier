@@ -378,9 +378,12 @@ class ToomCook43Clean extends Module {
   val coreReqIdx = RegInit(0.U(9.W))
   val coreReadValid = RegInit(false.B)
   val coreFeedJob = RegInit(0.U(9.W))
-  val coreWriteJob = RegInit(0.U(9.W))
   val coreDone = RegInit(false.B)
   val corePageReady = RegInit(VecInit(Seq.fill(49)(false.B)))
+  val coreJobQ = Module(new Queue(UInt(9.W), entries = 512))
+  coreJobQ.io.enq.valid := false.B
+  coreJobQ.io.enq.bits := 0.U
+  coreJobQ.io.deq.ready := false.B
 
   val i1Active = RegInit(false.B)
   val i1Page = RegInit(0.U(6.W))
@@ -482,7 +485,6 @@ class ToomCook43Clean extends Module {
     coreWordValid := false.B
     coreFeedJob := 0.U
     coreWordJob := 0.U
-    coreWriteJob := 0.U
     coreDone := false.B
     i1Active := false.B; i1Page := 0.U; i1Step := 0.U; i1Sub := 0.U
     i2Active := false.B; i2Pt0 := 0.U; i2Step := 0.U; i2Sub := 0.U
@@ -570,7 +572,8 @@ class ToomCook43Clean extends Module {
     }
 
     core.io.valid_in := coreWordValid
-    when(coreWordValid) { coreWriteJob := coreWordJob }
+    coreJobQ.io.enq.valid := coreWordValid
+    coreJobQ.io.enq.bits := coreWordJob
     when(coreReadValid) {
       for (bank <- 0 until 2) {
         when(evalBank(coreFeedJob) === bank.U) {
@@ -584,9 +587,11 @@ class ToomCook43Clean extends Module {
     coreReadValid := doCoreRead
     coreFeedJob := coreReqIdx
 
-    when(core.io.valid_out) {
-      val wrPage = pageOf(coreWriteJob)
-      val wrPt2 = pt2Of(coreWriteJob)
+    coreJobQ.io.deq.ready := core.io.valid_out
+    when(core.io.valid_out && coreJobQ.io.deq.valid) {
+      val wrJob = coreJobQ.io.deq.bits
+      val wrPage = pageOf(wrJob)
+      val wrPt2 = pt2Of(wrJob)
       for (buf <- 0 until 2; pt2 <- 0 until 7) {
         when(pageBuf(wrPage) === buf.U && wrPt2 === pt2.U) {
           coreRam(buf)(pt2).io.en := true.B
@@ -597,7 +602,7 @@ class ToomCook43Clean extends Module {
       }
       coreCount := coreCount + 1.U
       when(wrPt2 === 6.U) { corePageReady(wrPage) := true.B }
-      when(coreWriteJob === 342.U) { coreDone := true.B; coreActive := false.B }
+      when(wrJob === 342.U) { coreDone := true.B; coreActive := false.B }
     }
   }
 
