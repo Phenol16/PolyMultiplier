@@ -2,6 +2,7 @@ package poly_mult_sram
 
 import chisel3._
 import chisel3.util._
+import core.core16
 
 object Util {
   def mask(value: UInt, targetWidth: Int): UInt = {
@@ -240,101 +241,6 @@ class Interp8ColsStepTC4(pidx: Int, inW: Int, outW: Int) extends Module {
   io.nr2 := carry2(8)
 }
 
-class Product4TC4 extends Module {
-  private val A_EVAL_W = TC4EvalWidth.A_EVAL_W
-  private val B_EVAL_W = TC4EvalWidth.B_EVAL_W
-  private val PROD_MUL_MOD_W = A_EVAL_W
-  private val PROD_OUT_W = 36
-
-  val io = IO(new Bundle {
-    val a4 = Input(Vec(4, UInt(A_EVAL_W.W)))
-    val b4 = Input(Vec(4, UInt(B_EVAL_W.W)))
-    val out = Output(Vec(7, UInt(PROD_OUT_W.W)))
-  })
-
-  val evalA = Module(new EvalLayerTC4(A_EVAL_W, A_EVAL_W))
-  val evalB = Module(new EvalLayerTC4(B_EVAL_W, B_EVAL_W))
-  evalA.io.r := io.a4
-  evalB.io.r := io.b4
-
-  val wMul = Wire(Vec(7, UInt(PROD_MUL_MOD_W.W)))
-  for (i <- 0 until 7) {
-    val bw = evalB.io.out(i)(B_EVAL_W - 1, 0)
-    val bwSext = Cat(Fill(A_EVAL_W - B_EVAL_W, bw(B_EVAL_W - 1)), bw).asSInt
-    wMul(i) := mask((evalA.io.out(i)(A_EVAL_W - 1, 0).asSInt * bwSext).asUInt, PROD_MUL_MOD_W)
-  }
-
-  val r5a = mask(wMul(5) - wMul(4), PROD_MUL_MOD_W)
-  val r3a = mask(mask(wMul(3) - wMul(2), PROD_MUL_MOD_W) >> 1, PROD_MUL_MOD_W)
-  val r4a = mask(wMul(4) - wMul(0), PROD_MUL_MOD_W)
-  val r4b = mask((r4a << 1) + r5a - (wMul(6) << 7), PROD_MUL_MOD_W)
-  val r2a = mask(wMul(2) + r3a, PROD_MUL_MOD_W)
-  val r1a = mask(wMul(1) + wMul(4) - (r2a << 6) - r2a, PROD_MUL_MOD_W)
-  val r2b = mask(r2a - wMul(6) - wMul(0), PROD_MUL_MOD_W)
-  val r1b = mask(r1a + r2b + (r2b << 2) + (r2b << 3) + (r2b << 5), PROD_MUL_MOD_W)
-  val r4c = mask(mask(mask(r4b - (r2b << 3), PROD_MUL_MOD_W) >> 3, PROD_MUL_MOD_W) * "hAAAAAAAAB".U(42.W), PROD_OUT_W)
-  val r5b = mask(mask((r5a + r1b) >> 1, PROD_MUL_MOD_W) * "hEEEEEEEEF".U(42.W), 37)
-  val r1c = mask(mask(mask(r1b + (r3a << 4), PROD_MUL_MOD_W) >> 1, PROD_MUL_MOD_W) * "hE38E38E39".U(42.W), 37)
-  val r2c = mask(r2b - r4c, PROD_OUT_W)
-  val r3b = mask(0.U - r3a - r1c, PROD_OUT_W)
-  val r5c = mask((r1c - r5b) >> 1, PROD_OUT_W)
-  val r1d = mask(r1c - r5c, PROD_OUT_W)
-
-  io.out(0) := mask(wMul(6) - r2c, PROD_OUT_W)
-  io.out(1) := mask(r5c - r1d, PROD_OUT_W)
-  io.out(2) := mask(r4c - wMul(0), PROD_OUT_W)
-  io.out(3) := r3b
-  io.out(4) := 0.U
-  io.out(5) := 0.U
-  io.out(6) := 0.U
-}
-
-class Core16TC4 extends Module {
-  private val A_EVAL_W = TC4EvalWidth.A_EVAL_W
-  private val B_EVAL_W = TC4EvalWidth.B_EVAL_W
-  private val CORE_OUT_W = 36
-
-  val io = IO(new Bundle {
-    val valid_in = Input(Bool())
-    val avec = Input(Vec(16, UInt(A_EVAL_W.W)))
-    val bvec = Input(Vec(16, UInt(B_EVAL_W.W)))
-    val valid_out = Output(Bool())
-    val cOut = Output(Vec(16, UInt(CORE_OUT_W.W)))
-  })
-
-  val ae = Wire(Vec(28, UInt(A_EVAL_W.W)))
-  val be = Wire(Vec(28, UInt(B_EVAL_W.W)))
-  for (seg <- 0 until 4) {
-    val evalA = Module(new EvalLayerTC4(A_EVAL_W, A_EVAL_W))
-    val evalB = Module(new EvalLayerTC4(B_EVAL_W, B_EVAL_W))
-    for (k <- 0 until 4) {
-      evalA.io.r(k) := io.avec(seg * 4 + k)
-      evalB.io.r(k) := io.bvec(seg * 4 + k)
-    }
-    for (pt <- 0 until 7) {
-      ae(pt * 4 + seg) := evalA.io.out(pt)
-      be(pt * 4 + seg) := evalB.io.out(pt)
-    }
-  }
-
-  val wProd = Wire(Vec(28, UInt(CORE_OUT_W.W)))
-  for (pt <- 0 until 7) {
-    val prod = Module(new Product4TC4)
-    for (k <- 0 until 4) {
-      prod.io.a4(k) := ae(pt * 4 + k)
-      prod.io.b4(k) := be(pt * 4 + k)
-      wProd(pt * 4 + k) := prod.io.out(k)
-    }
-  }
-
-  val regW = RegEnable(wProd, io.valid_in)
-  val regValid = RegNext(io.valid_in, false.B)
-  val interp = Module(new Interp4ColsTC4(pidx = 0, inW = 36, outW = 36))
-  interp.io.in := regW
-
-  io.valid_out := regValid
-  io.cOut := interp.io.out
-}
 
 class SpRam(width: Int, depth: Int) extends BlackBox(Map("WIDTH" -> width, "DEPTH" -> depth)) with HasBlackBoxResource {
   override def desiredName: String = "sp_ram"
@@ -452,22 +358,29 @@ class ToomCook43Clean extends Module {
     evalBVec(lane) := evalB(lane).io.out
   }
 
-  val core = Module(new Core16TC4)
+  val core = Module(new core16(
+    t = 0,
+    k = 2,
+    sign = 1,
+    aWidth = A_EVAL_W,
+    bWidth = B_EVAL_W,
+    cWidth = 36
+  ))
   core.io.valid_in := false.B
   val coreAWordReg = Reg(UInt((16 * A_EVAL_W).W))
   val coreBWordReg = Reg(UInt((16 * B_EVAL_W).W))
   val coreWordValid = RegInit(false.B)
   val coreWordJob = RegInit(0.U(9.W))
-  core.io.avec := split16(coreAWordReg, A_EVAL_W)
-  core.io.bvec := split16(coreBWordReg, B_EVAL_W)
+  core.io.a := split16(coreAWordReg, A_EVAL_W)
+  core.io.b := split16(coreBWordReg, B_EVAL_W)
 
   val coreActive = RegInit(false.B)
   val coreReqIdx = RegInit(0.U(9.W))
   val coreReadValid = RegInit(false.B)
   val coreFeedJob = RegInit(0.U(9.W))
-  val coreWriteJob = RegInit(0.U(9.W))
   val coreDone = RegInit(false.B)
   val corePageReady = RegInit(VecInit(Seq.fill(49)(false.B)))
+  val coreRetireJob = RegInit(0.U(9.W))
 
   val i1Active = RegInit(false.B)
   val i1Page = RegInit(0.U(6.W))
@@ -569,7 +482,6 @@ class ToomCook43Clean extends Module {
     coreWordValid := false.B
     coreFeedJob := 0.U
     coreWordJob := 0.U
-    coreWriteJob := 0.U
     coreDone := false.B
     i1Active := false.B; i1Page := 0.U; i1Step := 0.U; i1Sub := 0.U
     i2Active := false.B; i2Pt0 := 0.U; i2Step := 0.U; i2Sub := 0.U
@@ -578,6 +490,7 @@ class ToomCook43Clean extends Module {
     i2Pr0 := 0.U; i2Pr1 := 0.U; i2Pr2 := 0.U
     i3Pr0 := 0.U; i3Pr1 := 0.U; i3Pr2 := 0.U
     corePageReady := VecInit(Seq.fill(49)(false.B))
+    coreRetireJob := 0.U
     w1PageReady := VecInit(Seq.fill(49)(false.B))
     w1GroupReady := VecInit(Seq.fill(7)(false.B))
     w0BlockReady := VecInit(Seq.fill(7)(false.B))
@@ -657,7 +570,6 @@ class ToomCook43Clean extends Module {
     }
 
     core.io.valid_in := coreWordValid
-    when(coreWordValid) { coreWriteJob := coreWordJob }
     when(coreReadValid) {
       for (bank <- 0 until 2) {
         when(evalBank(coreFeedJob) === bank.U) {
@@ -672,19 +584,21 @@ class ToomCook43Clean extends Module {
     coreFeedJob := coreReqIdx
 
     when(core.io.valid_out) {
-      val wrPage = pageOf(coreWriteJob)
-      val wrPt2 = pt2Of(coreWriteJob)
+      val wrJob = coreRetireJob
+      coreRetireJob := coreRetireJob + 1.U
+      val wrPage = pageOf(wrJob)
+      val wrPt2 = pt2Of(wrJob)
       for (buf <- 0 until 2; pt2 <- 0 until 7) {
         when(pageBuf(wrPage) === buf.U && wrPt2 === pt2.U) {
           coreRam(buf)(pt2).io.en := true.B
           coreRam(buf)(pt2).io.we := true.B
           coreRam(buf)(pt2).io.addr := pageAddr(wrPage) // coreRam(page%2)(pt2)(page/2).
-          coreRam(buf)(pt2).io.din := packVec(core.io.cOut)
+          coreRam(buf)(pt2).io.din := packVec(core.io.c)
         }
       }
       coreCount := coreCount + 1.U
       when(wrPt2 === 6.U) { corePageReady(wrPage) := true.B }
-      when(coreWriteJob === 342.U) { coreDone := true.B; coreActive := false.B }
+      when(wrJob === 342.U) { coreDone := true.B; coreActive := false.B }
     }
   }
 
