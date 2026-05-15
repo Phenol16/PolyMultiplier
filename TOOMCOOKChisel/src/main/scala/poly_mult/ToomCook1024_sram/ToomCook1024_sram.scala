@@ -226,7 +226,6 @@ class ToomCook43IO extends Bundle {
 
 class ToomCook43Clean extends Module {
   val io = IO(new ToomCook43IO)
-  private val CORE_LATENCY = 4
 
   private val A_EVAL_W = TC4EvalWidth.A_EVAL_W
   private val B_EVAL_W = TC4EvalWidth.B_EVAL_W
@@ -332,8 +331,7 @@ class ToomCook43Clean extends Module {
   val coreReqIdx = RegInit(0.U(9.W))
   val coreReadValid = RegInit(false.B)
   val coreFeedJob = RegInit(0.U(9.W))
-  val coreJobPipe = RegInit(VecInit(Seq.fill(CORE_LATENCY)(0.U(9.W))))
-  val coreValidPipe = RegInit(VecInit(Seq.fill(CORE_LATENCY)(false.B)))
+  val coreOutJob = RegInit(0.U(9.W))
   val coreDone = RegInit(false.B)
   val corePageReady = RegInit(VecInit(Seq.fill(49)(false.B)))
 
@@ -437,8 +435,7 @@ class ToomCook43Clean extends Module {
     coreWordValid := false.B
     coreFeedJob := 0.U
     coreWordJob := 0.U
-    coreJobPipe := VecInit(Seq.fill(CORE_LATENCY)(0.U(9.W)))
-    coreValidPipe := VecInit(Seq.fill(CORE_LATENCY)(false.B))
+    coreOutJob := 0.U
     coreDone := false.B
     i1Active := false.B; i1Page := 0.U; i1Step := 0.U; i1Sub := 0.U
     i2Active := false.B; i2Pt0 := 0.U; i2Step := 0.U; i2Sub := 0.U
@@ -537,15 +534,7 @@ class ToomCook43Clean extends Module {
     coreWordValid := coreReadValid
     coreReadValid := doCoreRead
     coreFeedJob := coreReqIdx
-    coreJobPipe(0) := coreWordJob
-    coreValidPipe(0) := coreWordValid
-    for (i <- 1 until CORE_LATENCY) {
-      coreJobPipe(i) := coreJobPipe(i - 1)
-      coreValidPipe(i) := coreValidPipe(i - 1)
-    }
-
-    val coreOutJob = coreJobPipe(CORE_LATENCY - 1)
-    when(core.io.valid_out && coreValidPipe(CORE_LATENCY - 1)) {
+    when(core.io.valid_out) {
       val wrPage = pageOf(coreOutJob)
       val wrPt2 = pt2Of(coreOutJob)
       for (buf <- 0 until 2; pt2 <- 0 until 7) {
@@ -558,7 +547,12 @@ class ToomCook43Clean extends Module {
       }
       coreCount := coreCount + 1.U
       when(wrPt2 === 6.U) { corePageReady(wrPage) := true.B }
-      when(coreOutJob === 342.U) { coreDone := true.B; coreActive := false.B }
+      when(coreOutJob === 342.U) {
+        coreDone := true.B
+        coreActive := false.B
+      }.otherwise {
+        coreOutJob := coreOutJob + 1.U
+      }
     }
   }
 
