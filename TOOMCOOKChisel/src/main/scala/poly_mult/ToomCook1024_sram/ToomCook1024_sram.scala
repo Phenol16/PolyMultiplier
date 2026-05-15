@@ -380,10 +380,10 @@ class ToomCook43Clean extends Module {
   val coreFeedJob = RegInit(0.U(9.W))
   val coreDone = RegInit(false.B)
   val corePageReady = RegInit(VecInit(Seq.fill(49)(false.B)))
-  val coreJobQ = Module(new Queue(UInt(9.W), entries = 512))
-  coreJobQ.io.enq.valid := false.B
-  coreJobQ.io.enq.bits := 0.U
-  coreJobQ.io.deq.ready := false.B
+  val coreJobFifo = Reg(Vec(512, UInt(9.W)))
+  val coreJobHead = RegInit(0.U(9.W))
+  val coreJobTail = RegInit(0.U(9.W))
+  val coreJobCount = RegInit(0.U(10.W))
 
   val i1Active = RegInit(false.B)
   val i1Page = RegInit(0.U(6.W))
@@ -493,6 +493,9 @@ class ToomCook43Clean extends Module {
     i2Pr0 := 0.U; i2Pr1 := 0.U; i2Pr2 := 0.U
     i3Pr0 := 0.U; i3Pr1 := 0.U; i3Pr2 := 0.U
     corePageReady := VecInit(Seq.fill(49)(false.B))
+    coreJobHead := 0.U
+    coreJobTail := 0.U
+    coreJobCount := 0.U
     w1PageReady := VecInit(Seq.fill(49)(false.B))
     w1GroupReady := VecInit(Seq.fill(7)(false.B))
     w0BlockReady := VecInit(Seq.fill(7)(false.B))
@@ -572,8 +575,11 @@ class ToomCook43Clean extends Module {
     }
 
     core.io.valid_in := coreWordValid
-    coreJobQ.io.enq.valid := coreWordValid
-    coreJobQ.io.enq.bits := coreWordJob
+    when(coreWordValid) {
+      coreJobFifo(coreJobTail) := coreWordJob
+      coreJobTail := coreJobTail + 1.U
+      coreJobCount := coreJobCount + 1.U
+    }
     when(coreReadValid) {
       for (bank <- 0 until 2) {
         when(evalBank(coreFeedJob) === bank.U) {
@@ -587,9 +593,10 @@ class ToomCook43Clean extends Module {
     coreReadValid := doCoreRead
     coreFeedJob := coreReqIdx
 
-    coreJobQ.io.deq.ready := core.io.valid_out
-    when(core.io.valid_out && coreJobQ.io.deq.valid) {
-      val wrJob = coreJobQ.io.deq.bits
+    when(core.io.valid_out && coreJobCount =/= 0.U) {
+      val wrJob = coreJobFifo(coreJobHead)
+      coreJobHead := coreJobHead + 1.U
+      coreJobCount := coreJobCount - 1.U
       val wrPage = pageOf(wrJob)
       val wrPt2 = pt2Of(wrJob)
       for (buf <- 0 until 2; pt2 <- 0 until 7) {
