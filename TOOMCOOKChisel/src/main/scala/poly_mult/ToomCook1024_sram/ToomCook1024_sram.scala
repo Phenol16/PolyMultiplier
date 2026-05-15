@@ -331,7 +331,6 @@ class ToomCook43Clean extends Module {
   val inter3In = Wire(Vec(7 * 8, UInt(27.W)))
   val i1CoreOffset = Cat(i1Step, 0.U(3.W))
   val i2Group = i2Step(1, 0)
-  val i2Addr = i2Step >> 2
   val i3Group = i3Step(1, 0)
   val i3Addr = i3Step >> 2
   for (pt <- 0 until 7) {
@@ -550,17 +549,15 @@ class ToomCook43Clean extends Module {
     val pt1 = pt1OfPage(i1Page)
     val wrBuf = pt0(0)
     when(i1Sub === 1.U) {
-      val w1WriteSlot = i1Step
-      val w1WriteAddr = w1WriteSlot >> 2
-      val w1WriteGroup = w1WriteSlot(1, 0)
-      val w1WriteWord = pack8((0 until ColsPerBank).map(col => interp1.io.out(w1WriteSlot * ColsPerBank.U + col.U)))
+      val w1WriteAddr = i1Step
       when(i1Step === 0.U) { firstW1 := interp1.io.out }
       for (buf <- 0 until 2; bank <- 0 until 7; group <- 0 until GroupsPerBlock) {
-        when(wrBuf === buf.U && pt1 === bank.U && w1WriteGroup === group.U) {
+        val groupWord = pack8((0 until ColsPerBank).map(col => interp1.io.out(group * ColsPerBank + col)))
+        when(wrBuf === buf.U && pt1 === bank.U) {
           w1Ram(buf)(bank)(group).io.en := true.B
           w1Ram(buf)(bank)(group).io.we := true.B
           w1Ram(buf)(bank)(group).io.addr := w1WriteAddr
-          w1Ram(buf)(bank)(group).io.din := w1WriteWord
+          w1Ram(buf)(bank)(group).io.din := groupWord
         }
       }
       i1Pr0 := interp1.io.nr0; i1Pr1 := interp1.io.nr1; i1Pr2 := interp1.io.nr2
@@ -597,10 +594,10 @@ class ToomCook43Clean extends Module {
   // Inter2 reads pt0.
   when(!i2Active && w1GroupReady(i2Pt0) && !w0BlockReady(i2Pt0)) {
     val rdBuf = i2Pt0(0)
-    for (pt1 <- 0 until 7; buf <- 0 until 2; group <- 0 until GroupsPerBlock) {
-      when(rdBuf === buf.U && i2Group === group.U) {
-        w1Ram(buf)(pt1)(group).io.en := true.B
-        w1Ram(buf)(pt1)(group).io.addr := i2Addr
+    for (pt1 <- 0 until 7; buf <- 0 until 2) {
+      when(rdBuf === buf.U) {
+        w1Ram(buf)(pt1)(0).io.en := true.B
+        w1Ram(buf)(pt1)(0).io.addr := 0.U
       }
     }
     i2Active := true.B
