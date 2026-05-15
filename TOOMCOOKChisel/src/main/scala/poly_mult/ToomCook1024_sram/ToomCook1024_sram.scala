@@ -226,6 +226,7 @@ class ToomCook43IO extends Bundle {
 
 class ToomCook43Clean extends Module {
   val io = IO(new ToomCook43IO)
+  private val CORE_LATENCY = 4
 
   private val A_EVAL_W = TC4EvalWidth.A_EVAL_W
   private val B_EVAL_W = TC4EvalWidth.B_EVAL_W
@@ -318,7 +319,7 @@ class ToomCook43Clean extends Module {
     evalBVec(lane) := evalB(lane).io.out
   }
 
-  val core = Module(new core16(t = 0, k = 2, sign = 1, aWidth = 39, bWidth = 29, cWidth = 36))
+  val core = Module(new core16(t = 0, k = 2, sign = 1, aWidth = A_EVAL_W, bWidth = B_EVAL_W, cWidth = 36))
   core.io.valid_in := false.B
   val coreAWordReg = Reg(UInt((16 * A_EVAL_W).W))
   val coreBWordReg = Reg(UInt((16 * B_EVAL_W).W))
@@ -331,11 +332,8 @@ class ToomCook43Clean extends Module {
   val coreReqIdx = RegInit(0.U(9.W))
   val coreReadValid = RegInit(false.B)
   val coreFeedJob = RegInit(0.U(9.W))
-  val coreWriteJob = RegInit(0.U(9.W))
-  val coreJobPipe0Valid = RegInit(false.B)
-  val coreJobPipe1Valid = RegInit(false.B)
-  val coreJobPipe0 = RegInit(0.U(9.W))
-  val coreJobPipe1 = RegInit(0.U(9.W))
+  val coreJobPipe = RegInit(VecInit(Seq.fill(CORE_LATENCY)(0.U(9.W))))
+  val coreValidPipe = RegInit(VecInit(Seq.fill(CORE_LATENCY)(false.B)))
   val coreDone = RegInit(false.B)
   val corePageReady = RegInit(VecInit(Seq.fill(49)(false.B)))
 
@@ -439,9 +437,8 @@ class ToomCook43Clean extends Module {
     coreWordValid := false.B
     coreFeedJob := 0.U
     coreWordJob := 0.U
-    coreWriteJob := 0.U
-    coreJobPipe0Valid := false.B
-    coreJobPipe1Valid := false.B
+    coreJobPipe := VecInit(Seq.fill(CORE_LATENCY)(0.U(9.W)))
+    coreValidPipe := VecInit(Seq.fill(CORE_LATENCY)(false.B))
     coreDone := false.B
     i1Active := false.B; i1Page := 0.U; i1Step := 0.U; i1Sub := 0.U
     i2Active := false.B; i2Pt0 := 0.U; i2Step := 0.U; i2Sub := 0.U
@@ -540,15 +537,17 @@ class ToomCook43Clean extends Module {
     coreWordValid := coreReadValid
     coreReadValid := doCoreRead
     coreFeedJob := coreReqIdx
-    coreJobPipe0Valid := coreWordValid
-    coreJobPipe1Valid := coreJobPipe0Valid
-    coreJobPipe0 := coreWordJob
-    coreJobPipe1 := coreJobPipe0
-    when(coreJobPipe1Valid) { coreWriteJob := coreJobPipe1 }
+    coreJobPipe(0) := coreWordJob
+    coreValidPipe(0) := coreWordValid
+    for (i <- 1 until CORE_LATENCY) {
+      coreJobPipe(i) := coreJobPipe(i - 1)
+      coreValidPipe(i) := coreValidPipe(i - 1)
+    }
 
-    when(core.io.valid_out && coreJobPipe1Valid) {
-      val wrPage = pageOf(coreWriteJob)
-      val wrPt2 = pt2Of(coreWriteJob)
+    val coreOutJob = coreJobPipe(CORE_LATENCY - 1)
+    when(core.io.valid_out && coreValidPipe(CORE_LATENCY - 1)) {
+      val wrPage = pageOf(coreOutJob)
+      val wrPt2 = pt2Of(coreOutJob)
       for (buf <- 0 until 2; pt2 <- 0 until 7) {
         when(pageBuf(wrPage) === buf.U && wrPt2 === pt2.U) {
           coreRam(buf)(pt2).io.en := true.B
@@ -559,12 +558,8 @@ class ToomCook43Clean extends Module {
       }
       coreCount := coreCount + 1.U
       when(wrPt2 === 6.U) { corePageReady(wrPage) := true.B }
-      when(coreWriteJob === 342.U) { coreDone := true.B; coreActive := false.B }
+      when(coreOutJob === 342.U) { coreDone := true.B; coreActive := false.B }
     }
-  }
-  when(!coreActive) {
-    coreJobPipe0Valid := false.B
-    coreJobPipe1Valid := false.B
   }
 
   // Inter1Controller: consume each core page as soon as its seven pt2 banks are
