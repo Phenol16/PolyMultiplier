@@ -14,8 +14,6 @@ class ToomCook1024Test extends AnyFlatSpec with ChiselScalatestTester {
 
   private val N = 1024
   private val QMask: BigInt = (BigInt(1) << 24) - 1
-private val ExpectedValidOutCycle = 410
-private val ValidOutCycleTolerance = 30
 
   /**
     * negacyclic convolution modulo x^1024 + 1, then modulo 2^24.
@@ -57,7 +55,7 @@ private val ValidOutCycleTolerance = 30
       aVals: Seq[BigInt],
       bVals: Seq[BigInt],
       expected: Seq[BigInt],
-      maxWaitCycles: Int = 6000,
+      maxWaitCycles: Int = 1200,
       maxPrintMismatch: Int = 30,
       printNonZero: Boolean = true
   ): Unit = {
@@ -65,72 +63,81 @@ private val ValidOutCycleTolerance = 30
     require(bVals.length == N, s"$label: b length must be $N")
     require(expected.length == N, s"$label: expected length must be $N")
 
-    println(s"[${now()}][$label] start poking inputs")
-
-    for (i <- 0 until N) {
-      dut.io.a(i).poke((aVals(i) & QMask).U)
-      dut.io.b(i).poke((bVals(i) & BigInt("ff", 16)).U)
+    def packA(block: Int, a: Seq[BigInt]): BigInt = {
+      (0 until 32).map { i =>
+        (a(block * 32 + i) & ((BigInt(1) << 24) - 1)) << (24 * i)
+      }.sum
+    }
+    def packB(block: Int, b: Seq[BigInt]): BigInt = {
+      (0 until 32).map { i =>
+        (b(block * 32 + i) & ((BigInt(1) << 8) - 1)) << (8 * i)
+      }.sum
+    }
+    def unpackC(word: BigInt): Seq[BigInt] = {
+      (0 until 32).map { i =>
+        (word >> (24 * i)) & ((BigInt(1) << 24) - 1)
+      }
     }
 
-    println(s"[${now()}][$label] finish poking inputs")
-    println(s"[${now()}][$label] send valid_in")
+    println(s"[${now()}][$label] write input SRAM blocks")
+    for (block <- 0 until 32) {
+      dut.io.a_we.poke(true.B)
+      dut.io.a_addr.poke(block.U)
+      dut.io.a_din.poke(packA(block, aVals).U)
+      dut.io.b_we.poke(true.B)
+      dut.io.b_addr.poke(block.U)
+      dut.io.b_din.poke(packB(block, bVals).U)
+      dut.clock.step(1)
+    }
+    dut.io.a_we.poke(false.B)
+    dut.io.b_we.poke(false.B)
 
-    dut.io.valid_in.poke(true.B)
+    println(s"[${now()}][$label] send start")
+    dut.io.start.poke(true.B)
     dut.clock.step(1)
-    dut.io.valid_in.poke(false.B)
+    dut.io.start.poke(false.B)
+    println(s"[${now()}][$label] start waiting done")
 
-    println(s"[${now()}][$label] start waiting valid_out")
-
-    var seenValid = false
-    var outCycle = -1
+    var seenDone = false
     var cycle = 0
-
-    while (!seenValid && cycle < maxWaitCycles) {
-      val v = dut.io.valid_out.peek().litToBoolean
-
-      if (cycle % 250 == 0) {
-        println(s"[${now()}][$label] cycle=$cycle valid_out=$v")
-      }
-
-      if (v) {
-        seenValid = true
-        outCycle = cycle
-        println(s"[${now()}][$label] valid_out asserted at cycle=$cycle")
-      } else {
-        dut.clock.step(1)
-        cycle += 1
-      }
+    while (!seenDone && cycle < maxWaitCycles) {
+      seenDone = dut.io.done.peek().litToBoolean
+      if (!seenDone) { dut.clock.step(1); cycle += 1 }
     }
 
     assert(
-      seenValid,
-      s"[$label] Error: 等待 io.valid_out 超时！maxWaitCycles=$maxWaitCycles"
+      seenDone,
+      s"[$label] Error: 等待 io.done 超时！maxWaitCycles=$maxWaitCycles"
     )
-
-    val cycleDelta = math.abs(outCycle - ExpectedValidOutCycle)
-    assert(
-      cycleDelta <= ValidOutCycleTolerance,
-      s"[$label] valid_out cycle=$outCycle, expected near $ExpectedValidOutCycle ± $ValidOutCycleTolerance"
-    )
-
-    println(s"[${now()}][$label] start checking outputs, outCycle=$outCycle")
+    println(s"[${now()}][$label] done asserted at cycle=$cycle")
+    println(s"[${now()}][$label] start checking outputs")
 
     var mismatchCount = 0
     val nonZero = scala.collection.mutable.ArrayBuffer[(Int, BigInt)]()
 
+    val got = collection.mutable.ArrayBuffer[BigInt]()
+    for (block <- 0 until 32) {
+      dut.io.c_re.poke(true.B)
+      dut.io.c_addr.poke(block.U)
+      dut.clock.step(1)
+      dut.io.c_re.poke(false.B)
+      dut.io.c_valid.expect(true.B)
+      got ++= unpackC(dut.io.c_dout.peek().litValue)
+    }
+
     for (i <- 0 until N) {
-      val got = dut.io.c(i).peek().litValue & QMask
+      val g = got(i) & QMask
       val exp = expected(i) & QMask
 
-      if (got != 0) {
-        nonZero += ((i, got))
+      if (g != 0) {
+        nonZero += ((i, g))
       }
 
-      if (got != exp) {
+      if (g != exp) {
         mismatchCount += 1
         if (mismatchCount <= maxPrintMismatch) {
           println(
-            s"[$label MISMATCH] index=$i got=0x${got.toString(16)} expected=0x${exp.toString(16)}"
+            s"[$label MISMATCH] index=$i got=0x${g.toString(16)} expected=0x${exp.toString(16)}"
           )
         }
       }
@@ -148,13 +155,7 @@ private val ValidOutCycleTolerance = 30
       s"[$label] 计算错误：共有 $mismatchCount 个系数不匹配，最多已打印 $maxPrintMismatch 个。"
     )
 
-    dut.clock.step(1)
-    assert(
-      !dut.io.valid_out.peek().litToBoolean,
-      s"[$label] valid_out must be a one-cycle pulse"
-    )
-
-    println(s"[${now()}][$label] PASS, valid_out cycle=$outCycle")
+    println(s"[${now()}][$label] PASS, done cycle=$cycle")
 
     // 让 DUT 回到 IDLE，便于同一次 elaboration 内连续输入下一组 case
     dut.clock.step(2)
