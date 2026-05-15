@@ -2,7 +2,7 @@ package poly_mult_sram
 
 import chisel3._
 import chisel3.util._
-import poly_mult.Core16
+import core.core16
 
 object Util {
   def mask(value: UInt, targetWidth: Int): UInt = {
@@ -358,14 +358,21 @@ class ToomCook43Clean extends Module {
     evalBVec(lane) := evalB(lane).io.out
   }
 
-  val core = Module(new Core16)
+  val core = Module(new core16(
+    t = 0,
+    k = 2,
+    sign = 1,
+    aWidth = A_EVAL_W,
+    bWidth = B_EVAL_W,
+    cWidth = 36
+  ))
   core.io.valid_in := false.B
   val coreAWordReg = Reg(UInt((16 * A_EVAL_W).W))
   val coreBWordReg = Reg(UInt((16 * B_EVAL_W).W))
   val coreWordValid = RegInit(false.B)
   val coreWordJob = RegInit(0.U(9.W))
-  core.io.avec := split16(coreAWordReg, A_EVAL_W)
-  core.io.bvec := split16(coreBWordReg, B_EVAL_W)
+  core.io.a := split16(coreAWordReg, A_EVAL_W)
+  core.io.b := split16(coreBWordReg, B_EVAL_W)
 
   val coreActive = RegInit(false.B)
   val coreReqIdx = RegInit(0.U(9.W))
@@ -585,7 +592,7 @@ class ToomCook43Clean extends Module {
           coreRam(buf)(pt2).io.en := true.B
           coreRam(buf)(pt2).io.we := true.B
           coreRam(buf)(pt2).io.addr := pageAddr(wrPage) // coreRam(page%2)(pt2)(page/2).
-          coreRam(buf)(pt2).io.din := packVec(core.io.cOut)
+          coreRam(buf)(pt2).io.din := packVec(core.io.c)
         }
       }
       coreCount := coreCount + 1.U
