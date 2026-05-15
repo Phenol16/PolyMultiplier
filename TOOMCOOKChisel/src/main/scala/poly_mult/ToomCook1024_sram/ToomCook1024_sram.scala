@@ -4,21 +4,6 @@ import chisel3._
 import chisel3.util._
 import core._
 
-object Util {
-  def mask(value: UInt, targetWidth: Int): UInt = {
-    require(targetWidth > 0, "mask width must be positive")
-    if (value.getWidth >= targetWidth) value(targetWidth - 1, 0)
-    else Cat(Fill(targetWidth - value.getWidth, 0.U), value)
-  }
-
-  def fillMsb(value: UInt, targetWidth: Int): UInt = {
-    require(targetWidth > 0, "fillMsb width must be positive")
-    if (value.getWidth >= targetWidth) value(targetWidth - 1, 0)
-    else Cat(Fill(targetWidth - value.getWidth, value(value.getWidth - 1)), value)
-  }
-}
-import Util._
-
 object TC4EvalWidth {
   val A_EVAL_W = 39
   val B_EVAL_W = 29
@@ -44,7 +29,7 @@ class TC4EvalPoint(inW: Int, outW: Int) extends Module {
   })
 
   val layer = Module(new Eval(inWidth = inW, outWidth = outW))
-  layer.io.r := io.r
+  layer.io.in := io.r
   io.out := MuxLookup(io.pt, 0.U(outW.W))((0 until 7).map(i => i.U -> layer.io.out(i)))
 }
 
@@ -101,35 +86,35 @@ class InterpStepCoreTC4(pidx: Int, inW: Int) extends Module {
     val nr2 = Output(UInt(mk2.W))
   })
 
-  val p0 = mask(io.pIn(0), mk)
-  val p1 = mask(io.pIn(1), mk)
-  val p2 = mask(io.pIn(2), mk)
-  val p3 = mask(io.pIn(3), mk)
-  val p4 = mask(io.pIn(4), mk)
-  val p5 = mask(io.pIn(5), mk)
-  val p6 = mask(io.pIn(6), mk)
+  val p0 = ParaMath.mask(io.pIn(0), mk)
+  val p1 = ParaMath.mask(io.pIn(1), mk)
+  val p2 = ParaMath.mask(io.pIn(2), mk)
+  val p3 = ParaMath.mask(io.pIn(3), mk)
+  val p4 = ParaMath.mask(io.pIn(4), mk)
+  val p5 = ParaMath.mask(io.pIn(5), mk)
+  val p6 = ParaMath.mask(io.pIn(6), mk)
 
-  val r5a = mask(p5 - p4, mk)
-  val r3a = mask(mask(p3 - p2, mk) >> 1, mk)
-  val r4a = mask(p4 - p0, mk)
-  val r4b = mask((r4a << 1) + r5a - (p6 << 7), mk)
-  val r2a = mask(p2 + r3a, mk)
-  val r1a = mask(p1 + p4 - (r2a << 6) - r2a, mk)
-  val r2b = mask(r2a - p6 - p0, mk)
-  val r1b = mask(r1a + r2b + (r2b << 2) + (r2b << 3) + (r2b << 5), mk)
-  val r4c = mask(mask(mask(r4b - (r2b << 3), mk) >> 3, mk) * p.inv3.U(42.W), mk2)
-  val r5b = mask(mask((r5a + r1b) >> 1, mk) * p.inv18.U(42.W), mk3)
-  val r1c = mask(mask(mask(r1b + (r3a << 4), mk) >> 1, mk) * p.inv9.U(42.W), mk3)
-  val r2c = mask(r2b - r4c, mk2)
-  val r3b = mask(0.U - r3a - r1c, mk2)
-  val r5c = mask((r1c - r5b) >> 1, mk2)
-  val r1d = mask(r1c - r5c, mk2)
+  val r5a = ParaMath.mask(p5 - p4, mk)
+  val r3a = ParaMath.mask(ParaMath.mask(p3 - p2, mk) >> 1, mk)
+  val r4a = ParaMath.mask(p4 - p0, mk)
+  val r4b = ParaMath.mask((r4a << 1) + r5a - (p6 << 7), mk)
+  val r2a = ParaMath.mask(p2 + r3a, mk)
+  val r1a = ParaMath.mask(p1 + p4 - (r2a << 6) - r2a, mk)
+  val r2b = ParaMath.mask(r2a - p6 - p0, mk)
+  val r1b = ParaMath.mask(r1a + r2b + (r2b << 2) + (r2b << 3) + (r2b << 5), mk)
+  val r4c = ParaMath.mask(ParaMath.mask(ParaMath.mask(r4b - (r2b << 3), mk) >> 3, mk) * p.inv3.U(42.W), mk2)
+  val r5b = ParaMath.mask(ParaMath.mask((r5a + r1b) >> 1, mk) * p.inv18.U(42.W), mk3)
+  val r1c = ParaMath.mask(ParaMath.mask(ParaMath.mask(r1b + (r3a << 4), mk) >> 1, mk) * p.inv9.U(42.W), mk3)
+  val r2c = ParaMath.mask(r2b - r4c, mk2)
+  val r3b = ParaMath.mask(0.U - r3a - r1c, mk2)
+  val r5c = ParaMath.mask((r1c - r5b) >> 1, mk2)
+  val r1d = ParaMath.mask(r1c - r5c, mk2)
 
   io.c3 := r3b
-  io.c0part := mask(p6 + io.pr2, mk2)
-  io.c1part := mask(r5c + io.pr1, mk2)
-  io.c2part := mask(r4c + io.pr0, mk2)
-  io.nr0 := mask(p0, mk2)
+  io.c0part := ParaMath.mask(p6 + io.pr2, mk2)
+  io.c1part := ParaMath.mask(r5c + io.pr1, mk2)
+  io.c2part := ParaMath.mask(r4c + io.pr0, mk2)
+  io.nr0 := ParaMath.mask(p0, mk2)
   io.nr1 := r1d
   io.nr2 := r2c
 }
@@ -162,10 +147,10 @@ class Interp8ColsStepTC4(pidx: Int, inW: Int, outW: Int) extends Module {
     core.io.pr1 := carry1(col)
     core.io.pr2 := carry2(col)
 
-    io.out(col * 4 + 0) := mask(core.io.c0part, outW)
-    io.out(col * 4 + 1) := mask(core.io.c1part, outW)
-    io.out(col * 4 + 2) := mask(core.io.c2part, outW)
-    io.out(col * 4 + 3) := mask(core.io.c3, outW)
+    io.out(col * 4 + 0) := ParaMath.mask(core.io.c0part, outW)
+    io.out(col * 4 + 1) := ParaMath.mask(core.io.c1part, outW)
+    io.out(col * 4 + 2) := ParaMath.mask(core.io.c2part, outW)
+    io.out(col * 4 + 3) := ParaMath.mask(core.io.c3, outW)
     carry0(col + 1) := core.io.nr0
     carry1(col + 1) := core.io.nr1
     carry2(col + 1) := core.io.nr2
@@ -296,7 +281,6 @@ class ToomCook43Clean extends Module {
   val coreAWordReg = Reg(UInt((16 * A_EVAL_W).W))
   val coreBWordReg = Reg(UInt((16 * B_EVAL_W).W))
   val coreWordValid = RegInit(false.B)
-  val coreWordJob = RegInit(0.U(9.W))
   core.io.a := split16(coreAWordReg, A_EVAL_W)
   core.io.b := split16(coreBWordReg, B_EVAL_W)
 
@@ -366,23 +350,23 @@ class ToomCook43Clean extends Module {
   // overwrites block0 coeff 0/1/2 using those final carries.
   val correctedW1Vec = Wire(Vec(32, UInt(33.W)))
   correctedW1Vec := firstW1
-  correctedW1Vec(0) := mask(firstW1(0) - i1Pr2, 33)
-  correctedW1Vec(1) := mask(firstW1(1) - i1Pr1, 33)
-  correctedW1Vec(2) := mask(firstW1(2) - i1Pr0, 33)
+  correctedW1Vec(0) := ParaMath.mask(firstW1(0) - i1Pr2, 33)
+  correctedW1Vec(1) := ParaMath.mask(firstW1(1) - i1Pr1, 33)
+  correctedW1Vec(2) := ParaMath.mask(firstW1(2) - i1Pr0, 33)
   val correctedW1Word = packVec(correctedW1Vec)
 
   val correctedW0Vec = Wire(Vec(32, UInt(27.W)))
   correctedW0Vec := firstW0
-  correctedW0Vec(0) := mask(firstW0(0) - i2Pr2, 27)
-  correctedW0Vec(1) := mask(firstW0(1) - i2Pr1, 27)
-  correctedW0Vec(2) := mask(firstW0(2) - i2Pr0, 27)
+  correctedW0Vec(0) := ParaMath.mask(firstW0(0) - i2Pr2, 27)
+  correctedW0Vec(1) := ParaMath.mask(firstW0(1) - i2Pr1, 27)
+  correctedW0Vec(2) := ParaMath.mask(firstW0(2) - i2Pr0, 27)
   val correctedW0Word = packVec(correctedW0Vec)
 
   val correctedOutVec = Wire(Vec(32, UInt(24.W)))
   correctedOutVec := firstOut
-  correctedOutVec(0) := mask(firstOut(0) - i3Pr2, 24)
-  correctedOutVec(1) := mask(firstOut(1) - i3Pr1, 24)
-  correctedOutVec(2) := mask(firstOut(2) - i3Pr0, 24)
+  correctedOutVec(0) := ParaMath.mask(firstOut(0) - i3Pr2, 24)
+  correctedOutVec(1) := ParaMath.mask(firstOut(1) - i3Pr1, 24)
+  correctedOutVec(2) := ParaMath.mask(firstOut(2) - i3Pr0, 24)
   val correctedOutWord = packVec(correctedOutVec)
 
   when(io.valid_in && !evalActive && !coreActive && !i1Active && !i2Active && !i3Active) {
@@ -407,7 +391,6 @@ class ToomCook43Clean extends Module {
     coreReadValid := false.B
     coreWordValid := false.B
     coreFeedJob := 0.U
-    coreWordJob := 0.U
     coreOutJob := 0.U
     coreDone := false.B
     i1Active := false.B; i1Page := 0.U; i1Step := 0.U; i1Sub := 0.U
@@ -502,7 +485,6 @@ class ToomCook43Clean extends Module {
           coreBWordReg := evalBRam(bank).io.dout
         }
       }
-      coreWordJob := coreFeedJob
     }
     coreWordValid := coreReadValid
     coreReadValid := doCoreRead
@@ -701,31 +683,3 @@ class ToomCook43Clean extends Module {
 
 class ToomCook1024Clean extends ToomCook43Clean
 class ToomCook43 extends ToomCook43Clean
-/* class EvalLayerTC4(inW: Int, outW: Int) extends Module {
-  val io = IO(new Bundle {
-    val r = Input(Vec(4, UInt(inW.W)))
-    val out = Output(Vec(7, UInt(outW.W)))
-  })
-
-  val r0 = io.r(0)
-  val r1 = io.r(1)
-  val r2 = io.r(2)
-  val r3 = io.r(3)
-
-  val even = r0 +& r2
-  val odd = r1 +& r3
-  val scaledEven = Cat(r0, 0.U(2.W)) +& r2
-  val scaledOdd = Cat(r1, 0.U(2.W)) +& r3
-  val high0 = r2 +& Cat(r3, 0.U(1.W))
-  val high1 = r1 +& Cat(high0, 0.U(1.W))
-  val high2 = r0 +& Cat(high1, 0.U(1.W))
-
-  io.out(0) := mask(r3, outW)
-  io.out(1) := mask(high2, outW)
-  io.out(2) := mask(even +& odd, outW)
-  io.out(3) := fillMsb(even -& odd, outW)
-  io.out(4) := mask(Cat(scaledEven, 0.U(1.W)) +& scaledOdd, outW)
-  io.out(5) := fillMsb(Cat(scaledEven, 0.U(1.W)) -& scaledOdd, outW)
-  io.out(6) := mask(r0, outW)
-}
- */
