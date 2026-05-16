@@ -21,7 +21,7 @@ object InterpParamTable {
 }
 
 
-class TC4EvalPoint(inW: Int, outW: Int) extends Module {
+class EvalPoint(inW: Int, outW: Int) extends Module {
   val io = IO(new Bundle {
     val r = Input(Vec(4, UInt(inW.W)))
     val pt = Input(UInt(3.W))
@@ -45,7 +45,7 @@ class Eval64Point(inW: Int, outW: Int) extends Module {
   val mid = Wire(Vec(16, UInt(outW.W)))
   for (outer <- 0 until 4) {
     for (middle <- 0 until 4) {
-      val eval = Module(new TC4EvalPoint(inW, outW))
+      val eval = Module(new EvalPoint(inW, outW))
       for (inner <- 0 until 4) eval.io.r(inner) := io.in(outer * 16 + middle * 4 + inner)
       eval.io.pt := io.pt0
       mid(outer * 4 + middle) := eval.io.out
@@ -54,19 +54,19 @@ class Eval64Point(inW: Int, outW: Int) extends Module {
 
   val high = Wire(Vec(4, UInt(outW.W)))
   for (outer <- 0 until 4) {
-    val eval = Module(new TC4EvalPoint(outW, outW))
+    val eval = Module(new EvalPoint(outW, outW))
     for (middle <- 0 until 4) eval.io.r(middle) := mid(outer * 4 + middle)
     eval.io.pt := io.pt1
     high(outer) := eval.io.out
   }
 
-  val eval = Module(new TC4EvalPoint(outW, outW))
+  val eval = Module(new EvalPoint(outW, outW))
   eval.io.r := high
   eval.io.pt := io.pt2
   io.out := eval.io.out
 }
 
-class InterpStepCoreTC4(pidx: Int, inW: Int) extends Module {
+class InterpStepCore(pidx: Int, inW: Int) extends Module {
   private val p = InterpParamTable.params(pidx)
   private val mk = p.mk
   private val mk2 = p.mk2
@@ -119,7 +119,7 @@ class InterpStepCoreTC4(pidx: Int, inW: Int) extends Module {
   io.nr2 := r2c
 }
 
-class Interp8ColsStepTC4(pidx: Int, inW: Int, outW: Int) extends Module {
+class Interp8ColsStep(pidx: Int, inW: Int, outW: Int) extends Module {
   private val mk2 = InterpParamTable.params(pidx).mk2
 
   val io = IO(new Bundle {
@@ -141,7 +141,7 @@ class Interp8ColsStepTC4(pidx: Int, inW: Int, outW: Int) extends Module {
   carry2(0) := io.pr2
 
   for (col <- 0 until 8) {
-    val core = Module(new InterpStepCoreTC4(pidx, inW))
+    val core = Module(new InterpStepCore(pidx, inW))
     for (pt <- 0 until 7) core.io.pIn(pt) := io.in(pt * 8 + col)
     core.io.pr0 := carry0(col)
     core.io.pr1 := carry1(col)
@@ -174,7 +174,7 @@ class SpRam(width: Int, depth: Int) extends BlackBox(Map("WIDTH" -> width, "DEPT
   addResource("/sp_ram.v")
 }
 
-class ToomCook43IO extends Bundle {
+class ToomCook1024IO extends Bundle {
   val start = Input(Bool())
   val busy = Output(Bool())
   val done = Output(Bool())
@@ -190,8 +190,8 @@ class ToomCook43IO extends Bundle {
   val c_valid = Output(Bool())
 }
 
-class ToomCook43Clean extends Module {
-  val io = IO(new ToomCook43IO)
+class ToomCook1024 extends Module {
+  val io = IO(new ToomCook1024IO)
 
   private val A_EVAL_W = TC4EvalWidth.A_EVAL_W
   private val B_EVAL_W = TC4EvalWidth.B_EVAL_W
@@ -212,12 +212,8 @@ class ToomCook43Clean extends Module {
 
   private def evalBank(job: UInt): UInt = job(0)
   private def evalAddr(job: UInt): UInt = job >> 1
-  private def pageOf(job: UInt): UInt = job / 7.U
-  private def pt2Of(job: UInt): UInt = job - pageOf(job) * 7.U
   private def pageBuf(page: UInt): UInt = page(0)
   private def pageAddr(page: UInt): UInt = page >> 1
-  private def pt0OfPage(page: UInt): UInt = page / 7.U
-  private def pt1OfPage(page: UInt): UInt = page - pt0OfPage(page) * 7.U
 
   private val ColsPerBank = 8
   private val GroupsPerBlock = 4
@@ -297,10 +293,14 @@ class ToomCook43Clean extends Module {
   val coreReadValid = RegInit(false.B)
   val coreFeedJob = RegInit(0.U(9.W))
   val coreOutJob = RegInit(0.U(9.W))
+  val coreWrPage = RegInit(0.U(6.W))
+  val coreWrPt2 = RegInit(0.U(3.W))
   val corePageReady = RegInit(VecInit(Seq.fill(49)(false.B)))
 
   val i1Active = RegInit(false.B)
   val i1Page = RegInit(0.U(6.W))
+  val i1Pt0 = RegInit(0.U(3.W))
+  val i1Pt1 = RegInit(0.U(3.W))
   val i1Step = RegInit(0.U(1.W))
   val i1Sub = RegInit(0.U(2.W))
   val i1Pr0 = RegInit(0.U(30.W)); val i1Pr1 = RegInit(0.U(30.W)); val i1Pr2 = RegInit(0.U(30.W))
@@ -322,9 +322,9 @@ class ToomCook43Clean extends Module {
   val i3Pr0 = RegInit(0.U(24.W)); val i3Pr1 = RegInit(0.U(24.W)); val i3Pr2 = RegInit(0.U(24.W))
   val firstOut = Reg(Vec(32, UInt(24.W)))
 
-  val interp1 = Module(new Interp8ColsStepTC4(pidx = 1, inW = 36, outW = 33))
-  val interp2 = Module(new Interp8ColsStepTC4(pidx = 2, inW = 33, outW = 27))
-  val interp3 = Module(new Interp8ColsStepTC4(pidx = 3, inW = 27, outW = 24))
+  val interp1 = Module(new Interp8ColsStep(pidx = 1, inW = 36, outW = 33))
+  val interp2 = Module(new Interp8ColsStep(pidx = 2, inW = 33, outW = 27))
+  val interp3 = Module(new Interp8ColsStep(pidx = 3, inW = 27, outW = 24))
 
   val inter1In = Wire(Vec(7 * 8, UInt(36.W)))
   val inter2In = Wire(Vec(7 * 8, UInt(33.W)))
@@ -414,7 +414,10 @@ class ToomCook43Clean extends Module {
     coreWordValid := false.B
     coreFeedJob := 0.U
     coreOutJob := 0.U
+    coreWrPage := 0.U
+    coreWrPt2 := 0.U
     i1Active := false.B; i1Page := 0.U; i1Step := 0.U; i1Sub := 0.U
+    i1Pt0 := 0.U; i1Pt1 := 0.U
     i2Active := false.B; i2Pt0 := 0.U; i2Step := 0.U; i2Sub := 0.U
     i3Active := false.B; i3Step := 0.U; i3Sub := 0.U
     i1Pr0 := 0.U; i1Pr1 := 0.U; i1Pr2 := 0.U
@@ -507,17 +510,21 @@ class ToomCook43Clean extends Module {
     coreReadValid := doCoreRead
     coreFeedJob := coreReqIdx
     when(core.io.valid_out) {
-      val wrPage = pageOf(coreOutJob)
-      val wrPt2 = pt2Of(coreOutJob)
       for (buf <- 0 until 2; pt2 <- 0 until 7) {
-        when(pageBuf(wrPage) === buf.U && wrPt2 === pt2.U) {
+        when(pageBuf(coreWrPage) === buf.U && coreWrPt2 === pt2.U) {
           coreRam(buf)(pt2).io.en := true.B
           coreRam(buf)(pt2).io.we := true.B
-          coreRam(buf)(pt2).io.addr := pageAddr(wrPage) // coreRam(page%2)(pt2)(page/2).
+          coreRam(buf)(pt2).io.addr := pageAddr(coreWrPage) // coreRam(page%2)(pt2)(page/2).
           coreRam(buf)(pt2).io.din := packVec(core.io.c)
         }
       }
-      when(wrPt2 === 6.U) { corePageReady(wrPage) := true.B }
+      when(coreWrPt2 === 6.U) { corePageReady(coreWrPage) := true.B }
+      when(coreWrPt2 === 6.U) {
+        coreWrPt2 := 0.U
+        coreWrPage := coreWrPage + 1.U
+      }.otherwise {
+        coreWrPt2 := coreWrPt2 + 1.U
+      }
       when(coreOutJob === 342.U) {
         coreActive := false.B
       }.otherwise {
@@ -545,8 +552,8 @@ class ToomCook43Clean extends Module {
     i1Step := 0.U
     i1Pr0 := 0.U; i1Pr1 := 0.U; i1Pr2 := 0.U
   }.elsewhen(i1Active) {
-    val pt0 = pt0OfPage(i1Page)
-    val pt1 = pt1OfPage(i1Page)
+    val pt0 = i1Pt0
+    val pt1 = i1Pt1
     val wrBuf = pt0(0)
     when(i1Sub === 1.U) {
       val w1WriteAddr = i1Step
@@ -585,7 +592,15 @@ class ToomCook43Clean extends Module {
       when(pt1 === 6.U) { w1GroupReady(pt0) := true.B }
       i1Active := false.B
       i1Pr0 := 0.U; i1Pr1 := 0.U; i1Pr2 := 0.U
-      when(i1Page =/= 48.U) { i1Page := i1Page + 1.U }
+      when(i1Page =/= 48.U) {
+        i1Page := i1Page + 1.U
+        when(i1Pt1 === 6.U) {
+          i1Pt1 := 0.U
+          i1Pt0 := i1Pt0 + 1.U
+        }.otherwise {
+          i1Pt1 := i1Pt1 + 1.U
+        }
+      }
     }
   }
 
@@ -649,13 +664,12 @@ class ToomCook43Clean extends Module {
   }
 
   // Inter3Controller: wait until all W0 pt0 banks are complete, then produce the
-  // final 32-wide output blocks. Each Inter3 write also updates outReg directly,
-  // so there is no output readback state on the critical path.
+  // final 32-wide output blocks.
   when(!i3Active && !doneReg && w0BlockReady.asUInt.andR) {
     for (pt0 <- 0 until 7; group <- 0 until GroupsPerBlock) {
-      when(i3Group === group.U) {
+      when(group.U === 0.U) {
         w0Ram(pt0)(group).io.en := true.B
-        w0Ram(pt0)(group).io.addr := i3Addr
+        w0Ram(pt0)(group).io.addr := 0.U
       }
     }
     i3Active := true.B
@@ -705,6 +719,3 @@ class ToomCook43Clean extends Module {
   io.c_dout := outRam.io.dout
   io.c_valid := RegNext(io.c_re && doneReg, false.B)
 }
-
-class ToomCook1024Clean extends ToomCook43Clean
-class ToomCook43 extends ToomCook43Clean
