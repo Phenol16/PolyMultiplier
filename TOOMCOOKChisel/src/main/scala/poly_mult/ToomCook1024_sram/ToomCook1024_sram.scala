@@ -261,7 +261,9 @@ class ToomCook1024 extends Module {
   val evalPt0 = RegInit(0.U(3.W))
   val evalPt1 = RegInit(0.U(3.W))
   val evalPt2 = RegInit(0.U(3.W))
-  val evalJobIdx = evalPt0 * 49.U + evalPt1 * 7.U + evalPt2 // jobIdx = pt0 * 49 + pt1 * 7 + pt2.
+  // Flat eval job counter. It advances in lockstep with evalPt0/evalPt1/evalPt2
+  // to avoid hardware multipliers for pt0*49 + pt1*7 + pt2.
+  val evalJobIdx = RegInit(0.U(9.W))
 
   val evalA = Seq.fill(16)(Module(new Eval64Point(24, A_EVAL_W)))
   val evalB = Seq.fill(16)(Module(new Eval64Point(8, B_EVAL_W)))
@@ -292,7 +294,7 @@ class ToomCook1024 extends Module {
   val coreReqIdx = RegInit(0.U(9.W))
   val coreReadValid = RegInit(false.B)
   val coreFeedJob = RegInit(0.U(9.W))
-  val coreOutJob = RegInit(0.U(9.W))
+  // Core output write pointer. It replaces the old flat coreOutJob counter.
   val coreWrPage = RegInit(0.U(6.W))
   val coreWrPt2 = RegInit(0.U(3.W))
   val corePageReady = RegInit(VecInit(Seq.fill(49)(false.B)))
@@ -408,12 +410,12 @@ class ToomCook1024 extends Module {
     evalActive := false.B
     evalProduced := 0.U
     evalPt0 := 0.U; evalPt1 := 0.U; evalPt2 := 0.U
+    evalJobIdx := 0.U
     coreActive := false.B
     coreReqIdx := 0.U
     coreReadValid := false.B
     coreWordValid := false.B
     coreFeedJob := 0.U
-    coreOutJob := 0.U
     coreWrPage := 0.U
     coreWrPt2 := 0.U
     i1Active := false.B; i1Page := 0.U; i1Step := 0.U; i1Sub := 0.U
@@ -468,10 +470,12 @@ class ToomCook1024 extends Module {
         evalBRam(bank).io.din := packVec(evalBVec)
       }
     }
+    val isLastEvalJob = evalPt0 === 6.U && evalPt1 === 6.U && evalPt2 === 6.U
     evalProduced := evalProduced + 1.U
-    when(evalPt0 === 6.U && evalPt1 === 6.U && evalPt2 === 6.U) {
+    when(isLastEvalJob) {
       evalActive := false.B
     }.otherwise {
+      evalJobIdx := evalJobIdx + 1.U
       when(evalPt2 === 6.U) {
         evalPt2 := 0.U
         when(evalPt1 === 6.U) { evalPt1 := 0.U; evalPt0 := evalPt0 + 1.U }
@@ -519,16 +523,15 @@ class ToomCook1024 extends Module {
         }
       }
       when(coreWrPt2 === 6.U) { corePageReady(coreWrPage) := true.B }
-      when(coreWrPt2 === 6.U) {
-        coreWrPt2 := 0.U
-        coreWrPage := coreWrPage + 1.U
-      }.otherwise {
-        coreWrPt2 := coreWrPt2 + 1.U
-      }
-      when(coreOutJob === 342.U) {
+      when(coreWrPage === 48.U && coreWrPt2 === 6.U) {
         coreActive := false.B
       }.otherwise {
-        coreOutJob := coreOutJob + 1.U
+        when(coreWrPt2 === 6.U) {
+          coreWrPt2 := 0.U
+          coreWrPage := coreWrPage + 1.U
+        }.otherwise {
+          coreWrPt2 := coreWrPt2 + 1.U
+        }
       }
     }
   }
