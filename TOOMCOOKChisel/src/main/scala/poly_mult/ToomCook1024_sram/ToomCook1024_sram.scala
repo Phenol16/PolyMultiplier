@@ -38,8 +38,7 @@ class Eval64Point(inW: Int, outW: Int) extends Module {
     val in = Input(Vec(64, UInt(inW.W)))
     val pt0 = Input(UInt(3.W))
     val pt1 = Input(UInt(3.W))
-    val pt2 = Input(UInt(3.W))
-    val out = Output(UInt(outW.W))
+    val out = Output(Vec(7, UInt(outW.W)))
   })
 
   val mid = Wire(Vec(16, UInt(outW.W)))
@@ -60,10 +59,9 @@ class Eval64Point(inW: Int, outW: Int) extends Module {
     high(outer) := eval.io.out
   }
 
-  val eval = Module(new EvalPoint(outW, outW))
-  eval.io.r := high
-  eval.io.pt := io.pt2
-  io.out := eval.io.out
+  val finalEval = Module(new Eval(inWidth = outW, outWidth = outW))
+  finalEval.io.in := high
+  io.out := finalEval.io.out
 }
 
 class InterpStepCore(pidx: Int, inW: Int) extends Module {
@@ -210,8 +208,6 @@ class ToomCook1024 extends Module {
     packVec(xs)
   }
 
-  private def evalBank(job: UInt): UInt = job(0)
-  private def evalAddr(job: UInt): UInt = job >> 1
   private def pageBuf(page: UInt): UInt = page(0)
   private def pageAddr(page: UInt): UInt = page >> 1
 
@@ -220,8 +216,8 @@ class ToomCook1024 extends Module {
 
   val inARam = Module(new SpRam(32 * 24, 32))
   val inBRam = Module(new SpRam(32 * 8, 32))
-  val evalARam = Seq.fill(2)(Module(new SpRam(16 * A_EVAL_W, 172)))
-  val evalBRam = Seq.fill(2)(Module(new SpRam(16 * B_EVAL_W, 172)))
+  val evalARam = Seq.fill(2, 7)(Module(new SpRam(16 * A_EVAL_W, 25)))
+  val evalBRam = Seq.fill(2, 7)(Module(new SpRam(16 * B_EVAL_W, 25)))
   // coreRam(buf)(pt2)(group): 8-col banked core output buffer.
   // group 0 stores core.io.c(0..7), group 1 stores core.io.c(8..15).
   val coreRam = Seq.fill(2, 7, 2)(Module(new SpRam(8 * 36, 25)))
@@ -240,8 +236,10 @@ class ToomCook1024 extends Module {
   }
   ramDefaults(inARam, 32 * 24)
   ramDefaults(inBRam, 32 * 8)
-  evalARam.foreach(ramDefaults(_, 16 * A_EVAL_W))
-  evalBRam.foreach(ramDefaults(_, 16 * B_EVAL_W))
+  for (buf <- 0 until 2; pt2 <- 0 until 7) {
+    ramDefaults(evalARam(buf)(pt2), 16 * A_EVAL_W)
+    ramDefaults(evalBRam(buf)(pt2), 16 * B_EVAL_W)
+  }
   for (buf <- 0 until 2; pt2 <- 0 until 7; group <- 0 until 2) ramDefaults(coreRam(buf)(pt2)(group), 8 * 36)
   for (buf <- 0 until 2; pt1 <- 0 until 7; group <- 0 until GroupsPerBlock) ramDefaults(w1Ram(buf)(pt1)(group), ColsPerBank * 33)
   for (pt0 <- 0 until 7; group <- 0 until GroupsPerBlock) ramDefaults(w0Ram(pt0)(group), ColsPerBank * 27)
@@ -259,29 +257,26 @@ class ToomCook1024 extends Module {
   val loadB0 = Reg(UInt((32 * 8).W))
 
   val evalActive = RegInit(false.B)
-  val evalProduced = RegInit(0.U(9.W))
+  val evalPage = RegInit(0.U(6.W))
   val evalPt0 = RegInit(0.U(3.W))
   val evalPt1 = RegInit(0.U(3.W))
-  val evalPt2 = RegInit(0.U(3.W))
-  // Flat eval job counter. It advances in lockstep with evalPt0/evalPt1/evalPt2
-  // to avoid hardware multipliers for pt0*49 + pt1*7 + pt2.
-  val evalJobIdx = RegInit(0.U(9.W))
+  val evalPageReady = RegInit(VecInit(Seq.fill(49)(false.B)))
 
   val evalA = Seq.fill(16)(Module(new Eval64Point(24, A_EVAL_W)))
   val evalB = Seq.fill(16)(Module(new Eval64Point(8, B_EVAL_W)))
-  val evalAVec = Wire(Vec(16, UInt(A_EVAL_W.W)))
-  val evalBVec = Wire(Vec(16, UInt(B_EVAL_W.W)))
+  val evalAVec = Wire(Vec(7, Vec(16, UInt(A_EVAL_W.W))))
+  val evalBVec = Wire(Vec(7, Vec(16, UInt(B_EVAL_W.W))))
   for (lane <- 0 until 16) {
     evalA(lane).io.in := split64(laneAWord(lane), 24)
     evalB(lane).io.in := split64(laneBWord(lane), 8)
     evalA(lane).io.pt0 := evalPt0
     evalA(lane).io.pt1 := evalPt1
-    evalA(lane).io.pt2 := evalPt2
     evalB(lane).io.pt0 := evalPt0
     evalB(lane).io.pt1 := evalPt1
-    evalB(lane).io.pt2 := evalPt2
-    evalAVec(lane) := evalA(lane).io.out
-    evalBVec(lane) := evalB(lane).io.out
+    for (pt2 <- 0 until 7) {
+      evalAVec(pt2)(lane) := evalA(lane).io.out(pt2)
+      evalBVec(pt2)(lane) := evalB(lane).io.out(pt2)
+    }
   }
 
   val core = Module(new core16(t = 0, k = 2, sign = 1, aWidth = A_EVAL_W, bWidth = B_EVAL_W, cWidth = 36))
@@ -293,9 +288,12 @@ class ToomCook1024 extends Module {
   core.io.b := split16(coreBWordReg, B_EVAL_W)
 
   val coreActive = RegInit(false.B)
-  val coreReqIdx = RegInit(0.U(9.W))
+  val coreReqPage = RegInit(0.U(6.W))
+  val coreReqPt2 = RegInit(0.U(3.W))
+  val coreFeedPage = RegInit(0.U(6.W))
+  val coreFeedPt2 = RegInit(0.U(3.W))
+  val coreReqDoneReg = RegInit(false.B)
   val coreReadValid = RegInit(false.B)
-  val coreFeedJob = RegInit(0.U(9.W))
   // Core output write pointer. It replaces the old flat coreOutJob counter.
   val coreWrPage = RegInit(0.U(6.W))
   val coreWrPt2 = RegInit(0.U(3.W))
@@ -413,14 +411,17 @@ class ToomCook1024 extends Module {
     loadLane := 0.U
     loadPhase := 0.U
     evalActive := false.B
-    evalProduced := 0.U
-    evalPt0 := 0.U; evalPt1 := 0.U; evalPt2 := 0.U
-    evalJobIdx := 0.U
+    evalPage := 0.U
+    evalPt0 := 0.U; evalPt1 := 0.U
+    evalPageReady := VecInit(Seq.fill(49)(false.B))
     coreActive := false.B
-    coreReqIdx := 0.U
+    coreReqPage := 0.U
+    coreReqPt2 := 0.U
+    coreFeedPage := 0.U
+    coreFeedPt2 := 0.U
+    coreReqDoneReg := false.B
     coreReadValid := false.B
     coreWordValid := false.B
-    coreFeedJob := 0.U
     coreWrPage := 0.U
     coreWrPt2 := 0.U
     i1Active := false.B; i1Page := 0.U; i1Step := 0.U; i1Sub := 0.U
@@ -462,62 +463,67 @@ class ToomCook1024 extends Module {
     }
   }
 
+  // EvalController: write one page per cycle. Each page contains seven pt2 banks.
   when(evalActive) {
-    for (bank <- 0 until 2) {
-      when(evalBank(evalJobIdx) === bank.U) {
-        evalARam(bank).io.en := true.B
-        evalARam(bank).io.we := true.B
-        evalARam(bank).io.addr := evalAddr(evalJobIdx)
-        evalARam(bank).io.din := packVec(evalAVec)
-        evalBRam(bank).io.en := true.B
-        evalBRam(bank).io.we := true.B
-        evalBRam(bank).io.addr := evalAddr(evalJobIdx)
-        evalBRam(bank).io.din := packVec(evalBVec)
+    val wrBuf = pageBuf(evalPage)
+    val wrAddr = pageAddr(evalPage)
+    for (pt2 <- 0 until 7; buf <- 0 until 2) {
+      when(wrBuf === buf.U) {
+        evalARam(buf)(pt2).io.en := true.B
+        evalARam(buf)(pt2).io.we := true.B
+        evalARam(buf)(pt2).io.addr := wrAddr
+        evalARam(buf)(pt2).io.din := packVec(evalAVec(pt2))
+        evalBRam(buf)(pt2).io.en := true.B
+        evalBRam(buf)(pt2).io.we := true.B
+        evalBRam(buf)(pt2).io.addr := wrAddr
+        evalBRam(buf)(pt2).io.din := packVec(evalBVec(pt2))
       }
     }
-    val isLastEvalJob = evalPt0 === 6.U && evalPt1 === 6.U && evalPt2 === 6.U
-    evalProduced := evalProduced + 1.U
-    when(isLastEvalJob) {
+    evalPageReady(evalPage) := true.B
+    when(evalPage === 48.U) {
       evalActive := false.B
     }.otherwise {
-      evalJobIdx := evalJobIdx + 1.U
-      when(evalPt2 === 6.U) {
-        evalPt2 := 0.U
-        when(evalPt1 === 6.U) { evalPt1 := 0.U; evalPt0 := evalPt0 + 1.U }
-          .otherwise { evalPt1 := evalPt1 + 1.U }
-      }.otherwise { evalPt2 := evalPt2 + 1.U }
+      evalPage := evalPage + 1.U
+      when(evalPt1 === 6.U) { evalPt1 := 0.U; evalPt0 := evalPt0 + 1.U }
+        .otherwise { evalPt1 := evalPt1 + 1.U }
     }
   }
 
-  // CoreController: read job k after eval has written it. While Eval writes job
-  // k+1 in bank (k+1)%2, Core reads job k from bank k%2, so no single-port SRAM
-  // read/write conflict occurs.
+  // CoreController: read eval pages in pt2 order and feed one core job per cycle.
   when(coreActive) {
-    val doCoreRead = coreReqIdx < evalProduced
+    val doCoreRead = !coreReqDoneReg && evalPageReady(coreReqPage)
     when(doCoreRead) {
-      for (bank <- 0 until 2) {
-        when(evalBank(coreReqIdx) === bank.U) {
-          evalARam(bank).io.en := true.B
-          evalARam(bank).io.addr := evalAddr(coreReqIdx)
-          evalBRam(bank).io.en := true.B
-          evalBRam(bank).io.addr := evalAddr(coreReqIdx)
+      for (buf <- 0 until 2; pt2 <- 0 until 7) {
+        when(pageBuf(coreReqPage) === buf.U && coreReqPt2 === pt2.U) {
+          evalARam(buf)(pt2).io.en := true.B
+          evalARam(buf)(pt2).io.addr := pageAddr(coreReqPage)
+          evalBRam(buf)(pt2).io.en := true.B
+          evalBRam(buf)(pt2).io.addr := pageAddr(coreReqPage)
         }
       }
-      coreReqIdx := coreReqIdx + 1.U
+      coreFeedPage := coreReqPage
+      coreFeedPt2 := coreReqPt2
+      when(coreReqPage === 48.U && coreReqPt2 === 6.U) {
+        coreReqDoneReg := true.B
+      }.elsewhen(coreReqPt2 === 6.U) {
+        coreReqPt2 := 0.U
+        coreReqPage := coreReqPage + 1.U
+      }.otherwise {
+        coreReqPt2 := coreReqPt2 + 1.U
+      }
     }
 
     core.io.valid_in := coreWordValid
     when(coreReadValid) {
-      for (bank <- 0 until 2) {
-        when(evalBank(coreFeedJob) === bank.U) {
-          coreAWordReg := evalARam(bank).io.dout
-          coreBWordReg := evalBRam(bank).io.dout
+      for (buf <- 0 until 2; pt2 <- 0 until 7) {
+        when(pageBuf(coreFeedPage) === buf.U && coreFeedPt2 === pt2.U) {
+          coreAWordReg := evalARam(buf)(pt2).io.dout
+          coreBWordReg := evalBRam(buf)(pt2).io.dout
         }
       }
     }
     coreWordValid := coreReadValid
     coreReadValid := doCoreRead
-    coreFeedJob := coreReqIdx
     when(core.io.valid_out) {
       for (buf <- 0 until 2; pt2 <- 0 until 7; group <- 0 until 2) {
         when(pageBuf(coreWrPage) === buf.U && coreWrPt2 === pt2.U) {
