@@ -222,7 +222,9 @@ class ToomCook1024 extends Module {
   val inBRam = Module(new SpRam(32 * 8, 32))
   val evalARam = Seq.fill(2)(Module(new SpRam(16 * A_EVAL_W, 172)))
   val evalBRam = Seq.fill(2)(Module(new SpRam(16 * B_EVAL_W, 172)))
-  val coreRam = Seq.fill(2, 7)(Module(new SpRam(16 * 36, 25)))
+  // coreRam(buf)(pt2)(group): 8-col banked core output buffer.
+  // group 0 stores core.io.c(0..7), group 1 stores core.io.c(8..15).
+  val coreRam = Seq.fill(2, 7, 2)(Module(new SpRam(8 * 36, 25)))
   // w1Ram(buf)(pt1)(group): 8-col banked W1 buffer
   val w1Ram = Seq.fill(2, 7, GroupsPerBlock)(Module(new SpRam(ColsPerBank * 33, 2)))
   // w0Ram(pt0)(group): 8-col banked W0 buffer
@@ -240,7 +242,7 @@ class ToomCook1024 extends Module {
   ramDefaults(inBRam, 32 * 8)
   evalARam.foreach(ramDefaults(_, 16 * A_EVAL_W))
   evalBRam.foreach(ramDefaults(_, 16 * B_EVAL_W))
-  for (buf <- 0 until 2; pt2 <- 0 until 7) ramDefaults(coreRam(buf)(pt2), 16 * 36)
+  for (buf <- 0 until 2; pt2 <- 0 until 7; group <- 0 until 2) ramDefaults(coreRam(buf)(pt2)(group), 8 * 36)
   for (buf <- 0 until 2; pt1 <- 0 until 7; group <- 0 until GroupsPerBlock) ramDefaults(w1Ram(buf)(pt1)(group), ColsPerBank * 33)
   for (pt0 <- 0 until 7; group <- 0 until GroupsPerBlock) ramDefaults(w0Ram(pt0)(group), ColsPerBank * 27)
   ramDefaults(outRam, 32 * 24)
@@ -331,13 +333,15 @@ class ToomCook1024 extends Module {
   val inter1In = Wire(Vec(7 * 8, UInt(36.W)))
   val inter2In = Wire(Vec(7 * 8, UInt(33.W)))
   val inter3In = Wire(Vec(7 * 8, UInt(27.W)))
-  val i1CoreOffset = Cat(i1Step, 0.U(3.W))
   val i2Group = i2Step(1, 0)
   val i3Group = i3Step(1, 0)
   val i3Addr = i3Step >> 2
   for (pt <- 0 until 7) {
-    val i1Packed = Mux(pageBuf(i1Page).asBool, coreRam(1)(pt).io.dout, coreRam(0)(pt).io.dout)
-    val i1Word = split16(i1Packed, 36)
+    val i1Packed8 = MuxLookup(i1Step, 0.U((8 * 36).W))(
+      (0 until 2).map(g =>
+        g.U -> Mux(pageBuf(i1Page).asBool, coreRam(1)(pt)(g).io.dout, coreRam(0)(pt)(g).io.dout)
+      )
+    )
     val i2Packed8 = MuxLookup(i2Group, 0.U((ColsPerBank * 33).W))(
       (0 until GroupsPerBlock).map(g =>
         g.U -> Mux(i2Pt0(0), w1Ram(1)(pt)(g).io.dout, w1Ram(0)(pt)(g).io.dout)
@@ -346,10 +350,11 @@ class ToomCook1024 extends Module {
     val i3Packed8 = MuxLookup(i3Group, 0.U((ColsPerBank * 27).W))(
       (0 until GroupsPerBlock).map(g => g.U -> w0Ram(pt)(g).io.dout)
     )
+    val i1Word8 = split8(i1Packed8, 36)
     val i2Word8 = split8(i2Packed8, 33)
     val i3Word8 = split8(i3Packed8, 27)
     for (col <- 0 until 8) {
-      inter1In(pt * 8 + col) := i1Word(i1CoreOffset + col.U)
+      inter1In(pt * 8 + col) := i1Word8(col)
       inter2In(pt * 8 + col) := i2Word8(col)
       inter3In(pt * 8 + col) := i3Word8(col)
     }
@@ -514,12 +519,12 @@ class ToomCook1024 extends Module {
     coreReadValid := doCoreRead
     coreFeedJob := coreReqIdx
     when(core.io.valid_out) {
-      for (buf <- 0 until 2; pt2 <- 0 until 7) {
+      for (buf <- 0 until 2; pt2 <- 0 until 7; group <- 0 until 2) {
         when(pageBuf(coreWrPage) === buf.U && coreWrPt2 === pt2.U) {
-          coreRam(buf)(pt2).io.en := true.B
-          coreRam(buf)(pt2).io.we := true.B
-          coreRam(buf)(pt2).io.addr := pageAddr(coreWrPage) // coreRam(page%2)(pt2)(page/2).
-          coreRam(buf)(pt2).io.din := packVec(core.io.c)
+          coreRam(buf)(pt2)(group).io.en := true.B
+          coreRam(buf)(pt2)(group).io.we := true.B
+          coreRam(buf)(pt2)(group).io.addr := pageAddr(coreWrPage)
+          coreRam(buf)(pt2)(group).io.din := pack8((0 until 8).map(col => core.io.c(group * 8 + col)))
         }
       }
       when(coreWrPt2 === 6.U) { corePageReady(coreWrPage) := true.B }
@@ -545,8 +550,8 @@ class ToomCook1024 extends Module {
     for (pt2 <- 0 until 7) {
       for (buf <- 0 until 2) {
         when(rdBuf === buf.U) {
-          coreRam(buf)(pt2).io.en := true.B
-          coreRam(buf)(pt2).io.addr := rdAddr
+          coreRam(buf)(pt2)(0).io.en := true.B
+          coreRam(buf)(pt2)(0).io.addr := rdAddr
         }
       }
     }
@@ -576,8 +581,8 @@ class ToomCook1024 extends Module {
         val rdAddr = pageAddr(i1Page)
         for (pt2 <- 0 until 7; buf <- 0 until 2) {
           when(rdBuf === buf.U) {
-            coreRam(buf)(pt2).io.en := true.B
-            coreRam(buf)(pt2).io.addr := rdAddr
+            coreRam(buf)(pt2)(1).io.en := true.B
+            coreRam(buf)(pt2)(1).io.addr := rdAddr
           }
         }
         i1Step := 1.U
