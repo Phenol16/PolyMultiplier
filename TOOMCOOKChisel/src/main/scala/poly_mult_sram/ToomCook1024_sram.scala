@@ -10,7 +10,7 @@ object TC4EvalWidth {
 }
 
 object InterpParamTable {
-  case class Param(mk: Int, mk2: Int, mk3: Int, inv3: BigInt, inv9: BigInt, inv18: BigInt)
+  case class Param(mk: Int, mk2: Int, mk3: Int, inv3: BigInt, inv9: BigInt, inv15: BigInt)
 
   val params = Seq(
     Param(36, 33, 34, BigInt("AAAAAAAAB", 16), BigInt("238E38E39", 16), BigInt("2EEEEEEEF", 16)),
@@ -109,7 +109,7 @@ class InterpStepCore(pidx: Int, inW: Int) extends Module {
   val r2b = ParaMath.mask(r2a - p6 - p0, mk)
   val r1b = ParaMath.mask(r1a + r2b + (r2b << 2) + (r2b << 3) + (r2b << 5), mk)
   val r4c = ParaMath.mask(ParaMath.mask(ParaMath.mask(r4b - (r2b << 3), mk) >> 3, mk) * p.inv3.U(42.W), mk2)
-  val r5b = ParaMath.mask(ParaMath.mask((r5a + r1b) >> 1, mk) * p.inv18.U(42.W), mk3)
+  val r5b = ParaMath.mask(ParaMath.mask((r5a + r1b) >> 1, mk) * p.inv15.U(42.W), mk3)
   val r1c = ParaMath.mask(ParaMath.mask(ParaMath.mask(r1b + (r3a << 4), mk) >> 1, mk) * p.inv9.U(42.W), mk3)
   val r2c = ParaMath.mask(r2b - r4c, mk2)
   val r3b = ParaMath.mask(0.U - r3a - r1c, mk2)
@@ -229,6 +229,7 @@ class ToomCook1024 extends Module {
 
   val evalARam = Seq.fill(2)(Module(new SpRam(16 * A_EVAL_W, 172)))
   val evalBRam = Seq.fill(2)(Module(new SpRam(16 * B_EVAL_W, 172)))
+
   val coreRam = Seq.fill(2, 7, CoreGroups)(Module(new SpRam(ColsPerBank * 36, 25)))
   val w1Buf = Reg(Vec(2, Vec(7, Vec(GroupsPerBlock, UInt((ColsPerBank * 33).W)))))
   val w0Ram = Seq.fill(7, GroupsPerBlock)(Module(new SpRam(ColsPerBank * 27, 4)))
