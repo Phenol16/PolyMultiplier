@@ -211,30 +211,32 @@ class ToomCook1024 extends Module {
   private val CoreGroups = 1
   private val GroupsPerBlock = 4
 
-  val inARam = Module(new SpRam(64 * 24, 16))
-  val inBRam = Module(new SpRam(64 * 8, 16))
-  val outRam = Module(new SpRam(64 * 24, 16))
+  val inARam = Module(new Sram1536x16)
+  val inBRam = Module(new Sram512x16)
+  val outRam = Module(new Sram1536x16)
 
-  val evalARam = Seq.fill(2)(Module(new SpRam(16 * A_EVAL_W, 172)))
-  val evalBRam = Seq.fill(2)(Module(new SpRam(16 * B_EVAL_W, 172)))
-  val coreRam = Seq.fill(2, 7, CoreGroups)(Module(new SpRam(ColsPerBank * 36, 25)))
+  val evalARam = Seq.fill(2)(Module(new Sram624x172))
+  val evalBRam = Seq.fill(2)(Module(new Sram464x172))
+  val coreRam = Seq.fill(2, 7, CoreGroups)(Module(new Sram576x25))
 
   val w1Buf = Reg(Vec(2, Vec(7, Vec(GroupsPerBlock, UInt((ColsPerBank * 33).W)))))
   val w0Buf = Reg(Vec(7, Vec(GroupsPerBlock, Vec(4, UInt((ColsPerBank * 27).W)))))
 
-  private def ramDefaults(ram: SpRam, width: Int): Unit = {
+  private def ramDefaults(ram: FixedSram): Unit = {
     ram.io.clk := clock
     ram.io.en := false.B
     ram.io.we := false.B
     ram.io.addr := 0.U
-    ram.io.din := 0.U(width.W)
+    ram.io.din := 0.U.asTypeOf(ram.io.din)
   }
-  ramDefaults(inARam, 64 * 24)
-  ramDefaults(inBRam, 64 * 8)
-  evalARam.foreach(ramDefaults(_, 16 * A_EVAL_W))
-  evalBRam.foreach(ramDefaults(_, 16 * B_EVAL_W))
-  for (buf <- 0 until 2; pt2 <- 0 until 7; group <- 0 until CoreGroups) ramDefaults(coreRam(buf)(pt2)(group), ColsPerBank * 36)
-  ramDefaults(outRam, 64 * 24)
+  ramDefaults(inARam)
+  ramDefaults(inBRam)
+  evalARam.foreach(ramDefaults)
+  evalBRam.foreach(ramDefaults)
+  for (buf <- 0 until 2; pt2 <- 0 until 7; group <- 0 until CoreGroups) {
+    ramDefaults(coreRam(buf)(pt2)(group))
+  }
+  ramDefaults(outRam)
 
   val doneReg = RegInit(false.B)
   io.done := doneReg
