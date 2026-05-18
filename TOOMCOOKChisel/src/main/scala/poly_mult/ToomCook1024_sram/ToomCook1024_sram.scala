@@ -20,7 +20,10 @@ object InterpParamTable {
   )
 }
 
-
+/* 4 个输入
+  → core.Eval 算出 7 个点
+  → 根据 pt 选择其中 1 个点
+  → 输出 */
 class EvalPoint(inW: Int, outW: Int) extends Module {
   val io = IO(new Bundle {
     val r = Input(Vec(4, UInt(inW.W)))
@@ -30,9 +33,12 @@ class EvalPoint(inW: Int, outW: Int) extends Module {
 
   val layer = Module(new Eval(inWidth = inW, outWidth = outW))
   layer.io.in := io.r
-  io.out := MuxLookup(io.pt, 0.U(outW.W))((0 until 7).map(i => i.U -> layer.io.out(i)))
+  io.out := MuxLookup(io.pt, 0.U(outW.W))((0 until 7).map(i => i.U -> layer.io.out(i))) //根据 io.pt 的值，从 layer.io.out(0..6) 中选择一个作为 io.out
 }
 
+/* 输入 64 个系数
+根据 pt0, pt1, pt2 三个 evaluation point
+输出一个最终估值结果 */
 class Eval64Point(inW: Int, outW: Int) extends Module {
   val io = IO(new Bundle {
     val in = Input(Vec(64, UInt(inW.W)))
@@ -46,7 +52,7 @@ class Eval64Point(inW: Int, outW: Int) extends Module {
   for (outer <- 0 until 4) {
     for (middle <- 0 until 4) {
       val eval = Module(new EvalPoint(inW, outW))
-      for (inner <- 0 until 4) eval.io.r(inner) := io.in(outer * 16 + middle * 4 + inner)
+      for (inner <- 0 until 4) eval.io.r(inner) := io.in(outer * 16 + middle * 4 + inner)//a[outer][middle][inner]
       eval.io.pt := io.pt0
       mid(outer * 4 + middle) := eval.io.out
     }
@@ -218,17 +224,25 @@ class ToomCook1024 extends Module {
   private val ColsPerBank = 8
   private val GroupsPerBlock = 4
 
+  //输入缓存
   val inARam = Module(new SpRam(32 * 24, 32))
   val inBRam = Module(new SpRam(32 * 8, 32))
+
+  //evaluation 结果缓存,2个bank2:eval 和 core 可以流水并行：eval 写 job k+1,core 读 job k,通过 job(0) 选择 bank，避免单端口 RAM 同时读写同一个 bank
   val evalARam = Seq.fill(2)(Module(new SpRam(16 * A_EVAL_W, 172)))
   val evalBRam = Seq.fill(2)(Module(new SpRam(16 * B_EVAL_W, 172)))
-  // coreRam(buf)(pt2)(group): 8-col banked core output buffer.
-  // group 0 stores core.io.c(0..7), group 1 stores core.io.c(8..15).
+
+  // core16 输出缓存
+  // coreRam(buf)(pt2)(group)
+  // group 0 : core.io.c(0..7), group 1 : core.io.c(8..15).
   val coreRam = Seq.fill(2, 7, 2)(Module(new SpRam(ColsPerBank * 36, 25)))
+  // 保存 Inter1 对 pt2 方向插值后的结果
   // w1Ram(buf)(pt1)(group): 8-col banked W1 buffer
   val w1Ram = Seq.fill(2, 7, GroupsPerBlock)(Module(new SpRam(ColsPerBank * 33, 2)))
+  // 保存 Inter2 对 pt1 方向插值后的结果
   // w0Ram(pt0)(group): 8-col banked W0 buffer
   val w0Ram = Seq.fill(7, GroupsPerBlock)(Module(new SpRam(ColsPerBank * 27, 8)))
+  // 最终输出缓存
   val outRam = Module(new SpRam(32 * 24, 32))
 
   private def ramDefaults(ram: SpRam, width: Int): Unit = {
