@@ -233,15 +233,14 @@ class ToomCook1024 extends Module {
   val evalBRam = Seq.fill(2)(Module(new SpRam(16 * B_EVAL_W, 172)))
 
   // core16 输出缓存
-  // coreRam(buf)(pt2)(group)
-  // group 0 : core.io.c(0..7), group 1 : core.io.c(8..15).
+  // coreRam(buf)(pt2)(0) stores core.io.c(0..15)
   val coreRam = Seq.fill(2, 7, CoreGroups)(Module(new SpRam(ColsPerBank * 36, 25)))
   // 保存 Inter1 对 pt2 方向插值后的结果
-  // w1Ram(buf)(pt1)(group): 8-col banked W1 buffer
-  val w1Ram = Seq.fill(2, 7, GroupsPerBlock)(Module(new SpRam(ColsPerBank * 33, 2)))
+  // w1Buf(buf)(pt1)(group): 16-col banked W1 buffer
+  val w1Buf = Reg(Vec(2, Vec(7, Vec(GroupsPerBlock, UInt((ColsPerBank * 33).W)))))
   // 保存 Inter2 对 pt1 方向插值后的结果
-  // w0Ram(pt0)(group): 8-col banked W0 buffer
-  val w0Ram = Seq.fill(7, GroupsPerBlock)(Module(new SpRam(ColsPerBank * 27, 8)))
+  // w0Ram(pt0)(group): 16-col banked W0 buffer
+  val w0Ram = Seq.fill(7, GroupsPerBlock)(Module(new SpRam(ColsPerBank * 27, 4)))
   // 最终输出缓存
   val outRam = Module(new SpRam(64 * 24, 16))
 
@@ -257,7 +256,6 @@ class ToomCook1024 extends Module {
   evalARam.foreach(ramDefaults(_, 16 * A_EVAL_W))
   evalBRam.foreach(ramDefaults(_, 16 * B_EVAL_W))
   for (buf <- 0 until 2; pt2 <- 0 until 7; group <- 0 until CoreGroups) ramDefaults(coreRam(buf)(pt2)(group), ColsPerBank * 36)
-  for (buf <- 0 until 2; pt1 <- 0 until 7; group <- 0 until GroupsPerBlock) ramDefaults(w1Ram(buf)(pt1)(group), ColsPerBank * 33)
   for (pt0 <- 0 until 7; group <- 0 until GroupsPerBlock) ramDefaults(w0Ram(pt0)(group), ColsPerBank * 27)
   ramDefaults(outRam, 64 * 24)
 
@@ -318,8 +316,7 @@ class ToomCook1024 extends Module {
   val i1Page = RegInit(0.U(6.W))
   val i1Pt0 = RegInit(0.U(3.W))
   val i1Pt1 = RegInit(0.U(3.W))
-  val i1Step = RegInit(0.U(1.W))
-  val i1Sub = RegInit(0.U(2.W))
+    val i1Sub = RegInit(0.U(2.W))
   val i1Pr0 = RegInit(0.U(30.W)); val i1Pr1 = RegInit(0.U(30.W)); val i1Pr2 = RegInit(0.U(30.W))
   val firstW1 = Reg(Vec(64, UInt(33.W)))
   val w1PageReady = RegInit(VecInit(Seq.fill(49)(false.B)))
@@ -334,7 +331,7 @@ class ToomCook1024 extends Module {
   val w0BlockReady = RegInit(VecInit(Seq.fill(7)(false.B)))
 
   val i3Active = RegInit(false.B)
-  val i3Step = RegInit(0.U(5.W))
+  val i3Step = RegInit(0.U(4.W))
   val i3Sub = RegInit(0.U(2.W))
   val i3Pr0 = RegInit(0.U(24.W)); val i3Pr1 = RegInit(0.U(24.W)); val i3Pr2 = RegInit(0.U(24.W))
   val firstOut = Reg(Vec(64, UInt(24.W)))
@@ -351,11 +348,7 @@ class ToomCook1024 extends Module {
   val i3Addr = i3Step >> 2
   for (pt <- 0 until 7) {
     val i1Packed16 = Mux(pageBuf(i1Page).asBool, coreRam(1)(pt)(0).io.dout, coreRam(0)(pt)(0).io.dout)
-    val i2Packed16 = MuxLookup(i2Group, 0.U((ColsPerBank * 33).W))(
-      (0 until GroupsPerBlock).map(g =>
-        g.U -> Mux(i2Pt0(0), w1Ram(1)(pt)(g).io.dout, w1Ram(0)(pt)(g).io.dout)
-      )
-    )
+    val i2Packed16 = Mux(i2Pt0(0), w1Buf(1)(pt)(i2Group), w1Buf(0)(pt)(i2Group))
     val i3Packed16 = MuxLookup(i3Group, 0.U((ColsPerBank * 27).W))(
       (0 until GroupsPerBlock).map(g => g.U -> w0Ram(pt)(g).io.dout)
     )
@@ -375,7 +368,7 @@ class ToomCook1024 extends Module {
   interp3.io.in := inter3In
   interp3.io.pr0 := i3Pr0; interp3.io.pr1 := i3Pr1; interp3.io.pr2 := i3Pr2
 
-  // firstW1/firstW0/firstOut hold raw block0. After the final 8-column step of
+  // firstW1/firstW0/firstOut hold raw block0. After the final 16-column step of
   // a full stride, i1Pr/i2Pr/i3Pr hold final carry; the correction stage then
   // overwrites block0 coeff 0/1/2 using those final carries.
   val correctedW1Vec = Wire(Vec(64, UInt(33.W)))
@@ -432,7 +425,7 @@ class ToomCook1024 extends Module {
     coreFeedJob := 0.U
     coreWrPage := 0.U
     coreWrPt2 := 0.U
-    i1Active := false.B; i1Page := 0.U; i1Step := 0.U; i1Sub := 0.U
+    i1Active := false.B; i1Page := 0.U; i1Sub := 0.U
     i1Pt0 := 0.U; i1Pt1 := 0.U
     i2Active := false.B; i2Pt0 := 0.U; i2Step := 0.U; i2Sub := 0.U
     i3Active := false.B; i3Step := 0.U; i3Sub := 0.U
@@ -559,22 +552,17 @@ class ToomCook1024 extends Module {
     }
     i1Active := true.B
     i1Sub := 1.U
-    i1Step := 0.U
     i1Pr0 := 0.U; i1Pr1 := 0.U; i1Pr2 := 0.U
   }.elsewhen(i1Active) {
     val pt0 = i1Pt0
     val pt1 = i1Pt1
     val wrBuf = pt0(0)
     when(i1Sub === 1.U) {
-      val w1WriteAddr = i1Step
-      when(i1Step === 0.U) { firstW1 := interp1.io.out }
+      firstW1 := interp1.io.out
       for (buf <- 0 until 2; bank <- 0 until 7; group <- 0 until GroupsPerBlock) {
         val groupWord = pack16((0 until ColsPerBank).map(col => interp1.io.out(group * ColsPerBank + col)))
         when(wrBuf === buf.U && pt1 === bank.U) {
-          w1Ram(buf)(bank)(group).io.en := true.B
-          w1Ram(buf)(bank)(group).io.we := true.B
-          w1Ram(buf)(bank)(group).io.addr := 0.U
-          w1Ram(buf)(bank)(group).io.din := groupWord
+          w1Buf(buf)(bank)(group) := groupWord
         }
       }
       i1Pr0 := interp1.io.nr0; i1Pr1 := interp1.io.nr1; i1Pr2 := interp1.io.nr2
@@ -582,10 +570,7 @@ class ToomCook1024 extends Module {
     }.otherwise {
       for (buf <- 0 until 2; bank <- 0 until 7) {
         when(wrBuf === buf.U && pt1 === bank.U) {
-          w1Ram(buf)(bank)(0).io.en := true.B
-          w1Ram(buf)(bank)(0).io.we := true.B
-          w1Ram(buf)(bank)(0).io.addr := 0.U // Correction rewrite for W1 coeff 0..7.
-          w1Ram(buf)(bank)(0).io.din := correctedW1WordG0
+          w1Buf(buf)(bank)(0) := correctedW1WordG0
         }
       }
       w1PageReady(i1Page) := true.B
@@ -608,20 +593,13 @@ class ToomCook1024 extends Module {
   // are ready. Inter1 writes pt0+1 into the opposite pt0%2 W1 buffer while
   // Inter2 reads pt0.
   when(!i2Active && w1GroupReady(i2Pt0) && !w0BlockReady(i2Pt0)) {
-    val rdBuf = i2Pt0(0)
-    for (pt1 <- 0 until 7; buf <- 0 until 2) {
-      when(rdBuf === buf.U) {
-        w1Ram(buf)(pt1)(0).io.en := true.B
-        w1Ram(buf)(pt1)(0).io.addr := 0.U
-      }
-    }
     i2Active := true.B
     i2Sub := 1.U
     i2Step := 0.U
     i2Pr0 := 0.U; i2Pr1 := 0.U; i2Pr2 := 0.U
   }.elsewhen(i2Active) {
     when(i2Sub === 1.U) {
-      val w0WriteAddr = i2Step
+      val w0WriteAddr = i2Step(1, 0)
       when(i2Step === 0.U) { firstW0 := interp2.io.out }
       for (pt0 <- 0 until 7; group <- 0 until GroupsPerBlock) {
         when(i2Pt0 === pt0.U) {
@@ -635,16 +613,6 @@ class ToomCook1024 extends Module {
       when(i2Step === 3.U) {
         i2Sub := 2.U
       }.otherwise {
-        val nextStep = i2Step + 1.U
-        val nextGroup = nextStep(1, 0)
-        val nextAddr = nextStep >> 2
-        val rdBuf = i2Pt0(0)
-        for (pt1 <- 0 until 7; buf <- 0 until 2; group <- 0 until GroupsPerBlock) {
-          when(rdBuf === buf.U && nextGroup === group.U) {
-            w1Ram(buf)(pt1)(group).io.en := true.B
-            w1Ram(buf)(pt1)(group).io.addr := nextAddr
-          }
-        }
         i2Step := i2Step + 1.U
       }
     }.otherwise {
@@ -652,7 +620,7 @@ class ToomCook1024 extends Module {
         when(i2Pt0 === pt0.U) {
           w0Ram(pt0)(0).io.en := true.B
           w0Ram(pt0)(0).io.we := true.B
-          w0Ram(pt0)(0).io.addr := 0.U // Correction rewrite for W0 coeff 0..7.
+          w0Ram(pt0)(0).io.addr := 0.U // Correction rewrite for W0 coeff 0..15.
           w0Ram(pt0)(0).io.din := correctedW0WordG0
         }
       }
@@ -664,13 +632,11 @@ class ToomCook1024 extends Module {
   }
 
   // Inter3Controller: wait until all W0 pt0 banks are complete, then produce the
-  // final 32-wide output blocks.
+  // final 64-wide output blocks.
   when(!i3Active && !doneReg && w0BlockReady.asUInt.andR) {
-    for (pt0 <- 0 until 7; group <- 0 until GroupsPerBlock) {
-      when(group.U === 0.U) {
-        w0Ram(pt0)(group).io.en := true.B
-        w0Ram(pt0)(group).io.addr := 0.U
-      }
+    for (pt0 <- 0 until 7) {
+      w0Ram(pt0)(0).io.en := true.B
+      w0Ram(pt0)(0).io.addr := 0.U
     }
     i3Active := true.B
     i3Sub := 1.U
@@ -695,7 +661,7 @@ class ToomCook1024 extends Module {
           for (group <- 0 until GroupsPerBlock) {
             when(nextGroup === group.U) {
               w0Ram(pt0)(group).io.en := true.B
-              w0Ram(pt0)(group).io.addr := nextAddr
+              w0Ram(pt0)(group).io.addr := nextAddr(1, 0)
             }
           }
         }
