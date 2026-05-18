@@ -125,30 +125,30 @@ class InterpStepCore(pidx: Int, inW: Int) extends Module {
   io.nr2 := r2c
 }
 
-class Interp8ColsStep(pidx: Int, inW: Int, outW: Int) extends Module {
+class Interp16ColsStep(pidx: Int, inW: Int, outW: Int) extends Module {
   private val mk2 = InterpParamTable.params(pidx).mk2
 
   val io = IO(new Bundle {
-    val in = Input(Vec(7 * 8, UInt(inW.W)))
+    val in = Input(Vec(7 * 16, UInt(inW.W)))
     val pr0 = Input(UInt(mk2.W))
     val pr1 = Input(UInt(mk2.W))
     val pr2 = Input(UInt(mk2.W))
-    val out = Output(Vec(8 * 4, UInt(outW.W)))
+    val out = Output(Vec(16 * 4, UInt(outW.W)))
     val nr0 = Output(UInt(mk2.W))
     val nr1 = Output(UInt(mk2.W))
     val nr2 = Output(UInt(mk2.W))
   })
 
-  val carry0 = Wire(Vec(9, UInt(mk2.W)))
-  val carry1 = Wire(Vec(9, UInt(mk2.W)))
-  val carry2 = Wire(Vec(9, UInt(mk2.W)))
+  val carry0 = Wire(Vec(17, UInt(mk2.W)))
+  val carry1 = Wire(Vec(17, UInt(mk2.W)))
+  val carry2 = Wire(Vec(17, UInt(mk2.W)))
   carry0(0) := io.pr0
   carry1(0) := io.pr1
   carry2(0) := io.pr2
 
-  for (col <- 0 until 8) {
+  for (col <- 0 until 16) {
     val core = Module(new InterpStepCore(pidx, inW))
-    for (pt <- 0 until 7) core.io.pIn(pt) := io.in(pt * 8 + col)
+    for (pt <- 0 until 7) core.io.pIn(pt) := io.in(pt * 16 + col)
     core.io.pr0 := carry0(col)
     core.io.pr1 := carry1(col)
     core.io.pr2 := carry2(col)
@@ -162,9 +162,9 @@ class Interp8ColsStep(pidx: Int, inW: Int, outW: Int) extends Module {
     carry2(col + 1) := core.io.nr2
   }
 
-  io.nr0 := carry0(8)
-  io.nr1 := carry1(8)
-  io.nr2 := carry2(8)
+  io.nr0 := carry0(16)
+  io.nr1 := carry1(16)
+  io.nr2 := carry2(16)
 }
 
 class SpRam(width: Int, depth: Int) extends BlackBox(Map("WIDTH" -> width, "DEPTH" -> depth)) with HasBlackBoxResource {
@@ -185,14 +185,14 @@ class ToomCook1024IO extends Bundle {
   val busy = Output(Bool())
   val done = Output(Bool())
   val a_we = Input(Bool())
-  val a_addr = Input(UInt(5.W))
-  val a_din = Input(UInt((32 * 24).W))
+  val a_addr = Input(UInt(4.W))
+  val a_din = Input(UInt((64 * 24).W))
   val b_we = Input(Bool())
-  val b_addr = Input(UInt(5.W))
-  val b_din = Input(UInt((32 * 8).W))
+  val b_addr = Input(UInt(4.W))
+  val b_din = Input(UInt((64 * 8).W))
   val c_re = Input(Bool())
-  val c_addr = Input(UInt(5.W))
-  val c_dout = Output(UInt((32 * 24).W))
+  val c_addr = Input(UInt(4.W))
+  val c_dout = Output(UInt((64 * 24).W))
   val c_valid = Output(Bool())
 }
 
@@ -210,9 +210,8 @@ class ToomCook1024 extends Module {
   }
   private def split64(x: UInt, w: Int): Vec[UInt] = unpackVec(x, 64, w)
   private def split16(x: UInt, w: Int): Vec[UInt] = unpackVec(x, 16, w)
-  private def split8(x: UInt, w: Int): Vec[UInt] = unpackVec(x, 8, w)
-  private def pack8(xs: Seq[UInt]): UInt = {
-    require(xs.length == 8)
+  private def pack16(xs: Seq[UInt]): UInt = {
+    require(xs.length == 16)
     packVec(xs)
   }
 
@@ -221,12 +220,13 @@ class ToomCook1024 extends Module {
   private def pageBuf(page: UInt): UInt = page(0)
   private def pageAddr(page: UInt): UInt = page >> 1
 
-  private val ColsPerBank = 8
+  private val ColsPerBank = 16
+  private val CoreGroups = 1
   private val GroupsPerBlock = 4
 
   //输入缓存
-  val inARam = Module(new SpRam(32 * 24, 32))
-  val inBRam = Module(new SpRam(32 * 8, 32))
+  val inARam = Module(new SpRam(64 * 24, 16))
+  val inBRam = Module(new SpRam(64 * 8, 16))
 
   //evaluation 结果缓存,2个bank2:eval 和 core 可以流水并行：eval 写 job k+1,core 读 job k,通过 job(0) 选择 bank，避免单端口 RAM 同时读写同一个 bank
   val evalARam = Seq.fill(2)(Module(new SpRam(16 * A_EVAL_W, 172)))
@@ -235,7 +235,7 @@ class ToomCook1024 extends Module {
   // core16 输出缓存
   // coreRam(buf)(pt2)(group)
   // group 0 : core.io.c(0..7), group 1 : core.io.c(8..15).
-  val coreRam = Seq.fill(2, 7, 2)(Module(new SpRam(ColsPerBank * 36, 25)))
+  val coreRam = Seq.fill(2, 7, CoreGroups)(Module(new SpRam(ColsPerBank * 36, 25)))
   // 保存 Inter1 对 pt2 方向插值后的结果
   // w1Ram(buf)(pt1)(group): 8-col banked W1 buffer
   val w1Ram = Seq.fill(2, 7, GroupsPerBlock)(Module(new SpRam(ColsPerBank * 33, 2)))
@@ -243,7 +243,7 @@ class ToomCook1024 extends Module {
   // w0Ram(pt0)(group): 8-col banked W0 buffer
   val w0Ram = Seq.fill(7, GroupsPerBlock)(Module(new SpRam(ColsPerBank * 27, 8)))
   // 最终输出缓存
-  val outRam = Module(new SpRam(32 * 24, 32))
+  val outRam = Module(new SpRam(64 * 24, 16))
 
   private def ramDefaults(ram: SpRam, width: Int): Unit = {
     ram.io.clk := clock
@@ -252,14 +252,14 @@ class ToomCook1024 extends Module {
     ram.io.addr := 0.U
     ram.io.din := 0.U(width.W)
   }
-  ramDefaults(inARam, 32 * 24)
-  ramDefaults(inBRam, 32 * 8)
+  ramDefaults(inARam, 64 * 24)
+  ramDefaults(inBRam, 64 * 8)
   evalARam.foreach(ramDefaults(_, 16 * A_EVAL_W))
   evalBRam.foreach(ramDefaults(_, 16 * B_EVAL_W))
-  for (buf <- 0 until 2; pt2 <- 0 until 7; group <- 0 until 2) ramDefaults(coreRam(buf)(pt2)(group), 8 * 36)
+  for (buf <- 0 until 2; pt2 <- 0 until 7; group <- 0 until CoreGroups) ramDefaults(coreRam(buf)(pt2)(group), ColsPerBank * 36)
   for (buf <- 0 until 2; pt1 <- 0 until 7; group <- 0 until GroupsPerBlock) ramDefaults(w1Ram(buf)(pt1)(group), ColsPerBank * 33)
   for (pt0 <- 0 until 7; group <- 0 until GroupsPerBlock) ramDefaults(w0Ram(pt0)(group), ColsPerBank * 27)
-  ramDefaults(outRam, 32 * 24)
+  ramDefaults(outRam, 64 * 24)
 
   val doneReg = RegInit(false.B)
   io.done := doneReg
@@ -268,9 +268,8 @@ class ToomCook1024 extends Module {
   val laneBWord = Reg(Vec(16, UInt((64 * 8).W)))
   val loadActive = RegInit(false.B)
   val loadLane = RegInit(0.U(4.W))
-  val loadPhase = RegInit(0.U(2.W))
-  val loadA0 = Reg(UInt((32 * 24).W))
-  val loadB0 = Reg(UInt((32 * 8).W))
+  val loadPhase = RegInit(false.B)
+  
 
   val evalActive = RegInit(false.B)
   val evalProduced = RegInit(0.U(9.W))
@@ -322,7 +321,7 @@ class ToomCook1024 extends Module {
   val i1Step = RegInit(0.U(1.W))
   val i1Sub = RegInit(0.U(2.W))
   val i1Pr0 = RegInit(0.U(30.W)); val i1Pr1 = RegInit(0.U(30.W)); val i1Pr2 = RegInit(0.U(30.W))
-  val firstW1 = Reg(Vec(32, UInt(33.W)))
+  val firstW1 = Reg(Vec(64, UInt(33.W)))
   val w1PageReady = RegInit(VecInit(Seq.fill(49)(false.B)))
   val w1GroupReady = RegInit(VecInit(Seq.fill(7)(false.B)))
 
@@ -331,46 +330,42 @@ class ToomCook1024 extends Module {
   val i2Step = RegInit(0.U(3.W))
   val i2Sub = RegInit(0.U(2.W))
   val i2Pr0 = RegInit(0.U(27.W)); val i2Pr1 = RegInit(0.U(27.W)); val i2Pr2 = RegInit(0.U(27.W))
-  val firstW0 = Reg(Vec(32, UInt(27.W)))
+  val firstW0 = Reg(Vec(64, UInt(27.W)))
   val w0BlockReady = RegInit(VecInit(Seq.fill(7)(false.B)))
 
   val i3Active = RegInit(false.B)
   val i3Step = RegInit(0.U(5.W))
   val i3Sub = RegInit(0.U(2.W))
   val i3Pr0 = RegInit(0.U(24.W)); val i3Pr1 = RegInit(0.U(24.W)); val i3Pr2 = RegInit(0.U(24.W))
-  val firstOut = Reg(Vec(32, UInt(24.W)))
+  val firstOut = Reg(Vec(64, UInt(24.W)))
 
-  val interp1 = Module(new Interp8ColsStep(pidx = 1, inW = 36, outW = 33))
-  val interp2 = Module(new Interp8ColsStep(pidx = 2, inW = 33, outW = 27))
-  val interp3 = Module(new Interp8ColsStep(pidx = 3, inW = 27, outW = 24))
+  val interp1 = Module(new Interp16ColsStep(pidx = 1, inW = 36, outW = 33))
+  val interp2 = Module(new Interp16ColsStep(pidx = 2, inW = 33, outW = 27))
+  val interp3 = Module(new Interp16ColsStep(pidx = 3, inW = 27, outW = 24))
 
-  val inter1In = Wire(Vec(7 * 8, UInt(36.W)))
-  val inter2In = Wire(Vec(7 * 8, UInt(33.W)))
-  val inter3In = Wire(Vec(7 * 8, UInt(27.W)))
+  val inter1In = Wire(Vec(7 * 16, UInt(36.W)))
+  val inter2In = Wire(Vec(7 * 16, UInt(33.W)))
+  val inter3In = Wire(Vec(7 * 16, UInt(27.W)))
   val i2Group = i2Step(1, 0)
   val i3Group = i3Step(1, 0)
   val i3Addr = i3Step >> 2
   for (pt <- 0 until 7) {
-    val i1Packed8 = MuxLookup(i1Step, 0.U((8 * 36).W))(
-      (0 until 2).map(g =>
-        g.U -> Mux(pageBuf(i1Page).asBool, coreRam(1)(pt)(g).io.dout, coreRam(0)(pt)(g).io.dout)
-      )
-    )
-    val i2Packed8 = MuxLookup(i2Group, 0.U((ColsPerBank * 33).W))(
+    val i1Packed16 = Mux(pageBuf(i1Page).asBool, coreRam(1)(pt)(0).io.dout, coreRam(0)(pt)(0).io.dout)
+    val i2Packed16 = MuxLookup(i2Group, 0.U((ColsPerBank * 33).W))(
       (0 until GroupsPerBlock).map(g =>
         g.U -> Mux(i2Pt0(0), w1Ram(1)(pt)(g).io.dout, w1Ram(0)(pt)(g).io.dout)
       )
     )
-    val i3Packed8 = MuxLookup(i3Group, 0.U((ColsPerBank * 27).W))(
+    val i3Packed16 = MuxLookup(i3Group, 0.U((ColsPerBank * 27).W))(
       (0 until GroupsPerBlock).map(g => g.U -> w0Ram(pt)(g).io.dout)
     )
-    val i1Word8 = split8(i1Packed8, 36)
-    val i2Word8 = split8(i2Packed8, 33)
-    val i3Word8 = split8(i3Packed8, 27)
-    for (col <- 0 until 8) {
-      inter1In(pt * 8 + col) := i1Word8(col)
-      inter2In(pt * 8 + col) := i2Word8(col)
-      inter3In(pt * 8 + col) := i3Word8(col)
+    val i1Word16 = split16(i1Packed16, 36)
+    val i2Word16 = split16(i2Packed16, 33)
+    val i3Word16 = split16(i3Packed16, 27)
+    for (col <- 0 until 16) {
+      inter1In(pt * 16 + col) := i1Word16(col)
+      inter2In(pt * 16 + col) := i2Word16(col)
+      inter3In(pt * 16 + col) := i3Word16(col)
     }
   }
   interp1.io.in := inter1In
@@ -383,21 +378,21 @@ class ToomCook1024 extends Module {
   // firstW1/firstW0/firstOut hold raw block0. After the final 8-column step of
   // a full stride, i1Pr/i2Pr/i3Pr hold final carry; the correction stage then
   // overwrites block0 coeff 0/1/2 using those final carries.
-  val correctedW1Vec = Wire(Vec(32, UInt(33.W)))
+  val correctedW1Vec = Wire(Vec(64, UInt(33.W)))
   correctedW1Vec := firstW1
   correctedW1Vec(0) := ParaMath.mask(firstW1(0) - i1Pr2, 33)
   correctedW1Vec(1) := ParaMath.mask(firstW1(1) - i1Pr1, 33)
   correctedW1Vec(2) := ParaMath.mask(firstW1(2) - i1Pr0, 33)
-  val correctedW1WordG0 = pack8((0 until ColsPerBank).map(i => correctedW1Vec(i)))
+  val correctedW1WordG0 = pack16((0 until ColsPerBank).map(i => correctedW1Vec(i)))
 
-  val correctedW0Vec = Wire(Vec(32, UInt(27.W)))
+  val correctedW0Vec = Wire(Vec(64, UInt(27.W)))
   correctedW0Vec := firstW0
   correctedW0Vec(0) := ParaMath.mask(firstW0(0) - i2Pr2, 27)
   correctedW0Vec(1) := ParaMath.mask(firstW0(1) - i2Pr1, 27)
   correctedW0Vec(2) := ParaMath.mask(firstW0(2) - i2Pr0, 27)
-  val correctedW0WordG0 = pack8((0 until ColsPerBank).map(i => correctedW0Vec(i)))
+  val correctedW0WordG0 = pack16((0 until ColsPerBank).map(i => correctedW0Vec(i)))
 
-  val correctedOutVec = Wire(Vec(32, UInt(24.W)))
+  val correctedOutVec = Wire(Vec(64, UInt(24.W)))
   correctedOutVec := firstOut
   correctedOutVec(0) := ParaMath.mask(firstOut(0) - i3Pr2, 24)
   correctedOutVec(1) := ParaMath.mask(firstOut(1) - i3Pr1, 24)
@@ -425,7 +420,7 @@ class ToomCook1024 extends Module {
     doneReg := false.B
     loadActive := true.B
     loadLane := 0.U
-    loadPhase := 0.U
+    loadPhase := false.B
     evalActive := false.B
     evalProduced := 0.U
     evalPt0 := 0.U; evalPt1 := 0.U; evalPt2 := 0.U
@@ -451,27 +446,20 @@ class ToomCook1024 extends Module {
   }
 
   when(loadActive) {
-    val baseAddr = Cat(loadLane, 0.U(1.W))
-    when(loadPhase === 0.U) {
-      inARam.io.en := true.B; inARam.io.addr := baseAddr
-      inBRam.io.en := true.B; inBRam.io.addr := baseAddr
-      loadPhase := 1.U
-    }.elsewhen(loadPhase === 1.U) {
-      loadA0 := inARam.io.dout
-      loadB0 := inBRam.io.dout
-      inARam.io.en := true.B; inARam.io.addr := baseAddr + 1.U
-      inBRam.io.en := true.B; inBRam.io.addr := baseAddr + 1.U
-      loadPhase := 2.U
+    when(!loadPhase) {
+      inARam.io.en := true.B; inARam.io.addr := loadLane
+      inBRam.io.en := true.B; inBRam.io.addr := loadLane
+      loadPhase := true.B
     }.otherwise {
-      laneAWord(loadLane) := Cat(inARam.io.dout, loadA0)
-      laneBWord(loadLane) := Cat(inBRam.io.dout, loadB0)
+      laneAWord(loadLane) := inARam.io.dout
+      laneBWord(loadLane) := inBRam.io.dout
       when(loadLane === 15.U) {
         loadActive := false.B
         evalActive := true.B
         coreActive := true.B
       }.otherwise {
         loadLane := loadLane + 1.U
-        loadPhase := 0.U
+        loadPhase := false.B
       }
     }
   }
@@ -533,12 +521,12 @@ class ToomCook1024 extends Module {
     coreReadValid := doCoreRead
     coreFeedJob := coreReqIdx
     when(core.io.valid_out) {
-      for (buf <- 0 until 2; pt2 <- 0 until 7; group <- 0 until 2) {
+      for (buf <- 0 until 2; pt2 <- 0 until 7) {
         when(pageBuf(coreWrPage) === buf.U && coreWrPt2 === pt2.U) {
-          coreRam(buf)(pt2)(group).io.en := true.B
-          coreRam(buf)(pt2)(group).io.we := true.B
-          coreRam(buf)(pt2)(group).io.addr := pageAddr(coreWrPage)
-          coreRam(buf)(pt2)(group).io.din := pack8((0 until 8).map(col => core.io.c(group * 8 + col)))
+          coreRam(buf)(pt2)(0).io.en := true.B
+          coreRam(buf)(pt2)(0).io.we := true.B
+          coreRam(buf)(pt2)(0).io.addr := pageAddr(coreWrPage)
+          coreRam(buf)(pt2)(0).io.din := pack16((0 until 16).map(col => core.io.c(col)))
         }
       }
       when(coreWrPt2 === 6.U) { corePageReady(coreWrPage) := true.B }
@@ -581,26 +569,16 @@ class ToomCook1024 extends Module {
       val w1WriteAddr = i1Step
       when(i1Step === 0.U) { firstW1 := interp1.io.out }
       for (buf <- 0 until 2; bank <- 0 until 7; group <- 0 until GroupsPerBlock) {
-        val groupWord = pack8((0 until ColsPerBank).map(col => interp1.io.out(group * ColsPerBank + col)))
+        val groupWord = pack16((0 until ColsPerBank).map(col => interp1.io.out(group * ColsPerBank + col)))
         when(wrBuf === buf.U && pt1 === bank.U) {
           w1Ram(buf)(bank)(group).io.en := true.B
           w1Ram(buf)(bank)(group).io.we := true.B
-          w1Ram(buf)(bank)(group).io.addr := w1WriteAddr
+          w1Ram(buf)(bank)(group).io.addr := 0.U
           w1Ram(buf)(bank)(group).io.din := groupWord
         }
       }
       i1Pr0 := interp1.io.nr0; i1Pr1 := interp1.io.nr1; i1Pr2 := interp1.io.nr2
-      when(i1Step === 0.U) {
-        val rdBuf = pageBuf(i1Page)
-        val rdAddr = pageAddr(i1Page)
-        for (pt2 <- 0 until 7; buf <- 0 until 2) {
-          when(rdBuf === buf.U) {
-            coreRam(buf)(pt2)(1).io.en := true.B
-            coreRam(buf)(pt2)(1).io.addr := rdAddr
-          }
-        }
-        i1Step := 1.U
-      }.otherwise { i1Sub := 2.U }
+      i1Sub := 2.U
     }.otherwise {
       for (buf <- 0 until 2; bank <- 0 until 7) {
         when(wrBuf === buf.U && pt1 === bank.U) {
@@ -650,11 +628,11 @@ class ToomCook1024 extends Module {
           w0Ram(pt0)(group).io.en := true.B
           w0Ram(pt0)(group).io.we := true.B
           w0Ram(pt0)(group).io.addr := w0WriteAddr
-          w0Ram(pt0)(group).io.din := pack8((0 until ColsPerBank).map(col => interp2.io.out(group * ColsPerBank + col)))
+          w0Ram(pt0)(group).io.din := pack16((0 until ColsPerBank).map(col => interp2.io.out(group * ColsPerBank + col)))
         }
       }
       i2Pr0 := interp2.io.nr0; i2Pr1 := interp2.io.nr1; i2Pr2 := interp2.io.nr2
-      when(i2Step === 7.U) {
+      when(i2Step === 3.U) {
         i2Sub := 2.U
       }.otherwise {
         val nextStep = i2Step + 1.U
@@ -707,7 +685,7 @@ class ToomCook1024 extends Module {
       outRam.io.addr := i3Step
       outRam.io.din := outWord
       i3Pr0 := interp3.io.nr0; i3Pr1 := interp3.io.nr1; i3Pr2 := interp3.io.nr2
-      when(i3Step === 31.U) {
+      when(i3Step === 15.U) {
         i3Sub := 2.U
       }.otherwise {
         val nextStep = i3Step + 1.U
