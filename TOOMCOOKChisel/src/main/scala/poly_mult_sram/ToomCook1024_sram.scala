@@ -167,19 +167,6 @@ class Interp16ColsStep(pidx: Int, inW: Int, outW: Int) extends Module {
   io.nr2 := carry2(16)
 }
 
-class SpRam(width: Int, depth: Int) extends BlackBox(Map("WIDTH" -> width, "DEPTH" -> depth)) with HasBlackBoxResource {
-  override def desiredName: String = "sp_ram"
-  val io = IO(new Bundle {
-    val clk = Input(Clock())
-    val en = Input(Bool())
-    val we = Input(Bool())
-    val addr = Input(UInt(log2Ceil(depth).W))
-    val din = Input(UInt(width.W))
-    val dout = Output(UInt(width.W))
-  })
-  addResource("/sp_ram.v")
-}
-
 class ToomCook1024IO extends Bundle {
   val start = Input(Bool())
   val busy = Output(Bool())
@@ -232,7 +219,11 @@ class ToomCook1024 extends Module {
 
   val coreRam = Seq.fill(2, 7, CoreGroups)(Module(new SpRam(ColsPerBank * 36, 25)))
   val w1Buf = Reg(Vec(2, Vec(7, Vec(GroupsPerBlock, UInt((ColsPerBank * 33).W)))))
-  val w0Ram = Seq.fill(7, GroupsPerBlock)(Module(new SpRam(ColsPerBank * 27, 4)))
+  // w0Buf replaces w0Ram in the fixed 16-column design.
+  // The original w0Ram depth is only 4, which is too shallow for the available
+  // SRAM macros. Using Reg avoids wasting 32-depth SRAM macro rows and also
+  // removes the one-cycle SRAM read prefetch in Interp3.
+  val w0Buf = Reg(Vec(7, Vec(GroupsPerBlock, Vec(4, UInt((ColsPerBank * 27).W)))))
 
   val outRam = Module(new SpRam(64 * 24, 16))
 
@@ -248,7 +239,6 @@ class ToomCook1024 extends Module {
   evalARam.foreach(ramDefaults(_, 16 * A_EVAL_W))
   evalBRam.foreach(ramDefaults(_, 16 * B_EVAL_W))
   for (buf <- 0 until 2; pt2 <- 0 until 7; group <- 0 until CoreGroups) ramDefaults(coreRam(buf)(pt2)(group), ColsPerBank * 36)
-  for (pt0 <- 0 until 7; group <- 0 until GroupsPerBlock) ramDefaults(w0Ram(pt0)(group), ColsPerBank * 27)
   ramDefaults(outRam, 64 * 24)
 
   val doneReg = RegInit(false.B)
@@ -337,13 +327,12 @@ class ToomCook1024 extends Module {
   val inter3In = Wire(Vec(7 * 16, UInt(27.W)))
   val i2Group = i2Step(1, 0)
   val i3Group = i3Step(1, 0)
+  val i3Addr = i3Step(3, 2)
 
   for (pt <- 0 until 7) {
     val i1Packed16 = Mux(pageBuf(i1Page).asBool, coreRam(1)(pt)(0).io.dout, coreRam(0)(pt)(0).io.dout)
     val i2Packed16 = Mux(i2Pt0(0), w1Buf(1)(pt)(i2Group), w1Buf(0)(pt)(i2Group))
-    val i3Packed16 = MuxLookup(i3Group, 0.U((ColsPerBank * 27).W))(
-      (0 until GroupsPerBlock).map(g => g.U -> w0Ram(pt)(g).io.dout)
-    )
+    val i3Packed16 = w0Buf(pt)(i3Group)(i3Addr)
     val i1Word16 = split16(i1Packed16, 36)
     val i2Word16 = split16(i2Packed16, 33)
     val i3Word16 = split16(i3Packed16, 27)
@@ -595,10 +584,7 @@ class ToomCook1024 extends Module {
       when(i2Step === 0.U) { firstW0 := interp2.io.out }
       for (pt0 <- 0 until 7; group <- 0 until GroupsPerBlock) {
         when(i2Pt0 === pt0.U) {
-          w0Ram(pt0)(group).io.en := true.B
-          w0Ram(pt0)(group).io.we := true.B
-          w0Ram(pt0)(group).io.addr := w0WriteAddr
-          w0Ram(pt0)(group).io.din := pack16((0 until ColsPerBank).map(col => interp2.io.out(group * ColsPerBank + col)))
+          w0Buf(pt0)(group)(w0WriteAddr) := pack16((0 until ColsPerBank).map(col => interp2.io.out(group * ColsPerBank + col)))
         }
       }
       i2Pr0 := interp2.io.nr0; i2Pr1 := interp2.io.nr1; i2Pr2 := interp2.io.nr2
@@ -610,10 +596,7 @@ class ToomCook1024 extends Module {
     }.otherwise {
       for (pt0 <- 0 until 7) {
         when(i2Pt0 === pt0.U) {
-          w0Ram(pt0)(0).io.en := true.B
-          w0Ram(pt0)(0).io.we := true.B
-          w0Ram(pt0)(0).io.addr := 0.U // Correction rewrite for W0 coeff 0..15.
-          w0Ram(pt0)(0).io.din := correctedW0WordG0
+          w0Buf(pt0)(0)(0) := correctedW0WordG0
         }
       }
       w0BlockReady(i2Pt0) := true.B
@@ -626,10 +609,6 @@ class ToomCook1024 extends Module {
   // Inter3Controller: wait until all W0 pt0 banks are complete, then produce the
   // final 64-wide output blocks.
   when(!i3Active && !doneReg && w0BlockReady.asUInt.andR) {
-    for (pt0 <- 0 until 7) {
-      w0Ram(pt0)(0).io.en := true.B
-      w0Ram(pt0)(0).io.addr := 0.U
-    }
     i3Active := true.B
     i3Sub := 1.U
     i3Step := 0.U
@@ -646,17 +625,6 @@ class ToomCook1024 extends Module {
       when(i3Step === 15.U) {
         i3Sub := 2.U
       }.otherwise {
-        val nextStep = i3Step + 1.U
-        val nextGroup = nextStep(1, 0)
-        val nextAddr = nextStep >> 2
-        for (pt0 <- 0 until 7) {
-          for (group <- 0 until GroupsPerBlock) {
-            when(nextGroup === group.U) {
-              w0Ram(pt0)(group).io.en := true.B
-              w0Ram(pt0)(group).io.addr := nextAddr(1, 0)
-            }
-          }
-        }
         i3Step := i3Step + 1.U
       }
     }.otherwise {
