@@ -167,6 +167,46 @@ class Interp8ColsStep(pidx: Int, inW: Int, outW: Int) extends Module {
   io.nr2 := carry2(8)
 }
 
+
+class InputLoadStageState extends Bundle {
+  val active = Bool()
+  val lane = UInt(4.W)
+  val phase = UInt(2.W)
+}
+
+class Eval1024StageState extends Bundle {
+  val active = Bool()
+  val produced = UInt(9.W)
+  val pt0 = UInt(3.W)
+  val pt1 = UInt(3.W)
+  val pt2 = UInt(3.W)
+  val jobIdx = UInt(9.W)
+}
+
+class Core16StageState extends Bundle {
+  val active = Bool()
+  val reqIdx = UInt(9.W)
+  val readValid = Bool()
+  val feedJob = UInt(9.W)
+  val wrPage = UInt(6.W)
+  val wrPt2 = UInt(3.W)
+}
+
+object InterpStageHelpers {
+  def correctedFirstBlock(first: Vec[UInt], pr0: UInt, pr1: UInt, pr2: UInt, w: Int): Vec[UInt] = {
+    val out = Wire(Vec(32, UInt(w.W)))
+    out := first
+    out(0) := ParaMath.mask(first(0) - pr2, w)
+    out(1) := ParaMath.mask(first(1) - pr1, w)
+    out(2) := ParaMath.mask(first(2) - pr0, w)
+    out
+  }
+
+  def packInterpGroup(xs: Vec[UInt], group: Int, colsPerBank: Int): UInt = {
+    Cat((0 until colsPerBank).reverse.map(col => xs(group * colsPerBank + col)))
+  }
+}
+
 class SpRam(width: Int, depth: Int) extends BlackBox(Map("WIDTH" -> width, "DEPTH" -> depth)) with HasBlackBoxResource {
   override def desiredName: String = "sp_ram"
   val io = IO(new Bundle {
@@ -224,25 +264,26 @@ class ToomCook1024 extends Module {
   private val ColsPerBank = 8
   private val GroupsPerBlock = 4
 
-  //输入缓存
+  // 1. SRAM declarations
+  // input SRAM
   val inARam = Module(new SpRam(32 * 24, 32))
   val inBRam = Module(new SpRam(32 * 8, 32))
 
-  //evaluation 结果缓存,2个bank2:eval 和 core 可以流水并行：eval 写 job k+1,core 读 job k,通过 job(0) 选择 bank，避免单端口 RAM 同时读写同一个 bank
+    // eval SRAM banks
   val evalARam = Seq.fill(2)(Module(new SpRam(16 * A_EVAL_W, 172)))
   val evalBRam = Seq.fill(2)(Module(new SpRam(16 * B_EVAL_W, 172)))
 
-  // core16 输出缓存
+    // core SRAM: page ping-pong buffer
   // coreRam(buf)(pt2)(group)
   // group 0 : core.io.c(0..7), group 1 : core.io.c(8..15).
   val coreRam = Seq.fill(2, 7, 2)(Module(new SpRam(ColsPerBank * 36, 25)))
-  // 保存 Inter1 对 pt2 方向插值后的结果
+    // Interp1 output SRAM: 343x16 -> 49x64
   // w1Ram(buf)(pt1)(group): 8-col banked W1 buffer
   val w1Ram = Seq.fill(2, 7, GroupsPerBlock)(Module(new SpRam(ColsPerBank * 33, 2)))
-  // 保存 Inter2 对 pt1 方向插值后的结果
+    // Interp2 output SRAM: 49x64 -> 7x256
   // w0Ram(pt0)(group): 8-col banked W0 buffer
   val w0Ram = Seq.fill(7, GroupsPerBlock)(Module(new SpRam(ColsPerBank * 27, 8)))
-  // 最终输出缓存
+    // output SRAM: 7x256 -> 1024
   val outRam = Module(new SpRam(32 * 24, 32))
 
   private def ramDefaults(ram: SpRam, width: Int): Unit = {
@@ -261,6 +302,22 @@ class ToomCook1024 extends Module {
   for (pt0 <- 0 until 7; group <- 0 until GroupsPerBlock) ramDefaults(w0Ram(pt0)(group), ColsPerBank * 27)
   ramDefaults(outRam, 32 * 24)
 
+
+  // Algorithm mapping:
+  // L0/L1/L2 evaluation:
+  //   1024 -> 7×256 -> 49×64 -> 343×16
+  // Core stage:
+  //   343 independent core16 jobs
+  // Interpolation:
+  //   Interp1: 343×16 -> 49×64
+  //   Interp2: 49×64  -> 7×256
+  //   Interp3: 7×256  -> 1024
+  //
+  // This SRAM implementation does not materialize the full software arrays.
+  // It streams/ping-pongs pages through SRAM banks and processes interpolation
+  // in 8-column chunks to avoid large combinational Interpolation(stride=256).
+
+  // 2. stage modules / stage control
   val doneReg = RegInit(false.B)
   io.done := doneReg
 
@@ -271,6 +328,10 @@ class ToomCook1024 extends Module {
   val loadPhase = RegInit(0.U(2.W))
   val loadA0 = Reg(UInt((32 * 24).W))
   val loadB0 = Reg(UInt((32 * 8).W))
+  val inputLoadState = Wire(new InputLoadStageState)
+  inputLoadState.active := loadActive
+  inputLoadState.lane := loadLane
+  inputLoadState.phase := loadPhase
 
   val evalActive = RegInit(false.B)
   val evalProduced = RegInit(0.U(9.W))
@@ -280,6 +341,13 @@ class ToomCook1024 extends Module {
   // Flat eval job counter. It advances in lockstep with evalPt0/evalPt1/evalPt2
   // to avoid hardware multipliers for pt0*49 + pt1*7 + pt2.
   val evalJobIdx = RegInit(0.U(9.W))
+  val evalStageState = Wire(new Eval1024StageState)
+  evalStageState.active := evalActive
+  evalStageState.produced := evalProduced
+  evalStageState.pt0 := evalPt0
+  evalStageState.pt1 := evalPt1
+  evalStageState.pt2 := evalPt2
+  evalStageState.jobIdx := evalJobIdx
 
   val evalA = Seq.fill(16)(Module(new Eval64Point(24, A_EVAL_W)))
   val evalB = Seq.fill(16)(Module(new Eval64Point(8, B_EVAL_W)))
@@ -314,6 +382,13 @@ class ToomCook1024 extends Module {
   val coreWrPage = RegInit(0.U(6.W))
   val coreWrPt2 = RegInit(0.U(3.W))
   val corePageReady = RegInit(VecInit(Seq.fill(49)(false.B)))
+  val coreStageState = Wire(new Core16StageState)
+  coreStageState.active := coreActive
+  coreStageState.reqIdx := coreReqIdx
+  coreStageState.readValid := coreReadValid
+  coreStageState.feedJob := coreFeedJob
+  coreStageState.wrPage := coreWrPage
+  coreStageState.wrPt2 := coreWrPt2
 
   val i1Active = RegInit(false.B)
   val i1Page = RegInit(0.U(6.W))
@@ -383,25 +458,13 @@ class ToomCook1024 extends Module {
   // firstW1/firstW0/firstOut hold raw block0. After the final 8-column step of
   // a full stride, i1Pr/i2Pr/i3Pr hold final carry; the correction stage then
   // overwrites block0 coeff 0/1/2 using those final carries.
-  val correctedW1Vec = Wire(Vec(32, UInt(33.W)))
-  correctedW1Vec := firstW1
-  correctedW1Vec(0) := ParaMath.mask(firstW1(0) - i1Pr2, 33)
-  correctedW1Vec(1) := ParaMath.mask(firstW1(1) - i1Pr1, 33)
-  correctedW1Vec(2) := ParaMath.mask(firstW1(2) - i1Pr0, 33)
+  val correctedW1Vec = InterpStageHelpers.correctedFirstBlock(firstW1, i1Pr0, i1Pr1, i1Pr2, 33)
   val correctedW1WordG0 = pack8((0 until ColsPerBank).map(i => correctedW1Vec(i)))
 
-  val correctedW0Vec = Wire(Vec(32, UInt(27.W)))
-  correctedW0Vec := firstW0
-  correctedW0Vec(0) := ParaMath.mask(firstW0(0) - i2Pr2, 27)
-  correctedW0Vec(1) := ParaMath.mask(firstW0(1) - i2Pr1, 27)
-  correctedW0Vec(2) := ParaMath.mask(firstW0(2) - i2Pr0, 27)
+  val correctedW0Vec = InterpStageHelpers.correctedFirstBlock(firstW0, i2Pr0, i2Pr1, i2Pr2, 27)
   val correctedW0WordG0 = pack8((0 until ColsPerBank).map(i => correctedW0Vec(i)))
 
-  val correctedOutVec = Wire(Vec(32, UInt(24.W)))
-  correctedOutVec := firstOut
-  correctedOutVec(0) := ParaMath.mask(firstOut(0) - i3Pr2, 24)
-  correctedOutVec(1) := ParaMath.mask(firstOut(1) - i3Pr1, 24)
-  correctedOutVec(2) := ParaMath.mask(firstOut(2) - i3Pr0, 24)
+  val correctedOutVec = InterpStageHelpers.correctedFirstBlock(firstOut, i3Pr0, i3Pr1, i3Pr2, 24)
   val correctedOutWord = packVec(correctedOutVec)
 
   val computing = loadActive || evalActive || coreActive || i1Active || i2Active || i3Active
