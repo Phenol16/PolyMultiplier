@@ -64,23 +64,23 @@ class ToomCook1024Test extends AnyFlatSpec with ChiselScalatestTester {
     require(expected.length == N, s"$label: expected length must be $N")
 
     def packA(block: Int, a: Seq[BigInt]): BigInt = {
-      (0 until 32).map { i =>
-        (a(block * 32 + i) & ((BigInt(1) << 24) - 1)) << (24 * i)
+      (0 until 64).map { i =>
+        (a(block * 64 + i) & ((BigInt(1) << 24) - 1)) << (24 * i)
       }.sum
     }
     def packB(block: Int, b: Seq[BigInt]): BigInt = {
-      (0 until 32).map { i =>
-        (b(block * 32 + i) & ((BigInt(1) << 8) - 1)) << (8 * i)
+      (0 until 64).map { i =>
+        (b(block * 64 + i) & ((BigInt(1) << 8) - 1)) << (8 * i)
       }.sum
     }
     def unpackC(word: BigInt): Seq[BigInt] = {
-      (0 until 32).map { i =>
+      (0 until 64).map { i =>
         (word >> (24 * i)) & ((BigInt(1) << 24) - 1)
       }
     }
 
     println(s"[${now()}][$label] write input SRAM blocks")
-    for (block <- 0 until 32) {
+    for (block <- 0 until 16) {
       dut.io.a_we.poke(true.B)
       dut.io.a_addr.poke(block.U)
       dut.io.a_din.poke(packA(block, aVals).U)
@@ -116,7 +116,7 @@ class ToomCook1024Test extends AnyFlatSpec with ChiselScalatestTester {
     val nonZero = scala.collection.mutable.ArrayBuffer[(Int, BigInt)]()
 
     val got = collection.mutable.ArrayBuffer[BigInt]()
-    for (block <- 0 until 32) {
+    for (block <- 0 until 16) {
       dut.io.c_re.poke(true.B)
       dut.io.c_addr.poke(block.U)
       dut.clock.step(1)
