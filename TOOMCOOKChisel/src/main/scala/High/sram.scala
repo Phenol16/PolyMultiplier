@@ -14,5 +14,5 @@ class SpRam(width: Int, depth: Int) extends BlackBox(Map("WIDTH" -> width, "DEPT
     val din = Input(UInt(width.W))
     val dout = Output(UInt(width.W))
   })
-  addResource("/sp_ram.v")
+  addResource("/sp_ram_marco.v")
 }

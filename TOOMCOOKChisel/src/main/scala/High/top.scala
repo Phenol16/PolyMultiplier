@@ -47,21 +47,18 @@ class ToomCook1024 extends Module {
   private def pageAddr(page: UInt): UInt = halfAddr(page)
 
 //存储模块实例化
-  private val ColsPerBank = 16
-  private val GroupsPerBlock = 4
 
   val inARam = Module(new SpRam(64 * 24, 16))
   val inBRam = Module(new SpRam(64 * 8, 16))
   val outRam = Module(new SpRam(64 * 24, 16))
-  
-  val laneAWord = Reg(Vec(16, UInt((64 * 24).W)))
-  val laneBWord = Reg(Vec(16, UInt((64 * 8).W)))
   val evalARam = Seq.fill(2)(Module(new SpRam(16 * A_EVAL_W, 172)))
   val evalBRam = Seq.fill(2)(Module(new SpRam(16 * B_EVAL_W, 172)))
-  val coreRam = Seq.fill(2, 7)(Module(new SpRam(ColsPerBank * 36, 25)))
+  val coreRam = Seq.fill(2, 7)(Module(new SpRam(16 * 36, 25)))
 
-  val w1Buf = Reg(Vec(2, Vec(7, Vec(GroupsPerBlock, UInt((ColsPerBank * 33).W)))))
-  val w0Buf = Reg(Vec(7, Vec(GroupsPerBlock, Vec(4, UInt((ColsPerBank * 27).W)))))
+  val laneAWord = Reg(Vec(16, UInt((64 * 24).W)))
+  val laneBWord = Reg(Vec(16, UInt((64 * 8).W)))
+  val w1Buf = Reg(Vec(2, Vec(7, Vec(4, UInt((16 * 33).W)))))
+  val w0Buf = Reg(Vec(7, Vec(4, Vec(4, UInt((16 * 27).W)))))
 // RAM 默认值设置
   private def ramDefaults(ram: SpRam): Unit = {
     ram.io.clk := clock
@@ -110,7 +107,7 @@ class ToomCook1024 extends Module {
 
   val evalAWord = packVec(evalAVec)
   val evalBWord = packVec(evalBVec)
-  val coreOutWord = pack16((0 until ColsPerBank).map(col => core.io.c(col)))
+  val coreOutWord = pack16((0 until 16).map(col => core.io.c(col)))
   core.io.valid_in := coreActive && coreWordValid
 
   val core = Module(new core16(t = 0, k = 2, sign = 1, aWidth = A_EVAL_W, bWidth = B_EVAL_W, cWidth = 36))
@@ -134,7 +131,7 @@ class ToomCook1024 extends Module {
   val i1Pt1 = RegInit(0.U(3.W))
   val i1Correct = RegInit(false.B)
   val i1Pr = RegInit(VecInit(Seq.fill(3)(0.U(30.W))))
-  val firstW1 = Reg(Vec(ColsPerBank, UInt(33.W)))
+  val firstW1 = Reg(Vec(16, UInt(33.W)))
   val w1GroupsReady = RegInit(0.U(4.W))
 
   val i2Active = RegInit(false.B)
@@ -142,7 +139,7 @@ class ToomCook1024 extends Module {
   val i2Step = RegInit(0.U(3.W))
   val i2Correct = RegInit(false.B)
   val i2Pr = RegInit(VecInit(Seq.fill(3)(0.U(27.W))))
-  val firstW0 = Reg(Vec(ColsPerBank, UInt(27.W)))
+  val firstW0 = Reg(Vec(16, UInt(27.W)))
   val w0BlocksReady = RegInit(0.U(4.W))
 
   val i3Active = RegInit(false.B)
@@ -183,14 +180,14 @@ class ToomCook1024 extends Module {
   interp3.io.pr0 := i3Pr(0); interp3.io.pr1 := i3Pr(1); interp3.io.pr2 := i3Pr(2)
 
 //插值回绕
-  val correctedW1WordG0 = pack16((0 until ColsPerBank).map {
+  val correctedW1WordG0 = pack16((0 until 16).map {
     case 0 => ParaMath.mask(firstW1(0) - i1Pr(2), 33)
     case 1 => ParaMath.mask(firstW1(1) - i1Pr(1), 33)
     case 2 => ParaMath.mask(firstW1(2) - i1Pr(0), 33)
     case i => firstW1(i)
   })
 
-  val correctedW0WordG0 = pack16((0 until ColsPerBank).map {
+  val correctedW0WordG0 = pack16((0 until 16).map {
     case 0 => ParaMath.mask(firstW0(0) - i2Pr(2), 27)
     case 1 => ParaMath.mask(firstW0(1) - i2Pr(1), 27)
     case 2 => ParaMath.mask(firstW0(2) - i2Pr(0), 27)
@@ -204,13 +201,13 @@ class ToomCook1024 extends Module {
   correctedOutVec(2) := ParaMath.mask(firstOut(2) - i3Pr(0), 24)
   val correctedOutWord = packVec(correctedOutVec)
 
-  val i1GroupWords = Wire(Vec(GroupsPerBlock, UInt((ColsPerBank * 33).W)))
-  for (group <- 0 until GroupsPerBlock) {
-    i1GroupWords(group) := pack16((0 until ColsPerBank).map(col => interp1.io.out(group * ColsPerBank + col)))
+  val i1GroupWords = Wire(Vec(4, UInt((16 * 33).W)))
+  for (group <- 0 until 4) {
+    i1GroupWords(group) := pack16((0 until 16).map(col => interp1.io.out(group * 16 + col)))
   }
-  val i2GroupWords = Wire(Vec(GroupsPerBlock, UInt((ColsPerBank * 27).W)))
-  for (group <- 0 until GroupsPerBlock) {
-    i2GroupWords(group) := pack16((0 until ColsPerBank).map(col => interp2.io.out(group * ColsPerBank + col)))
+  val i2GroupWords = Wire(Vec(4, UInt((16 * 27).W)))
+  for (group <- 0 until 4) {
+    i2GroupWords(group) := pack16((0 until 16).map(col => interp2.io.out(group * 16 + col)))
   }
 
 
@@ -381,10 +378,10 @@ class ToomCook1024 extends Module {
     val pt1 = i1Pt1
     val wrBuf = pt0(0)
     when(!i1Correct) {
-      for (i <- 0 until ColsPerBank) {
+      for (i <- 0 until 16) {
         firstW1(i) := interp1.io.out(i)
       }
-      for (group <- 0 until GroupsPerBlock) {
+      for (group <- 0 until 4) {
         w1Buf(wrBuf)(pt1)(group) := i1GroupWords(group)
       }
       i1Pr(0) := interp1.io.nr0; i1Pr(1) := interp1.io.nr1; i1Pr(2) := interp1.io.nr2
@@ -418,11 +415,11 @@ class ToomCook1024 extends Module {
     when(!i2Correct) {
       val w0WriteAddr = i2Step(1, 0)
       when(i2Step === 0.U) {
-        for (i <- 0 until ColsPerBank) {
+        for (i <- 0 until 16) {
           firstW0(i) := interp2.io.out(i)
         }
       }
-      for (group <- 0 until GroupsPerBlock) {
+      for (group <- 0 until 4) {
         w0Buf(i2Pt0)(group)(w0WriteAddr) := i2GroupWords(group)
       }
       i2Pr(0) := interp2.io.nr0; i2Pr(1) := interp2.io.nr1; i2Pr(2) := interp2.io.nr2
@@ -441,7 +438,8 @@ class ToomCook1024 extends Module {
     }
   }
 
-//插值3阶段
+  // Inter3Controller: wait until all W0 pt0 banks are complete, then produce the
+  // final 64-wide output blocks.
   when(!i3Active && !doneReg && (w0BlocksReady === 7.U)) {
     i3Active := true.B
     i3Correct := false.B
