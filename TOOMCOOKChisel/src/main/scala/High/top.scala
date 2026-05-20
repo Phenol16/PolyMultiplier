@@ -107,8 +107,7 @@ class ToomCook1024 extends Module {
 
   val evalAWord = packVec(evalAVec)
   val evalBWord = packVec(evalBVec)
-  val coreOutWord = pack16((0 until 16).map(col => core.io.c(col)))
-  core.io.valid_in := coreActive && coreWordValid
+
 
   val core = Module(new core16(t = 0, k = 2, sign = 1, aWidth = A_EVAL_W, bWidth = B_EVAL_W, cWidth = 36))
   val coreAWordReg = Reg(UInt((16 * A_EVAL_W).W))
@@ -124,7 +123,8 @@ class ToomCook1024 extends Module {
   val coreWrPage = RegInit(0.U(6.W))
   val coreWrPt2 = RegInit(0.U(3.W))
   val corePagesReady = RegInit(0.U(6.W))
-
+  val coreOutWord = pack16((0 until 16).map(col => core.io.c(col)))
+  core.io.valid_in := coreActive && coreWordValid
   val i1Active = RegInit(false.B)
   val i1Page = RegInit(0.U(6.W))
   val i1Pt0 = RegInit(0.U(3.W))
