@@ -1,0 +1,302 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 3
+Design : poly_fast_split_mult_kernel
+Version: O-2018.06-SP5
+Date   : Fri May 22 21:16:05 2026
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: ssg0p81vm40c   Library: tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+Wire Load Model Mode: segmented
+
+  Startpoint: REG_13_reg_17_
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: usint_ext_mult_6/holdh_delay_reg_15_
+            (rising edge-triggered flip-flop clocked by clock_main)
+  Path Group: clock_main
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  poly_fast_split_mult_kernel
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  usint_ext_mult_0_DP_OP_17J2_185_1390_J2_0_722
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  REG_13_reg_17_/CP (DFQD1BWP40P140)                      0.00 #     0.00 r
+  REG_13_reg_17_/Q (DFQD1BWP40P140)                       0.11       0.11 r
+  usint_ext_mult_6/io_ops[17] (usint_ext_mult_722)        0.00       0.11 r
+  usint_ext_mult_6/U31/ZN (CKND1BWP40P140)                0.03       0.14 f
+  usint_ext_mult_6/U40/ZN (ND4D1BWP40P140LVT)             0.02       0.15 r
+  usint_ext_mult_6/U45/Z (OR4D1BWP40P140)                 0.03       0.19 r
+  usint_ext_mult_6/U46/ZN (OAI31D1BWP40P140LVT)           0.06       0.24 f
+  usint_ext_mult_6/U53/ZN (NR2OPTIBD1BWP40P140)           0.13       0.38 r
+  usint_ext_mult_6/DP_OP_17J2_185_1390/I4[1] (usint_ext_mult_0_DP_OP_17J2_185_1390_J2_0_722)
+                                                          0.00       0.38 r
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U317/ZN (CKND1BWP40P140)
+                                                          0.15       0.53 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U327/ZN (OAI22D1BWP40P140)
+                                                          0.14       0.66 r
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U330/ZN (CKND1BWP40P140)
+                                                          0.05       0.72 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U331/ZN (AOI221D1BWP40P140)
+                                                          0.06       0.78 r
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U332/ZN (CKND1BWP40P140)
+                                                          0.06       0.84 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U285/ZN (OAI22D1BWP40P140)
+                                                          0.06       0.89 r
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U408/S (HA1D1BWP40P140)
+                                                          0.07       0.96 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U500/CO (FA1D1BWP40P140)
+                                                          0.06       1.02 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U501/CO (FA1D1BWP40P140)
+                                                          0.06       1.08 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U502/CO (FA1D1BWP40P140)
+                                                          0.06       1.13 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U503/CO (FA1D1BWP40P140)
+                                                          0.06       1.19 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U504/CO (FA1D1BWP40P140)
+                                                          0.06       1.24 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U505/CO (FA1D1BWP40P140)
+                                                          0.06       1.30 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U477/CO (FA1D1BWP40P140)
+                                                          0.06       1.36 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U489/CO (FA1D1BWP40P140)
+                                                          0.06       1.41 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U486/CO (FA1D1BWP40P140)
+                                                          0.06       1.47 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U484/CO (FA1D1BWP40P140)
+                                                          0.06       1.52 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U483/CO (FA1D1BWP40P140)
+                                                          0.06       1.58 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U481/S (FA1D1BWP40P140)
+                                                          0.10       1.68 r
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U508/CO (FA1D1BWP40P140)
+                                                          0.05       1.73 r
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U490/Z (XOR3UD1BWP40P140)
+                                                          0.04       1.78 r
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U493/Z (XOR4D1BWP40P140)
+                                                          0.10       1.87 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U496/Z (XOR4D1BWP40P140)
+                                                          0.10       1.98 r
+  usint_ext_mult_6/DP_OP_17J2_185_1390/O2[6] (usint_ext_mult_0_DP_OP_17J2_185_1390_J2_0_722)
+                                                          0.00       1.98 r
+  usint_ext_mult_6/U69/Z (AO22D1BWP40P140LVT)             0.03       2.01 r
+  usint_ext_mult_6/holdh_delay_reg_15_/D (DFQD1BWP40P140)
+                                                          0.00       2.01 r
+  data arrival time                                                  2.01
+
+  clock clock_main (rise edge)                            5.00       5.00
+  clock network delay (ideal)                             0.00       5.00
+  clock uncertainty                                      -0.10       4.90
+  usint_ext_mult_6/holdh_delay_reg_15_/CP (DFQD1BWP40P140)
+                                                          0.00       4.90 r
+  library setup time                                     -0.01       4.89
+  data required time                                                 4.89
+  --------------------------------------------------------------------------
+  data required time                                                 4.89
+  data arrival time                                                 -2.01
+  --------------------------------------------------------------------------
+  slack (MET)                                                        2.89
+
+
+  Startpoint: REG_15_reg_17_
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: usint_ext_mult_7/holdh_delay_reg_15_
+            (rising edge-triggered flip-flop clocked by clock_main)
+  Path Group: clock_main
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  poly_fast_split_mult_kernel
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  usint_ext_mult_0_DP_OP_17J2_185_1390_J2_0_721
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  REG_15_reg_17_/CP (DFQD1BWP40P140)                      0.00 #     0.00 r
+  REG_15_reg_17_/Q (DFQD1BWP40P140)                       0.11       0.11 r
+  usint_ext_mult_7/io_ops[17] (usint_ext_mult_721)        0.00       0.11 r
+  usint_ext_mult_7/U31/ZN (CKND1BWP40P140)                0.03       0.14 f
+  usint_ext_mult_7/U38/ZN (ND4D1BWP40P140LVT)             0.02       0.15 r
+  usint_ext_mult_7/U44/Z (OR4D1BWP40P140)                 0.03       0.19 r
+  usint_ext_mult_7/U45/ZN (OAI31D1BWP40P140LVT)           0.06       0.24 f
+  usint_ext_mult_7/U52/ZN (NR2OPTIBD1BWP40P140)           0.13       0.38 r
+  usint_ext_mult_7/DP_OP_17J2_185_1390/I4[1] (usint_ext_mult_0_DP_OP_17J2_185_1390_J2_0_721)
+                                                          0.00       0.38 r
+  usint_ext_mult_7/DP_OP_17J2_185_1390/U318/ZN (CKND1BWP40P140)
+                                                          0.15       0.53 f
+  usint_ext_mult_7/DP_OP_17J2_185_1390/U326/ZN (OAI22D1BWP40P140)
+                                                          0.14       0.66 r
+  usint_ext_mult_7/DP_OP_17J2_185_1390/U329/ZN (CKND1BWP40P140)
+                                                          0.05       0.72 f
+  usint_ext_mult_7/DP_OP_17J2_185_1390/U330/ZN (AOI221D1BWP40P140)
+                                                          0.06       0.78 r
+  usint_ext_mult_7/DP_OP_17J2_185_1390/U331/ZN (CKND1BWP40P140)
+                                                          0.06       0.84 f
+  usint_ext_mult_7/DP_OP_17J2_185_1390/U405/ZN (OAI22D1BWP40P140)
+                                                          0.06       0.89 r
+  usint_ext_mult_7/DP_OP_17J2_185_1390/U408/S (HA1D1BWP40P140)
+                                                          0.07       0.96 f
+  usint_ext_mult_7/DP_OP_17J2_185_1390/U500/CO (FA1D1BWP40P140)
+                                                          0.06       1.02 f
+  usint_ext_mult_7/DP_OP_17J2_185_1390/U501/CO (FA1D1BWP40P140)
+                                                          0.06       1.08 f
+  usint_ext_mult_7/DP_OP_17J2_185_1390/U502/CO (FA1D1BWP40P140)
+                                                          0.06       1.13 f
+  usint_ext_mult_7/DP_OP_17J2_185_1390/U503/CO (FA1D1BWP40P140)
+                                                          0.06       1.19 f
+  usint_ext_mult_7/DP_OP_17J2_185_1390/U504/CO (FA1D1BWP40P140)
+                                                          0.06       1.24 f
+  usint_ext_mult_7/DP_OP_17J2_185_1390/U505/CO (FA1D1BWP40P140)
+                                                          0.06       1.30 f
+  usint_ext_mult_7/DP_OP_17J2_185_1390/U476/CO (FA1D1BWP40P140)
+                                                          0.06       1.36 f
+  usint_ext_mult_7/DP_OP_17J2_185_1390/U489/CO (FA1D1BWP40P140)
+                                                          0.06       1.41 f
+  usint_ext_mult_7/DP_OP_17J2_185_1390/U486/CO (FA1D1BWP40P140)
+                                                          0.06       1.47 f
+  usint_ext_mult_7/DP_OP_17J2_185_1390/U484/CO (FA1D1BWP40P140)
+                                                          0.06       1.52 f
+  usint_ext_mult_7/DP_OP_17J2_185_1390/U482/CO (FA1D1BWP40P140)
+                                                          0.06       1.58 f
+  usint_ext_mult_7/DP_OP_17J2_185_1390/U480/S (FA1D1BWP40P140)
+                                                          0.10       1.68 r
+  usint_ext_mult_7/DP_OP_17J2_185_1390/U508/CO (FA1D1BWP40P140)
+                                                          0.05       1.73 r
+  usint_ext_mult_7/DP_OP_17J2_185_1390/U490/Z (XOR3UD1BWP40P140)
+                                                          0.04       1.78 r
+  usint_ext_mult_7/DP_OP_17J2_185_1390/U493/Z (XOR4D1BWP40P140)
+                                                          0.10       1.87 f
+  usint_ext_mult_7/DP_OP_17J2_185_1390/U496/Z (XOR4D1BWP40P140)
+                                                          0.10       1.98 r
+  usint_ext_mult_7/DP_OP_17J2_185_1390/O2[6] (usint_ext_mult_0_DP_OP_17J2_185_1390_J2_0_721)
+                                                          0.00       1.98 r
+  usint_ext_mult_7/U69/Z (AO22D1BWP40P140LVT)             0.03       2.01 r
+  usint_ext_mult_7/holdh_delay_reg_15_/D (DFQD1BWP40P140)
+                                                          0.00       2.01 r
+  data arrival time                                                  2.01
+
+  clock clock_main (rise edge)                            5.00       5.00
+  clock network delay (ideal)                             0.00       5.00
+  clock uncertainty                                      -0.10       4.90
+  usint_ext_mult_7/holdh_delay_reg_15_/CP (DFQD1BWP40P140)
+                                                          0.00       4.90 r
+  library setup time                                     -0.01       4.89
+  data required time                                                 4.89
+  --------------------------------------------------------------------------
+  data required time                                                 4.89
+  data arrival time                                                 -2.01
+  --------------------------------------------------------------------------
+  slack (MET)                                                        2.89
+
+
+  Startpoint: REG_17_reg_17_
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: usint_ext_mult_8/holdh_delay_reg_15_
+            (rising edge-triggered flip-flop clocked by clock_main)
+  Path Group: clock_main
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  poly_fast_split_mult_kernel
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  usint_ext_mult_0_DP_OP_17J2_185_1390_J2_0_720
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  REG_17_reg_17_/CP (DFQD1BWP40P140)                      0.00 #     0.00 r
+  REG_17_reg_17_/Q (DFQD1BWP40P140)                       0.11       0.11 r
+  usint_ext_mult_8/io_ops[17] (usint_ext_mult_720)        0.00       0.11 r
+  usint_ext_mult_8/U29/ZN (CKND1BWP40P140)                0.03       0.14 f
+  usint_ext_mult_8/U37/ZN (ND4D1BWP40P140LVT)             0.02       0.15 r
+  usint_ext_mult_8/U43/Z (OR4D1BWP40P140)                 0.03       0.19 r
+  usint_ext_mult_8/U44/ZN (OAI31D1BWP40P140LVT)           0.06       0.24 f
+  usint_ext_mult_8/U52/ZN (NR2OPTIBD1BWP40P140)           0.13       0.38 r
+  usint_ext_mult_8/DP_OP_17J2_185_1390/I4[1] (usint_ext_mult_0_DP_OP_17J2_185_1390_J2_0_720)
+                                                          0.00       0.38 r
+  usint_ext_mult_8/DP_OP_17J2_185_1390/U319/ZN (CKND1BWP40P140)
+                                                          0.15       0.53 f
+  usint_ext_mult_8/DP_OP_17J2_185_1390/U329/ZN (OAI22D1BWP40P140)
+                                                          0.14       0.66 r
+  usint_ext_mult_8/DP_OP_17J2_185_1390/U332/ZN (CKND1BWP40P140)
+                                                          0.05       0.72 f
+  usint_ext_mult_8/DP_OP_17J2_185_1390/U333/ZN (AOI221D1BWP40P140)
+                                                          0.06       0.78 r
+  usint_ext_mult_8/DP_OP_17J2_185_1390/U334/ZN (CKND1BWP40P140)
+                                                          0.06       0.84 f
+  usint_ext_mult_8/DP_OP_17J2_185_1390/U407/ZN (OAI22D1BWP40P140)
+                                                          0.06       0.89 r
+  usint_ext_mult_8/DP_OP_17J2_185_1390/U410/S (HA1D1BWP40P140)
+                                                          0.07       0.96 f
+  usint_ext_mult_8/DP_OP_17J2_185_1390/U500/CO (FA1D1BWP40P140)
+                                                          0.06       1.02 f
+  usint_ext_mult_8/DP_OP_17J2_185_1390/U501/CO (FA1D1BWP40P140)
+                                                          0.06       1.08 f
+  usint_ext_mult_8/DP_OP_17J2_185_1390/U502/CO (FA1D1BWP40P140)
+                                                          0.06       1.13 f
+  usint_ext_mult_8/DP_OP_17J2_185_1390/U503/CO (FA1D1BWP40P140)
+                                                          0.06       1.19 f
+  usint_ext_mult_8/DP_OP_17J2_185_1390/U504/CO (FA1D1BWP40P140)
+                                                          0.06       1.24 f
+  usint_ext_mult_8/DP_OP_17J2_185_1390/U505/CO (FA1D1BWP40P140)
+                                                          0.06       1.30 f
+  usint_ext_mult_8/DP_OP_17J2_185_1390/U478/CO (FA1D1BWP40P140)
+                                                          0.06       1.36 f
+  usint_ext_mult_8/DP_OP_17J2_185_1390/U490/CO (FA1D1BWP40P140)
+                                                          0.06       1.41 f
+  usint_ext_mult_8/DP_OP_17J2_185_1390/U487/CO (FA1D1BWP40P140)
+                                                          0.06       1.47 f
+  usint_ext_mult_8/DP_OP_17J2_185_1390/U485/CO (FA1D1BWP40P140)
+                                                          0.06       1.52 f
+  usint_ext_mult_8/DP_OP_17J2_185_1390/U483/CO (FA1D1BWP40P140)
+                                                          0.06       1.58 f
+  usint_ext_mult_8/DP_OP_17J2_185_1390/U482/S (FA1D1BWP40P140)
+                                                          0.10       1.68 r
+  usint_ext_mult_8/DP_OP_17J2_185_1390/U508/CO (FA1D1BWP40P140)
+                                                          0.05       1.73 r
+  usint_ext_mult_8/DP_OP_17J2_185_1390/U491/Z (XOR3UD1BWP40P140)
+                                                          0.04       1.78 r
+  usint_ext_mult_8/DP_OP_17J2_185_1390/U494/Z (XOR4D1BWP40P140)
+                                                          0.10       1.87 f
+  usint_ext_mult_8/DP_OP_17J2_185_1390/U291/Z (XOR4D1BWP40P140)
+                                                          0.10       1.98 r
+  usint_ext_mult_8/DP_OP_17J2_185_1390/O2[6] (usint_ext_mult_0_DP_OP_17J2_185_1390_J2_0_720)
+                                                          0.00       1.98 r
+  usint_ext_mult_8/U69/Z (AO22D1BWP40P140LVT)             0.03       2.01 r
+  usint_ext_mult_8/holdh_delay_reg_15_/D (DFQD1BWP40P140)
+                                                          0.00       2.01 r
+  data arrival time                                                  2.01
+
+  clock clock_main (rise edge)                            5.00       5.00
+  clock network delay (ideal)                             0.00       5.00
+  clock uncertainty                                      -0.10       4.90
+  usint_ext_mult_8/holdh_delay_reg_15_/CP (DFQD1BWP40P140)
+                                                          0.00       4.90 r
+  library setup time                                     -0.01       4.89
+  data required time                                                 4.89
+  --------------------------------------------------------------------------
+  data required time                                                 4.89
+  data arrival time                                                 -2.01
+  --------------------------------------------------------------------------
+  slack (MET)                                                        2.89
+
+
+1

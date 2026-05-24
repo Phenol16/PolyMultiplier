@@ -1,0 +1,740 @@
+ 
+****************************************
+Report : power
+        -hier
+        -analysis_effort low
+Design : poly_fir_mult_kernel
+Version: O-2018.06-SP5
+Date   : Tue Sep  2 19:34:33 2025
+****************************************
+
+
+Library(s) Used:
+
+    tcbn28hpcplusbwp40p140ssg0p81vm40c_ccs (File: /export1/Library/TN28HPC+/STD_CELL_ext/track9_200824/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp40p140_180a/tcbn28hpcplusbwp40p140ssg0p81vm40c_ccs.db)
+    tcbn28hpcplusbwp40p140lvtssg0p81vm40c_ccs (File: /export1/Library/TN28HPC+/STD_CELL_ext/track9_200824/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp40p140lvt_180a/tcbn28hpcplusbwp40p140lvtssg0p81vm40c_ccs.db)
+    tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs (File: /export1/Library/TN28HPC+/STD_CELL_ext/track9_200824/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp40p140hvt_180a/tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs.db)
+
+
+Operating Conditions: ssg0p81vm40c   Library: tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+Wire Load Model Mode: segmented
+
+Design        Wire Load Model            Library
+------------------------------------------------
+poly_fir_mult_kernel   ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DP_OP_542J2_136_9218_J2_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DP_OP_541J2_135_7361_J2_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DP_OP_540J2_134_2879_J2_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DP_OP_539J2_133_4645_J2_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DP_OP_538J2_132_9963_J2_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DP_OP_537J2_131_4526_J2_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DP_OP_536J2_130_2783_J2_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DP_OP_535J2_129_2539_J2_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DP_OP_534J2_128_4969_J2_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DP_OP_533J2_127_4661_J2_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DP_OP_532J2_126_2783_J2_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DP_OP_531J2_125_4661_J2_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DP_OP_530J2_124_5650_J2_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DP_OP_529J2_123_1794_J2_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DP_OP_528J2_122_2783_J2_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_1
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_2
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_3
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_4
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_5
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_6
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_7
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_8
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_9
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_10
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_11
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_12
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_13
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_14
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_15
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_16
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_17
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_18
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_19
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_20
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_21
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_22
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_23
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_24
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_25
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_26
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_27
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_28
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_29
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_30
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_31
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_32
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_33
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_34
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_35
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_36
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_37
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_38
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_39
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_40
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_41
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_42
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_43
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_44
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_45
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_46
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_47
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_48
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_49
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_50
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_51
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_52
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_53
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_54
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_55
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_56
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_57
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_58
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_59
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_60
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_61
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_62
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_63
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_64
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_65
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_66
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_67
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_68
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_69
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_70
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_71
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_72
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_73
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_74
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_75
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_76
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_77
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_78
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_79
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_80
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_81
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_82
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_83
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_84
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_85
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_86
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_87
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_88
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_89
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_90
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_91
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_92
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_93
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_94
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_95
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_96
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_97
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_98
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_99
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_100
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_101
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_102
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_103
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_104
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_105
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_106
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_107
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_108
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_109
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_110
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_111
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_112
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_113
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_114
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_115
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_116
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_117
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_118
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_119
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_120
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_121
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_122
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_123
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_124
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_125
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_126
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_127
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_128
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_129
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_130
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_131
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_132
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_133
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_134
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fir_mult_kernel_DW_mult_uns_J2_135
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+unordered_adder_0_DP_OP_30J2_137_3296_J2_0_15
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+unordered_adder_0_DP_OP_30J2_137_3296_J2_0_14
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+unordered_adder_0_DP_OP_30J2_137_3296_J2_0_13
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+unordered_adder_0_DP_OP_30J2_137_3296_J2_0_12
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+unordered_adder_0_DP_OP_30J2_137_3296_J2_0_11
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+unordered_adder_0_DP_OP_30J2_137_3296_J2_0_10
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+unordered_adder_0_DP_OP_30J2_137_3296_J2_0_9
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+unordered_adder_0_DP_OP_30J2_137_3296_J2_0_8
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+unordered_adder_0_DP_OP_30J2_137_3296_J2_0_7
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+unordered_adder_0_DP_OP_30J2_137_3296_J2_0_6
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+unordered_adder_0_DP_OP_30J2_137_3296_J2_0_5
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+unordered_adder_0_DP_OP_30J2_137_3296_J2_0_4
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+unordered_adder_0_DP_OP_30J2_137_3296_J2_0_3
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+unordered_adder_0_DP_OP_30J2_137_3296_J2_0_2
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+unordered_adder_0_DP_OP_30J2_137_3296_J2_0_1
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+unordered_adder_0_DP_OP_30J2_137_3296_J2_0_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+
+Global Operating Voltage = 0.81 
+Power-specific unit information :
+    Voltage Units = 1V
+    Capacitance Units = 1.000000pf
+    Time Units = 1ns
+    Dynamic Power Units = 1mW    (derived from V,C,T units)
+    Leakage Power Units = 1nW
+
+
+--------------------------------------------------------------------------------
+                                       Switch   Int      Leak     Total
+Hierarchy                              Power    Power    Power    Power    %
+--------------------------------------------------------------------------------
+poly_fir_mult_kernel                      6.311   14.175 6.85e+03   20.493 100.0
+  mult_x_1 (poly_fir_mult_kernel_DW_mult_uns_J2_135)
+                                       2.03e-02 3.38e-02   23.152 5.41e-02   0.3
+  mult_x_2 (poly_fir_mult_kernel_DW_mult_uns_J2_134)
+                                       2.03e-02 3.38e-02   23.161 5.41e-02   0.3
+  mult_x_3 (poly_fir_mult_kernel_DW_mult_uns_J2_133)
+                                       2.03e-02 3.39e-02   23.160 5.42e-02   0.3
+  mult_x_4 (poly_fir_mult_kernel_DW_mult_uns_J2_132)
+                                       2.03e-02 3.38e-02   23.163 5.41e-02   0.3
+  mult_x_5 (poly_fir_mult_kernel_DW_mult_uns_J2_131)
+                                       2.03e-02 3.38e-02   23.162 5.41e-02   0.3
+  mult_x_6 (poly_fir_mult_kernel_DW_mult_uns_J2_130)
+                                       2.03e-02 3.38e-02   23.152 5.41e-02   0.3
+  mult_x_7 (poly_fir_mult_kernel_DW_mult_uns_J2_129)
+                                       2.03e-02 3.37e-02   23.165 5.40e-02   0.3
+  mult_x_8 (poly_fir_mult_kernel_DW_mult_uns_J2_128)
+                                       2.02e-02 3.37e-02   23.164 5.39e-02   0.3
+  mult_x_9 (poly_fir_mult_kernel_DW_mult_uns_J2_127)
+                                       2.02e-02 3.36e-02   23.162 5.39e-02   0.3
+  mult_x_10 (poly_fir_mult_kernel_DW_mult_uns_J2_126)
+                                       2.02e-02 3.37e-02   23.163 5.39e-02   0.3
+  mult_x_11 (poly_fir_mult_kernel_DW_mult_uns_J2_125)
+                                       2.03e-02 3.38e-02   23.162 5.40e-02   0.3
+  mult_x_12 (poly_fir_mult_kernel_DW_mult_uns_J2_124)
+                                       2.03e-02 3.37e-02   23.161 5.40e-02   0.3
+  mult_x_13 (poly_fir_mult_kernel_DW_mult_uns_J2_123)
+                                       2.03e-02 3.38e-02   23.161 5.42e-02   0.3
+  mult_x_14 (poly_fir_mult_kernel_DW_mult_uns_J2_122)
+                                       2.03e-02 3.38e-02   23.162 5.40e-02   0.3
+  mult_x_15 (poly_fir_mult_kernel_DW_mult_uns_J2_121)
+                                       2.03e-02 3.38e-02   23.155 5.41e-02   0.3
+  mult_x_16 (poly_fir_mult_kernel_DW_mult_uns_J2_120)
+                                       2.03e-02 3.38e-02   23.157 5.41e-02   0.3
+  mult_x_17 (poly_fir_mult_kernel_DW_mult_uns_J2_119)
+                                       2.04e-02 3.40e-02   23.163 5.44e-02   0.3
+  mult_x_18 (poly_fir_mult_kernel_DW_mult_uns_J2_118)
+                                       2.04e-02 3.39e-02   23.165 5.43e-02   0.3
+  mult_x_19 (poly_fir_mult_kernel_DW_mult_uns_J2_117)
+                                       2.04e-02 3.40e-02   23.155 5.44e-02   0.3
+  mult_x_20 (poly_fir_mult_kernel_DW_mult_uns_J2_116)
+                                       2.04e-02 3.39e-02   23.167 5.43e-02   0.3
+  mult_x_21 (poly_fir_mult_kernel_DW_mult_uns_J2_115)
+                                       2.04e-02 3.39e-02   23.159 5.43e-02   0.3
+  mult_x_22 (poly_fir_mult_kernel_DW_mult_uns_J2_114)
+                                       2.04e-02 3.40e-02   23.164 5.44e-02   0.3
+  mult_x_23 (poly_fir_mult_kernel_DW_mult_uns_J2_113)
+                                       2.04e-02 3.39e-02   23.166 5.43e-02   0.3
+  mult_x_24 (poly_fir_mult_kernel_DW_mult_uns_J2_112)
+                                       2.03e-02 3.38e-02   23.166 5.41e-02   0.3
+  mult_x_25 (poly_fir_mult_kernel_DW_mult_uns_J2_111)
+                                       2.02e-02 3.37e-02   23.157 5.40e-02   0.3
+  mult_x_26 (poly_fir_mult_kernel_DW_mult_uns_J2_110)
+                                       2.03e-02 3.38e-02   23.167 5.41e-02   0.3
+  mult_x_27 (poly_fir_mult_kernel_DW_mult_uns_J2_109)
+                                       2.03e-02 3.39e-02   23.156 5.42e-02   0.3
+  mult_x_28 (poly_fir_mult_kernel_DW_mult_uns_J2_108)
+                                       2.03e-02 3.39e-02   23.165 5.42e-02   0.3
+  mult_x_29 (poly_fir_mult_kernel_DW_mult_uns_J2_107)
+                                       2.04e-02 3.40e-02   23.164 5.44e-02   0.3
+  mult_x_30 (poly_fir_mult_kernel_DW_mult_uns_J2_106)
+                                       2.04e-02 3.39e-02   23.157 5.43e-02   0.3
+  mult_x_31 (poly_fir_mult_kernel_DW_mult_uns_J2_105)
+                                       2.04e-02 3.40e-02   23.160 5.44e-02   0.3
+  mult_x_32 (poly_fir_mult_kernel_DW_mult_uns_J2_104)
+                                       2.04e-02 3.39e-02   23.160 5.43e-02   0.3
+  mult_x_33 (poly_fir_mult_kernel_DW_mult_uns_J2_103)
+                                       2.04e-02 3.40e-02   23.152 5.44e-02   0.3
+  mult_x_34 (poly_fir_mult_kernel_DW_mult_uns_J2_102)
+                                       2.04e-02 3.40e-02   23.154 5.45e-02   0.3
+  mult_x_35 (poly_fir_mult_kernel_DW_mult_uns_J2_101)
+                                       2.04e-02 3.39e-02   23.155 5.43e-02   0.3
+  mult_x_36 (poly_fir_mult_kernel_DW_mult_uns_J2_100)
+                                       2.04e-02 3.39e-02   23.162 5.43e-02   0.3
+  mult_x_37 (poly_fir_mult_kernel_DW_mult_uns_J2_99)
+                                       2.04e-02 3.40e-02   23.151 5.44e-02   0.3
+  mult_x_38 (poly_fir_mult_kernel_DW_mult_uns_J2_98)
+                                       2.03e-02 3.39e-02   23.164 5.42e-02   0.3
+  mult_x_39 (poly_fir_mult_kernel_DW_mult_uns_J2_97)
+                                       2.03e-02 3.38e-02   23.154 5.41e-02   0.3
+  mult_x_40 (poly_fir_mult_kernel_DW_mult_uns_J2_96)
+                                       2.03e-02 3.38e-02   23.162 5.41e-02   0.3
+  mult_x_41 (poly_fir_mult_kernel_DW_mult_uns_J2_95)
+                                       2.03e-02 3.38e-02   23.164 5.41e-02   0.3
+  mult_x_42 (poly_fir_mult_kernel_DW_mult_uns_J2_94)
+                                       2.03e-02 3.39e-02   23.160 5.42e-02   0.3
+  mult_x_43 (poly_fir_mult_kernel_DW_mult_uns_J2_93)
+                                       2.03e-02 3.38e-02   23.161 5.42e-02   0.3
+  mult_x_44 (poly_fir_mult_kernel_DW_mult_uns_J2_92)
+                                       2.04e-02 3.40e-02   23.152 5.44e-02   0.3
+  mult_x_45 (poly_fir_mult_kernel_DW_mult_uns_J2_91)
+                                       2.03e-02 3.39e-02   23.161 5.42e-02   0.3
+  mult_x_46 (poly_fir_mult_kernel_DW_mult_uns_J2_90)
+                                       2.04e-02 3.39e-02   23.151 5.43e-02   0.3
+  mult_x_47 (poly_fir_mult_kernel_DW_mult_uns_J2_89)
+                                       2.04e-02 3.40e-02   23.153 5.44e-02   0.3
+  mult_x_48 (poly_fir_mult_kernel_DW_mult_uns_J2_88)
+                                       2.04e-02 3.40e-02   23.155 5.44e-02   0.3
+  mult_x_49 (poly_fir_mult_kernel_DW_mult_uns_J2_87)
+                                       2.04e-02 3.39e-02   23.163 5.43e-02   0.3
+  mult_x_50 (poly_fir_mult_kernel_DW_mult_uns_J2_86)
+                                       2.04e-02 3.39e-02   23.155 5.43e-02   0.3
+  mult_x_51 (poly_fir_mult_kernel_DW_mult_uns_J2_85)
+                                       2.04e-02 3.40e-02   23.161 5.44e-02   0.3
+  mult_x_52 (poly_fir_mult_kernel_DW_mult_uns_J2_84)
+                                       2.03e-02 3.39e-02   23.155 5.42e-02   0.3
+  mult_x_53 (poly_fir_mult_kernel_DW_mult_uns_J2_83)
+                                       2.03e-02 3.37e-02   23.155 5.40e-02   0.3
+  mult_x_54 (poly_fir_mult_kernel_DW_mult_uns_J2_82)
+                                       2.03e-02 3.38e-02   23.163 5.40e-02   0.3
+  mult_x_55 (poly_fir_mult_kernel_DW_mult_uns_J2_81)
+                                       2.03e-02 3.38e-02   23.162 5.41e-02   0.3
+  mult_x_56 (poly_fir_mult_kernel_DW_mult_uns_J2_80)
+                                       2.03e-02 3.38e-02   23.161 5.42e-02   0.3
+  mult_x_57 (poly_fir_mult_kernel_DW_mult_uns_J2_79)
+                                       2.03e-02 3.38e-02   23.153 5.42e-02   0.3
+  mult_x_58 (poly_fir_mult_kernel_DW_mult_uns_J2_78)
+                                       2.04e-02 3.40e-02   23.161 5.45e-02   0.3
+  mult_x_59 (poly_fir_mult_kernel_DW_mult_uns_J2_77)
+                                       2.03e-02 3.38e-02   23.145 5.41e-02   0.3
+  mult_x_60 (poly_fir_mult_kernel_DW_mult_uns_J2_76)
+                                       2.03e-02 3.38e-02   23.146 5.42e-02   0.3
+  mult_x_61 (poly_fir_mult_kernel_DW_mult_uns_J2_75)
+                                       2.04e-02 3.39e-02   23.152 5.43e-02   0.3
+  mult_x_62 (poly_fir_mult_kernel_DW_mult_uns_J2_74)
+                                       2.03e-02 3.38e-02   23.148 5.41e-02   0.3
+  mult_x_63 (poly_fir_mult_kernel_DW_mult_uns_J2_73)
+                                       2.03e-02 3.38e-02   23.147 5.42e-02   0.3
+  mult_x_64 (poly_fir_mult_kernel_DW_mult_uns_J2_72)
+                                       2.03e-02 3.38e-02   23.145 5.42e-02   0.3
+  mult_x_65 (poly_fir_mult_kernel_DW_mult_uns_J2_71)
+                                       2.03e-02 3.37e-02   23.147 5.40e-02   0.3
+  mult_x_66 (poly_fir_mult_kernel_DW_mult_uns_J2_70)
+                                       2.02e-02 3.37e-02   23.148 5.40e-02   0.3
+  mult_x_67 (poly_fir_mult_kernel_DW_mult_uns_J2_69)
+                                       2.02e-02 3.36e-02   23.147 5.39e-02   0.3
+  mult_x_68 (poly_fir_mult_kernel_DW_mult_uns_J2_68)
+                                       2.02e-02 3.37e-02   23.156 5.39e-02   0.3
+  mult_x_69 (poly_fir_mult_kernel_DW_mult_uns_J2_67)
+                                       2.02e-02 3.37e-02   23.146 5.40e-02   0.3
+  mult_x_70 (poly_fir_mult_kernel_DW_mult_uns_J2_66)
+                                       2.03e-02 3.37e-02   23.154 5.40e-02   0.3
+  mult_x_71 (poly_fir_mult_kernel_DW_mult_uns_J2_65)
+                                       2.03e-02 3.37e-02   23.144 5.40e-02   0.3
+  mult_x_72 (poly_fir_mult_kernel_DW_mult_uns_J2_64)
+                                       2.03e-02 3.38e-02   23.146 5.41e-02   0.3
+  mult_x_73 (poly_fir_mult_kernel_DW_mult_uns_J2_63)
+                                       2.03e-02 3.39e-02   23.148 5.42e-02   0.3
+  mult_x_74 (poly_fir_mult_kernel_DW_mult_uns_J2_62)
+                                       2.02e-02 3.37e-02   23.147 5.40e-02   0.3
+  mult_x_75 (poly_fir_mult_kernel_DW_mult_uns_J2_61)
+                                       2.03e-02 3.37e-02   23.148 5.40e-02   0.3
+  mult_x_76 (poly_fir_mult_kernel_DW_mult_uns_J2_60)
+                                       2.03e-02 3.38e-02   23.145 5.42e-02   0.3
+  mult_x_77 (poly_fir_mult_kernel_DW_mult_uns_J2_59)
+                                       2.02e-02 3.36e-02   23.146 5.39e-02   0.3
+  mult_x_78 (poly_fir_mult_kernel_DW_mult_uns_J2_58)
+                                       2.02e-02 3.36e-02   23.147 5.38e-02   0.3
+  mult_x_79 (poly_fir_mult_kernel_DW_mult_uns_J2_57)
+                                       2.02e-02 3.36e-02   23.155 5.38e-02   0.3
+  mult_x_80 (poly_fir_mult_kernel_DW_mult_uns_J2_56)
+                                       2.02e-02 3.36e-02   23.149 5.38e-02   0.3
+  mult_x_81 (poly_fir_mult_kernel_DW_mult_uns_J2_55)
+                                       2.02e-02 3.37e-02   23.154 5.39e-02   0.3
+  mult_x_82 (poly_fir_mult_kernel_DW_mult_uns_J2_54)
+                                       2.04e-02 3.40e-02   23.142 5.44e-02   0.3
+  mult_x_83 (poly_fir_mult_kernel_DW_mult_uns_J2_53)
+                                       2.04e-02 3.40e-02   23.144 5.44e-02   0.3
+  mult_x_84 (poly_fir_mult_kernel_DW_mult_uns_J2_52)
+                                       2.04e-02 3.40e-02   23.143 5.45e-02   0.3
+  mult_x_85 (poly_fir_mult_kernel_DW_mult_uns_J2_51)
+                                       2.04e-02 3.39e-02   23.146 5.43e-02   0.3
+  mult_x_86 (poly_fir_mult_kernel_DW_mult_uns_J2_50)
+                                       2.04e-02 3.39e-02   23.146 5.43e-02   0.3
+  mult_x_87 (poly_fir_mult_kernel_DW_mult_uns_J2_49)
+                                       2.04e-02 3.40e-02   23.143 5.44e-02   0.3
+  mult_x_88 (poly_fir_mult_kernel_DW_mult_uns_J2_48)
+                                       2.03e-02 3.38e-02   23.146 5.41e-02   0.3
+  mult_x_89 (poly_fir_mult_kernel_DW_mult_uns_J2_47)
+                                       2.03e-02 3.38e-02   23.154 5.41e-02   0.3
+  mult_x_90 (poly_fir_mult_kernel_DW_mult_uns_J2_46)
+                                       2.03e-02 3.38e-02   23.144 5.41e-02   0.3
+  mult_x_91 (poly_fir_mult_kernel_DW_mult_uns_J2_45)
+                                       2.03e-02 3.38e-02   23.154 5.42e-02   0.3
+  mult_x_92 (poly_fir_mult_kernel_DW_mult_uns_J2_44)
+                                       2.04e-02 3.39e-02   23.120 5.43e-02   0.3
+  mult_x_93 (poly_fir_mult_kernel_DW_mult_uns_J2_43)
+                                       2.04e-02 3.39e-02   23.122 5.43e-02   0.3
+  mult_x_94 (poly_fir_mult_kernel_DW_mult_uns_J2_42)
+                                       2.04e-02 3.40e-02   23.119 5.44e-02   0.3
+  mult_x_95 (poly_fir_mult_kernel_DW_mult_uns_J2_41)
+                                       2.03e-02 3.39e-02   23.124 5.42e-02   0.3
+  mult_x_96 (poly_fir_mult_kernel_DW_mult_uns_J2_40)
+                                       2.04e-02 3.39e-02   23.123 5.43e-02   0.3
+  mult_x_97 (poly_fir_mult_kernel_DW_mult_uns_J2_39)
+                                       2.04e-02 3.40e-02   23.121 5.44e-02   0.3
+  mult_x_98 (poly_fir_mult_kernel_DW_mult_uns_J2_38)
+                                       2.04e-02 3.39e-02   23.123 5.43e-02   0.3
+  mult_x_99 (poly_fir_mult_kernel_DW_mult_uns_J2_37)
+                                       2.03e-02 3.38e-02   23.123 5.41e-02   0.3
+  mult_x_100 (poly_fir_mult_kernel_DW_mult_uns_J2_36)
+                                       2.02e-02 3.37e-02   23.122 5.40e-02   0.3
+  mult_x_101 (poly_fir_mult_kernel_DW_mult_uns_J2_35)
+                                       2.03e-02 3.38e-02   23.177 5.42e-02   0.3
+  mult_x_102 (poly_fir_mult_kernel_DW_mult_uns_J2_34)
+                                       2.03e-02 3.38e-02   23.178 5.42e-02   0.3
+  mult_x_103 (poly_fir_mult_kernel_DW_mult_uns_J2_33)
+                                       2.04e-02 3.39e-02   23.175 5.43e-02   0.3
+  mult_x_104 (poly_fir_mult_kernel_DW_mult_uns_J2_32)
+                                       2.03e-02 3.38e-02   23.179 5.41e-02   0.3
+  mult_x_105 (poly_fir_mult_kernel_DW_mult_uns_J2_31)
+                                       2.03e-02 3.38e-02   23.180 5.42e-02   0.3
+  mult_x_106 (poly_fir_mult_kernel_DW_mult_uns_J2_30)
+                                       2.04e-02 3.39e-02   23.177 5.43e-02   0.3
+  mult_x_107 (poly_fir_mult_kernel_DW_mult_uns_J2_29)
+                                       2.03e-02 3.38e-02   23.180 5.41e-02   0.3
+  mult_x_108 (poly_fir_mult_kernel_DW_mult_uns_J2_28)
+                                       2.03e-02 3.37e-02   23.180 5.40e-02   0.3
+  mult_x_109 (poly_fir_mult_kernel_DW_mult_uns_J2_27)
+                                       2.03e-02 3.38e-02   23.198 5.41e-02   0.3
+  mult_x_110 (poly_fir_mult_kernel_DW_mult_uns_J2_26)
+                                       2.03e-02 3.39e-02   23.198 5.42e-02   0.3
+  mult_x_111 (poly_fir_mult_kernel_DW_mult_uns_J2_25)
+                                       2.03e-02 3.39e-02   23.197 5.43e-02   0.3
+  mult_x_112 (poly_fir_mult_kernel_DW_mult_uns_J2_24)
+                                       2.03e-02 3.39e-02   23.202 5.42e-02   0.3
+  mult_x_113 (poly_fir_mult_kernel_DW_mult_uns_J2_23)
+                                       2.03e-02 3.38e-02   23.201 5.41e-02   0.3
+  mult_x_114 (poly_fir_mult_kernel_DW_mult_uns_J2_22)
+                                       2.03e-02 3.39e-02   23.199 5.43e-02   0.3
+  mult_x_115 (poly_fir_mult_kernel_DW_mult_uns_J2_21)
+                                       2.02e-02 3.38e-02   23.202 5.41e-02   0.3
+  mult_x_116 (poly_fir_mult_kernel_DW_mult_uns_J2_20)
+                                       2.03e-02 3.39e-02   23.145 5.43e-02   0.3
+  mult_x_117 (poly_fir_mult_kernel_DW_mult_uns_J2_19)
+                                       2.04e-02 3.40e-02   23.149 5.44e-02   0.3
+  mult_x_118 (poly_fir_mult_kernel_DW_mult_uns_J2_18)
+                                       2.04e-02 3.40e-02   23.147 5.45e-02   0.3
+  mult_x_119 (poly_fir_mult_kernel_DW_mult_uns_J2_17)
+                                       2.03e-02 3.39e-02   23.148 5.42e-02   0.3
+  mult_x_120 (poly_fir_mult_kernel_DW_mult_uns_J2_16)
+                                       2.04e-02 3.40e-02   23.149 5.43e-02   0.3
+  mult_x_121 (poly_fir_mult_kernel_DW_mult_uns_J2_15)
+                                       2.04e-02 3.39e-02   23.147 5.43e-02   0.3
+  mult_x_122 (poly_fir_mult_kernel_DW_mult_uns_J2_14)
+                                       2.04e-02 3.39e-02   23.082 5.43e-02   0.3
+  mult_x_123 (poly_fir_mult_kernel_DW_mult_uns_J2_13)
+                                       2.04e-02 3.40e-02   23.084 5.44e-02   0.3
+  mult_x_124 (poly_fir_mult_kernel_DW_mult_uns_J2_12)
+                                       2.05e-02 3.40e-02   23.090 5.45e-02   0.3
+  mult_x_125 (poly_fir_mult_kernel_DW_mult_uns_J2_11)
+                                       2.04e-02 3.39e-02   23.092 5.43e-02   0.3
+  mult_x_126 (poly_fir_mult_kernel_DW_mult_uns_J2_10)
+                                       2.04e-02 3.39e-02   23.086 5.43e-02   0.3
+  mult_x_127 (poly_fir_mult_kernel_DW_mult_uns_J2_9)
+                                       2.04e-02 3.39e-02   23.081 5.43e-02   0.3
+  mult_x_128 (poly_fir_mult_kernel_DW_mult_uns_J2_8)
+                                       2.04e-02 3.40e-02   23.082 5.44e-02   0.3
+  mult_x_129 (poly_fir_mult_kernel_DW_mult_uns_J2_7)
+                                       2.04e-02 3.40e-02   23.081 5.45e-02   0.3
+  mult_x_130 (poly_fir_mult_kernel_DW_mult_uns_J2_6)
+                                       2.04e-02 3.38e-02   23.091 5.42e-02   0.3
+  mult_x_131 (poly_fir_mult_kernel_DW_mult_uns_J2_5)
+                                       2.05e-02 3.40e-02   23.083 5.45e-02   0.3
+  mult_x_132 (poly_fir_mult_kernel_DW_mult_uns_J2_4)
+                                       2.05e-02 3.41e-02   23.084 5.46e-02   0.3
+  mult_x_133 (poly_fir_mult_kernel_DW_mult_uns_J2_3)
+                                       2.05e-02 3.41e-02   23.090 5.47e-02   0.3
+  mult_x_134 (poly_fir_mult_kernel_DW_mult_uns_J2_2)
+                                       2.04e-02 3.39e-02   23.083 5.43e-02   0.3
+  mult_x_135 (poly_fir_mult_kernel_DW_mult_uns_J2_1)
+                                       2.04e-02 3.38e-02   23.084 5.42e-02   0.3
+  mult_x_136 (poly_fir_mult_kernel_DW_mult_uns_J2_0)
+                                       2.04e-02 3.39e-02   23.080 5.43e-02   0.3
+  DP_OP_528J2_122_2783 (poly_fir_mult_kernel_DP_OP_528J2_122_2783_J2_0)
+                                          0.374    0.570  328.621    0.944   4.6
+  DP_OP_529J2_123_1794 (poly_fir_mult_kernel_DP_OP_529J2_123_1794_J2_0)
+                                          0.350    0.532  306.430    0.882   4.3
+  DP_OP_530J2_124_5650 (poly_fir_mult_kernel_DP_OP_530J2_124_5650_J2_0)
+                                          0.327    0.497  284.831    0.824   4.0
+  DP_OP_531J2_125_4661 (poly_fir_mult_kernel_DP_OP_531J2_125_4661_J2_0)
+                                          0.300    0.457  263.668    0.757   3.7
+  DP_OP_532J2_126_2783 (poly_fir_mult_kernel_DP_OP_532J2_126_2783_J2_0)
+                                          0.275    0.419  241.502    0.694   3.4
+  DP_OP_533J2_127_4661 (poly_fir_mult_kernel_DP_OP_533J2_127_4661_J2_0)
+                                          0.250    0.381  220.046    0.632   3.1
+  DP_OP_534J2_128_4969 (poly_fir_mult_kernel_DP_OP_534J2_128_4969_J2_0)
+                                          0.225    0.343  198.414    0.568   2.8
+  DP_OP_535J2_129_2539 (poly_fir_mult_kernel_DP_OP_535J2_129_2539_J2_0)
+                                          0.200    0.305  176.585    0.505   2.5
+  DP_OP_536J2_130_2783 (poly_fir_mult_kernel_DP_OP_536J2_130_2783_J2_0)
+                                          0.175    0.267  155.185    0.443   2.2
+  DP_OP_537J2_131_4526 (poly_fir_mult_kernel_DP_OP_537J2_131_4526_J2_0)
+                                          0.150    0.229  133.430    0.379   1.9
+  DP_OP_538J2_132_9963 (poly_fir_mult_kernel_DP_OP_538J2_132_9963_J2_0)
+                                          0.124    0.190  111.338    0.314   1.5
+  DP_OP_539J2_133_4645 (poly_fir_mult_kernel_DP_OP_539J2_133_4645_J2_0)
+                                          0.101    0.153   89.721    0.254   1.2
+  DP_OP_540J2_134_2879 (poly_fir_mult_kernel_DP_OP_540J2_134_2879_J2_0)
+                                       7.56e-02    0.116   68.098    0.191   0.9
+  DP_OP_541J2_135_7361 (poly_fir_mult_kernel_DP_OP_541J2_135_7361_J2_0)
+                                       5.12e-02 7.77e-02   46.365    0.129   0.6
+  DP_OP_542J2_136_9218 (poly_fir_mult_kernel_DP_OP_542J2_136_9218_J2_0)
+                                       2.45e-02 3.88e-02   22.916 6.34e-02   0.3
+  unordered_adder_15 (unordered_adder_0)
+                                       1.91e-02 3.81e-02   28.147 5.72e-02   0.3
+    DP_OP_30J2_137_3296 (unordered_adder_0_DP_OP_30J2_137_3296_J2_0_0)
+                                       1.91e-02 3.81e-02   28.147 5.72e-02   0.3
+  unordered_adder_14 (unordered_adder_1)
+                                       1.91e-02 3.80e-02   28.147 5.72e-02   0.3
+    DP_OP_30J2_137_3296 (unordered_adder_0_DP_OP_30J2_137_3296_J2_0_1)
+                                       1.91e-02 3.80e-02   28.147 5.72e-02   0.3
+  unordered_adder_13 (unordered_adder_2)
+                                       1.91e-02 3.81e-02   28.147 5.72e-02   0.3
+    DP_OP_30J2_137_3296 (unordered_adder_0_DP_OP_30J2_137_3296_J2_0_2)
+                                       1.91e-02 3.81e-02   28.147 5.72e-02   0.3
+  unordered_adder_12 (unordered_adder_3)
+                                       1.91e-02 3.81e-02   28.147 5.72e-02   0.3
+    DP_OP_30J2_137_3296 (unordered_adder_0_DP_OP_30J2_137_3296_J2_0_3)
+                                       1.91e-02 3.81e-02   28.147 5.72e-02   0.3
+  unordered_adder_11 (unordered_adder_4)
+                                       1.91e-02 3.80e-02   28.147 5.72e-02   0.3
+    DP_OP_30J2_137_3296 (unordered_adder_0_DP_OP_30J2_137_3296_J2_0_4)
+                                       1.91e-02 3.80e-02   28.147 5.72e-02   0.3
+  unordered_adder_10 (unordered_adder_5)
+                                       1.91e-02 3.81e-02   28.147 5.72e-02   0.3
+    DP_OP_30J2_137_3296 (unordered_adder_0_DP_OP_30J2_137_3296_J2_0_5)
+                                       1.91e-02 3.81e-02   28.147 5.72e-02   0.3
+  unordered_adder_9 (unordered_adder_6)
+                                       1.91e-02 3.80e-02   28.147 5.72e-02   0.3
+    DP_OP_30J2_137_3296 (unordered_adder_0_DP_OP_30J2_137_3296_J2_0_6)
+                                       1.91e-02 3.80e-02   28.147 5.72e-02   0.3
+  unordered_adder_8 (unordered_adder_7)
+                                       1.91e-02 3.80e-02   28.147 5.71e-02   0.3
+    DP_OP_30J2_137_3296 (unordered_adder_0_DP_OP_30J2_137_3296_J2_0_7)
+                                       1.91e-02 3.80e-02   28.147 5.71e-02   0.3
+  unordered_adder_7 (unordered_adder_8)
+                                       1.91e-02 3.80e-02   28.147 5.72e-02   0.3
+    DP_OP_30J2_137_3296 (unordered_adder_0_DP_OP_30J2_137_3296_J2_0_8)
+                                       1.91e-02 3.80e-02   28.147 5.72e-02   0.3
+  unordered_adder_6 (unordered_adder_9)
+                                       1.91e-02 3.80e-02   28.147 5.72e-02   0.3
+    DP_OP_30J2_137_3296 (unordered_adder_0_DP_OP_30J2_137_3296_J2_0_9)
+                                       1.91e-02 3.80e-02   28.147 5.72e-02   0.3
+  unordered_adder_5 (unordered_adder_10)
+                                       1.91e-02 3.80e-02   28.147 5.72e-02   0.3
+    DP_OP_30J2_137_3296 (unordered_adder_0_DP_OP_30J2_137_3296_J2_0_10)
+                                       1.91e-02 3.80e-02   28.147 5.72e-02   0.3
+  unordered_adder_4 (unordered_adder_11)
+                                       1.91e-02 3.80e-02   28.147 5.72e-02   0.3
+    DP_OP_30J2_137_3296 (unordered_adder_0_DP_OP_30J2_137_3296_J2_0_11)
+                                       1.91e-02 3.80e-02   28.147 5.72e-02   0.3
+  unordered_adder_3 (unordered_adder_12)
+                                       1.91e-02 3.80e-02   28.147 5.71e-02   0.3
+    DP_OP_30J2_137_3296 (unordered_adder_0_DP_OP_30J2_137_3296_J2_0_12)
+                                       1.91e-02 3.80e-02   28.147 5.71e-02   0.3
+  unordered_adder_2 (unordered_adder_13)
+                                       1.91e-02 3.80e-02   28.147 5.72e-02   0.3
+    DP_OP_30J2_137_3296 (unordered_adder_0_DP_OP_30J2_137_3296_J2_0_13)
+                                       1.91e-02 3.80e-02   28.147 5.72e-02   0.3
+  unordered_adder_1 (unordered_adder_14)
+                                       1.91e-02 3.80e-02   28.147 5.72e-02   0.3
+    DP_OP_30J2_137_3296 (unordered_adder_0_DP_OP_30J2_137_3296_J2_0_14)
+                                       1.91e-02 3.80e-02   28.147 5.72e-02   0.3
+  unordered_adder (unordered_adder_15) 1.91e-02 3.80e-02   28.147 5.72e-02   0.3
+    DP_OP_30J2_137_3296 (unordered_adder_0_DP_OP_30J2_137_3296_J2_0_15)
+                                       1.91e-02 3.80e-02   28.147 5.72e-02   0.3
+1

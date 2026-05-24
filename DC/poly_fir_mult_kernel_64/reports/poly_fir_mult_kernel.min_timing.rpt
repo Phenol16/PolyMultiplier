@@ -1,0 +1,127 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay min
+        -max_paths 3
+Design : poly_fir_mult_kernel
+Version: O-2018.06-SP5
+Date   : Sat May 23 05:40:23 2026
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: ffg0p99v125c   Library: tcbn28hpcplusbwp40p140hvtffg0p99v125c_ccs
+Wire Load Model Mode: segmented
+
+  Startpoint: C_0_34_reg_23_
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: io_polyc_0[23]
+            (output port)
+  Path Group: (none)
+  Path Type: min
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  poly_fir_mult_kernel
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  unordered_adder_0_DP_OP_126J3_122_3296_J3_0_63
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  C_0_34_reg_23_/CP (DFQD1BWP40P140)                      0.00 #     0.00 r
+  C_0_34_reg_23_/Q (DFQD1BWP40P140)                       0.05       0.05 r
+  unordered_adder/io_din_34[23] (unordered_adder_63)      0.00       0.05 r
+  unordered_adder/DP_OP_126J3_122_3296/I30[23] (unordered_adder_0_DP_OP_126J3_122_3296_J3_0_63)
+                                                          0.00       0.05 r
+  unordered_adder/DP_OP_126J3_122_3296/U1605/Z (XOR4D1BWP40P140)
+                                                          0.03       0.08 f
+  unordered_adder/DP_OP_126J3_122_3296/U1907/Z (XOR4D1BWP40P140)
+                                                          0.03       0.11 f
+  unordered_adder/DP_OP_126J3_122_3296/U1464/Z (XOR4D1BWP40P140)
+                                                          0.03       0.14 f
+  unordered_adder/DP_OP_126J3_122_3296/O1[23] (unordered_adder_0_DP_OP_126J3_122_3296_J3_0_63)
+                                                          0.00       0.14 f
+  unordered_adder/io_dout[23] (unordered_adder_63)        0.00       0.14 f
+  io_polyc_0[23] (out)                                    0.00       0.14 f
+  data arrival time                                                  0.14
+  --------------------------------------------------------------------------
+  (Path is unconstrained)
+
+
+  Startpoint: C_1_34_reg_23_
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: io_polyc_1[23]
+            (output port)
+  Path Group: (none)
+  Path Type: min
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  poly_fir_mult_kernel
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  unordered_adder_0_DP_OP_126J3_122_3296_J3_0_62
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  C_1_34_reg_23_/CP (DFQD1BWP40P140)                      0.00 #     0.00 r
+  C_1_34_reg_23_/Q (DFQD1BWP40P140)                       0.05       0.05 r
+  unordered_adder_1/io_din_34[23] (unordered_adder_62)
+                                                          0.00       0.05 r
+  unordered_adder_1/DP_OP_126J3_122_3296/I30[23] (unordered_adder_0_DP_OP_126J3_122_3296_J3_0_62)
+                                                          0.00       0.05 r
+  unordered_adder_1/DP_OP_126J3_122_3296/U1606/Z (XOR4D1BWP40P140)
+                                                          0.03       0.08 f
+  unordered_adder_1/DP_OP_126J3_122_3296/U1465/Z (XOR4D1BWP40P140)
+                                                          0.03       0.11 f
+  unordered_adder_1/DP_OP_126J3_122_3296/U1466/Z (XOR4D1BWP40P140)
+                                                          0.03       0.14 f
+  unordered_adder_1/DP_OP_126J3_122_3296/O1[23] (unordered_adder_0_DP_OP_126J3_122_3296_J3_0_62)
+                                                          0.00       0.14 f
+  unordered_adder_1/io_dout[23] (unordered_adder_62)      0.00       0.14 f
+  io_polyc_1[23] (out)                                    0.00       0.14 f
+  data arrival time                                                  0.14
+  --------------------------------------------------------------------------
+  (Path is unconstrained)
+
+
+  Startpoint: C_2_34_reg_23_
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: io_polyc_2[23]
+            (output port)
+  Path Group: (none)
+  Path Type: min
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  poly_fir_mult_kernel
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  unordered_adder_0_DP_OP_126J3_122_3296_J3_0_61
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  C_2_34_reg_23_/CP (DFQD1BWP40P140)                      0.00 #     0.00 r
+  C_2_34_reg_23_/Q (DFQD1BWP40P140)                       0.05       0.05 r
+  unordered_adder_2/io_din_34[23] (unordered_adder_61)
+                                                          0.00       0.05 r
+  unordered_adder_2/DP_OP_126J3_122_3296/I30[23] (unordered_adder_0_DP_OP_126J3_122_3296_J3_0_61)
+                                                          0.00       0.05 r
+  unordered_adder_2/DP_OP_126J3_122_3296/U1605/Z (XOR4D1BWP40P140)
+                                                          0.03       0.08 f
+  unordered_adder_2/DP_OP_126J3_122_3296/U1908/Z (XOR4D1BWP40P140)
+                                                          0.03       0.11 f
+  unordered_adder_2/DP_OP_126J3_122_3296/U1465/Z (XOR4D1BWP40P140)
+                                                          0.03       0.14 f
+  unordered_adder_2/DP_OP_126J3_122_3296/O1[23] (unordered_adder_0_DP_OP_126J3_122_3296_J3_0_61)
+                                                          0.00       0.14 f
+  unordered_adder_2/io_dout[23] (unordered_adder_61)      0.00       0.14 f
+  io_polyc_2[23] (out)                                    0.00       0.14 f
+  data arrival time                                                  0.14
+  --------------------------------------------------------------------------
+  (Path is unconstrained)
+
+
+1

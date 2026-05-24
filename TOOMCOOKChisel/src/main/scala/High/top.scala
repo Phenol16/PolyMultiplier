@@ -38,6 +38,7 @@ class ToomCook1024 extends Module {
     require(xs.length == 16)
     packVec(xs)
   }
+  
 //bank和地址计算
   private def lowBitBank(x: UInt): UInt = x(0)
   private def halfAddr(x: UInt): UInt = x >> 1
@@ -438,8 +439,7 @@ class ToomCook1024 extends Module {
     }
   }
 
-  // Inter3Controller: wait until all W0 pt0 banks are complete, then produce the
-  // final 64-wide output blocks.
+//插值3阶段
   when(!i3Active && !doneReg && (w0BlocksReady === 7.U)) {
     i3Active := true.B
     i3Correct := false.B

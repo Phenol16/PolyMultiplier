@@ -1,0 +1,83 @@
+ 
+****************************************
+Report : power
+        -analysis_effort low
+        -verbose
+Design : core4_a28_b16_c28
+Version: O-2018.06-SP5
+Date   : Tue May 12 06:40:09 2026
+****************************************
+
+
+Library(s) Used:
+
+    tcbn28hpcplusbwp40p140lvtssg0p81vm40c_ccs (File: /export1/Library/TN28HPC+/STD_CELL_ext/track9_200824/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp40p140lvt_180a/tcbn28hpcplusbwp40p140lvtssg0p81vm40c_ccs.db)
+    tcbn28hpcplusbwp40p140ssg0p81vm40c_ccs (File: /export1/Library/TN28HPC+/STD_CELL_ext/track9_200824/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp40p140_180a/tcbn28hpcplusbwp40p140ssg0p81vm40c_ccs.db)
+    tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs (File: /export1/Library/TN28HPC+/STD_CELL_ext/track9_200824/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp40p140hvt_180a/tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs.db)
+
+
+Operating Conditions: ssg0p81vm40c   Library: tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+Wire Load Model Mode: segmented
+
+Design        Wire Load Model            Library
+------------------------------------------------
+core4_a28_b16_c28      ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+core4_a28_b16_c28_DW_mult_uns_J3_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+core4_a28_b16_c28_DW_mult_tc_J3_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+core4_a28_b16_c28_DW_mult_tc_J3_1
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+core4_a28_b16_c28_DW_mult_tc_J3_2
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+core4_a28_b16_c28_DW_mult_uns_J3_1
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+core4_a28_b16_c28_DW_mult_tc_J3_3
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+core4_a28_b16_c28_DW_mult_uns_J3_2
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+Eval_DP_OP_54J2_125_4743_J2_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+Eval_DP_OP_53J2_124_6834_J2_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+Eval_DP_OP_52J2_123_5748_J2_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+Eval_1_DP_OP_54J3_124_8477_J3_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+Eval_1_DP_OP_53J3_123_4557_J3_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+Eval_1_DP_OP_52J3_122_4926_J3_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+InterpolationComb_DP_OP_106J2_122_1947_J2_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+
+Global Operating Voltage = 0.81 
+Power-specific unit information :
+    Voltage Units = 1V
+    Capacitance Units = 1.000000pf
+    Time Units = 1ns
+    Dynamic Power Units = 1mW    (derived from V,C,T units)
+    Leakage Power Units = 1nW
+
+
+  Cell Internal Power  = 946.7292 uW   (63%)
+  Net Switching Power  = 556.8575 uW   (37%)
+                         ---------
+Total Dynamic Power    =   1.5036 mW  (100%)
+
+Cell Leakage Power     = 248.2304 nW
+
+                 Internal         Switching           Leakage            Total                         Cell
+Power Group      Power            Power               Power              Power   (   %    )  Attrs  Count
+---------------------------------------------------------------------------------------------------------
+io_pad             0.0000            0.0000            0.0000            0.0000  (   0.00%)            0
+memory             0.0000            0.0000            0.0000            0.0000  (   0.00%)            0
+black_box          0.0000            0.0000            0.0000            0.0000  (   0.00%)            0
+clock_network      0.0000            0.0000            0.0000            0.0000  (   0.00%)            0
+register           0.2623        1.3103e-02           26.1100            0.2755  (  18.32%)            328
+sequential         0.0000            0.0000            0.0000            0.0000  (   0.00%)            0
+combinational      0.6844            0.5438          222.1050            1.2284  (  81.68%)            6377
+---------------------------------------------------------------------------------------------------------
+Total              0.9467 mW         0.5569 mW       248.2150 nW         1.5038 mW
+1

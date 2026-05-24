@@ -1,0 +1,228 @@
+ 
+****************************************
+Report : area
+Design : poly_fir_mult_kernel
+Version: O-2018.06-SP5
+Date   : Tue Sep  2 19:34:10 2025
+****************************************
+
+Library(s) Used:
+
+    tcbn28hpcplusbwp40p140ssg0p81vm40c_ccs (File: /export1/Library/TN28HPC+/STD_CELL_ext/track9_200824/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp40p140_180a/tcbn28hpcplusbwp40p140ssg0p81vm40c_ccs.db)
+    tcbn28hpcplusbwp40p140lvtssg0p81vm40c_ccs (File: /export1/Library/TN28HPC+/STD_CELL_ext/track9_200824/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp40p140lvt_180a/tcbn28hpcplusbwp40p140lvtssg0p81vm40c_ccs.db)
+    tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs (File: /export1/Library/TN28HPC+/STD_CELL_ext/track9_200824/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp40p140hvt_180a/tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs.db)
+
+Number of ports:                        31754
+Number of nets:                        210723
+Number of cells:                       145671
+Number of combinational cells:         139344
+Number of sequential cells:              6144
+Number of macros/black boxes:               0
+Number of buf/inv:                       7358
+Number of references:                     169
+
+Combinational area:             145851.928475
+Buf/Inv area:                     1873.872029
+Noncombinational area:           11612.159912
+Macro/Black Box area:                0.000000
+Net Interconnect area:      undefined  (Wire load has zero net area)
+
+Total cell area:                157464.088387
+Total area:                 undefined
+
+Hierarchical area distribution
+------------------------------
+
+                                  Global cell area              Local cell area
+                                  --------------------  ------------------------------- 
+Hierarchical cell                 Absolute     Percent  Combi-       Noncombi-   Black-
+                                  Total        Total    national     national    boxes   Design
+--------------------------------  -----------  -------  -----------  ----------  ------  ----------------------------------------------
+poly_fir_mult_kernel              157464.0884    100.0    3096.5760  11612.1599  0.0000  poly_fir_mult_kernel
+DP_OP_528J2_122_2783                7526.9879      4.8    7526.9879      0.0000  0.0000  poly_fir_mult_kernel_DP_OP_528J2_122_2783_J2_0
+DP_OP_529J2_123_1794                7027.6499      4.5    7027.6499      0.0000  0.0000  poly_fir_mult_kernel_DP_OP_529J2_123_1794_J2_0
+DP_OP_530J2_124_5650                6532.2179      4.1    6532.2179      0.0000  0.0000  poly_fir_mult_kernel_DP_OP_530J2_124_5650_J2_0
+DP_OP_531J2_125_4661                6032.1239      3.8    6032.1239      0.0000  0.0000  poly_fir_mult_kernel_DP_OP_531J2_125_4661_J2_0
+DP_OP_532J2_126_2783                5536.8179      3.5    5536.8179      0.0000  0.0000  poly_fir_mult_kernel_DP_OP_532J2_126_2783_J2_0
+DP_OP_533J2_127_4661                5039.8739      3.2    5039.8739      0.0000  0.0000  poly_fir_mult_kernel_DP_OP_533J2_127_4661_J2_0
+DP_OP_534J2_128_4969                4543.0559      2.9    4543.0559      0.0000  0.0000  poly_fir_mult_kernel_DP_OP_534J2_128_4969_J2_0
+DP_OP_535J2_129_2539                4044.3479      2.6    4044.3479      0.0000  0.0000  poly_fir_mult_kernel_DP_OP_535J2_129_2539_J2_0
+DP_OP_536J2_130_2783                3547.2780      2.3    3547.2780      0.0000  0.0000  poly_fir_mult_kernel_DP_OP_536J2_130_2783_J2_0
+DP_OP_537J2_131_4526                3049.4520      1.9    3049.4520      0.0000  0.0000  poly_fir_mult_kernel_DP_OP_537J2_131_4526_J2_0
+DP_OP_538J2_132_9963                2552.5080      1.6    2552.5080      0.0000  0.0000  poly_fir_mult_kernel_DP_OP_538J2_132_9963_J2_0
+DP_OP_539J2_133_4645                2055.0600      1.3    2055.0600      0.0000  0.0000  poly_fir_mult_kernel_DP_OP_539J2_133_4645_J2_0
+DP_OP_540J2_134_2879                1557.8640      1.0    1557.8640      0.0000  0.0000  poly_fir_mult_kernel_DP_OP_540J2_134_2879_J2_0
+DP_OP_541J2_135_7361                1058.5260      0.7    1058.5260      0.0000  0.0000  poly_fir_mult_kernel_DP_OP_541J2_135_7361_J2_0
+DP_OP_542J2_136_9218                 527.5620      0.3     527.5620      0.0000  0.0000  poly_fir_mult_kernel_DP_OP_542J2_136_9218_J2_0
+mult_x_1                             516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_135
+mult_x_10                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_126
+mult_x_100                           516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_36
+mult_x_101                           516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_35
+mult_x_102                           516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_34
+mult_x_103                           516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_33
+mult_x_104                           516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_32
+mult_x_105                           516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_31
+mult_x_106                           516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_30
+mult_x_107                           516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_29
+mult_x_108                           516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_28
+mult_x_109                           516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_27
+mult_x_11                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_125
+mult_x_110                           516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_26
+mult_x_111                           516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_25
+mult_x_112                           516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_24
+mult_x_113                           516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_23
+mult_x_114                           516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_22
+mult_x_115                           516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_21
+mult_x_116                           516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_20
+mult_x_117                           516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_19
+mult_x_118                           516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_18
+mult_x_119                           516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_17
+mult_x_12                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_124
+mult_x_120                           516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_16
+mult_x_121                           516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_15
+mult_x_122                           516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_14
+mult_x_123                           516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_13
+mult_x_124                           516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_12
+mult_x_125                           516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_11
+mult_x_126                           516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_10
+mult_x_127                           516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_9
+mult_x_128                           516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_8
+mult_x_129                           516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_7
+mult_x_13                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_123
+mult_x_130                           516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_6
+mult_x_131                           516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_5
+mult_x_132                           516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_4
+mult_x_133                           516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_3
+mult_x_134                           516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_2
+mult_x_135                           516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_1
+mult_x_136                           516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_0
+mult_x_14                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_122
+mult_x_15                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_121
+mult_x_16                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_120
+mult_x_17                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_119
+mult_x_18                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_118
+mult_x_19                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_117
+mult_x_2                             516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_134
+mult_x_20                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_116
+mult_x_21                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_115
+mult_x_22                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_114
+mult_x_23                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_113
+mult_x_24                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_112
+mult_x_25                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_111
+mult_x_26                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_110
+mult_x_27                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_109
+mult_x_28                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_108
+mult_x_29                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_107
+mult_x_3                             516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_133
+mult_x_30                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_106
+mult_x_31                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_105
+mult_x_32                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_104
+mult_x_33                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_103
+mult_x_34                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_102
+mult_x_35                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_101
+mult_x_36                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_100
+mult_x_37                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_99
+mult_x_38                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_98
+mult_x_39                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_97
+mult_x_4                             516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_132
+mult_x_40                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_96
+mult_x_41                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_95
+mult_x_42                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_94
+mult_x_43                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_93
+mult_x_44                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_92
+mult_x_45                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_91
+mult_x_46                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_90
+mult_x_47                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_89
+mult_x_48                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_88
+mult_x_49                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_87
+mult_x_5                             516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_131
+mult_x_50                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_86
+mult_x_51                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_85
+mult_x_52                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_84
+mult_x_53                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_83
+mult_x_54                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_82
+mult_x_55                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_81
+mult_x_56                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_80
+mult_x_57                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_79
+mult_x_58                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_78
+mult_x_59                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_77
+mult_x_6                             516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_130
+mult_x_60                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_76
+mult_x_61                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_75
+mult_x_62                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_74
+mult_x_63                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_73
+mult_x_64                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_72
+mult_x_65                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_71
+mult_x_66                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_70
+mult_x_67                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_69
+mult_x_68                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_68
+mult_x_69                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_67
+mult_x_7                             516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_129
+mult_x_70                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_66
+mult_x_71                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_65
+mult_x_72                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_64
+mult_x_73                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_63
+mult_x_74                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_62
+mult_x_75                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_61
+mult_x_76                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_60
+mult_x_77                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_59
+mult_x_78                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_58
+mult_x_79                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_57
+mult_x_8                             516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_128
+mult_x_80                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_56
+mult_x_81                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_55
+mult_x_82                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_54
+mult_x_83                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_53
+mult_x_84                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_52
+mult_x_85                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_51
+mult_x_86                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_50
+mult_x_87                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_49
+mult_x_88                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_48
+mult_x_89                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_47
+mult_x_9                             516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_127
+mult_x_90                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_46
+mult_x_91                            516.7260      0.3     516.7260      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_45
+mult_x_92                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_44
+mult_x_93                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_43
+mult_x_94                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_42
+mult_x_95                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_41
+mult_x_96                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_40
+mult_x_97                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_39
+mult_x_98                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_38
+mult_x_99                            516.8520      0.3     516.8520      0.0000  0.0000  poly_fir_mult_kernel_DW_mult_uns_J2_37
+unordered_adder                      739.8720      0.5       0.0000      0.0000  0.0000  unordered_adder_15
+unordered_adder/DP_OP_30J2_137_3296    739.8720     0.5    739.8720      0.0000  0.0000  unordered_adder_0_DP_OP_30J2_137_3296_J2_0_15
+unordered_adder_1                    739.8720      0.5       0.0000      0.0000  0.0000  unordered_adder_14
+unordered_adder_1/DP_OP_30J2_137_3296    739.8720     0.5    739.8720     0.0000 0.0000  unordered_adder_0_DP_OP_30J2_137_3296_J2_0_14
+unordered_adder_10                   739.8720      0.5       0.0000      0.0000  0.0000  unordered_adder_5
+unordered_adder_10/DP_OP_30J2_137_3296    739.8720     0.5    739.8720     0.0000 0.0000 unordered_adder_0_DP_OP_30J2_137_3296_J2_0_5
+unordered_adder_11                   739.8720      0.5       0.0000      0.0000  0.0000  unordered_adder_4
+unordered_adder_11/DP_OP_30J2_137_3296    739.8720     0.5    739.8720     0.0000 0.0000 unordered_adder_0_DP_OP_30J2_137_3296_J2_0_4
+unordered_adder_12                   739.8720      0.5       0.0000      0.0000  0.0000  unordered_adder_3
+unordered_adder_12/DP_OP_30J2_137_3296    739.8720     0.5    739.8720     0.0000 0.0000 unordered_adder_0_DP_OP_30J2_137_3296_J2_0_3
+unordered_adder_13                   739.8720      0.5       0.0000      0.0000  0.0000  unordered_adder_2
+unordered_adder_13/DP_OP_30J2_137_3296    739.8720     0.5    739.8720     0.0000 0.0000 unordered_adder_0_DP_OP_30J2_137_3296_J2_0_2
+unordered_adder_14                   739.8720      0.5       0.0000      0.0000  0.0000  unordered_adder_1
+unordered_adder_14/DP_OP_30J2_137_3296    739.8720     0.5    739.8720     0.0000 0.0000 unordered_adder_0_DP_OP_30J2_137_3296_J2_0_1
+unordered_adder_15                   739.8720      0.5       0.0000      0.0000  0.0000  unordered_adder_0
+unordered_adder_15/DP_OP_30J2_137_3296    739.8720     0.5    739.8720     0.0000 0.0000 unordered_adder_0_DP_OP_30J2_137_3296_J2_0_0
+unordered_adder_2                    739.8720      0.5       0.0000      0.0000  0.0000  unordered_adder_13
+unordered_adder_2/DP_OP_30J2_137_3296    739.8720     0.5    739.8720     0.0000 0.0000  unordered_adder_0_DP_OP_30J2_137_3296_J2_0_13
+unordered_adder_3                    739.8720      0.5       0.0000      0.0000  0.0000  unordered_adder_12
+unordered_adder_3/DP_OP_30J2_137_3296    739.8720     0.5    739.8720     0.0000 0.0000  unordered_adder_0_DP_OP_30J2_137_3296_J2_0_12
+unordered_adder_4                    739.8720      0.5       0.0000      0.0000  0.0000  unordered_adder_11
+unordered_adder_4/DP_OP_30J2_137_3296    739.8720     0.5    739.8720     0.0000 0.0000  unordered_adder_0_DP_OP_30J2_137_3296_J2_0_11
+unordered_adder_5                    739.8720      0.5       0.0000      0.0000  0.0000  unordered_adder_10
+unordered_adder_5/DP_OP_30J2_137_3296    739.8720     0.5    739.8720     0.0000 0.0000  unordered_adder_0_DP_OP_30J2_137_3296_J2_0_10
+unordered_adder_6                    739.8720      0.5       0.0000      0.0000  0.0000  unordered_adder_9
+unordered_adder_6/DP_OP_30J2_137_3296    739.8720     0.5    739.8720     0.0000 0.0000  unordered_adder_0_DP_OP_30J2_137_3296_J2_0_9
+unordered_adder_7                    739.8720      0.5       0.0000      0.0000  0.0000  unordered_adder_8
+unordered_adder_7/DP_OP_30J2_137_3296    739.8720     0.5    739.8720     0.0000 0.0000  unordered_adder_0_DP_OP_30J2_137_3296_J2_0_8
+unordered_adder_8                    739.8720      0.5       0.0000      0.0000  0.0000  unordered_adder_7
+unordered_adder_8/DP_OP_30J2_137_3296    739.8720     0.5    739.8720     0.0000 0.0000  unordered_adder_0_DP_OP_30J2_137_3296_J2_0_7
+unordered_adder_9                    739.8720      0.5       0.0000      0.0000  0.0000  unordered_adder_6
+unordered_adder_9/DP_OP_30J2_137_3296    739.8720     0.5    739.8720     0.0000 0.0000  unordered_adder_0_DP_OP_30J2_137_3296_J2_0_6
+--------------------------------  -----------  -------  -----------  ----------  ------  ----------------------------------------------
+Total                                                   145851.9285  11612.1599  0.0000
+
+1

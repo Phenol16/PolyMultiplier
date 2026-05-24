@@ -1,0 +1,67 @@
+.
+ 
+****************************************
+Report : RTL congestion
+Design : poly_fast_split_mult_unit
+Version: O-2018.06-SP5
+Date   : Fri May 22 19:23:12 2026
+****************************************
+
+########################################
+Large MUX details
+########################################
+
+--------------------------------------------------------------------------------
+Structure    Cell name            Size (width)     Line No    RTL File
+--------------------------------------------------------------------------------
+MUX_OP       sp_ram_wrapped/sp_ram/C1951
+                                  4 x 1 (96)            21    /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fast_split_mult_unit/sp_ram.v
+MUX_OP       sp_ram_wrapped_1/sp_ram/C1951
+                                  4 x 1 (96)            21    /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fast_split_mult_unit/sp_ram.v
+MUX_OP       sp_ram_wrapped_2/sp_ram/C1951
+                                  4 x 1 (96)            21    /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fast_split_mult_unit/sp_ram.v
+MUX_OP       sp_ram_wrapped_3/sp_ram/C1951
+                                  4 x 1 (96)            21    /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fast_split_mult_unit/sp_ram.v
+MUX_OP       sp_ram_wrapped_4/sp_ram/C3511
+                                  8 x 1 (96)            21    /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fast_split_mult_unit/sp_ram.v
+MUX_OP       sp_ram_wrapped_5/sp_ram/C3511
+                                  8 x 1 (96)            21    /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fast_split_mult_unit/sp_ram.v
+MUX_OP       sp_ram_wrapped_6/sp_ram/C3511
+                                  8 x 1 (96)            21    /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fast_split_mult_unit/sp_ram.v
+MUX_OP       sp_ram_wrapped_7/sp_ram/C3511
+                                  8 x 1 (96)            21    /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fast_split_mult_unit/sp_ram.v
+MUX_OP       sp_ram_wrapped_8/sp_ram/C6599
+                                  16 x 1 (96)           21    /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fast_split_mult_unit/sp_ram.v
+MUX_OP       sp_ram_wrapped_9/sp_ram/C6599
+                                  16 x 1 (96)           21    /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fast_split_mult_unit/sp_ram.v
+MUX_OP       sp_ram_wrapped_10/sp_ram/C6599
+                                  16 x 1 (96)           21    /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fast_split_mult_unit/sp_ram.v
+MUX_OP       sp_ram_wrapped_11/sp_ram/C6599
+                                  16 x 1 (96)           21    /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fast_split_mult_unit/sp_ram.v
+MUX_OP       sp_ram_wrapped_12/sp_ram/C1951
+                                  4 x 1 (96)            21    /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fast_split_mult_unit/sp_ram.v
+MUX_OP       sp_ram_wrapped_13/sp_ram/C1951
+                                  4 x 1 (96)            21    /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fast_split_mult_unit/sp_ram.v
+MUX_OP       sp_ram_wrapped_14/sp_ram/C1951
+                                  4 x 1 (96)            21    /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fast_split_mult_unit/sp_ram.v
+MUX_OP       sp_ram_wrapped_15/sp_ram/C1951
+                                  4 x 1 (96)            21    /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fast_split_mult_unit/sp_ram.v
+MUX_OP       sp_ram_wrapped_16/sp_ram/C3511
+                                  8 x 1 (96)            21    /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fast_split_mult_unit/sp_ram.v
+MUX_OP       sp_ram_wrapped_17/sp_ram/C3511
+                                  8 x 1 (96)            21    /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fast_split_mult_unit/sp_ram.v
+MUX_OP       sp_ram_wrapped_18/sp_ram/C3511
+                                  8 x 1 (96)            21    /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fast_split_mult_unit/sp_ram.v
+MUX_OP       sp_ram_wrapped_19/sp_ram/C3511
+                                  8 x 1 (96)            21    /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fast_split_mult_unit/sp_ram.v
+MUX_OP       sp_ram_wrapped_20/sp_ram/C6599
+                                  16 x 1 (96)           21    /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fast_split_mult_unit/sp_ram.v
+MUX_OP       sp_ram_wrapped_21/sp_ram/C6599
+                                  16 x 1 (96)           21    /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fast_split_mult_unit/sp_ram.v
+MUX_OP       sp_ram_wrapped_22/sp_ram/C6599
+                                  16 x 1 (96)           21    /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fast_split_mult_unit/sp_ram.v
+MUX_OP       sp_ram_wrapped_23/sp_ram/C6599
+                                  16 x 1 (96)           21    /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fast_split_mult_unit/sp_ram.v
+
+Memory usage for J1 task 2504 Mbytes -- main task 2504 Mbytes.
+1

@@ -1,0 +1,556 @@
+**************************************************
+Report         : unmatched_points
+
+Reference      : r:/WORK/poly_fast_split_mult_unit
+Implementation : i:/WORK/poly_fast_split_mult_unit
+Version        : O-2018.06-SP5
+Date           : Fri May 22 20:16:02 2026
+**************************************************
+
+258 Unmatched points (0 reference, 258 implementation):
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/clk_gate_cntl_ctr_2_reg/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/clk_gate_pipe_ctr_reg/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/clk_gate_postadd_l0_regf_0_0_reg/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/clk_gate_postadd_l0_regf_1_0_reg/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/clk_gate_postadd_l1_regf_0_0_reg/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/clk_gate_postadd_l1_regf_1_0_reg/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/clk_gate_postadd_l1_regf_2_0_reg/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/clk_gate_postadd_l1_regf_3_0_reg/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/poly_fast_split_mult_core/poly_fast_split_mult_preadd/clk_gate_polya_preadd_left_reg/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/poly_fast_split_mult_core/poly_fast_split_mult_preadd/clk_gate_polya_preadd_right_reg/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped/sp_ram/clk_gate_dout_reg/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped/sp_ram/clk_gate_ram_sp_reg_0_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped/sp_ram/clk_gate_ram_sp_reg_1_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped/sp_ram/clk_gate_ram_sp_reg_2_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped/sp_ram/clk_gate_ram_sp_reg_3_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_1/sp_ram/clk_gate_dout_reg/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_1/sp_ram/clk_gate_ram_sp_reg_0_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_1/sp_ram/clk_gate_ram_sp_reg_1_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_1/sp_ram/clk_gate_ram_sp_reg_2_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_1/sp_ram/clk_gate_ram_sp_reg_3_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_10/sp_ram/clk_gate_dout_reg/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_10/sp_ram/clk_gate_ram_sp_reg_0_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_10/sp_ram/clk_gate_ram_sp_reg_10_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_10/sp_ram/clk_gate_ram_sp_reg_11_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_10/sp_ram/clk_gate_ram_sp_reg_12_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_10/sp_ram/clk_gate_ram_sp_reg_13_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_10/sp_ram/clk_gate_ram_sp_reg_14_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_10/sp_ram/clk_gate_ram_sp_reg_15_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_10/sp_ram/clk_gate_ram_sp_reg_1_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_10/sp_ram/clk_gate_ram_sp_reg_2_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_10/sp_ram/clk_gate_ram_sp_reg_3_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_10/sp_ram/clk_gate_ram_sp_reg_4_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_10/sp_ram/clk_gate_ram_sp_reg_5_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_10/sp_ram/clk_gate_ram_sp_reg_6_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_10/sp_ram/clk_gate_ram_sp_reg_7_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_10/sp_ram/clk_gate_ram_sp_reg_8_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_10/sp_ram/clk_gate_ram_sp_reg_9_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_11/sp_ram/clk_gate_dout_reg/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_11/sp_ram/clk_gate_ram_sp_reg_0_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_11/sp_ram/clk_gate_ram_sp_reg_10_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_11/sp_ram/clk_gate_ram_sp_reg_11_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_11/sp_ram/clk_gate_ram_sp_reg_12_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_11/sp_ram/clk_gate_ram_sp_reg_13_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_11/sp_ram/clk_gate_ram_sp_reg_14_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_11/sp_ram/clk_gate_ram_sp_reg_15_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_11/sp_ram/clk_gate_ram_sp_reg_1_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_11/sp_ram/clk_gate_ram_sp_reg_2_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_11/sp_ram/clk_gate_ram_sp_reg_3_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_11/sp_ram/clk_gate_ram_sp_reg_4_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_11/sp_ram/clk_gate_ram_sp_reg_5_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_11/sp_ram/clk_gate_ram_sp_reg_6_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_11/sp_ram/clk_gate_ram_sp_reg_7_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_11/sp_ram/clk_gate_ram_sp_reg_8_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_11/sp_ram/clk_gate_ram_sp_reg_9_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_12/sp_ram/clk_gate_dout_reg/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_12/sp_ram/clk_gate_ram_sp_reg_0_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_12/sp_ram/clk_gate_ram_sp_reg_1_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_12/sp_ram/clk_gate_ram_sp_reg_2_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_12/sp_ram/clk_gate_ram_sp_reg_3_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_13/sp_ram/clk_gate_dout_reg/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_13/sp_ram/clk_gate_ram_sp_reg_0_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_13/sp_ram/clk_gate_ram_sp_reg_1_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_13/sp_ram/clk_gate_ram_sp_reg_2_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_13/sp_ram/clk_gate_ram_sp_reg_3_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_14/sp_ram/clk_gate_dout_reg/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_14/sp_ram/clk_gate_ram_sp_reg_0_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_14/sp_ram/clk_gate_ram_sp_reg_1_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_14/sp_ram/clk_gate_ram_sp_reg_2_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_14/sp_ram/clk_gate_ram_sp_reg_3_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_15/sp_ram/clk_gate_dout_reg/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_15/sp_ram/clk_gate_ram_sp_reg_0_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_15/sp_ram/clk_gate_ram_sp_reg_1_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_15/sp_ram/clk_gate_ram_sp_reg_2_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_15/sp_ram/clk_gate_ram_sp_reg_3_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_16/sp_ram/clk_gate_dout_reg/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_16/sp_ram/clk_gate_ram_sp_reg_0_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_16/sp_ram/clk_gate_ram_sp_reg_1_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_16/sp_ram/clk_gate_ram_sp_reg_2_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_16/sp_ram/clk_gate_ram_sp_reg_3_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_16/sp_ram/clk_gate_ram_sp_reg_4_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_16/sp_ram/clk_gate_ram_sp_reg_5_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_16/sp_ram/clk_gate_ram_sp_reg_6_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_16/sp_ram/clk_gate_ram_sp_reg_7_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_17/sp_ram/clk_gate_dout_reg/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_17/sp_ram/clk_gate_ram_sp_reg_0_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_17/sp_ram/clk_gate_ram_sp_reg_1_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_17/sp_ram/clk_gate_ram_sp_reg_2_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_17/sp_ram/clk_gate_ram_sp_reg_3_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_17/sp_ram/clk_gate_ram_sp_reg_4_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_17/sp_ram/clk_gate_ram_sp_reg_5_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_17/sp_ram/clk_gate_ram_sp_reg_6_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_17/sp_ram/clk_gate_ram_sp_reg_7_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_18/sp_ram/clk_gate_dout_reg/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_18/sp_ram/clk_gate_ram_sp_reg_0_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_18/sp_ram/clk_gate_ram_sp_reg_1_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_18/sp_ram/clk_gate_ram_sp_reg_2_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_18/sp_ram/clk_gate_ram_sp_reg_3_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_18/sp_ram/clk_gate_ram_sp_reg_4_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_18/sp_ram/clk_gate_ram_sp_reg_5_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_18/sp_ram/clk_gate_ram_sp_reg_6_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_18/sp_ram/clk_gate_ram_sp_reg_7_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_19/sp_ram/clk_gate_dout_reg/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_19/sp_ram/clk_gate_ram_sp_reg_0_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_19/sp_ram/clk_gate_ram_sp_reg_1_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_19/sp_ram/clk_gate_ram_sp_reg_2_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_19/sp_ram/clk_gate_ram_sp_reg_3_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_19/sp_ram/clk_gate_ram_sp_reg_4_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_19/sp_ram/clk_gate_ram_sp_reg_5_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_19/sp_ram/clk_gate_ram_sp_reg_6_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_19/sp_ram/clk_gate_ram_sp_reg_7_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_2/sp_ram/clk_gate_dout_reg/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_2/sp_ram/clk_gate_ram_sp_reg_0_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_2/sp_ram/clk_gate_ram_sp_reg_1_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_2/sp_ram/clk_gate_ram_sp_reg_2_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_2/sp_ram/clk_gate_ram_sp_reg_3_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_20/sp_ram/clk_gate_dout_reg/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_20/sp_ram/clk_gate_ram_sp_reg_0_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_20/sp_ram/clk_gate_ram_sp_reg_10_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_20/sp_ram/clk_gate_ram_sp_reg_11_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_20/sp_ram/clk_gate_ram_sp_reg_12_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_20/sp_ram/clk_gate_ram_sp_reg_13_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_20/sp_ram/clk_gate_ram_sp_reg_14_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_20/sp_ram/clk_gate_ram_sp_reg_15_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_20/sp_ram/clk_gate_ram_sp_reg_1_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_20/sp_ram/clk_gate_ram_sp_reg_2_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_20/sp_ram/clk_gate_ram_sp_reg_3_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_20/sp_ram/clk_gate_ram_sp_reg_4_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_20/sp_ram/clk_gate_ram_sp_reg_5_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_20/sp_ram/clk_gate_ram_sp_reg_6_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_20/sp_ram/clk_gate_ram_sp_reg_7_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_20/sp_ram/clk_gate_ram_sp_reg_8_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_20/sp_ram/clk_gate_ram_sp_reg_9_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_21/sp_ram/clk_gate_dout_reg/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_21/sp_ram/clk_gate_ram_sp_reg_0_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_21/sp_ram/clk_gate_ram_sp_reg_10_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_21/sp_ram/clk_gate_ram_sp_reg_11_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_21/sp_ram/clk_gate_ram_sp_reg_12_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_21/sp_ram/clk_gate_ram_sp_reg_13_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_21/sp_ram/clk_gate_ram_sp_reg_14_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_21/sp_ram/clk_gate_ram_sp_reg_15_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_21/sp_ram/clk_gate_ram_sp_reg_1_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_21/sp_ram/clk_gate_ram_sp_reg_2_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_21/sp_ram/clk_gate_ram_sp_reg_3_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_21/sp_ram/clk_gate_ram_sp_reg_4_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_21/sp_ram/clk_gate_ram_sp_reg_5_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_21/sp_ram/clk_gate_ram_sp_reg_6_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_21/sp_ram/clk_gate_ram_sp_reg_7_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_21/sp_ram/clk_gate_ram_sp_reg_8_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_21/sp_ram/clk_gate_ram_sp_reg_9_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_22/sp_ram/clk_gate_dout_reg/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_22/sp_ram/clk_gate_ram_sp_reg_0_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_22/sp_ram/clk_gate_ram_sp_reg_10_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_22/sp_ram/clk_gate_ram_sp_reg_11_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_22/sp_ram/clk_gate_ram_sp_reg_12_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_22/sp_ram/clk_gate_ram_sp_reg_13_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_22/sp_ram/clk_gate_ram_sp_reg_14_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_22/sp_ram/clk_gate_ram_sp_reg_15_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_22/sp_ram/clk_gate_ram_sp_reg_1_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_22/sp_ram/clk_gate_ram_sp_reg_2_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_22/sp_ram/clk_gate_ram_sp_reg_3_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_22/sp_ram/clk_gate_ram_sp_reg_4_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_22/sp_ram/clk_gate_ram_sp_reg_5_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_22/sp_ram/clk_gate_ram_sp_reg_6_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_22/sp_ram/clk_gate_ram_sp_reg_7_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_22/sp_ram/clk_gate_ram_sp_reg_8_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_22/sp_ram/clk_gate_ram_sp_reg_9_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_23/sp_ram/clk_gate_dout_reg/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_23/sp_ram/clk_gate_ram_sp_reg_0_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_23/sp_ram/clk_gate_ram_sp_reg_10_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_23/sp_ram/clk_gate_ram_sp_reg_11_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_23/sp_ram/clk_gate_ram_sp_reg_12_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_23/sp_ram/clk_gate_ram_sp_reg_13_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_23/sp_ram/clk_gate_ram_sp_reg_14_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_23/sp_ram/clk_gate_ram_sp_reg_15_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_23/sp_ram/clk_gate_ram_sp_reg_1_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_23/sp_ram/clk_gate_ram_sp_reg_2_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_23/sp_ram/clk_gate_ram_sp_reg_3_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_23/sp_ram/clk_gate_ram_sp_reg_4_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_23/sp_ram/clk_gate_ram_sp_reg_5_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_23/sp_ram/clk_gate_ram_sp_reg_6_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_23/sp_ram/clk_gate_ram_sp_reg_7_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_23/sp_ram/clk_gate_ram_sp_reg_8_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_23/sp_ram/clk_gate_ram_sp_reg_9_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_3/sp_ram/clk_gate_dout_reg/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_3/sp_ram/clk_gate_ram_sp_reg_0_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_3/sp_ram/clk_gate_ram_sp_reg_1_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_3/sp_ram/clk_gate_ram_sp_reg_2_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_3/sp_ram/clk_gate_ram_sp_reg_3_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_4/sp_ram/clk_gate_dout_reg/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_4/sp_ram/clk_gate_ram_sp_reg_0_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_4/sp_ram/clk_gate_ram_sp_reg_1_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_4/sp_ram/clk_gate_ram_sp_reg_2_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_4/sp_ram/clk_gate_ram_sp_reg_3_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_4/sp_ram/clk_gate_ram_sp_reg_4_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_4/sp_ram/clk_gate_ram_sp_reg_5_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_4/sp_ram/clk_gate_ram_sp_reg_6_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_4/sp_ram/clk_gate_ram_sp_reg_7_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_5/sp_ram/clk_gate_dout_reg/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_5/sp_ram/clk_gate_ram_sp_reg_0_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_5/sp_ram/clk_gate_ram_sp_reg_1_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_5/sp_ram/clk_gate_ram_sp_reg_2_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_5/sp_ram/clk_gate_ram_sp_reg_3_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_5/sp_ram/clk_gate_ram_sp_reg_4_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_5/sp_ram/clk_gate_ram_sp_reg_5_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_5/sp_ram/clk_gate_ram_sp_reg_6_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_5/sp_ram/clk_gate_ram_sp_reg_7_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_6/sp_ram/clk_gate_dout_reg/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_6/sp_ram/clk_gate_ram_sp_reg_0_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_6/sp_ram/clk_gate_ram_sp_reg_1_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_6/sp_ram/clk_gate_ram_sp_reg_2_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_6/sp_ram/clk_gate_ram_sp_reg_3_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_6/sp_ram/clk_gate_ram_sp_reg_4_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_6/sp_ram/clk_gate_ram_sp_reg_5_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_6/sp_ram/clk_gate_ram_sp_reg_6_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_6/sp_ram/clk_gate_ram_sp_reg_7_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_7/sp_ram/clk_gate_dout_reg/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_7/sp_ram/clk_gate_ram_sp_reg_0_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_7/sp_ram/clk_gate_ram_sp_reg_1_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_7/sp_ram/clk_gate_ram_sp_reg_2_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_7/sp_ram/clk_gate_ram_sp_reg_3_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_7/sp_ram/clk_gate_ram_sp_reg_4_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_7/sp_ram/clk_gate_ram_sp_reg_5_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_7/sp_ram/clk_gate_ram_sp_reg_6_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_7/sp_ram/clk_gate_ram_sp_reg_7_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_8/sp_ram/clk_gate_dout_reg/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_8/sp_ram/clk_gate_ram_sp_reg_0_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_8/sp_ram/clk_gate_ram_sp_reg_10_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_8/sp_ram/clk_gate_ram_sp_reg_11_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_8/sp_ram/clk_gate_ram_sp_reg_12_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_8/sp_ram/clk_gate_ram_sp_reg_13_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_8/sp_ram/clk_gate_ram_sp_reg_14_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_8/sp_ram/clk_gate_ram_sp_reg_15_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_8/sp_ram/clk_gate_ram_sp_reg_1_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_8/sp_ram/clk_gate_ram_sp_reg_2_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_8/sp_ram/clk_gate_ram_sp_reg_3_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_8/sp_ram/clk_gate_ram_sp_reg_4_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_8/sp_ram/clk_gate_ram_sp_reg_5_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_8/sp_ram/clk_gate_ram_sp_reg_6_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_8/sp_ram/clk_gate_ram_sp_reg_7_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_8/sp_ram/clk_gate_ram_sp_reg_8_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_8/sp_ram/clk_gate_ram_sp_reg_9_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_9/sp_ram/clk_gate_dout_reg/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_9/sp_ram/clk_gate_ram_sp_reg_0_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_9/sp_ram/clk_gate_ram_sp_reg_10_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_9/sp_ram/clk_gate_ram_sp_reg_11_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_9/sp_ram/clk_gate_ram_sp_reg_12_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_9/sp_ram/clk_gate_ram_sp_reg_13_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_9/sp_ram/clk_gate_ram_sp_reg_14_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_9/sp_ram/clk_gate_ram_sp_reg_15_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_9/sp_ram/clk_gate_ram_sp_reg_1_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_9/sp_ram/clk_gate_ram_sp_reg_2_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_9/sp_ram/clk_gate_ram_sp_reg_3_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_9/sp_ram/clk_gate_ram_sp_reg_4_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_9/sp_ram/clk_gate_ram_sp_reg_5_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_9/sp_ram/clk_gate_ram_sp_reg_6_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_9/sp_ram/clk_gate_ram_sp_reg_7_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_9/sp_ram/clk_gate_ram_sp_reg_8_/latch
+
+  Impl LATCG      i:/WORK/poly_fast_split_mult_unit/sp_ram_wrapped_9/sp_ram/clk_gate_ram_sp_reg_9_/latch
+
+ [BBNet: multiply-driven net
+  BBox:  black-box
+  BBPin: black-box pin
+  Block: hierarchical block
+  BlPin: hierarchical block pin
+  Cut:   cut-point
+  DFF:   non-constant DFF register
+  DFF0:  constant 0 DFF register
+  DFF1:  constant 1 DFF register
+  DFFX:  constant X DFF register
+  DFF0X: constrained 0X DFF register
+  DFF1X: constrained 1X DFF register
+  LAT:   non-constant latch register
+  LAT0:  constant 0 latch register
+  LAT1:  constant 1 latch register
+  LATX:  constant X latch register
+  LAT0X: constrained 0X latch register
+  LAT1X: constrained 1X latch register
+  LATCG: clock-gating latch register
+  TLA:   transparent latch register
+  TLA0X: transparent constrained 0X latch register
+  TLA1X: transparent constrained 1X latch register
+  Loop:  cycle break point
+  Net:   matchable net
+  Port:  primary (top-level) port
+  Und:   undriven signal cut-point
+  Unk:   unknown signal cut-point]
+
+1

@@ -1,0 +1,25 @@
+ 
+****************************************
+Report : clock_gating
+        -nosplit
+Design : ToomCook1024
+Version: O-2018.06-SP5
+Date   : Sun May 24 10:50:50 2026
+****************************************
+
+
+
+                             Clock Gating Summary
+          ------------------------------------------------------------
+          |    Number of Clock gating elements    |       97         |
+          |                                       |                  |
+          |    Number of Gated registers          | 110742 (95.84%)  |
+          |                                       |                  |
+          |    Number of Ungated registers        |  4801 (4.16%)    |
+          |                                       |                  |
+          |    Total number of registers          |   115543         |
+          ------------------------------------------------------------
+
+
+
+1

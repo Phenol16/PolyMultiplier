@@ -1,0 +1,126 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -nets
+        -max_paths 1
+        -transition_time
+Design : poly_fast_split_mult_kernel
+Version: O-2018.06-SP5
+Date   : Fri May 22 21:14:56 2026
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: ssg0p81vm40c   Library: tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+Wire Load Model Mode: segmented
+
+  Startpoint: REG_13_reg_17_
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: usint_ext_mult_6/holdh_delay_reg_15_
+            (rising edge-triggered flip-flop clocked by clock_main)
+  Path Group: clock_main
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  poly_fast_split_mult_kernel ZeroWireload tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  usint_ext_mult_0_DP_OP_17J2_185_1390_J2_0_722 ZeroWireload tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+Attributes:
+    d - dont_touch
+    u - dont_use
+   mo - map_only
+   so - size_only
+    i - ideal_net or ideal_network
+  inf - infeasible path
+
+  Point                                       Fanout     Trans      Incr       Path      Attributes
+  ---------------------------------------------------------------------------------------------------------
+  clock clock_main (rise edge)                                      0.00       0.00
+  clock network delay (ideal)                                       0.00       0.00
+  REG_13_reg_17_/CP (DFQD1BWP40P140)                      0.10      0.00 #     0.00 r    i 
+  REG_13_reg_17_/Q (DFQD1BWP40P140)                       0.02      0.11       0.11 r
+  usint_ext_mult_6_io_ops[17] (net)             3                   0.00       0.11 r
+  usint_ext_mult_6/io_ops[17] (usint_ext_mult_722)                  0.00       0.11 r
+  usint_ext_mult_6/io_ops[17] (net)                                 0.00       0.11 r
+  usint_ext_mult_6/U31/ZN (CKND1BWP40P140)                0.04      0.03       0.14 f
+  usint_ext_mult_6/n36 (net)                    8                   0.00       0.14 f
+  usint_ext_mult_6/U40/ZN (ND4D1BWP40P140LVT)             0.01      0.02       0.15 r
+  usint_ext_mult_6/n3 (net)                     1                   0.00       0.15 r
+  usint_ext_mult_6/U45/Z (OR4D1BWP40P140)                 0.01      0.03       0.19 r
+  usint_ext_mult_6/n4 (net)                     1                   0.00       0.19 r
+  usint_ext_mult_6/U46/ZN (OAI31D1BWP40P140LVT)           0.08      0.06       0.24 f
+  usint_ext_mult_6/n15 (net)                   11                   0.00       0.24 f
+  usint_ext_mult_6/U53/ZN (NR2OPTIBD1BWP40P140)           0.16      0.13       0.38 r
+  usint_ext_mult_6/ophm[1] (net)               19                   0.00       0.38 r
+  usint_ext_mult_6/DP_OP_17J2_185_1390/I4[1] (usint_ext_mult_0_DP_OP_17J2_185_1390_J2_0_722)     0.00     0.38 r
+  usint_ext_mult_6/DP_OP_17J2_185_1390/I4[1] (net)                  0.00       0.38 r
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U317/ZN (CKND1BWP40P140)     0.15     0.15     0.53 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/n499 (net)    30             0.00       0.53 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U327/ZN (OAI22D1BWP40P140)     0.13     0.14     0.66 r
+  usint_ext_mult_6/DP_OP_17J2_185_1390/n587 (net)    15             0.00       0.66 r
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U330/ZN (CKND1BWP40P140)     0.04     0.05     0.72 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/n480 (net)     3             0.00       0.72 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U331/ZN (AOI221D1BWP40P140)     0.06     0.06     0.78 r
+  usint_ext_mult_6/DP_OP_17J2_185_1390/n591 (net)     2             0.00       0.78 r
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U332/ZN (CKND1BWP40P140)     0.06     0.06     0.84 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/n518 (net)    12             0.00       0.84 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U285/ZN (OAI22D1BWP40P140)     0.06     0.06     0.89 r
+  usint_ext_mult_6/DP_OP_17J2_185_1390/n442 (net)     1             0.00       0.89 r
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U408/S (HA1D1BWP40P140)     0.02     0.07     0.96 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/n607 (net)     1             0.00       0.96 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U500/CO (FA1D1BWP40P140)     0.02     0.06     1.02 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/n609 (net)     1             0.00       1.02 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U501/CO (FA1D1BWP40P140)     0.02     0.06     1.08 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/n612 (net)     1             0.00       1.08 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U502/CO (FA1D1BWP40P140)     0.02     0.06     1.13 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/n615 (net)     1             0.00       1.13 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U503/CO (FA1D1BWP40P140)     0.02     0.06     1.19 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/n618 (net)     1             0.00       1.19 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U504/CO (FA1D1BWP40P140)     0.02     0.06     1.24 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/n621 (net)     1             0.00       1.24 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U505/CO (FA1D1BWP40P140)     0.02     0.06     1.30 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/n551 (net)     1             0.00       1.30 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U477/CO (FA1D1BWP40P140)     0.02     0.06     1.36 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/n574 (net)     1             0.00       1.36 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U489/CO (FA1D1BWP40P140)     0.02     0.06     1.41 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/n569 (net)     1             0.00       1.41 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U486/CO (FA1D1BWP40P140)     0.02     0.06     1.47 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/n566 (net)     1             0.00       1.47 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U484/CO (FA1D1BWP40P140)     0.02     0.06     1.52 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/n563 (net)     1             0.00       1.52 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U483/CO (FA1D1BWP40P140)     0.02     0.06     1.58 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/n560 (net)     1             0.00       1.58 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U481/S (FA1D1BWP40P140)     0.03     0.10     1.68 r
+  usint_ext_mult_6/DP_OP_17J2_185_1390/n631 (net)     1             0.00       1.68 r
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U508/CO (FA1D1BWP40P140)     0.02     0.05     1.73 r
+  usint_ext_mult_6/DP_OP_17J2_185_1390/n577 (net)     1             0.00       1.73 r
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U490/Z (XOR3UD1BWP40P140)     0.03     0.04     1.78 r
+  usint_ext_mult_6/DP_OP_17J2_185_1390/n585 (net)     1             0.00       1.78 r
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U493/Z (XOR4D1BWP40P140)     0.02     0.10     1.87 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/n594 (net)     1             0.00       1.87 f
+  usint_ext_mult_6/DP_OP_17J2_185_1390/U496/Z (XOR4D1BWP40P140)     0.02     0.10     1.98 r
+  usint_ext_mult_6/DP_OP_17J2_185_1390/O2[6] (net)     1            0.00       1.98 r
+  usint_ext_mult_6/DP_OP_17J2_185_1390/O2[6] (usint_ext_mult_0_DP_OP_17J2_185_1390_J2_0_722)     0.00     1.98 r
+  usint_ext_mult_6/n_holdh_T_3[6] (net)                             0.00       1.98 r
+  usint_ext_mult_6/U69/Z (AO22D1BWP40P140LVT)             0.02      0.03       2.01 r
+  usint_ext_mult_6/n52 (net)                    1                   0.00       2.01 r
+  usint_ext_mult_6/holdh_delay_reg_15_/D (DFQD1BWP40P140)     0.02     0.00     2.01 r
+  data arrival time                                                            2.01
+
+  clock clock_main (rise edge)                                      5.00       5.00
+  clock network delay (ideal)                                       0.00       5.00
+  clock uncertainty                                                -0.10       4.90
+  usint_ext_mult_6/holdh_delay_reg_15_/CP (DFQD1BWP40P140)          0.00       4.90 r
+  library setup time                                               -0.01       4.89
+  data required time                                                           4.89
+  ---------------------------------------------------------------------------------------------------------
+  data required time                                                           4.89
+  data arrival time                                                           -2.01
+  ---------------------------------------------------------------------------------------------------------
+  slack (MET)                                                                  2.89
+
+
+1

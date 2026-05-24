@@ -1,0 +1,85 @@
+Information: Updating design information... (UID-85)
+Warning: Design 'core64_a32_b16_c32' contains 1 high-fanout nets. A fanout number of 1000 will be used for delay calculations involving these nets. (TIM-134)
+ 
+****************************************
+Report : qor
+Design : core64_a32_b16_c32
+Version: O-2018.06-SP5
+Date   : Wed May 13 04:44:44 2026
+****************************************
+
+
+  Timing Path Group 'clk'
+  -----------------------------------
+  Levels of Logic:              61.00
+  Critical Path Length:          4.47
+  Critical Path Slack:           0.00
+  Critical Path Clk Period:      5.00
+  Total Negative Slack:          0.00
+  No. of Violating Paths:        0.00
+  Worst Hold Violation:          0.00
+  Total Hold Violation:          0.00
+  No. of Hold Violations:        0.00
+  -----------------------------------
+
+
+  Cell Count
+  -----------------------------------
+  Hierarchical Cell Count:       1314
+  Hierarchical Port Count:     389686
+  Leaf Cell Count:             674946
+  Buf/Inv Cell Count:           77418
+  Buf Cell Count:               10765
+  Inv Cell Count:               66653
+  CT Buf/Inv Cell Count:            0
+  Combinational Cell Count:    636396
+  Sequential Cell Count:        38550
+  Macro Count:                      0
+  -----------------------------------
+
+
+  Area
+  -----------------------------------
+  Combinational Area:   788156.952252
+  Noncombinational Area: 72859.751449
+  Buf/Inv Area:          20892.564173
+  Total Buffer Area:          4070.18
+  Total Inverter Area:       16822.39
+  Macro/Black Box Area:      0.000000
+  Net Area:                  0.000000
+  -----------------------------------
+  Cell Area:            861016.703701
+  Design Area:          861016.703701
+
+
+  Design Rules
+  -----------------------------------
+  Total Number of Nets:        939785
+  Nets With Violations:             0
+  Max Trans Violations:             0
+  Max Cap Violations:               0
+  -----------------------------------
+
+
+  Hostname: inspur19
+
+  Compile CPU Statistics
+  -----------------------------------------
+  Resource Sharing:                    0.00
+  Logic Optimization:                  0.00
+  Mapping Optimization:                0.00
+  -----------------------------------------
+  Overall Compile Time:            11858.89
+  Overall Compile Wall Clock Time:   998.91
+
+  --------------------------------------------------------------------
+
+  Design  WNS: 0.00  TNS: 0.00  Number of Violating Paths: 0
+
+
+  Design (Hold)  WNS: 0.00  TNS: 0.00  Number of Violating Paths: 0
+
+  --------------------------------------------------------------------
+
+
+1

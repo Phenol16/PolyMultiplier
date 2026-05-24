@@ -1,0 +1,355 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 3
+Design : poly_fast_split_mult_unit
+Version: O-2018.06-SP5
+Date   : Fri May 22 20:10:15 2026
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: ssg0p81vm40c   Library: tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+Wire Load Model Mode: segmented
+
+  Startpoint: poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/cntl_ctr_0_delay_reg_0_
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/postadd_l1_regf_0_8_reg_23_
+            (rising edge-triggered flip-flop clocked by clock_main)
+  Path Group: clock_main
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  poly_fast_split_mult_unit
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  poly_fast_split_mult_postadd_core_DW01_add_J2_23
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/cntl_ctr_0_delay_reg_0_/CP (DFCNQD1BWP40P140)
+                                                          0.00 #     0.00 r
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/cntl_ctr_0_delay_reg_0_/Q (DFCNQD1BWP40P140)
+                                                          0.32       0.32 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/U646/ZN (CKND2D1BWP40P140HVT)
+                                                          0.40       0.72 r
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/U644/Z (DEL025D1BWP40P140)
+                                                          0.34       1.07 r
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/U647/ZN (CKND1BWP40P140)
+                                                          0.50       1.56 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/U2909/ZN (AOI21D1BWP40P140)
+                                                          0.22       1.78 r
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/U595/ZN (INVD3BWP40P140)
+                                                          0.30       2.09 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/U300/ZN (NR2OPTIBD1BWP40P140)
+                                                          0.47       2.56 r
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/U691/Z (DEL025D1BWP40P140)
+                                                          0.39       2.95 r
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/U690/Z (DEL025D1BWP40P140)
+                                                          0.32       3.26 r
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/U11545/ZN (OAI22D1BWP40P140)
+                                                          0.14       3.40 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/B[1] (poly_fast_split_mult_postadd_core_DW01_add_J2_23)
+                                                          0.00       3.40 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U31/CO (FA1D1BWP40P140)
+                                                          0.10       3.50 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U32/CO (FA1D1BWP40P140)
+                                                          0.06       3.56 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U33/CO (FA1D1BWP40P140)
+                                                          0.06       3.62 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U34/CO (FA1D1BWP40P140)
+                                                          0.06       3.67 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U35/CO (FA1D1BWP40P140)
+                                                          0.06       3.73 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U36/CO (FA1D1BWP40P140)
+                                                          0.06       3.78 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U37/CO (FA1D1BWP40P140)
+                                                          0.06       3.84 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U38/CO (FA1D1BWP40P140)
+                                                          0.06       3.89 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U39/CO (FA1D1BWP40P140)
+                                                          0.06       3.95 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U40/CO (FA1D1BWP40P140)
+                                                          0.06       4.00 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U41/CO (FA1D1BWP40P140)
+                                                          0.06       4.06 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U42/CO (FA1D1BWP40P140)
+                                                          0.06       4.11 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U43/CO (FA1D1BWP40P140)
+                                                          0.06       4.17 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U44/CO (FA1D1BWP40P140)
+                                                          0.06       4.23 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U45/CO (FA1D1BWP40P140)
+                                                          0.06       4.28 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U46/CO (FA1D1BWP40P140)
+                                                          0.06       4.34 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U47/CO (FA1D1BWP40P140)
+                                                          0.06       4.39 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U48/CO (FA1D1BWP40P140)
+                                                          0.06       4.45 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U49/CO (FA1D1BWP40P140)
+                                                          0.06       4.50 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U50/CO (FA1D1BWP40P140)
+                                                          0.06       4.56 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U51/CO (FA1D1BWP40P140)
+                                                          0.06       4.61 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U52/CO (FA1D1BWP40P140)
+                                                          0.05       4.67 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U29/Z (XOR3UD1BWP40P140)
+                                                          0.07       4.74 r
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/SUM[23] (poly_fast_split_mult_postadd_core_DW01_add_J2_23)
+                                                          0.00       4.74 r
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/U11537/ZN (CKND1BWP40P140)
+                                                          0.03       4.77 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/U11542/ZN (OAI22D1BWP40P140)
+                                                          0.03       4.80 r
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/postadd_l1_regf_0_8_reg_23_/D (DFCNQD1BWP40P140)
+                                                          0.00       4.80 r
+  data arrival time                                                  4.80
+
+  clock clock_main (rise edge)                            5.00       5.00
+  clock network delay (ideal)                             0.00       5.00
+  clock uncertainty                                      -0.10       4.90
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/postadd_l1_regf_0_8_reg_23_/CP (DFCNQD1BWP40P140)
+                                                          0.00       4.90 r
+  library setup time                                     -0.04       4.86
+  data required time                                                 4.86
+  --------------------------------------------------------------------------
+  data required time                                                 4.86
+  data arrival time                                                 -4.80
+  --------------------------------------------------------------------------
+  slack (MET)                                                        0.06
+
+
+  Startpoint: poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/cntl_ctr_0_delay_reg_0_
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/postadd_l1_regf_2_8_reg_23_
+            (rising edge-triggered flip-flop clocked by clock_main)
+  Path Group: clock_main
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  poly_fast_split_mult_unit
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  poly_fast_split_mult_postadd_core_DW01_add_J2_23
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/cntl_ctr_0_delay_reg_0_/CP (DFCNQD1BWP40P140)
+                                                          0.00 #     0.00 r
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/cntl_ctr_0_delay_reg_0_/Q (DFCNQD1BWP40P140)
+                                                          0.32       0.32 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/U646/ZN (CKND2D1BWP40P140HVT)
+                                                          0.40       0.72 r
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/U644/Z (DEL025D1BWP40P140)
+                                                          0.34       1.07 r
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/U647/ZN (CKND1BWP40P140)
+                                                          0.50       1.56 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/U2909/ZN (AOI21D1BWP40P140)
+                                                          0.22       1.78 r
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/U595/ZN (INVD3BWP40P140)
+                                                          0.30       2.09 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/U300/ZN (NR2OPTIBD1BWP40P140)
+                                                          0.47       2.56 r
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/U691/Z (DEL025D1BWP40P140)
+                                                          0.39       2.95 r
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/U690/Z (DEL025D1BWP40P140)
+                                                          0.32       3.26 r
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/U11545/ZN (OAI22D1BWP40P140)
+                                                          0.14       3.40 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/B[1] (poly_fast_split_mult_postadd_core_DW01_add_J2_23)
+                                                          0.00       3.40 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U31/CO (FA1D1BWP40P140)
+                                                          0.10       3.50 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U32/CO (FA1D1BWP40P140)
+                                                          0.06       3.56 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U33/CO (FA1D1BWP40P140)
+                                                          0.06       3.62 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U34/CO (FA1D1BWP40P140)
+                                                          0.06       3.67 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U35/CO (FA1D1BWP40P140)
+                                                          0.06       3.73 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U36/CO (FA1D1BWP40P140)
+                                                          0.06       3.78 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U37/CO (FA1D1BWP40P140)
+                                                          0.06       3.84 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U38/CO (FA1D1BWP40P140)
+                                                          0.06       3.89 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U39/CO (FA1D1BWP40P140)
+                                                          0.06       3.95 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U40/CO (FA1D1BWP40P140)
+                                                          0.06       4.00 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U41/CO (FA1D1BWP40P140)
+                                                          0.06       4.06 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U42/CO (FA1D1BWP40P140)
+                                                          0.06       4.11 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U43/CO (FA1D1BWP40P140)
+                                                          0.06       4.17 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U44/CO (FA1D1BWP40P140)
+                                                          0.06       4.23 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U45/CO (FA1D1BWP40P140)
+                                                          0.06       4.28 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U46/CO (FA1D1BWP40P140)
+                                                          0.06       4.34 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U47/CO (FA1D1BWP40P140)
+                                                          0.06       4.39 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U48/CO (FA1D1BWP40P140)
+                                                          0.06       4.45 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U49/CO (FA1D1BWP40P140)
+                                                          0.06       4.50 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U50/CO (FA1D1BWP40P140)
+                                                          0.06       4.56 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U51/CO (FA1D1BWP40P140)
+                                                          0.06       4.61 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U52/CO (FA1D1BWP40P140)
+                                                          0.05       4.67 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/U29/Z (XOR3UD1BWP40P140)
+                                                          0.07       4.74 r
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_213/SUM[23] (poly_fast_split_mult_postadd_core_DW01_add_J2_23)
+                                                          0.00       4.74 r
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/U11537/ZN (CKND1BWP40P140)
+                                                          0.03       4.77 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/U2105/ZN (MOAI22D1BWP40P140)
+                                                          0.02       4.79 r
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/postadd_l1_regf_2_8_reg_23_/D (DFCNQD1BWP40P140)
+                                                          0.00       4.79 r
+  data arrival time                                                  4.79
+
+  clock clock_main (rise edge)                            5.00       5.00
+  clock network delay (ideal)                             0.00       5.00
+  clock uncertainty                                      -0.10       4.90
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/postadd_l1_regf_2_8_reg_23_/CP (DFCNQD1BWP40P140)
+                                                          0.00       4.90 r
+  library setup time                                     -0.04       4.86
+  data required time                                                 4.86
+  --------------------------------------------------------------------------
+  data required time                                                 4.86
+  data arrival time                                                 -4.79
+  --------------------------------------------------------------------------
+  slack (MET)                                                        0.07
+
+
+  Startpoint: poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/cntl_ctr_0_delay_reg_0_
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/postadd_l1_regf_0_9_reg_23_
+            (rising edge-triggered flip-flop clocked by clock_main)
+  Path Group: clock_main
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  poly_fast_split_mult_unit
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  poly_fast_split_mult_postadd_core_DW01_add_J2_22
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/cntl_ctr_0_delay_reg_0_/CP (DFCNQD1BWP40P140)
+                                                          0.00 #     0.00 r
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/cntl_ctr_0_delay_reg_0_/Q (DFCNQD1BWP40P140)
+                                                          0.32       0.32 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/U646/ZN (CKND2D1BWP40P140HVT)
+                                                          0.40       0.72 r
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/U644/Z (DEL025D1BWP40P140)
+                                                          0.34       1.07 r
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/U647/ZN (CKND1BWP40P140)
+                                                          0.50       1.56 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/U2909/ZN (AOI21D1BWP40P140)
+                                                          0.22       1.78 r
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/U595/ZN (INVD3BWP40P140)
+                                                          0.30       2.09 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/U300/ZN (NR2OPTIBD1BWP40P140)
+                                                          0.47       2.56 r
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/U691/Z (DEL025D1BWP40P140)
+                                                          0.39       2.95 r
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/U690/Z (DEL025D1BWP40P140)
+                                                          0.32       3.26 r
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/U11417/ZN (OAI22D1BWP40P140)
+                                                          0.12       3.38 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_221/B[0] (poly_fast_split_mult_postadd_core_DW01_add_J2_22)
+                                                          0.00       3.38 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_221/U30/CO (HA1D1BWP40P140)
+                                                          0.06       3.44 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_221/U31/CO (FA1D1BWP40P140)
+                                                          0.05       3.49 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_221/U32/CO (FA1D1BWP40P140)
+                                                          0.06       3.55 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_221/U33/CO (FA1D1BWP40P140)
+                                                          0.06       3.60 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_221/U34/CO (FA1D1BWP40P140)
+                                                          0.06       3.66 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_221/U35/CO (FA1D1BWP40P140)
+                                                          0.06       3.72 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_221/U36/CO (FA1D1BWP40P140)
+                                                          0.06       3.77 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_221/U37/CO (FA1D1BWP40P140)
+                                                          0.06       3.83 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_221/U38/CO (FA1D1BWP40P140)
+                                                          0.06       3.88 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_221/U39/CO (FA1D1BWP40P140)
+                                                          0.06       3.94 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_221/U40/CO (FA1D1BWP40P140)
+                                                          0.06       3.99 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_221/U41/CO (FA1D1BWP40P140)
+                                                          0.06       4.05 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_221/U42/CO (FA1D1BWP40P140)
+                                                          0.06       4.10 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_221/U43/CO (FA1D1BWP40P140)
+                                                          0.06       4.16 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_221/U44/CO (FA1D1BWP40P140)
+                                                          0.06       4.22 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_221/U45/CO (FA1D1BWP40P140)
+                                                          0.06       4.27 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_221/U46/CO (FA1D1BWP40P140)
+                                                          0.06       4.33 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_221/U47/CO (FA1D1BWP40P140)
+                                                          0.06       4.38 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_221/U48/CO (FA1D1BWP40P140)
+                                                          0.06       4.44 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_221/U49/CO (FA1D1BWP40P140)
+                                                          0.06       4.49 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_221/U50/CO (FA1D1BWP40P140)
+                                                          0.06       4.55 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_221/U51/CO (FA1D1BWP40P140)
+                                                          0.06       4.60 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_221/U52/CO (FA1D1BWP40P140)
+                                                          0.05       4.66 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_221/U29/Z (XOR3UD1BWP40P140)
+                                                          0.07       4.73 r
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/add_x_221/SUM[23] (poly_fast_split_mult_postadd_core_DW01_add_J2_22)
+                                                          0.00       4.73 r
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/U11309/ZN (CKND1BWP40P140)
+                                                          0.03       4.76 f
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/U3562/ZN (OAI22D1BWP40P140)
+                                                          0.03       4.79 r
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/postadd_l1_regf_0_9_reg_23_/D (DFCNQD1BWP40P140)
+                                                          0.00       4.79 r
+  data arrival time                                                  4.79
+
+  clock clock_main (rise edge)                            5.00       5.00
+  clock network delay (ideal)                             0.00       5.00
+  clock uncertainty                                      -0.10       4.90
+  poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/postadd_l1_regf_0_9_reg_23_/CP (DFCNQD1BWP40P140)
+                                                          0.00       4.90 r
+  library setup time                                     -0.04       4.86
+  data required time                                                 4.86
+  --------------------------------------------------------------------------
+  data required time                                                 4.86
+  data arrival time                                                 -4.79
+  --------------------------------------------------------------------------
+  slack (MET)                                                        0.07
+
+
+1

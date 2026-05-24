@@ -1,0 +1,1397 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 3
+Design : ToomCook1024
+Version: O-2018.06-SP5
+Date   : Thu May 21 04:10:38 2026
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: ssg0p81vm40c   Library: tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+Wire Load Model Mode: segmented
+
+  Startpoint: evalPt0_reg_0_
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: evalARam_0/GEN_172x624_u_ram/GEN_SRAM_256x96_5__u_sram
+            (rising edge-triggered flip-flop clocked by clock_main)
+  Path Group: REG2REG
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  ToomCook1024       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_254      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_128      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_4    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_5    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_6    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_7    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_8    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_9    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_10   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_11   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_12   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_13   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_14   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_15   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_0    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_1    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_2    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_3    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_176  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_177  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_178  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_179  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_180  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_181  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_182  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_183  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_184  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_185  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_186  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_187  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_188  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_189  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_190  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_191  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_16_0   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_16_11  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_4      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_5      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_6      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_7      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_8      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_11     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_12     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_13     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_15     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_237  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_255  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_254  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_253  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_252  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_251  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_250  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_249  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_248  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_247  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_246  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_245  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_244  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_240  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_241  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_242  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_243  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_16_2   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_16_10  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_16_12  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_16_13  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_16_14  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_16_15  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_3      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_10     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_61       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_62       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_63       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_64       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_49       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_50       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_51       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_52       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_53       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_54       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_55       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_56       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_57       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_58       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_59       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_60       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_16_0_DP_OP_55J9_124_1598_J9_0_24
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_16_0_DP_OP_54J9_123_3531_J9_0_24
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_16_0_DP_OP_53J9_122_27_J9_0_24
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_16_24         ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_16_17    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_16_0_DP_OP_55J9_124_1598_J9_0_22
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_16_0_DP_OP_54J9_123_3531_J9_0_22
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_16_0_DP_OP_53J9_122_27_J9_0_22
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_16_22         ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_16_15    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_172x624_1   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH624_DEPTH172_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  evalPt0_reg_0_/CP (DFQD1BWP40P140)                      0.00       0.00 r
+  evalPt0_reg_0_/Q (DFQD1BWP40P140)                       0.42       0.42 f
+  U81930/ZN (CKND0BWP40P140)                              0.19       0.61 r
+  U81929/ZN (CKND0BWP40P140)                              0.37       0.98 f
+  evalA_12/io_pt0[0] (Eval64Point_3)                      0.00       0.98 f
+  evalA_12/U11/ZN (CKND0BWP40P140)                        0.14       1.12 r
+  evalA_12/U2/ZN (CKND0BWP40P140)                         0.32       1.44 f
+  evalA_12/eval_10/io_pt[0] (EvalPoint_54)                0.00       1.44 f
+  evalA_12/eval_10/U3/ZN (CKND0BWP40P140)                 0.17       1.61 r
+  evalA_12/eval_10/U9/ZN (NR3D0BWP40P140)                 0.14       1.75 f
+  evalA_12/eval_10/U43/ZN (AOI22D0BWP40P140)              0.12       1.87 r
+  evalA_12/eval_10/U45/ZN (ND4D0BWP40P140HVT)             0.30       2.18 f
+  evalA_12/eval_10/io_out[1] (EvalPoint_54)               0.00       2.18 f
+  evalA_12/eval_18/io_r_2[1] (EvalPoint_16_17)            0.00       2.18 f
+  evalA_12/eval_18/layer/io_in_2[1] (Eval_16_24)          0.00       2.18 f
+  evalA_12/eval_18/layer/DP_OP_54J9_123_3531/I2[1] (Eval_16_0_DP_OP_54J9_123_3531_J9_0_24)
+                                                          0.00       2.18 f
+  evalA_12/eval_18/layer/DP_OP_54J9_123_3531/U274/S (FA1D0BWP40P140)
+                                                          0.30       2.47 r
+  evalA_12/eval_18/layer/DP_OP_54J9_123_3531/U309/S (FA1D0BWP40P140)
+                                                          0.11       2.59 f
+  evalA_12/eval_18/layer/DP_OP_54J9_123_3531/O1[1] (Eval_16_0_DP_OP_54J9_123_3531_J9_0_24)
+                                                          0.00       2.59 f
+  evalA_12/eval_18/layer/io_out_2[1] (Eval_16_24)         0.00       2.59 f
+  evalA_12/eval_18/U29/ZN (AOI22D0BWP40P140)              0.03       2.62 r
+  evalA_12/eval_18/U31/ZN (ND4D0BWP40P140HVT)             0.31       2.92 f
+  evalA_12/eval_18/io_out[1] (EvalPoint_16_17)            0.00       2.92 f
+  evalA_12/eval_20/io_r_2[1] (EvalPoint_16_15)            0.00       2.92 f
+  evalA_12/eval_20/layer/io_in_2[1] (Eval_16_22)          0.00       2.92 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/I1[1] (Eval_16_0_DP_OP_53J9_122_27_J9_0_22)
+                                                          0.00       2.92 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U149/CO (HA1D0BWP40P140)
+                                                          0.16       3.08 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U150/CO (FA1D0BWP40P140)
+                                                          0.07       3.15 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U148/CO (FA1D0BWP40P140)
+                                                          0.07       3.23 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U147/CO (FA1D0BWP40P140)
+                                                          0.07       3.30 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U146/CO (FA1D0BWP40P140)
+                                                          0.07       3.38 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U145/CO (FA1D0BWP40P140)
+                                                          0.07       3.45 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U144/CO (FA1D0BWP40P140)
+                                                          0.07       3.53 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U143/CO (FA1D0BWP40P140)
+                                                          0.07       3.60 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U142/CO (FA1D0BWP40P140)
+                                                          0.07       3.68 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U141/CO (FA1D0BWP40P140)
+                                                          0.07       3.75 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U140/CO (FA1D0BWP40P140)
+                                                          0.07       3.82 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U139/CO (FA1D0BWP40P140)
+                                                          0.07       3.90 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U138/CO (FA1D0BWP40P140)
+                                                          0.07       3.97 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U137/CO (FA1D0BWP40P140)
+                                                          0.07       4.05 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U136/CO (FA1D0BWP40P140)
+                                                          0.07       4.12 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U135/CO (FA1D0BWP40P140)
+                                                          0.07       4.20 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U134/CO (FA1D0BWP40P140)
+                                                          0.07       4.27 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U133/CO (FA1D0BWP40P140)
+                                                          0.07       4.35 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U132/CO (FA1D0BWP40P140)
+                                                          0.07       4.42 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U131/CO (FA1D0BWP40P140)
+                                                          0.07       4.49 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U130/CO (FA1D0BWP40P140)
+                                                          0.07       4.57 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U129/CO (FA1D0BWP40P140)
+                                                          0.07       4.64 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U128/CO (FA1D0BWP40P140)
+                                                          0.07       4.72 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U127/CO (FA1D0BWP40P140)
+                                                          0.07       4.79 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U126/CO (FA1D0BWP40P140)
+                                                          0.07       4.87 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U125/CO (FA1D0BWP40P140)
+                                                          0.07       4.94 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U124/CO (FA1D0BWP40P140)
+                                                          0.07       5.02 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U123/CO (FA1D0BWP40P140)
+                                                          0.07       5.09 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U122/CO (FA1D0BWP40P140)
+                                                          0.07       5.16 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U121/CO (FA1D0BWP40P140)
+                                                          0.07       5.24 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U120/CO (FA1D0BWP40P140)
+                                                          0.07       5.31 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U119/CO (FA1D0BWP40P140)
+                                                          0.07       5.39 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U118/CO (FA1D0BWP40P140)
+                                                          0.07       5.46 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U220/S (FA1D0BWP40P140)
+                                                          0.12       5.59 r
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U221/CO (FA1D0BWP40P140)
+                                                          0.08       5.66 r
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U224/S (FA1D0BWP40P140)
+                                                          0.11       5.78 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U225/CO (FA1D0BWP40P140)
+                                                          0.07       5.85 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U226/ZN (XNR4D0BWP40P140)
+                                                          0.13       5.97 r
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U227/ZN (XNR4D0BWP40P140)
+                                                          0.09       6.07 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/O1[38] (Eval_16_0_DP_OP_53J9_122_27_J9_0_22)
+                                                          0.00       6.07 f
+  evalA_12/eval_20/layer/io_out_1[38] (Eval_16_22)        0.00       6.07 f
+  evalA_12/eval_20/U204/ZN (AOI22D0BWP40P140)             0.04       6.11 r
+  evalA_12/eval_20/U207/ZN (ND4D0BWP40P140HVT)            0.09       6.20 f
+  evalA_12/eval_20/io_out[38] (EvalPoint_16_15)           0.00       6.20 f
+  evalA_12/io_out[38] (Eval64Point_3)                     0.00       6.20 f
+  U80856/Z (AN2D0BWP40P140)                               0.06       6.26 f
+  evalARam_0/din[506] (sp_ram_WIDTH624_DEPTH172_1)        0.00       6.26 f
+  evalARam_0/GEN_172x624_u_ram/din[506] (sp_ram_172x624_1)
+                                                          0.00       6.26 f
+  evalARam_0/GEN_172x624_u_ram/GEN_SRAM_256x96_5__u_sram/D[26] (TS1N28HPCPHVTB256X96M4S)
+                                                          0.00       6.26 f
+  data arrival time                                                  6.26
+
+  clock clock_main (rise edge)                           10.00      10.00
+  clock network delay (ideal)                             0.00      10.00
+  clock uncertainty                                      -1.00       9.00
+  evalARam_0/GEN_172x624_u_ram/GEN_SRAM_256x96_5__u_sram/CLK (TS1N28HPCPHVTB256X96M4S)
+                                                          0.00       9.00 r
+  library setup time                                     -0.14       8.86
+  data required time                                                 8.86
+  --------------------------------------------------------------------------
+  data required time                                                 8.86
+  data arrival time                                                 -6.26
+  --------------------------------------------------------------------------
+  slack (MET)                                                        2.60
+
+
+  Startpoint: evalPt0_reg_0_
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: evalARam_1/GEN_172x624_u_ram/GEN_SRAM_256x96_5__u_sram
+            (rising edge-triggered flip-flop clocked by clock_main)
+  Path Group: REG2REG
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  ToomCook1024       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_254      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_128      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_4    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_5    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_6    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_7    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_8    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_9    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_10   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_11   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_12   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_13   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_14   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_15   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_0    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_1    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_2    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_3    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_176  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_177  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_178  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_179  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_180  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_181  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_182  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_183  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_184  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_185  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_186  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_187  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_188  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_189  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_190  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_191  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_16_0   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_16_11  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_4      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_5      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_6      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_7      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_8      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_11     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_12     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_13     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_15     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_237  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_255  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_254  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_253  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_252  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_251  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_250  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_249  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_248  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_247  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_246  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_245  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_244  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_240  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_241  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_242  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_243  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_16_2   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_16_10  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_16_12  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_16_13  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_16_14  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_16_15  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_3      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_10     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_61       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_62       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_63       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_64       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_49       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_50       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_51       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_52       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_53       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_54       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_55       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_56       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_57       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_58       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_59       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_60       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_16_0_DP_OP_55J9_124_1598_J9_0_24
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_16_0_DP_OP_54J9_123_3531_J9_0_24
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_16_0_DP_OP_53J9_122_27_J9_0_24
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_16_24         ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_16_17    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_16_0_DP_OP_55J9_124_1598_J9_0_22
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_16_0_DP_OP_54J9_123_3531_J9_0_22
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_16_0_DP_OP_53J9_122_27_J9_0_22
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_16_22         ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_16_15    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_172x624_0   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH624_DEPTH172_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  evalPt0_reg_0_/CP (DFQD1BWP40P140)                      0.00       0.00 r
+  evalPt0_reg_0_/Q (DFQD1BWP40P140)                       0.42       0.42 f
+  U81930/ZN (CKND0BWP40P140)                              0.19       0.61 r
+  U81929/ZN (CKND0BWP40P140)                              0.37       0.98 f
+  evalA_12/io_pt0[0] (Eval64Point_3)                      0.00       0.98 f
+  evalA_12/U11/ZN (CKND0BWP40P140)                        0.14       1.12 r
+  evalA_12/U2/ZN (CKND0BWP40P140)                         0.32       1.44 f
+  evalA_12/eval_10/io_pt[0] (EvalPoint_54)                0.00       1.44 f
+  evalA_12/eval_10/U3/ZN (CKND0BWP40P140)                 0.17       1.61 r
+  evalA_12/eval_10/U9/ZN (NR3D0BWP40P140)                 0.14       1.75 f
+  evalA_12/eval_10/U43/ZN (AOI22D0BWP40P140)              0.12       1.87 r
+  evalA_12/eval_10/U45/ZN (ND4D0BWP40P140HVT)             0.30       2.18 f
+  evalA_12/eval_10/io_out[1] (EvalPoint_54)               0.00       2.18 f
+  evalA_12/eval_18/io_r_2[1] (EvalPoint_16_17)            0.00       2.18 f
+  evalA_12/eval_18/layer/io_in_2[1] (Eval_16_24)          0.00       2.18 f
+  evalA_12/eval_18/layer/DP_OP_54J9_123_3531/I2[1] (Eval_16_0_DP_OP_54J9_123_3531_J9_0_24)
+                                                          0.00       2.18 f
+  evalA_12/eval_18/layer/DP_OP_54J9_123_3531/U274/S (FA1D0BWP40P140)
+                                                          0.30       2.47 r
+  evalA_12/eval_18/layer/DP_OP_54J9_123_3531/U309/S (FA1D0BWP40P140)
+                                                          0.11       2.59 f
+  evalA_12/eval_18/layer/DP_OP_54J9_123_3531/O1[1] (Eval_16_0_DP_OP_54J9_123_3531_J9_0_24)
+                                                          0.00       2.59 f
+  evalA_12/eval_18/layer/io_out_2[1] (Eval_16_24)         0.00       2.59 f
+  evalA_12/eval_18/U29/ZN (AOI22D0BWP40P140)              0.03       2.62 r
+  evalA_12/eval_18/U31/ZN (ND4D0BWP40P140HVT)             0.31       2.92 f
+  evalA_12/eval_18/io_out[1] (EvalPoint_16_17)            0.00       2.92 f
+  evalA_12/eval_20/io_r_2[1] (EvalPoint_16_15)            0.00       2.92 f
+  evalA_12/eval_20/layer/io_in_2[1] (Eval_16_22)          0.00       2.92 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/I1[1] (Eval_16_0_DP_OP_53J9_122_27_J9_0_22)
+                                                          0.00       2.92 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U149/CO (HA1D0BWP40P140)
+                                                          0.16       3.08 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U150/CO (FA1D0BWP40P140)
+                                                          0.07       3.15 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U148/CO (FA1D0BWP40P140)
+                                                          0.07       3.23 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U147/CO (FA1D0BWP40P140)
+                                                          0.07       3.30 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U146/CO (FA1D0BWP40P140)
+                                                          0.07       3.38 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U145/CO (FA1D0BWP40P140)
+                                                          0.07       3.45 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U144/CO (FA1D0BWP40P140)
+                                                          0.07       3.53 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U143/CO (FA1D0BWP40P140)
+                                                          0.07       3.60 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U142/CO (FA1D0BWP40P140)
+                                                          0.07       3.68 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U141/CO (FA1D0BWP40P140)
+                                                          0.07       3.75 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U140/CO (FA1D0BWP40P140)
+                                                          0.07       3.82 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U139/CO (FA1D0BWP40P140)
+                                                          0.07       3.90 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U138/CO (FA1D0BWP40P140)
+                                                          0.07       3.97 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U137/CO (FA1D0BWP40P140)
+                                                          0.07       4.05 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U136/CO (FA1D0BWP40P140)
+                                                          0.07       4.12 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U135/CO (FA1D0BWP40P140)
+                                                          0.07       4.20 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U134/CO (FA1D0BWP40P140)
+                                                          0.07       4.27 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U133/CO (FA1D0BWP40P140)
+                                                          0.07       4.35 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U132/CO (FA1D0BWP40P140)
+                                                          0.07       4.42 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U131/CO (FA1D0BWP40P140)
+                                                          0.07       4.49 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U130/CO (FA1D0BWP40P140)
+                                                          0.07       4.57 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U129/CO (FA1D0BWP40P140)
+                                                          0.07       4.64 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U128/CO (FA1D0BWP40P140)
+                                                          0.07       4.72 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U127/CO (FA1D0BWP40P140)
+                                                          0.07       4.79 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U126/CO (FA1D0BWP40P140)
+                                                          0.07       4.87 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U125/CO (FA1D0BWP40P140)
+                                                          0.07       4.94 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U124/CO (FA1D0BWP40P140)
+                                                          0.07       5.02 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U123/CO (FA1D0BWP40P140)
+                                                          0.07       5.09 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U122/CO (FA1D0BWP40P140)
+                                                          0.07       5.16 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U121/CO (FA1D0BWP40P140)
+                                                          0.07       5.24 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U120/CO (FA1D0BWP40P140)
+                                                          0.07       5.31 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U119/CO (FA1D0BWP40P140)
+                                                          0.07       5.39 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U118/CO (FA1D0BWP40P140)
+                                                          0.07       5.46 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U220/S (FA1D0BWP40P140)
+                                                          0.12       5.59 r
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U221/CO (FA1D0BWP40P140)
+                                                          0.08       5.66 r
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U224/S (FA1D0BWP40P140)
+                                                          0.11       5.78 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U225/CO (FA1D0BWP40P140)
+                                                          0.07       5.85 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U226/ZN (XNR4D0BWP40P140)
+                                                          0.13       5.97 r
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/U227/ZN (XNR4D0BWP40P140)
+                                                          0.09       6.07 f
+  evalA_12/eval_20/layer/DP_OP_53J9_122_27/O1[38] (Eval_16_0_DP_OP_53J9_122_27_J9_0_22)
+                                                          0.00       6.07 f
+  evalA_12/eval_20/layer/io_out_1[38] (Eval_16_22)        0.00       6.07 f
+  evalA_12/eval_20/U204/ZN (AOI22D0BWP40P140)             0.04       6.11 r
+  evalA_12/eval_20/U207/ZN (ND4D0BWP40P140HVT)            0.09       6.20 f
+  evalA_12/eval_20/io_out[38] (EvalPoint_16_15)           0.00       6.20 f
+  evalA_12/io_out[38] (Eval64Point_3)                     0.00       6.20 f
+  U83558/Z (AN2D0BWP40P140)                               0.06       6.26 f
+  evalARam_1/din[506] (sp_ram_WIDTH624_DEPTH172_0)        0.00       6.26 f
+  evalARam_1/GEN_172x624_u_ram/din[506] (sp_ram_172x624_0)
+                                                          0.00       6.26 f
+  evalARam_1/GEN_172x624_u_ram/GEN_SRAM_256x96_5__u_sram/D[26] (TS1N28HPCPHVTB256X96M4S)
+                                                          0.00       6.26 f
+  data arrival time                                                  6.26
+
+  clock clock_main (rise edge)                           10.00      10.00
+  clock network delay (ideal)                             0.00      10.00
+  clock uncertainty                                      -1.00       9.00
+  evalARam_1/GEN_172x624_u_ram/GEN_SRAM_256x96_5__u_sram/CLK (TS1N28HPCPHVTB256X96M4S)
+                                                          0.00       9.00 r
+  library setup time                                     -0.14       8.86
+  data required time                                                 8.86
+  --------------------------------------------------------------------------
+  data required time                                                 8.86
+  data arrival time                                                 -6.26
+  --------------------------------------------------------------------------
+  slack (MET)                                                        2.60
+
+
+  Startpoint: evalPt0_reg_0_
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: evalARam_1/GEN_172x624_u_ram/GEN_SRAM_256x96_2__u_sram
+            (rising edge-triggered flip-flop clocked by clock_main)
+  Path Group: REG2REG
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  ToomCook1024       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_254      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_128      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_4    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_5    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_6    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_7    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_8    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_9    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_10   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_11   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_12   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_13   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_14   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_15   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_0    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_1    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_2    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_3    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_176  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_177  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_178  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_179  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_180  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_181  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_182  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_183  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_184  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_185  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_186  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_187  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_188  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_189  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_190  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_191  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_16_0   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_16_11  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_4      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_5      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_6      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_7      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_8      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_11     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_12     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_13     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_15     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_237  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_255  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_254  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_253  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_252  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_251  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_250  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_249  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_248  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_247  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_246  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_245  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_244  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_240  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_241  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_242  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_336_243  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_16_2   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_16_10  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_16_12  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_16_13  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_16_14  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_16_15  ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_3      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval64Point_10     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_173      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_174      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_175      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_176      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_161      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_162      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_163      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_164      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_165      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_166      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_167      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_168      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_169      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_170      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_171      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_172      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_16_0_DP_OP_55J9_124_1598_J9_0_59
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_16_0_DP_OP_54J9_123_3531_J9_0_59
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_16_0_DP_OP_53J9_122_27_J9_0_59
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_16_59         ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_16_52    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_16_0_DP_OP_55J9_124_1598_J9_0_57
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_16_0_DP_OP_54J9_123_3531_J9_0_57
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_16_0_DP_OP_53J9_122_27_J9_0_57
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Eval_16_57         ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  EvalPoint_16_50    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_172x624_0   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH624_DEPTH172_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  evalPt0_reg_0_/CP (DFQD1BWP40P140)                      0.00       0.00 r
+  evalPt0_reg_0_/Q (DFQD1BWP40P140)                       0.42       0.42 f
+  U81930/ZN (CKND0BWP40P140)                              0.19       0.61 r
+  U81929/ZN (CKND0BWP40P140)                              0.37       0.98 f
+  evalA_5/io_pt0[0] (Eval64Point_10)                      0.00       0.98 f
+  evalA_5/U8/ZN (CKND0BWP40P140)                          0.14       1.12 r
+  evalA_5/U1/ZN (CKND0BWP40P140)                          0.32       1.44 f
+  evalA_5/eval_10/io_pt[0] (EvalPoint_166)                0.00       1.44 f
+  evalA_5/eval_10/U2/ZN (CKND0BWP40P140)                  0.17       1.61 r
+  evalA_5/eval_10/U16/ZN (NR3D0BWP40P140)                 0.14       1.75 f
+  evalA_5/eval_10/U48/ZN (AOI22D0BWP40P140)               0.12       1.87 r
+  evalA_5/eval_10/U50/ZN (ND4D0BWP40P140HVT)              0.30       2.17 f
+  evalA_5/eval_10/io_out[1] (EvalPoint_166)               0.00       2.17 f
+  evalA_5/eval_18/io_r_2[1] (EvalPoint_16_52)             0.00       2.17 f
+  evalA_5/eval_18/layer/io_in_2[1] (Eval_16_59)           0.00       2.17 f
+  evalA_5/eval_18/layer/DP_OP_54J9_123_3531/I2[1] (Eval_16_0_DP_OP_54J9_123_3531_J9_0_59)
+                                                          0.00       2.17 f
+  evalA_5/eval_18/layer/DP_OP_54J9_123_3531/U274/S (FA1D0BWP40P140)
+                                                          0.30       2.47 r
+  evalA_5/eval_18/layer/DP_OP_54J9_123_3531/U309/S (FA1D0BWP40P140)
+                                                          0.11       2.58 f
+  evalA_5/eval_18/layer/DP_OP_54J9_123_3531/O1[1] (Eval_16_0_DP_OP_54J9_123_3531_J9_0_59)
+                                                          0.00       2.58 f
+  evalA_5/eval_18/layer/io_out_2[1] (Eval_16_59)          0.00       2.58 f
+  evalA_5/eval_18/U28/ZN (AOI22D0BWP40P140)               0.03       2.61 r
+  evalA_5/eval_18/U30/ZN (ND4D0BWP40P140HVT)              0.30       2.91 f
+  evalA_5/eval_18/io_out[1] (EvalPoint_16_52)             0.00       2.91 f
+  evalA_5/eval_20/io_r_2[1] (EvalPoint_16_50)             0.00       2.91 f
+  evalA_5/eval_20/layer/io_in_2[1] (Eval_16_57)           0.00       2.91 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/I1[1] (Eval_16_0_DP_OP_53J9_122_27_J9_0_57)
+                                                          0.00       2.91 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U149/CO (HA1D0BWP40P140)
+                                                          0.16       3.07 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U150/CO (FA1D0BWP40P140)
+                                                          0.07       3.14 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U148/CO (FA1D0BWP40P140)
+                                                          0.07       3.22 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U147/CO (FA1D0BWP40P140)
+                                                          0.07       3.29 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U146/CO (FA1D0BWP40P140)
+                                                          0.07       3.37 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U145/CO (FA1D0BWP40P140)
+                                                          0.07       3.44 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U144/CO (FA1D0BWP40P140)
+                                                          0.07       3.51 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U143/CO (FA1D0BWP40P140)
+                                                          0.07       3.59 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U142/CO (FA1D0BWP40P140)
+                                                          0.07       3.66 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U141/CO (FA1D0BWP40P140)
+                                                          0.07       3.74 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U140/CO (FA1D0BWP40P140)
+                                                          0.07       3.81 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U139/CO (FA1D0BWP40P140)
+                                                          0.07       3.89 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U138/CO (FA1D0BWP40P140)
+                                                          0.07       3.96 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U137/CO (FA1D0BWP40P140)
+                                                          0.07       4.04 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U136/CO (FA1D0BWP40P140)
+                                                          0.07       4.11 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U135/CO (FA1D0BWP40P140)
+                                                          0.07       4.18 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U134/CO (FA1D0BWP40P140)
+                                                          0.07       4.26 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U133/CO (FA1D0BWP40P140)
+                                                          0.07       4.33 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U132/CO (FA1D0BWP40P140)
+                                                          0.07       4.41 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U131/CO (FA1D0BWP40P140)
+                                                          0.07       4.48 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U130/CO (FA1D0BWP40P140)
+                                                          0.07       4.56 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U129/CO (FA1D0BWP40P140)
+                                                          0.07       4.63 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U128/CO (FA1D0BWP40P140)
+                                                          0.07       4.71 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U127/CO (FA1D0BWP40P140)
+                                                          0.07       4.78 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U126/CO (FA1D0BWP40P140)
+                                                          0.07       4.85 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U125/CO (FA1D0BWP40P140)
+                                                          0.07       4.93 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U124/CO (FA1D0BWP40P140)
+                                                          0.07       5.00 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U123/CO (FA1D0BWP40P140)
+                                                          0.07       5.08 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U122/CO (FA1D0BWP40P140)
+                                                          0.07       5.15 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U121/CO (FA1D0BWP40P140)
+                                                          0.07       5.23 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U120/CO (FA1D0BWP40P140)
+                                                          0.07       5.30 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U119/CO (FA1D0BWP40P140)
+                                                          0.07       5.38 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U118/CO (FA1D0BWP40P140)
+                                                          0.07       5.45 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U220/S (FA1D0BWP40P140)
+                                                          0.12       5.57 r
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U221/CO (FA1D0BWP40P140)
+                                                          0.08       5.65 r
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U224/S (FA1D0BWP40P140)
+                                                          0.11       5.76 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U225/CO (FA1D0BWP40P140)
+                                                          0.07       5.83 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U226/ZN (XNR4D0BWP40P140)
+                                                          0.13       5.96 r
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/U227/ZN (XNR4D0BWP40P140)
+                                                          0.09       6.05 f
+  evalA_5/eval_20/layer/DP_OP_53J9_122_27/O1[38] (Eval_16_0_DP_OP_53J9_122_27_J9_0_57)
+                                                          0.00       6.05 f
+  evalA_5/eval_20/layer/io_out_1[38] (Eval_16_57)         0.00       6.05 f
+  evalA_5/eval_20/U204/ZN (AOI22D0BWP40P140)              0.04       6.09 r
+  evalA_5/eval_20/U207/ZN (ND4D0BWP40P140HVT)             0.09       6.19 f
+  evalA_5/eval_20/io_out[38] (EvalPoint_16_50)            0.00       6.19 f
+  evalA_5/io_out[38] (Eval64Point_10)                     0.00       6.19 f
+  U102876/Z (AN2D0BWP40P140)                              0.06       6.24 f
+  evalARam_1/din[233] (sp_ram_WIDTH624_DEPTH172_0)        0.00       6.24 f
+  evalARam_1/GEN_172x624_u_ram/din[233] (sp_ram_172x624_0)
+                                                          0.00       6.24 f
+  evalARam_1/GEN_172x624_u_ram/GEN_SRAM_256x96_2__u_sram/D[41] (TS1N28HPCPHVTB256X96M4S)
+                                                          0.00       6.24 f
+  data arrival time                                                  6.24
+
+  clock clock_main (rise edge)                           10.00      10.00
+  clock network delay (ideal)                             0.00      10.00
+  clock uncertainty                                      -1.00       9.00
+  evalARam_1/GEN_172x624_u_ram/GEN_SRAM_256x96_2__u_sram/CLK (TS1N28HPCPHVTB256X96M4S)
+                                                          0.00       9.00 r
+  library setup time                                     -0.14       8.86
+  data required time                                                 8.86
+  --------------------------------------------------------------------------
+  data required time                                                 8.86
+  data arrival time                                                 -6.24
+  --------------------------------------------------------------------------
+  slack (MET)                                                        2.61
+
+
+  Startpoint: io_b_we (input port clocked by clock_main)
+  Endpoint: inBRam/GEN_16x512_u_ram/GEN_SRAM_32x96_0__u_sram
+            (rising edge-triggered flip-flop clocked by clock_main)
+  Path Group: REGIN
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  ToomCook1024       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH512_DEPTH16
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_16x512      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  input external delay                                    2.00       2.00 r
+  io_b_we (in)                                            0.00       2.00 r
+  U94679/ZN (ND2D0BWP40P140HVT)                           0.10       2.10 f
+  U81318/ZN (INVD0P7BWP40P140)                            0.45       2.55 r
+  U81676/Z (BUFFD0BWP40P140)                              0.43       2.98 r
+  U96802/Z (AN2D0BWP40P140)                               0.12       3.10 r
+  inBRam/din[20] (sp_ram_WIDTH512_DEPTH16)                0.00       3.10 r
+  inBRam/GEN_16x512_u_ram/din[20] (sp_ram_16x512)         0.00       3.10 r
+  inBRam/GEN_16x512_u_ram/GEN_SRAM_32x96_0__u_sram/D[20] (TS1N28HPCPHVTB32X96M4S)
+                                                          0.00       3.10 r
+  data arrival time                                                  3.10
+
+  clock clock_main (rise edge)                           10.00      10.00
+  clock network delay (ideal)                             0.00      10.00
+  clock uncertainty                                      -1.00       9.00
+  inBRam/GEN_16x512_u_ram/GEN_SRAM_32x96_0__u_sram/CLK (TS1N28HPCPHVTB32X96M4S)
+                                                          0.00       9.00 r
+  library setup time                                     -0.15       8.85
+  data required time                                                 8.85
+  --------------------------------------------------------------------------
+  data required time                                                 8.85
+  data arrival time                                                 -3.10
+  --------------------------------------------------------------------------
+  slack (MET)                                                        5.75
+
+
+  Startpoint: io_b_we (input port clocked by clock_main)
+  Endpoint: inBRam/GEN_16x512_u_ram/GEN_SRAM_32x96_0__u_sram
+            (rising edge-triggered flip-flop clocked by clock_main)
+  Path Group: REGIN
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  ToomCook1024       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH512_DEPTH16
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_16x512      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  input external delay                                    2.00       2.00 r
+  io_b_we (in)                                            0.00       2.00 r
+  U94679/ZN (ND2D0BWP40P140HVT)                           0.10       2.10 f
+  U81318/ZN (INVD0P7BWP40P140)                            0.45       2.55 r
+  U81676/Z (BUFFD0BWP40P140)                              0.43       2.98 r
+  U96027/Z (AN2D0BWP40P140)                               0.12       3.10 r
+  inBRam/din[6] (sp_ram_WIDTH512_DEPTH16)                 0.00       3.10 r
+  inBRam/GEN_16x512_u_ram/din[6] (sp_ram_16x512)          0.00       3.10 r
+  inBRam/GEN_16x512_u_ram/GEN_SRAM_32x96_0__u_sram/D[6] (TS1N28HPCPHVTB32X96M4S)
+                                                          0.00       3.10 r
+  data arrival time                                                  3.10
+
+  clock clock_main (rise edge)                           10.00      10.00
+  clock network delay (ideal)                             0.00      10.00
+  clock uncertainty                                      -1.00       9.00
+  inBRam/GEN_16x512_u_ram/GEN_SRAM_32x96_0__u_sram/CLK (TS1N28HPCPHVTB32X96M4S)
+                                                          0.00       9.00 r
+  library setup time                                     -0.15       8.85
+  data required time                                                 8.85
+  --------------------------------------------------------------------------
+  data required time                                                 8.85
+  data arrival time                                                 -3.10
+  --------------------------------------------------------------------------
+  slack (MET)                                                        5.75
+
+
+  Startpoint: io_b_we (input port clocked by clock_main)
+  Endpoint: inBRam/GEN_16x512_u_ram/GEN_SRAM_32x96_0__u_sram
+            (rising edge-triggered flip-flop clocked by clock_main)
+  Path Group: REGIN
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  ToomCook1024       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH512_DEPTH16
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_16x512      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  input external delay                                    2.00       2.00 r
+  io_b_we (in)                                            0.00       2.00 r
+  U94679/ZN (ND2D0BWP40P140HVT)                           0.10       2.10 f
+  U81318/ZN (INVD0P7BWP40P140)                            0.45       2.55 r
+  U81676/Z (BUFFD0BWP40P140)                              0.43       2.98 r
+  U96661/Z (AN2D0BWP40P140)                               0.12       3.10 r
+  inBRam/din[7] (sp_ram_WIDTH512_DEPTH16)                 0.00       3.10 r
+  inBRam/GEN_16x512_u_ram/din[7] (sp_ram_16x512)          0.00       3.10 r
+  inBRam/GEN_16x512_u_ram/GEN_SRAM_32x96_0__u_sram/D[7] (TS1N28HPCPHVTB32X96M4S)
+                                                          0.00       3.10 r
+  data arrival time                                                  3.10
+
+  clock clock_main (rise edge)                           10.00      10.00
+  clock network delay (ideal)                             0.00      10.00
+  clock uncertainty                                      -1.00       9.00
+  inBRam/GEN_16x512_u_ram/GEN_SRAM_32x96_0__u_sram/CLK (TS1N28HPCPHVTB32X96M4S)
+                                                          0.00       9.00 r
+  library setup time                                     -0.15       8.85
+  data required time                                                 8.85
+  --------------------------------------------------------------------------
+  data required time                                                 8.85
+  data arrival time                                                 -3.10
+  --------------------------------------------------------------------------
+  slack (MET)                                                        5.75
+
+
+  Startpoint: outRam/GEN_16x1536_u_ram/GEN_SRAM_32x96_0__u_sram
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: io_c_dout[2]
+            (output port clocked by clock_main)
+  Path Group: REGOUT
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  ToomCook1024       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_10   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_9    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_8    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_4    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_3    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_12   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_7    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_6    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_0    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_10
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_9
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_8
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_4
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_3
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_12
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_7
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_6
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_0    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_1    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_2    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_3    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_4    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_5    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_6    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_7    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_0            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_1            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_2            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_3            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_4            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_5            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_6            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_1    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_2    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_5    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_11   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_13   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_172x464_0   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_172x464_1   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_172x624_0   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_172x624_1   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_16x1536_0   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_16x512      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_16x1536_1   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core16             ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_2
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_5
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_11
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_13
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH464_DEPTH172_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH464_DEPTH172_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH624_DEPTH172_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH624_DEPTH172_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH1536_DEPTH16_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH512_DEPTH16
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH1536_DEPTH16_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  outRam/GEN_16x1536_u_ram/GEN_SRAM_32x96_0__u_sram/CLK (TS1N28HPCPHVTB32X96M4S)
+                                                          0.00 #     0.00 r
+  outRam/GEN_16x1536_u_ram/GEN_SRAM_32x96_0__u_sram/Q[2] (TS1N28HPCPHVTB32X96M4S)
+                                                          0.67       0.67 r
+  outRam/GEN_16x1536_u_ram/dout[2] (sp_ram_16x1536_0)     0.00       0.67 r
+  outRam/dout[2] (sp_ram_WIDTH1536_DEPTH16_0)             0.00       0.67 r
+  io_c_dout[2] (out)                                      0.00       0.67 r
+  data arrival time                                                  0.67
+
+  clock clock_main (rise edge)                           10.00      10.00
+  clock network delay (ideal)                             0.00      10.00
+  clock uncertainty                                      -1.00       9.00
+  output external delay                                  -2.00       7.00
+  data required time                                                 7.00
+  --------------------------------------------------------------------------
+  data required time                                                 7.00
+  data arrival time                                                 -0.67
+  --------------------------------------------------------------------------
+  slack (MET)                                                        6.33
+
+
+  Startpoint: outRam/GEN_16x1536_u_ram/GEN_SRAM_32x96_0__u_sram
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: io_c_dout[1]
+            (output port clocked by clock_main)
+  Path Group: REGOUT
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  ToomCook1024       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_10   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_9    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_8    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_4    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_3    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_12   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_7    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_6    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_0    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_10
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_9
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_8
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_4
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_3
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_12
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_7
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_6
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_0    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_1    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_2    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_3    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_4    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_5    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_6    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_7    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_0            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_1            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_2            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_3            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_4            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_5            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_6            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_1    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_2    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_5    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_11   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_13   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_172x464_0   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_172x464_1   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_172x624_0   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_172x624_1   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_16x1536_0   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_16x512      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_16x1536_1   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core16             ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_2
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_5
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_11
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_13
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH464_DEPTH172_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH464_DEPTH172_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH624_DEPTH172_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH624_DEPTH172_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH1536_DEPTH16_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH512_DEPTH16
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH1536_DEPTH16_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  outRam/GEN_16x1536_u_ram/GEN_SRAM_32x96_0__u_sram/CLK (TS1N28HPCPHVTB32X96M4S)
+                                                          0.00 #     0.00 r
+  outRam/GEN_16x1536_u_ram/GEN_SRAM_32x96_0__u_sram/Q[1] (TS1N28HPCPHVTB32X96M4S)
+                                                          0.67       0.67 r
+  outRam/GEN_16x1536_u_ram/dout[1] (sp_ram_16x1536_0)     0.00       0.67 r
+  outRam/dout[1] (sp_ram_WIDTH1536_DEPTH16_0)             0.00       0.67 r
+  io_c_dout[1] (out)                                      0.00       0.67 r
+  data arrival time                                                  0.67
+
+  clock clock_main (rise edge)                           10.00      10.00
+  clock network delay (ideal)                             0.00      10.00
+  clock uncertainty                                      -1.00       9.00
+  output external delay                                  -2.00       7.00
+  data required time                                                 7.00
+  --------------------------------------------------------------------------
+  data required time                                                 7.00
+  data arrival time                                                 -0.67
+  --------------------------------------------------------------------------
+  slack (MET)                                                        6.33
+
+
+  Startpoint: outRam/GEN_16x1536_u_ram/GEN_SRAM_32x96_0__u_sram
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: io_c_dout[0]
+            (output port clocked by clock_main)
+  Path Group: REGOUT
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  ToomCook1024       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_10   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_9    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_8    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_4    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_3    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_12   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_7    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_6    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_0    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_10
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_9
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_8
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_4
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_3
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_12
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_7
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_6
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_0    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_1    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_2    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_3    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_4    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_5    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_6    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_7    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_0            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_1            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_2            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_3            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_4            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_5            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_6            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_1    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_2    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_5    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_11   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_13   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_172x464_0   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_172x464_1   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_172x624_0   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_172x624_1   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_16x1536_0   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_16x512      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_16x1536_1   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core16             ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_2
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_5
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_11
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_13
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH464_DEPTH172_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH464_DEPTH172_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH624_DEPTH172_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH624_DEPTH172_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH1536_DEPTH16_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH512_DEPTH16
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH1536_DEPTH16_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  outRam/GEN_16x1536_u_ram/GEN_SRAM_32x96_0__u_sram/CLK (TS1N28HPCPHVTB32X96M4S)
+                                                          0.00 #     0.00 r
+  outRam/GEN_16x1536_u_ram/GEN_SRAM_32x96_0__u_sram/Q[0] (TS1N28HPCPHVTB32X96M4S)
+                                                          0.67       0.67 r
+  outRam/GEN_16x1536_u_ram/dout[0] (sp_ram_16x1536_0)     0.00       0.67 r
+  outRam/dout[0] (sp_ram_WIDTH1536_DEPTH16_0)             0.00       0.67 r
+  io_c_dout[0] (out)                                      0.00       0.67 r
+  data arrival time                                                  0.67
+
+  clock clock_main (rise edge)                           10.00      10.00
+  clock network delay (ideal)                             0.00      10.00
+  clock uncertainty                                      -1.00       9.00
+  output external delay                                  -2.00       7.00
+  data required time                                                 7.00
+  --------------------------------------------------------------------------
+  data required time                                                 7.00
+  data arrival time                                                 -0.67
+  --------------------------------------------------------------------------
+  slack (MET)                                                        6.33
+
+
+  Startpoint: i2Correct_reg
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: clk_gate_w0Buf_3_0_0_reg/latch
+            (gating element for clock clock_main)
+  Path Group: clock_main
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  ToomCook1024       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  i2Correct_reg/CP (DFQD1BWP40P140)                       0.00       0.00 r
+  i2Correct_reg/Q (DFQD1BWP40P140)                        0.37       0.37 f
+  U82884/ZN (CKND0BWP40P140)                              0.20       0.57 r
+  U83430/ZN (INVD1BWP40P140LVT)                           0.31       0.87 f
+  U93814/ZN (NR2D0BWP40P140)                              0.23       1.10 r
+  U93939/ZN (ND3D0BWP40P140HVT)                           0.16       1.26 f
+  U93987/ZN (NR2D0BWP40P140)                              0.10       1.35 r
+  U93990/ZN (CKND0BWP40P140)                              0.02       1.38 f
+  U93991/ZN (OAI31D0BWP40P140HVT)                         0.03       1.41 r
+  clk_gate_w0Buf_3_0_0_reg/EN (SNPS_CLOCK_GATE_HIGH_ToomCook1024_169)
+                                                          0.00       1.41 r
+  clk_gate_w0Buf_3_0_0_reg/latch/E (CKLNQD1BWP40P140HVT)
+                                                          0.00       1.41 r
+  data arrival time                                                  1.41
+
+  clock clock_main (rise edge)                           10.00      10.00
+  clock network delay (ideal)                             0.00      10.00
+  clock uncertainty                                      -1.00       9.00
+  clk_gate_w0Buf_3_0_0_reg/latch/CP (CKLNQD1BWP40P140HVT)
+                                                          0.00       9.00 r
+  clock gating setup time                                -0.08       8.92
+  data required time                                                 8.92
+  --------------------------------------------------------------------------
+  data required time                                                 8.92
+  data arrival time                                                 -1.41
+  --------------------------------------------------------------------------
+  slack (MET)                                                        7.52
+
+
+  Startpoint: i2Correct_reg
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: clk_gate_w0Buf_0_0_0_reg/latch
+            (gating element for clock clock_main)
+  Path Group: clock_main
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  ToomCook1024       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  i2Correct_reg/CP (DFQD1BWP40P140)                       0.00       0.00 r
+  i2Correct_reg/Q (DFQD1BWP40P140)                        0.37       0.37 f
+  U82884/ZN (CKND0BWP40P140)                              0.20       0.57 r
+  U83430/ZN (INVD1BWP40P140LVT)                           0.31       0.87 f
+  U93814/ZN (NR2D0BWP40P140)                              0.23       1.10 r
+  U93946/ZN (ND3D0BWP40P140HVT)                           0.16       1.26 f
+  U94043/ZN (NR2D0BWP40P140)                              0.10       1.36 r
+  U94044/ZN (CKND0BWP40P140)                              0.02       1.38 f
+  U94045/ZN (OAI21D0BWP40P140HVT)                         0.03       1.41 r
+  clk_gate_w0Buf_0_0_0_reg/EN (SNPS_CLOCK_GATE_HIGH_ToomCook1024_217)
+                                                          0.00       1.41 r
+  clk_gate_w0Buf_0_0_0_reg/latch/E (CKLNQD1BWP40P140HVT)
+                                                          0.00       1.41 r
+  data arrival time                                                  1.41
+
+  clock clock_main (rise edge)                           10.00      10.00
+  clock network delay (ideal)                             0.00      10.00
+  clock uncertainty                                      -1.00       9.00
+  clk_gate_w0Buf_0_0_0_reg/latch/CP (CKLNQD1BWP40P140HVT)
+                                                          0.00       9.00 r
+  clock gating setup time                                -0.07       8.93
+  data required time                                                 8.93
+  --------------------------------------------------------------------------
+  data required time                                                 8.93
+  data arrival time                                                 -1.41
+  --------------------------------------------------------------------------
+  slack (MET)                                                        7.52
+
+
+  Startpoint: i2Correct_reg
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: clk_gate_w0Buf_1_0_0_reg/latch
+            (gating element for clock clock_main)
+  Path Group: clock_main
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  ToomCook1024       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  i2Correct_reg/CP (DFQD1BWP40P140)                       0.00       0.00 r
+  i2Correct_reg/Q (DFQD1BWP40P140)                        0.37       0.37 f
+  U82884/ZN (CKND0BWP40P140)                              0.20       0.57 r
+  U83430/ZN (INVD1BWP40P140LVT)                           0.31       0.87 f
+  U93814/ZN (NR2D0BWP40P140)                              0.23       1.10 r
+  U93946/ZN (ND3D0BWP40P140HVT)                           0.16       1.26 f
+  U94046/ZN (NR2D0BWP40P140)                              0.10       1.36 r
+  U94047/ZN (CKND0BWP40P140)                              0.02       1.38 f
+  U94048/ZN (OAI21D0BWP40P140HVT)                         0.03       1.41 r
+  clk_gate_w0Buf_1_0_0_reg/EN (SNPS_CLOCK_GATE_HIGH_ToomCook1024_201)
+                                                          0.00       1.41 r
+  clk_gate_w0Buf_1_0_0_reg/latch/E (CKLNQD1BWP40P140HVT)
+                                                          0.00       1.41 r
+  data arrival time                                                  1.41
+
+  clock clock_main (rise edge)                           10.00      10.00
+  clock network delay (ideal)                             0.00      10.00
+  clock uncertainty                                      -1.00       9.00
+  clk_gate_w0Buf_1_0_0_reg/latch/CP (CKLNQD1BWP40P140HVT)
+                                                          0.00       9.00 r
+  clock gating setup time                                -0.07       8.93
+  data required time                                                 8.93
+  --------------------------------------------------------------------------
+  data required time                                                 8.93
+  data arrival time                                                 -1.41
+  --------------------------------------------------------------------------
+  slack (MET)                                                        7.52
+
+
+1

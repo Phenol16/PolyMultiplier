@@ -1,0 +1,119 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay min
+        -max_paths 3
+Design : poly_fir_mult_kernel
+Version: O-2018.06-SP5
+Date   : Tue Sep  2 19:34:14 2025
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: ffg0p99v125c   Library: tcbn28hpcplusbwp40p140hvtffg0p99v125c_ccs
+Wire Load Model Mode: segmented
+
+  Startpoint: C_0_8_reg_23_
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: io_polyc_0[23]
+            (output port)
+  Path Group: (none)
+  Path Type: min
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  poly_fir_mult_kernel
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  unordered_adder_0_DP_OP_30J2_137_3296_J2_0_15
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  C_0_8_reg_23_/CP (DFQD1BWP40P140)                       0.00 #     0.00 r
+  C_0_8_reg_23_/Q (DFQD1BWP40P140)                        0.05       0.05 r
+  unordered_adder/io_din_8[23] (unordered_adder_15)       0.00       0.05 r
+  unordered_adder/DP_OP_30J2_137_3296/I8[23] (unordered_adder_0_DP_OP_30J2_137_3296_J2_0_15)
+                                                          0.00       0.05 r
+  unordered_adder/DP_OP_30J2_137_3296/U667/Z (XOR4D1BWP40P140)
+                                                          0.03       0.08 f
+  unordered_adder/DP_OP_30J2_137_3296/U355/Z (XOR4D1BWP40P140)
+                                                          0.03       0.11 f
+  unordered_adder/DP_OP_30J2_137_3296/O1[23] (unordered_adder_0_DP_OP_30J2_137_3296_J2_0_15)
+                                                          0.00       0.11 f
+  unordered_adder/io_dout[23] (unordered_adder_15)        0.00       0.11 f
+  io_polyc_0[23] (out)                                    0.00       0.11 f
+  data arrival time                                                  0.11
+  --------------------------------------------------------------------------
+  (Path is unconstrained)
+
+
+  Startpoint: C_1_8_reg_23_
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: io_polyc_1[23]
+            (output port)
+  Path Group: (none)
+  Path Type: min
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  poly_fir_mult_kernel
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  unordered_adder_0_DP_OP_30J2_137_3296_J2_0_14
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  C_1_8_reg_23_/CP (DFQD1BWP40P140)                       0.00 #     0.00 r
+  C_1_8_reg_23_/Q (DFQD1BWP40P140)                        0.05       0.05 r
+  unordered_adder_1/io_din_8[23] (unordered_adder_14)     0.00       0.05 r
+  unordered_adder_1/DP_OP_30J2_137_3296/I8[23] (unordered_adder_0_DP_OP_30J2_137_3296_J2_0_14)
+                                                          0.00       0.05 r
+  unordered_adder_1/DP_OP_30J2_137_3296/U667/Z (XOR4D1BWP40P140)
+                                                          0.03       0.08 f
+  unordered_adder_1/DP_OP_30J2_137_3296/U356/Z (XOR4D1BWP40P140)
+                                                          0.03       0.11 f
+  unordered_adder_1/DP_OP_30J2_137_3296/O1[23] (unordered_adder_0_DP_OP_30J2_137_3296_J2_0_14)
+                                                          0.00       0.11 f
+  unordered_adder_1/io_dout[23] (unordered_adder_14)      0.00       0.11 f
+  io_polyc_1[23] (out)                                    0.00       0.11 f
+  data arrival time                                                  0.11
+  --------------------------------------------------------------------------
+  (Path is unconstrained)
+
+
+  Startpoint: C_2_8_reg_23_
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: io_polyc_2[23]
+            (output port)
+  Path Group: (none)
+  Path Type: min
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  poly_fir_mult_kernel
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  unordered_adder_0_DP_OP_30J2_137_3296_J2_0_13
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  C_2_8_reg_23_/CP (DFQD1BWP40P140)                       0.00 #     0.00 r
+  C_2_8_reg_23_/Q (DFQD1BWP40P140)                        0.05       0.05 r
+  unordered_adder_2/io_din_8[23] (unordered_adder_13)     0.00       0.05 r
+  unordered_adder_2/DP_OP_30J2_137_3296/I8[23] (unordered_adder_0_DP_OP_30J2_137_3296_J2_0_13)
+                                                          0.00       0.05 r
+  unordered_adder_2/DP_OP_30J2_137_3296/U355/Z (XOR4D1BWP40P140)
+                                                          0.03       0.08 f
+  unordered_adder_2/DP_OP_30J2_137_3296/U356/Z (XOR4D1BWP40P140)
+                                                          0.03       0.11 f
+  unordered_adder_2/DP_OP_30J2_137_3296/O1[23] (unordered_adder_0_DP_OP_30J2_137_3296_J2_0_13)
+                                                          0.00       0.11 f
+  unordered_adder_2/io_dout[23] (unordered_adder_13)      0.00       0.11 f
+  io_polyc_2[23] (out)                                    0.00       0.11 f
+  data arrival time                                                  0.11
+  --------------------------------------------------------------------------
+  (Path is unconstrained)
+
+
+1

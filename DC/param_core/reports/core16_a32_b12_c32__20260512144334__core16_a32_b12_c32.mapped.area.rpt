@@ -1,0 +1,213 @@
+ 
+****************************************
+Report : area
+Design : core16_a32_b12_c32
+Version: O-2018.06-SP5
+Date   : Tue May 12 15:57:40 2026
+****************************************
+
+Library(s) Used:
+
+    tcbn28hpcplusbwp40p140lvtssg0p81vm40c_ccs (File: /export1/Library/TN28HPC+/STD_CELL_ext/track9_200824/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp40p140lvt_180a/tcbn28hpcplusbwp40p140lvtssg0p81vm40c_ccs.db)
+    tcbn28hpcplusbwp40p140ssg0p81vm40c_ccs (File: /export1/Library/TN28HPC+/STD_CELL_ext/track9_200824/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp40p140_180a/tcbn28hpcplusbwp40p140ssg0p81vm40c_ccs.db)
+    tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs (File: /export1/Library/TN28HPC+/STD_CELL_ext/track9_200824/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp40p140hvt_180a/tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs.db)
+
+Number of ports:                        41700
+Number of nets:                        134153
+Number of cells:                        69443
+Number of combinational cells:          64492
+Number of sequential cells:              4305
+Number of macros/black boxes:               0
+Number of buf/inv:                       7766
+Number of references:                      21
+
+Combinational area:              81805.372675
+Buf/Inv area:                     2103.192017
+Noncombinational area:            8671.950137
+Macro/Black Box area:                0.000000
+Net Interconnect area:      undefined  (Wire load has zero net area)
+
+Total cell area:                 90477.322812
+Total area:                 undefined
+
+Hierarchical area distribution
+------------------------------
+
+                                  Global cell area            Local cell area
+                                  -------------------  ----------------------------- 
+Hierarchical cell                 Absolute    Percent  Combi-      Noncombi-  Black-
+                                  Total       Total    national    national   boxes   Design
+--------------------------------  ----------  -------  ----------  ---------  ------  -------------------------------------------------
+core16_a32_b12_c32                90477.3228    100.0      2.0160  1953.5040  0.0000  core16_a32_b12_c32
+core4_0                            9713.0879     10.7      1.0080   531.7200  0.0000  core4_6
+core4_0/evalA                       814.3380      0.9     24.6960     0.0000  0.0000  Eval_8_6
+core4_0/evalA/DP_OP_54J8_125_3710   211.6800      0.2    211.6800     0.0000  0.0000  Eval_8_6_DP_OP_54J8_125_3710_J8_0
+core4_0/evalA/DP_OP_55J8_126_189    286.0200      0.3    286.0200     0.0000  0.0000  Eval_8_6_DP_OP_55J8_126_189_J8_0
+core4_0/evalA/DP_OP_56J8_127_7474   291.9420      0.3    291.9420     0.0000  0.0000  Eval_8_6_DP_OP_56J8_127_7474_J8_0
+core4_0/evalB                       320.9220      0.4     10.3320     0.0000  0.0000  Eval_9_6
+core4_0/evalB/DP_OP_54J6_122_1710    83.1600      0.1     83.1600     0.0000  0.0000  Eval_9_6_DP_OP_54J6_122_1710_J6_0
+core4_0/evalB/DP_OP_55J6_123_8406   110.7540      0.1    110.7540     0.0000  0.0000  Eval_9_6_DP_OP_55J6_123_8406_J6_0
+core4_0/evalB/DP_OP_56J6_124_5041   116.6760      0.1    116.6760     0.0000  0.0000  Eval_9_6_DP_OP_56J6_124_5041_J6_0
+core4_0/interp                     2707.3620      3.0      0.7560   276.1920  0.0000  Interpolation_6
+core4_0/interp/interp              2430.4140      2.7      0.2520     0.0000  0.0000  InterpolationComb_6
+core4_0/interp/interp/DP_OP_106J11_122_6007  2430.1620     2.7  2430.1620    0.0000 0.0000 InterpolationComb_0_DP_OP_106J11_122_6007_J11_0_2
+core4_0/mult_x_1                    647.7660      0.7    647.7660     0.0000  0.0000  core4_6_DW_mult_uns_J6_3
+core4_0/mult_x_2                    872.1720      1.0    872.1720     0.0000  0.0000  core4_6_DW_mult_uns_J6_2
+core4_0/mult_x_3                    712.2780      0.8    712.2780     0.0000  0.0000  core4_6_DW_mult_tc_J6_2
+core4_0/mult_x_4                    758.6460      0.8    758.6460     0.0000  0.0000  core4_6_DW_mult_tc_J6_1
+core4_0/mult_x_5                    835.2540      0.9    835.2540     0.0000  0.0000  core4_6_DW_mult_uns_J6_1
+core4_0/mult_x_6                    863.8560      1.0    863.8560     0.0000  0.0000  core4_6_DW_mult_tc_J6_0
+core4_0/mult_x_7                    647.7660      0.7    647.7660     0.0000  0.0000  core4_6_DW_mult_uns_J6_0
+core4_1                           11120.2558     12.3      1.0080   530.7120  0.0000  core4_5
+core4_1/evalA                       896.4900      1.0     28.4760     0.0000  0.0000  Eval_8_5
+core4_1/evalA/DP_OP_53J8_122_3262   229.1940      0.3    229.1940     0.0000  0.0000  Eval_8_1_DP_OP_53J8_122_3262_J8_0_2
+core4_1/evalA/DP_OP_54J8_123_2021   323.9460      0.4    323.9460     0.0000  0.0000  Eval_8_1_DP_OP_54J8_123_2021_J8_0_2
+core4_1/evalA/DP_OP_55J8_124_534    314.8740      0.3    314.8740     0.0000  0.0000  Eval_8_1_DP_OP_55J8_124_534_J8_0_2
+core4_1/evalB                       436.9680      0.5     13.9860     0.0000  0.0000  Eval_9_5
+core4_1/evalB/DP_OP_54J11_126_6859   112.5180     0.1    112.5180     0.0000  0.0000  Eval_9_5_DP_OP_54J11_126_6859_J11_0
+core4_1/evalB/DP_OP_55J11_127_4984   155.6100     0.2    155.6100     0.0000  0.0000  Eval_9_5_DP_OP_55J11_127_4984_J11_0
+core4_1/evalB/DP_OP_56J11_128_9671   154.8540     0.2    154.8540     0.0000  0.0000  Eval_9_5_DP_OP_56J11_128_9671_J11_0
+core4_1/interp                     2707.3620      3.0      0.7560   276.1920  0.0000  Interpolation_5
+core4_1/interp/interp              2430.4140      2.7      0.2520     0.0000  0.0000  InterpolationComb_5
+core4_1/interp/interp/DP_OP_106J11_122_6007  2430.1620     2.7  2430.1620    0.0000 0.0000 InterpolationComb_0_DP_OP_106J11_122_6007_J11_0_1
+core4_1/mult_x_1                    872.1720      1.0    872.1720     0.0000  0.0000  core4_5_DW_mult_uns_J13_1
+core4_1/mult_x_2                    946.6380      1.0    946.6380     0.0000  0.0000  core4_5_DW_mult_tc_J13_4
+core4_1/mult_x_3                    934.1640      1.0    934.1640     0.0000  0.0000  core4_5_DW_mult_tc_J13_3
+core4_1/mult_x_4                    962.8920      1.1    962.8920     0.0000  0.0000  core4_5_DW_mult_tc_J13_2
+core4_1/mult_x_5                    979.9020      1.1    979.9020     0.0000  0.0000  core4_5_DW_mult_tc_J13_1
+core4_1/mult_x_6                    979.7760      1.1    979.7760     0.0000  0.0000  core4_5_DW_mult_tc_J13_0
+core4_1/mult_x_7                    872.1720      1.0    872.1720     0.0000  0.0000  core4_5_DW_mult_uns_J13_0
+core4_2                           10389.2039     11.5      1.0080   531.3420  0.0000  core4_4
+core4_2/evalA                       859.6980      1.0     26.2080     0.0000  0.0000  Eval_8_4
+core4_2/evalA/DP_OP_54J11_123_6538   222.5160     0.2    222.5160     0.0000  0.0000  Eval_8_4_DP_OP_54J11_123_6538_J11_0
+core4_2/evalA/DP_OP_55J11_124_9249   302.9040     0.3    302.9040     0.0000  0.0000  Eval_8_4_DP_OP_55J11_124_9249_J11_0
+core4_2/evalA/DP_OP_56J11_125_8751   308.0700     0.3    308.0700     0.0000  0.0000  Eval_8_4_DP_OP_56J11_125_8751_J11_0
+core4_2/evalB                       368.5500      0.4     11.0880     0.0000  0.0000  Eval_9_4
+core4_2/evalB/DP_OP_54J8_128_4538    96.0120      0.1     96.0120     0.0000  0.0000  Eval_9_4_DP_OP_54J8_128_4538_J8_0
+core4_2/evalB/DP_OP_55J8_129_3266   127.6380      0.1    127.6380     0.0000  0.0000  Eval_9_4_DP_OP_55J8_129_3266_J8_0
+core4_2/evalB/DP_OP_56J8_130_4817   133.8120      0.1    133.8120     0.0000  0.0000  Eval_9_4_DP_OP_56J8_130_4817_J8_0
+core4_2/interp                     2806.6500      3.1      0.7560   284.2560  0.0000  Interpolation_4
+core4_2/interp/interp              2521.6380      2.8      0.2520     0.0000  0.0000  InterpolationComb_4
+core4_2/interp/interp/DP_OP_106J9_122_7677  2521.3860     2.8  2521.3860    0.0000 0.0000 InterpolationComb_1_DP_OP_106J9_122_7677_J9_0_3
+core4_2/mult_x_1                    694.7640      0.8    694.7640     0.0000  0.0000  core4_4_DW_mult_uns_J7_3
+core4_2/mult_x_2                    895.2300      1.0    895.2300     0.0000  0.0000  core4_4_DW_mult_uns_J7_2
+core4_2/mult_x_3                    811.4400      0.9    811.4400     0.0000  0.0000  core4_4_DW_mult_tc_J7_2
+core4_2/mult_x_4                    856.5480      0.9    856.5480     0.0000  0.0000  core4_4_DW_mult_tc_J7_1
+core4_2/mult_x_5                    912.4920      1.0    912.4920     0.0000  0.0000  core4_4_DW_mult_uns_J7_1
+core4_2/mult_x_6                    956.7180      1.1    956.7180     0.0000  0.0000  core4_4_DW_mult_tc_J7_0
+core4_2/mult_x_7                    694.7640      0.8    694.7640     0.0000  0.0000  core4_4_DW_mult_uns_J7_0
+core4_3                           11060.7838     12.2      0.7560   530.9640  0.0000  core4_3
+core4_3/evalA                       904.9320      1.0     29.2320     0.0000  0.0000  Eval_8_3
+core4_3/evalA/DP_OP_53J8_122_3262   229.0680      0.3    229.0680     0.0000  0.0000  Eval_8_1_DP_OP_53J8_122_3262_J8_0_1
+core4_3/evalA/DP_OP_54J8_123_2021   329.9940      0.4    329.9940     0.0000  0.0000  Eval_8_1_DP_OP_54J8_123_2021_J8_0_1
+core4_3/evalA/DP_OP_55J8_124_534    316.6380      0.3    316.6380     0.0000  0.0000  Eval_8_1_DP_OP_55J8_124_534_J8_0_1
+core4_3/evalB                       483.4620      0.5     16.3800     0.0000  0.0000  Eval_9_3
+core4_3/evalB/DP_OP_53J9_126_3190   119.9520      0.1    119.9520     0.0000  0.0000  Eval_9_1_DP_OP_53J9_126_3190_J9_0_1
+core4_3/evalB/DP_OP_54J9_127_2985   180.1800      0.2    180.1800     0.0000  0.0000  Eval_9_1_DP_OP_54J9_127_2985_J9_0_1
+core4_3/evalB/DP_OP_55J9_128_8061   166.9500      0.2    166.9500     0.0000  0.0000  Eval_9_1_DP_OP_55J9_128_8061_J9_0_1
+core4_3/interp                     2806.6500      3.1      0.7560   284.2560  0.0000  Interpolation_3
+core4_3/interp/interp              2521.6380      2.8      0.2520     0.0000  0.0000  InterpolationComb_3
+core4_3/interp/interp/DP_OP_106J9_122_7677  2521.3860     2.8  2521.3860    0.0000 0.0000 InterpolationComb_1_DP_OP_106J9_122_7677_J9_0_2
+core4_3/mult_x_1                    734.0760      0.8    734.0760     0.0000  0.0000  core4_1_DW_mult_tc_J12_6_1
+core4_3/mult_x_2                    946.8900      1.0    946.8900     0.0000  0.0000  core4_1_DW_mult_tc_J12_5_1
+core4_3/mult_x_3                    979.6500      1.1    979.6500     0.0000  0.0000  core4_1_DW_mult_tc_J12_4_1
+core4_3/mult_x_4                    979.7760      1.1    979.7760     0.0000  0.0000  core4_1_DW_mult_tc_J12_3_1
+core4_3/mult_x_5                    979.7760      1.1    979.7760     0.0000  0.0000  core4_1_DW_mult_tc_J12_2_1
+core4_3/mult_x_6                    979.7760      1.1    979.7760     0.0000  0.0000  core4_1_DW_mult_tc_J12_1_1
+core4_3/mult_x_7                    734.0760      0.8    734.0760     0.0000  0.0000  core4_1_DW_mult_tc_J12_0_1
+core4_4                           11068.2178     12.2      1.0080   531.0900  0.0000  core4_2
+core4_4/evalA                       898.8840      1.0     28.4760     0.0000  0.0000  Eval_8_2
+core4_4/evalA/DP_OP_55J10_122_395   228.1860      0.3    228.1860     0.0000  0.0000  Eval_8_2_DP_OP_55J10_122_395_J10_0
+core4_4/evalA/DP_OP_56J10_123_4961   326.4660     0.4    326.4660     0.0000  0.0000  Eval_8_2_DP_OP_56J10_123_4961_J10_0
+core4_4/evalA/DP_OP_57J10_124_2206   315.7560     0.3    315.7560     0.0000  0.0000  Eval_8_2_DP_OP_57J10_124_2206_J10_0
+core4_4/evalB                       438.4800      0.5     13.8600     0.0000  0.0000  Eval_9_2
+core4_4/evalB/DP_OP_54J10_128_120   113.2740      0.1    113.2740     0.0000  0.0000  Eval_9_2_DP_OP_54J10_128_120_J10_0
+core4_4/evalB/DP_OP_55J10_129_6793   152.9640     0.2    152.9640     0.0000  0.0000  Eval_9_2_DP_OP_55J10_129_6793_J10_0
+core4_4/evalB/DP_OP_56J10_130_5617   158.3820     0.2    158.3820     0.0000  0.0000  Eval_9_2_DP_OP_56J10_130_5617_J10_0
+core4_4/interp                     2806.6500      3.1      0.7560   284.2560  0.0000  Interpolation_2
+core4_4/interp/interp              2521.6380      2.8      0.2520     0.0000  0.0000  InterpolationComb_2
+core4_4/interp/interp/DP_OP_106J9_122_7677  2521.3860     2.8  2521.3860    0.0000 0.0000 InterpolationComb_1_DP_OP_106J9_122_7677_J9_0_1
+core4_4/mult_x_1                    808.0380      0.9    808.0380     0.0000  0.0000  core4_2_DW_mult_uns_J14_1
+core4_4/mult_x_2                    946.6380      1.0    946.6380     0.0000  0.0000  core4_2_DW_mult_tc_J14_4
+core4_4/mult_x_3                    912.9960      1.0    912.9960     0.0000  0.0000  core4_2_DW_mult_tc_J14_3
+core4_4/mult_x_4                    956.7180      1.1    956.7180     0.0000  0.0000  core4_2_DW_mult_tc_J14_2
+core4_4/mult_x_5                    979.7760      1.1    979.7760     0.0000  0.0000  core4_2_DW_mult_tc_J14_1
+core4_4/mult_x_6                    979.9020      1.1    979.9020     0.0000  0.0000  core4_2_DW_mult_tc_J14_0
+core4_4/mult_x_7                    808.0380      0.9    808.0380     0.0000  0.0000  core4_2_DW_mult_uns_J14_0
+core4_5                           11262.3838     12.4      0.7560   530.9640  0.0000  core4_1
+core4_5/evalA                       904.9320      1.0     29.2320     0.0000  0.0000  Eval_8_1
+core4_5/evalA/DP_OP_53J8_122_3262   229.0680      0.3    229.0680     0.0000  0.0000  Eval_8_1_DP_OP_53J8_122_3262_J8_0_0
+core4_5/evalA/DP_OP_54J8_123_2021   329.9940      0.4    329.9940     0.0000  0.0000  Eval_8_1_DP_OP_54J8_123_2021_J8_0_0
+core4_5/evalA/DP_OP_55J8_124_534    316.6380      0.3    316.6380     0.0000  0.0000  Eval_8_1_DP_OP_55J8_124_534_J8_0_0
+core4_5/evalB                       484.4700      0.5     17.0100     0.0000  0.0000  Eval_9_1
+core4_5/evalB/DP_OP_53J9_126_3190   119.8260      0.1    119.8260     0.0000  0.0000  Eval_9_1_DP_OP_53J9_126_3190_J9_0_0
+core4_5/evalB/DP_OP_54J9_127_2985   180.4320      0.2    180.4320     0.0000  0.0000  Eval_9_1_DP_OP_54J9_127_2985_J9_0_0
+core4_5/evalB/DP_OP_55J9_128_8061   167.2020      0.2    167.2020     0.0000  0.0000  Eval_9_1_DP_OP_55J9_128_8061_J9_0_0
+core4_5/interp                     2806.6500      3.1      0.7560   284.2560  0.0000  Interpolation_1
+core4_5/interp/interp              2521.6380      2.8      0.2520     0.0000  0.0000  InterpolationComb_1
+core4_5/interp/interp/DP_OP_106J9_122_7677  2521.3860     2.8  2521.3860    0.0000 0.0000 InterpolationComb_1_DP_OP_106J9_122_7677_J9_0_0
+core4_5/mult_x_1                    834.3720      0.9    834.3720     0.0000  0.0000  core4_1_DW_mult_tc_J12_6_0
+core4_5/mult_x_2                    946.7640      1.0    946.7640     0.0000  0.0000  core4_1_DW_mult_tc_J12_5_0
+core4_5/mult_x_3                    979.7760      1.1    979.7760     0.0000  0.0000  core4_1_DW_mult_tc_J12_4_0
+core4_5/mult_x_4                    979.7760      1.1    979.7760     0.0000  0.0000  core4_1_DW_mult_tc_J12_3_0
+core4_5/mult_x_5                    979.7760      1.1    979.7760     0.0000  0.0000  core4_1_DW_mult_tc_J12_2_0
+core4_5/mult_x_6                    979.7760      1.1    979.7760     0.0000  0.0000  core4_1_DW_mult_tc_J12_1_0
+core4_5/mult_x_7                    834.3720      0.9    834.3720     0.0000  0.0000  core4_1_DW_mult_tc_J12_0_0
+core4_6                            9713.5919     10.7      1.0080   531.8460  0.0000  core4_0
+core4_6/evalA                       814.3380      0.9     24.6960     0.0000  0.0000  Eval_8_0
+core4_6/evalA/DP_OP_54J9_123_5485   211.6800      0.2    211.6800     0.0000  0.0000  Eval_8_0_DP_OP_54J9_123_5485_J9_0
+core4_6/evalA/DP_OP_55J9_124_5683   286.0200      0.3    286.0200     0.0000  0.0000  Eval_8_0_DP_OP_55J9_124_5683_J9_0
+core4_6/evalA/DP_OP_56J9_125_1948   291.9420      0.3    291.9420     0.0000  0.0000  Eval_8_0_DP_OP_56J9_125_1948_J9_0
+core4_6/evalB                       320.9220      0.4     10.3320     0.0000  0.0000  Eval_9_0
+core4_6/evalB/DP_OP_54J5_122_3485    83.1600      0.1     83.1600     0.0000  0.0000  Eval_9_0_DP_OP_54J5_122_3485_J5_0
+core4_6/evalB/DP_OP_55J5_123_3965   110.7540      0.1    110.7540     0.0000  0.0000  Eval_9_0_DP_OP_55J5_123_3965_J5_0
+core4_6/evalB/DP_OP_56J5_124_9514   116.6760      0.1    116.6760     0.0000  0.0000  Eval_9_0_DP_OP_56J5_124_9514_J5_0
+core4_6/interp                     2707.3620      3.0      0.7560   276.1920  0.0000  Interpolation_0
+core4_6/interp/interp              2430.4140      2.7      0.2520     0.0000  0.0000  InterpolationComb_0
+core4_6/interp/interp/DP_OP_106J11_122_6007  2430.1620     2.7  2430.1620    0.0000 0.0000 InterpolationComb_0_DP_OP_106J11_122_6007_J11_0_0
+core4_6/mult_x_1                    647.7660      0.7    647.7660     0.0000  0.0000  core4_0_DW_mult_uns_J5_3
+core4_6/mult_x_2                    872.1720      1.0    872.1720     0.0000  0.0000  core4_0_DW_mult_uns_J5_2
+core4_6/mult_x_3                    712.2780      0.8    712.2780     0.0000  0.0000  core4_0_DW_mult_tc_J5_2
+core4_6/mult_x_4                    759.0240      0.8    759.0240     0.0000  0.0000  core4_0_DW_mult_tc_J5_1
+core4_6/mult_x_5                    835.2540      0.9    835.2540     0.0000  0.0000  core4_0_DW_mult_uns_J5_1
+core4_6/mult_x_6                    863.8560      1.0    863.8560     0.0000  0.0000  core4_0_DW_mult_tc_J5_0
+core4_6/mult_x_7                    647.7660      0.7    647.7660     0.0000  0.0000  core4_0_DW_mult_uns_J5_0
+evalA                               814.3380      0.9     26.5860     0.0000  0.0000  Eval_4
+evalA/DP_OP_52J10_125_9524          284.5080      0.3    284.5080     0.0000  0.0000  Eval_0_DP_OP_52J10_125_9524_J10_0_3
+evalA/DP_OP_53J10_126_6299          291.5640      0.3    291.5640     0.0000  0.0000  Eval_0_DP_OP_53J10_126_6299_J10_0_3
+evalA/DP_OP_54J10_127_1625          211.6800      0.2    211.6800     0.0000  0.0000  Eval_0_DP_OP_54J10_127_1625_J10_0_3
+evalA_1                             814.2120      0.9     26.3340     0.0000  0.0000  Eval_3
+evalA_1/DP_OP_52J10_125_9524        284.5080      0.3    284.5080     0.0000  0.0000  Eval_0_DP_OP_52J10_125_9524_J10_0_2
+evalA_1/DP_OP_53J10_126_6299        291.6900      0.3    291.6900     0.0000  0.0000  Eval_0_DP_OP_53J10_126_6299_J10_0_2
+evalA_1/DP_OP_54J10_127_1625        211.6800      0.2    211.6800     0.0000  0.0000  Eval_0_DP_OP_54J10_127_1625_J10_0_2
+evalA_2                             814.2120      0.9     26.3340     0.0000  0.0000  Eval_2
+evalA_2/DP_OP_52J10_125_9524        284.5080      0.3    284.5080     0.0000  0.0000  Eval_0_DP_OP_52J10_125_9524_J10_0_1
+evalA_2/DP_OP_53J10_126_6299        291.6900      0.3    291.6900     0.0000  0.0000  Eval_0_DP_OP_53J10_126_6299_J10_0_1
+evalA_2/DP_OP_54J10_127_1625        211.6800      0.2    211.6800     0.0000  0.0000  Eval_0_DP_OP_54J10_127_1625_J10_0_1
+evalA_3                             814.3380      0.9     26.5860     0.0000  0.0000  Eval_0
+evalA_3/DP_OP_52J10_125_9524        284.5080      0.3    284.5080     0.0000  0.0000  Eval_0_DP_OP_52J10_125_9524_J10_0_0
+evalA_3/DP_OP_53J10_126_6299        291.5640      0.3    291.5640     0.0000  0.0000  Eval_0_DP_OP_53J10_126_6299_J10_0_0
+evalA_3/DP_OP_54J10_127_1625        211.6800      0.2    211.6800     0.0000  0.0000  Eval_0_DP_OP_54J10_127_1625_J10_0_0
+evalB                               320.7960      0.4     14.3640     0.0000  0.0000  Eval_1_3
+evalB/DP_OP_52J7_122_7082            83.1600      0.1     83.1600     0.0000  0.0000  Eval_1_0_DP_OP_52J7_122_7082_J7_0_3
+evalB/DP_OP_53J7_123_1358           108.1080      0.1    108.1080     0.0000  0.0000  Eval_1_0_DP_OP_53J7_123_1358_J7_0_3
+evalB/DP_OP_54J7_124_7047           115.1640      0.1    115.1640     0.0000  0.0000  Eval_1_0_DP_OP_54J7_124_7047_J7_0_3
+evalB_1                             320.0400      0.4     13.4820     0.0000  0.0000  Eval_1_2
+evalB_1/DP_OP_52J7_122_7082          83.1600      0.1     83.1600     0.0000  0.0000  Eval_1_0_DP_OP_52J7_122_7082_J7_0_2
+evalB_1/DP_OP_53J7_123_1358         108.1080      0.1    108.1080     0.0000  0.0000  Eval_1_0_DP_OP_53J7_123_1358_J7_0_2
+evalB_1/DP_OP_54J7_124_7047         115.2900      0.1    115.2900     0.0000  0.0000  Eval_1_0_DP_OP_54J7_124_7047_J7_0_2
+evalB_2                             320.0400      0.4     13.4820     0.0000  0.0000  Eval_1_1
+evalB_2/DP_OP_52J7_122_7082          83.1600      0.1     83.1600     0.0000  0.0000  Eval_1_0_DP_OP_52J7_122_7082_J7_0_1
+evalB_2/DP_OP_53J7_123_1358         108.1080      0.1    108.1080     0.0000  0.0000  Eval_1_0_DP_OP_53J7_123_1358_J7_0_1
+evalB_2/DP_OP_54J7_124_7047         115.2900      0.1    115.2900     0.0000  0.0000  Eval_1_0_DP_OP_54J7_124_7047_J7_0_1
+evalB_3                             321.6780      0.4     15.2460     0.0000  0.0000  Eval_1_0
+evalB_3/DP_OP_52J7_122_7082          83.1600      0.1     83.1600     0.0000  0.0000  Eval_1_0_DP_OP_52J7_122_7082_J7_0_0
+evalB_3/DP_OP_53J7_123_1358         108.1080      0.1    108.1080     0.0000  0.0000  Eval_1_0_DP_OP_53J7_123_1358_J7_0_0
+evalB_3/DP_OP_54J7_124_7047         115.1640      0.1    115.1640     0.0000  0.0000  Eval_1_0_DP_OP_54J7_124_7047_J7_0_0
+interp                             9654.6239     10.7      0.7560  1034.2080  0.0000  Interpolation_7
+interp/interp                      8619.6599      9.5      0.2520     0.0000  0.0000  InterpolationComb_7
+interp/interp/DP_OP_421J3_122_5484  8619.4079     9.5   8619.4079     0.0000  0.0000  InterpolationComb_7_DP_OP_421J3_122_5484_J3_0
+--------------------------------  ----------  -------  ----------  ---------  ------  -------------------------------------------------
+Total                                                  81805.3727  8671.9501  0.0000
+
+1

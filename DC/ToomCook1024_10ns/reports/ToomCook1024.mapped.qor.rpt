@@ -1,0 +1,125 @@
+Information: Updating design information... (UID-85)
+Warning: Design 'ToomCook1024' contains 61 high-fanout nets. A fanout number of 1000 will be used for delay calculations involving these nets. (TIM-134)
+ 
+****************************************
+Report : qor
+Design : ToomCook1024
+Version: O-2018.06-SP5
+Date   : Thu May 21 04:09:22 2026
+****************************************
+
+
+  Timing Path Group 'REG2REG'
+  -----------------------------------
+  Levels of Logic:              54.00
+  Critical Path Length:          6.26
+  Critical Path Slack:           2.60
+  Critical Path Clk Period:     10.00
+  Total Negative Slack:          0.00
+  No. of Violating Paths:        0.00
+  Worst Hold Violation:         -0.14
+  Total Hold Violation:      -1219.17
+  No. of Hold Violations:    14732.00
+  -----------------------------------
+
+  Timing Path Group 'REGIN'
+  -----------------------------------
+  Levels of Logic:               4.00
+  Critical Path Length:          1.10
+  Critical Path Slack:           5.75
+  Critical Path Clk Period:     10.00
+  Total Negative Slack:          0.00
+  No. of Violating Paths:        0.00
+  Worst Hold Violation:          0.00
+  Total Hold Violation:          0.00
+  No. of Hold Violations:        0.00
+  -----------------------------------
+
+  Timing Path Group 'REGOUT'
+  -----------------------------------
+  Levels of Logic:               0.00
+  Critical Path Length:          0.67
+  Critical Path Slack:           6.33
+  Critical Path Clk Period:     10.00
+  Total Negative Slack:          0.00
+  No. of Violating Paths:        0.00
+  Worst Hold Violation:          0.00
+  Total Hold Violation:          0.00
+  No. of Hold Violations:        0.00
+  -----------------------------------
+
+  Timing Path Group 'clock_main'
+  -----------------------------------
+  Levels of Logic:               7.00
+  Critical Path Length:          1.41
+  Critical Path Slack:           7.52
+  Critical Path Clk Period:     10.00
+  Total Negative Slack:          0.00
+  No. of Violating Paths:        0.00
+  Worst Hold Violation:         -0.04
+  Total Hold Violation:         -0.99
+  No. of Hold Violations:       85.00
+  -----------------------------------
+
+
+  Cell Count
+  -----------------------------------
+  Hierarchical Cell Count:       3859
+  Hierarchical Port Count:     748314
+  Leaf Cell Count:             640096
+  Buf/Inv Cell Count:           91007
+  Buf Cell Count:               36959
+  Inv Cell Count:               54048
+  CT Buf/Inv Cell Count:            0
+  Combinational Cell Count:    524310
+  Sequential Cell Count:       115786
+  Macro Count:                    146
+  -----------------------------------
+
+
+  Area
+  -----------------------------------
+  Combinational Area:   634746.662919
+  Noncombinational Area:
+                        218565.646345
+  Buf/Inv Area:          27629.531893
+  Total Buffer Area:         14005.53
+  Total Inverter Area:       13624.00
+  Macro/Black Box Area: 837646.967773
+  Net Area:                  0.000000
+  -----------------------------------
+  Cell Area:           1690959.277038
+  Design Area:         1690959.277038
+
+
+  Design Rules
+  -----------------------------------
+  Total Number of Nets:        880791
+  Nets With Violations:            15
+  Max Trans Violations:            14
+  Max Cap Violations:               1
+  -----------------------------------
+
+
+  Hostname: inspur19
+
+  Compile CPU Statistics
+  -----------------------------------------
+  Resource Sharing:                    0.00
+  Logic Optimization:                  0.00
+  Mapping Optimization:                0.00
+  -----------------------------------------
+  Overall Compile Time:            17117.87
+  Overall Compile Wall Clock Time:  1348.56
+
+  --------------------------------------------------------------------
+
+  Design  WNS: 0.00  TNS: 0.00  Number of Violating Paths: 0
+
+
+  Design (Hold)  WNS: 0.14  TNS: 1220.13  Number of Violating Paths: 14817
+
+  --------------------------------------------------------------------
+
+
+1

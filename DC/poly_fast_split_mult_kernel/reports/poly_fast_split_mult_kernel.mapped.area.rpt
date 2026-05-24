@@ -1,0 +1,392 @@
+ 
+****************************************
+Report : area
+Design : poly_fast_split_mult_kernel
+Version: O-2018.06-SP5
+Date   : Mon Aug 25 17:06:16 2025
+****************************************
+
+Library(s) Used:
+
+    tcbn28hpcplusbwp40p140lvtssg0p81vm40c_ccs (File: /export1/Library/TN28HPC+/STD_CELL_ext/track9_200824/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp40p140lvt_180a/tcbn28hpcplusbwp40p140lvtssg0p81vm40c_ccs.db)
+    tcbn28hpcplusbwp40p140ssg0p81vm40c_ccs (File: /export1/Library/TN28HPC+/STD_CELL_ext/track9_200824/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp40p140_180a/tcbn28hpcplusbwp40p140ssg0p81vm40c_ccs.db)
+    tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs (File: /export1/Library/TN28HPC+/STD_CELL_ext/track9_200824/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp40p140hvt_180a/tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs.db)
+
+Number of ports:                        28268
+Number of nets:                        112258
+Number of cells:                        67733
+Number of combinational cells:          60752
+Number of sequential cells:              6554
+Number of macros/black boxes:               0
+Number of buf/inv:                       6156
+Number of references:                     126
+
+Combinational area:              64947.077354
+Buf/Inv area:                     1577.646022
+Noncombinational area:           12795.300058
+Macro/Black Box area:                0.000000
+Net Interconnect area:      undefined  (Wire load has zero net area)
+
+Total cell area:                 77742.377412
+Total area:                 undefined
+
+Hierarchical area distribution
+------------------------------
+
+                                  Global cell area            Local cell area
+                                  -------------------  ------------------------------ 
+Hierarchical cell                 Absolute    Percent  Combi-      Noncombi-   Black-
+                                  Total       Total    national    national    boxes   Design
+--------------------------------  ----------  -------  ----------  ----------  ------  --------------------------------------------------------
+poly_fast_split_mult_kernel       77742.3774    100.0   1906.5060   6263.4600  0.0000  poly_fast_split_mult_kernel
+DP_OP_2839J2_122_1542             11224.5838     14.4  11224.5838      0.0000  0.0000  poly_fast_split_mult_kernel_DP_OP_2839J2_122_1542_J2_0
+DP_OP_2840J2_123_9237               151.5780      0.2    151.5780      0.0000  0.0000  poly_fast_split_mult_kernel_DP_OP_2840J2_123_9237_J2_0
+DP_OP_2841J2_124_179                 95.3820      0.1     95.3820      0.0000  0.0000  poly_fast_split_mult_kernel_DP_OP_2841J2_124_179_J2_0_0
+DP_OP_2842J2_125_9237               151.5780      0.2    151.5780      0.0000  0.0000  poly_fast_split_mult_kernel_DP_OP_2842J2_125_9237_J2_0
+DP_OP_2843J2_126_179                 95.3820      0.1     95.3820      0.0000  0.0000  poly_fast_split_mult_kernel_DP_OP_2843J2_126_179_J2_0_0
+DP_OP_2844J2_127_1430               454.7340      0.6    454.7340      0.0000  0.0000  poly_fast_split_mult_kernel_DP_OP_2844J2_127_1430_J2_0_0
+DP_OP_2845J2_128_6777               290.4300      0.4    290.4300      0.0000  0.0000  poly_fast_split_mult_kernel_DP_OP_2845J2_128_6777_J2_0_0
+DP_OP_2846J2_129_9237               151.5780      0.2    151.5780      0.0000  0.0000  poly_fast_split_mult_kernel_DP_OP_2846J2_129_9237_J2_0
+DP_OP_2847J2_130_179                 95.3820      0.1     95.3820      0.0000  0.0000  poly_fast_split_mult_kernel_DP_OP_2847J2_130_179_J2_0_0
+DP_OP_2848J2_131_9237               151.5780      0.2    151.5780      0.0000  0.0000  poly_fast_split_mult_kernel_DP_OP_2848J2_131_9237_J2_0
+DP_OP_2849J2_132_179                 95.3820      0.1     95.3820      0.0000  0.0000  poly_fast_split_mult_kernel_DP_OP_2849J2_132_179_J2_0_0
+DP_OP_2850J2_133_1430               454.7340      0.6    454.7340      0.0000  0.0000  poly_fast_split_mult_kernel_DP_OP_2850J2_133_1430_J2_0_0
+DP_OP_2851J2_134_6777               290.4300      0.4    290.4300      0.0000  0.0000  poly_fast_split_mult_kernel_DP_OP_2851J2_134_6777_J2_0_0
+DP_OP_2852J2_135_6110              1363.1940      1.8   1363.1940      0.0000  0.0000  poly_fast_split_mult_kernel_DP_OP_2852J2_135_6110_J2_0
+DP_OP_2853J2_136_9956               885.1500      1.1    885.1500      0.0000  0.0000  poly_fast_split_mult_kernel_DP_OP_2853J2_136_9956_J2_0_0
+add_x_1                              50.5260      0.1     50.5260      0.0000  0.0000  poly_fast_split_mult_kernel_DW01_add_J2_15
+add_x_11                             50.5260      0.1     50.5260      0.0000  0.0000  poly_fast_split_mult_kernel_DW01_add_J2_5
+add_x_13                             50.5260      0.1     50.5260      0.0000  0.0000  poly_fast_split_mult_kernel_DW01_add_J2_3
+add_x_15                             50.5260      0.1     50.5260      0.0000  0.0000  poly_fast_split_mult_kernel_DW01_add_J2_1
+add_x_3                              50.5260      0.1     50.5260      0.0000  0.0000  poly_fast_split_mult_kernel_DW01_add_J2_13
+add_x_5                              50.5260      0.1     50.5260      0.0000  0.0000  poly_fast_split_mult_kernel_DW01_add_J2_11
+add_x_7                              50.5260      0.1     50.5260      0.0000  0.0000  poly_fast_split_mult_kernel_DW01_add_J2_9
+add_x_9                              50.5260      0.1     50.5260      0.0000  0.0000  poly_fast_split_mult_kernel_DW01_add_J2_7
+usint_ext_mult                      629.8740      0.8     33.7680     80.6400  0.0000  usint_ext_mult_80
+usint_ext_mult/DP_OP_17J2_137_1390   197.0640     0.3    197.0640      0.0000  0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_80
+usint_ext_mult/add_x_3               33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_80
+usint_ext_mult/mult_x_1             285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_80
+usint_ext_mult_1                    629.8740      0.8     33.7680     80.6400  0.0000  usint_ext_mult_79
+usint_ext_mult_1/DP_OP_17J2_137_1390   197.0640     0.3   197.0640     0.0000  0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_79
+usint_ext_mult_1/add_x_3             33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_79
+usint_ext_mult_1/mult_x_1           285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_79
+usint_ext_mult_10                   629.8740      0.8     33.7680     80.6400  0.0000  usint_ext_mult_70
+usint_ext_mult_10/DP_OP_17J2_137_1390   197.0640     0.3   197.0640     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_70
+usint_ext_mult_10/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_70
+usint_ext_mult_10/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_70
+usint_ext_mult_11                   654.0660      0.8     34.9020     80.6400  0.0000  usint_ext_mult_69
+usint_ext_mult_11/DP_OP_17J2_137_1390   220.1220     0.3   220.1220     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_69
+usint_ext_mult_11/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_69
+usint_ext_mult_11/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_69
+usint_ext_mult_12                   629.8740      0.8     33.7680     80.6400  0.0000  usint_ext_mult_68
+usint_ext_mult_12/DP_OP_17J2_137_1390   197.0640     0.3   197.0640     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_68
+usint_ext_mult_12/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_68
+usint_ext_mult_12/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_68
+usint_ext_mult_13                   629.8740      0.8     33.7680     80.6400  0.0000  usint_ext_mult_67
+usint_ext_mult_13/DP_OP_17J2_137_1390   197.0640     0.3   197.0640     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_67
+usint_ext_mult_13/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_67
+usint_ext_mult_13/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_67
+usint_ext_mult_14                   654.0660      0.8     34.9020     80.6400  0.0000  usint_ext_mult_66
+usint_ext_mult_14/DP_OP_17J2_137_1390   220.1220     0.3   220.1220     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_66
+usint_ext_mult_14/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_66
+usint_ext_mult_14/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_66
+usint_ext_mult_15                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_65
+usint_ext_mult_15/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_65
+usint_ext_mult_15/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_65
+usint_ext_mult_15/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_65
+usint_ext_mult_16                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_64
+usint_ext_mult_16/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_64
+usint_ext_mult_16/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_64
+usint_ext_mult_16/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_64
+usint_ext_mult_17                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_63
+usint_ext_mult_17/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_63
+usint_ext_mult_17/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_63
+usint_ext_mult_17/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_63
+usint_ext_mult_18                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_62
+usint_ext_mult_18/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_62
+usint_ext_mult_18/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_62
+usint_ext_mult_18/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_62
+usint_ext_mult_19                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_61
+usint_ext_mult_19/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_61
+usint_ext_mult_19/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_61
+usint_ext_mult_19/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_61
+usint_ext_mult_2                    654.0660      0.8     34.9020     80.6400  0.0000  usint_ext_mult_78
+usint_ext_mult_2/DP_OP_17J2_137_1390   220.1220     0.3   220.1220     0.0000  0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_78
+usint_ext_mult_2/add_x_3             33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_78
+usint_ext_mult_2/mult_x_1           285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_78
+usint_ext_mult_20                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_60
+usint_ext_mult_20/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_60
+usint_ext_mult_20/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_60
+usint_ext_mult_20/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_60
+usint_ext_mult_21                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_59
+usint_ext_mult_21/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_59
+usint_ext_mult_21/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_59
+usint_ext_mult_21/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_59
+usint_ext_mult_22                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_58
+usint_ext_mult_22/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_58
+usint_ext_mult_22/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_58
+usint_ext_mult_22/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_58
+usint_ext_mult_23                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_57
+usint_ext_mult_23/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_57
+usint_ext_mult_23/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_57
+usint_ext_mult_23/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_57
+usint_ext_mult_24                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_56
+usint_ext_mult_24/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_56
+usint_ext_mult_24/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_56
+usint_ext_mult_24/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_56
+usint_ext_mult_25                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_55
+usint_ext_mult_25/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_55
+usint_ext_mult_25/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_55
+usint_ext_mult_25/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_55
+usint_ext_mult_26                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_54
+usint_ext_mult_26/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_54
+usint_ext_mult_26/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_54
+usint_ext_mult_26/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_54
+usint_ext_mult_27                   629.8740      0.8     33.7680     80.6400  0.0000  usint_ext_mult_53
+usint_ext_mult_27/DP_OP_17J2_137_1390   197.0640     0.3   197.0640     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_53
+usint_ext_mult_27/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_53
+usint_ext_mult_27/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_53
+usint_ext_mult_28                   629.8740      0.8     33.7680     80.6400  0.0000  usint_ext_mult_52
+usint_ext_mult_28/DP_OP_17J2_137_1390   197.0640     0.3   197.0640     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_52
+usint_ext_mult_28/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_52
+usint_ext_mult_28/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_52
+usint_ext_mult_29                   654.0660      0.8     34.9020     80.6400  0.0000  usint_ext_mult_51
+usint_ext_mult_29/DP_OP_17J2_137_1390   220.1220     0.3   220.1220     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_51
+usint_ext_mult_29/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_51
+usint_ext_mult_29/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_51
+usint_ext_mult_3                    629.8740      0.8     33.7680     80.6400  0.0000  usint_ext_mult_77
+usint_ext_mult_3/DP_OP_17J2_137_1390   197.0640     0.3   197.0640     0.0000  0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_77
+usint_ext_mult_3/add_x_3             33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_77
+usint_ext_mult_3/mult_x_1           285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_77
+usint_ext_mult_30                   629.8740      0.8     33.7680     80.6400  0.0000  usint_ext_mult_50
+usint_ext_mult_30/DP_OP_17J2_137_1390   197.0640     0.3   197.0640     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_50
+usint_ext_mult_30/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_50
+usint_ext_mult_30/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_50
+usint_ext_mult_31                   629.8740      0.8     33.7680     80.6400  0.0000  usint_ext_mult_49
+usint_ext_mult_31/DP_OP_17J2_137_1390   197.0640     0.3   197.0640     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_49
+usint_ext_mult_31/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_49
+usint_ext_mult_31/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_49
+usint_ext_mult_32                   654.0660      0.8     34.9020     80.6400  0.0000  usint_ext_mult_48
+usint_ext_mult_32/DP_OP_17J2_137_1390   220.1220     0.3   220.1220     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_48
+usint_ext_mult_32/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_48
+usint_ext_mult_32/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_48
+usint_ext_mult_33                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_47
+usint_ext_mult_33/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_47
+usint_ext_mult_33/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_47
+usint_ext_mult_33/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_47
+usint_ext_mult_34                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_46
+usint_ext_mult_34/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_46
+usint_ext_mult_34/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_46
+usint_ext_mult_34/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_46
+usint_ext_mult_35                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_45
+usint_ext_mult_35/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_45
+usint_ext_mult_35/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_45
+usint_ext_mult_35/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_45
+usint_ext_mult_36                   629.8740      0.8     33.7680     80.6400  0.0000  usint_ext_mult_44
+usint_ext_mult_36/DP_OP_17J2_137_1390   197.0640     0.3   197.0640     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_44
+usint_ext_mult_36/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_44
+usint_ext_mult_36/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_44
+usint_ext_mult_37                   629.8740      0.8     33.7680     80.6400  0.0000  usint_ext_mult_43
+usint_ext_mult_37/DP_OP_17J2_137_1390   197.0640     0.3   197.0640     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_43
+usint_ext_mult_37/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_43
+usint_ext_mult_37/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_43
+usint_ext_mult_38                   654.0660      0.8     34.9020     80.6400  0.0000  usint_ext_mult_42
+usint_ext_mult_38/DP_OP_17J2_137_1390   220.1220     0.3   220.1220     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_42
+usint_ext_mult_38/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_42
+usint_ext_mult_38/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_42
+usint_ext_mult_39                   629.8740      0.8     33.7680     80.6400  0.0000  usint_ext_mult_41
+usint_ext_mult_39/DP_OP_17J2_137_1390   197.0640     0.3   197.0640     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_41
+usint_ext_mult_39/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_41
+usint_ext_mult_39/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_41
+usint_ext_mult_4                    629.8740      0.8     33.7680     80.6400  0.0000  usint_ext_mult_76
+usint_ext_mult_4/DP_OP_17J2_137_1390   197.0640     0.3   197.0640     0.0000  0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_76
+usint_ext_mult_4/add_x_3             33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_76
+usint_ext_mult_4/mult_x_1           285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_76
+usint_ext_mult_40                   629.8740      0.8     33.7680     80.6400  0.0000  usint_ext_mult_40
+usint_ext_mult_40/DP_OP_17J2_137_1390   197.0640     0.3   197.0640     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_40
+usint_ext_mult_40/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_40
+usint_ext_mult_40/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_40
+usint_ext_mult_41                   654.0660      0.8     34.9020     80.6400  0.0000  usint_ext_mult_39
+usint_ext_mult_41/DP_OP_17J2_137_1390   220.1220     0.3   220.1220     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_39
+usint_ext_mult_41/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_39
+usint_ext_mult_41/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_39
+usint_ext_mult_42                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_38
+usint_ext_mult_42/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_38
+usint_ext_mult_42/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_38
+usint_ext_mult_42/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_38
+usint_ext_mult_43                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_37
+usint_ext_mult_43/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_37
+usint_ext_mult_43/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_37
+usint_ext_mult_43/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_37
+usint_ext_mult_44                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_36
+usint_ext_mult_44/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_36
+usint_ext_mult_44/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_36
+usint_ext_mult_44/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_36
+usint_ext_mult_45                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_35
+usint_ext_mult_45/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_35
+usint_ext_mult_45/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_35
+usint_ext_mult_45/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_35
+usint_ext_mult_46                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_34
+usint_ext_mult_46/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_34
+usint_ext_mult_46/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_34
+usint_ext_mult_46/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_34
+usint_ext_mult_47                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_33
+usint_ext_mult_47/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_33
+usint_ext_mult_47/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_33
+usint_ext_mult_47/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_33
+usint_ext_mult_48                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_32
+usint_ext_mult_48/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_32
+usint_ext_mult_48/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_32
+usint_ext_mult_48/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_32
+usint_ext_mult_49                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_31
+usint_ext_mult_49/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_31
+usint_ext_mult_49/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_31
+usint_ext_mult_49/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_31
+usint_ext_mult_5                    654.0660      0.8     34.9020     80.6400  0.0000  usint_ext_mult_75
+usint_ext_mult_5/DP_OP_17J2_137_1390   220.1220     0.3   220.1220     0.0000  0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_75
+usint_ext_mult_5/add_x_3             33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_75
+usint_ext_mult_5/mult_x_1           285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_75
+usint_ext_mult_50                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_30
+usint_ext_mult_50/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_30
+usint_ext_mult_50/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_30
+usint_ext_mult_50/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_30
+usint_ext_mult_51                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_29
+usint_ext_mult_51/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_29
+usint_ext_mult_51/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_29
+usint_ext_mult_51/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_29
+usint_ext_mult_52                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_28
+usint_ext_mult_52/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_28
+usint_ext_mult_52/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_28
+usint_ext_mult_52/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_28
+usint_ext_mult_53                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_27
+usint_ext_mult_53/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_27
+usint_ext_mult_53/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_27
+usint_ext_mult_53/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_27
+usint_ext_mult_54                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_26
+usint_ext_mult_54/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_26
+usint_ext_mult_54/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_26
+usint_ext_mult_54/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_26
+usint_ext_mult_55                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_25
+usint_ext_mult_55/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_25
+usint_ext_mult_55/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_25
+usint_ext_mult_55/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_25
+usint_ext_mult_56                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_24
+usint_ext_mult_56/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_24
+usint_ext_mult_56/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_24
+usint_ext_mult_56/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_24
+usint_ext_mult_57                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_23
+usint_ext_mult_57/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_23
+usint_ext_mult_57/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_23
+usint_ext_mult_57/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_23
+usint_ext_mult_58                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_22
+usint_ext_mult_58/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_22
+usint_ext_mult_58/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_22
+usint_ext_mult_58/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_22
+usint_ext_mult_59                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_21
+usint_ext_mult_59/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_21
+usint_ext_mult_59/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_21
+usint_ext_mult_59/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_21
+usint_ext_mult_6                    665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_74
+usint_ext_mult_6/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000  0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_74
+usint_ext_mult_6/add_x_3             33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_74
+usint_ext_mult_6/mult_x_1           285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_74
+usint_ext_mult_60                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_20
+usint_ext_mult_60/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_20
+usint_ext_mult_60/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_20
+usint_ext_mult_60/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_20
+usint_ext_mult_61                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_19
+usint_ext_mult_61/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_19
+usint_ext_mult_61/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_19
+usint_ext_mult_61/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_19
+usint_ext_mult_62                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_18
+usint_ext_mult_62/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_18
+usint_ext_mult_62/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_18
+usint_ext_mult_62/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_18
+usint_ext_mult_63                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_17
+usint_ext_mult_63/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_17
+usint_ext_mult_63/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_17
+usint_ext_mult_63/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_17
+usint_ext_mult_64                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_16
+usint_ext_mult_64/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_16
+usint_ext_mult_64/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_16
+usint_ext_mult_64/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_16
+usint_ext_mult_65                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_15
+usint_ext_mult_65/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_15
+usint_ext_mult_65/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_15
+usint_ext_mult_65/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_15
+usint_ext_mult_66                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_14
+usint_ext_mult_66/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_14
+usint_ext_mult_66/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_14
+usint_ext_mult_66/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_14
+usint_ext_mult_67                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_13
+usint_ext_mult_67/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_13
+usint_ext_mult_67/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_13
+usint_ext_mult_67/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_13
+usint_ext_mult_68                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_12
+usint_ext_mult_68/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_12
+usint_ext_mult_68/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_12
+usint_ext_mult_68/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_12
+usint_ext_mult_69                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_11
+usint_ext_mult_69/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_11
+usint_ext_mult_69/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_11
+usint_ext_mult_69/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_11
+usint_ext_mult_7                    665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_73
+usint_ext_mult_7/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000  0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_73
+usint_ext_mult_7/add_x_3             33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_73
+usint_ext_mult_7/mult_x_1           285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_73
+usint_ext_mult_70                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_10
+usint_ext_mult_70/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_10
+usint_ext_mult_70/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_10
+usint_ext_mult_70/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_10
+usint_ext_mult_71                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_9
+usint_ext_mult_71/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_9
+usint_ext_mult_71/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_9
+usint_ext_mult_71/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_9
+usint_ext_mult_72                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_8
+usint_ext_mult_72/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_8
+usint_ext_mult_72/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_8
+usint_ext_mult_72/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_8
+usint_ext_mult_73                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_7
+usint_ext_mult_73/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_7
+usint_ext_mult_73/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_7
+usint_ext_mult_73/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_7
+usint_ext_mult_74                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_6
+usint_ext_mult_74/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_6
+usint_ext_mult_74/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_6
+usint_ext_mult_74/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_6
+usint_ext_mult_75                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_5
+usint_ext_mult_75/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_5
+usint_ext_mult_75/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_5
+usint_ext_mult_75/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_5
+usint_ext_mult_76                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_4
+usint_ext_mult_76/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_4
+usint_ext_mult_76/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_4
+usint_ext_mult_76/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_4
+usint_ext_mult_77                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_3
+usint_ext_mult_77/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_3
+usint_ext_mult_77/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_3
+usint_ext_mult_77/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_3
+usint_ext_mult_78                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_2
+usint_ext_mult_78/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_2
+usint_ext_mult_78/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_2
+usint_ext_mult_78/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_2
+usint_ext_mult_79                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_1
+usint_ext_mult_79/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_1
+usint_ext_mult_79/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_1
+usint_ext_mult_79/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_1
+usint_ext_mult_8                    665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_72
+usint_ext_mult_8/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000  0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_72
+usint_ext_mult_8/add_x_3             33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_72
+usint_ext_mult_8/mult_x_1           285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_72
+usint_ext_mult_80                   665.0280      0.9     37.9260     80.6400  0.0000  usint_ext_mult_0
+usint_ext_mult_80/DP_OP_17J2_137_1390   228.0600     0.3   228.0600     0.0000 0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_0
+usint_ext_mult_80/add_x_3            33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_0
+usint_ext_mult_80/mult_x_1          285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_0
+usint_ext_mult_9                    629.8740      0.8     33.7680     80.6400  0.0000  usint_ext_mult_71
+usint_ext_mult_9/DP_OP_17J2_137_1390   197.0640     0.3   197.0640     0.0000  0.0000  usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_71
+usint_ext_mult_9/add_x_3             33.3900      0.0     33.3900      0.0000  0.0000  usint_ext_mult_0_DW01_add_J2_0_71
+usint_ext_mult_9/mult_x_1           285.0120      0.4    285.0120      0.0000  0.0000  usint_ext_mult_0_DW_mult_uns_J2_0_71
+--------------------------------  ----------  -------  ----------  ----------  ------  --------------------------------------------------------
+Total                                                  64947.0774  12795.3001  0.0000
+
+1

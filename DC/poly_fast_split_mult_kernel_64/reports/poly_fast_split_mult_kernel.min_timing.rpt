@@ -1,0 +1,157 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay min
+        -max_paths 3
+Design : poly_fast_split_mult_kernel
+Version: O-2018.06-SP5
+Date   : Fri May 22 21:16:05 2026
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: ffg0p99v125c   Library: tcbn28hpcplusbwp40p140hvtffg0p99v125c_ccs
+Wire Load Model Mode: segmented
+
+  Startpoint: REG_reg_23_
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: usint_ext_mult/holdl_delay_reg_23_
+            (rising edge-triggered flip-flop clocked by clock_main)
+  Path Group: clock_main
+  Path Type: min
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  poly_fast_split_mult_kernel
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  usint_ext_mult_0_DW_mult_uns_J2_0_728
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  REG_reg_23_/CP (DFQD1BWP40P140)                         0.00 #     0.00 r
+  REG_reg_23_/Q (DFQD1BWP40P140)                          0.06       0.06 r
+  usint_ext_mult/io_opu[23] (usint_ext_mult_728)          0.00       0.06 r
+  usint_ext_mult/mult_x_1/a[23] (usint_ext_mult_0_DW_mult_uns_J2_0_728)
+                                                          0.00       0.06 r
+  usint_ext_mult/mult_x_1/U499/ZN (AOI221D1BWP40P140)     0.01       0.07 f
+  usint_ext_mult/mult_x_1/U354/Z (XOR3UD1BWP40P140)       0.02       0.09 f
+  usint_ext_mult/mult_x_1/product[23] (usint_ext_mult_0_DW_mult_uns_J2_0_728)
+                                                          0.00       0.09 f
+  usint_ext_mult/U29/ZN (INR2D1BWP40P140)                 0.02       0.11 f
+  usint_ext_mult/holdl_delay_reg_23_/D (DFQD1BWP40P140)
+                                                          0.00       0.11 f
+  data arrival time                                                  0.11
+
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  clock uncertainty                                       0.10       0.10
+  usint_ext_mult/holdl_delay_reg_23_/CP (DFQD1BWP40P140)
+                                                          0.00       0.10 r
+  library hold time                                       0.02       0.12
+  data required time                                                 0.12
+  --------------------------------------------------------------------------
+  data required time                                                 0.12
+  data arrival time                                                 -0.11
+  --------------------------------------------------------------------------
+  slack (VIOLATED)                                                  -0.01
+
+
+  Startpoint: REG_2_reg_23_
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: usint_ext_mult_1/holdl_delay_reg_23_
+            (rising edge-triggered flip-flop clocked by clock_main)
+  Path Group: clock_main
+  Path Type: min
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  poly_fast_split_mult_kernel
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  usint_ext_mult_0_DW_mult_uns_J2_0_727
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  REG_2_reg_23_/CP (DFQD1BWP40P140)                       0.00 #     0.00 r
+  REG_2_reg_23_/Q (DFQD1BWP40P140)                        0.06       0.06 r
+  usint_ext_mult_1/io_opu[23] (usint_ext_mult_727)        0.00       0.06 r
+  usint_ext_mult_1/mult_x_1/a[23] (usint_ext_mult_0_DW_mult_uns_J2_0_727)
+                                                          0.00       0.06 r
+  usint_ext_mult_1/mult_x_1/U504/ZN (AOI221D1BWP40P140)
+                                                          0.01       0.07 f
+  usint_ext_mult_1/mult_x_1/U358/Z (XOR3UD1BWP40P140)     0.02       0.09 f
+  usint_ext_mult_1/mult_x_1/product[23] (usint_ext_mult_0_DW_mult_uns_J2_0_727)
+                                                          0.00       0.09 f
+  usint_ext_mult_1/U5/ZN (INR2D1BWP40P140)                0.02       0.11 f
+  usint_ext_mult_1/holdl_delay_reg_23_/D (DFQD1BWP40P140)
+                                                          0.00       0.11 f
+  data arrival time                                                  0.11
+
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  clock uncertainty                                       0.10       0.10
+  usint_ext_mult_1/holdl_delay_reg_23_/CP (DFQD1BWP40P140)
+                                                          0.00       0.10 r
+  library hold time                                       0.02       0.12
+  data required time                                                 0.12
+  --------------------------------------------------------------------------
+  data required time                                                 0.12
+  data arrival time                                                 -0.11
+  --------------------------------------------------------------------------
+  slack (VIOLATED)                                                  -0.01
+
+
+  Startpoint: REG_4_reg_23_
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: usint_ext_mult_2/holdl_delay_reg_23_
+            (rising edge-triggered flip-flop clocked by clock_main)
+  Path Group: clock_main
+  Path Type: min
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  poly_fast_split_mult_kernel
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  usint_ext_mult_0_DW_mult_uns_J2_0_726
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  REG_4_reg_23_/CP (DFQD1BWP40P140)                       0.00 #     0.00 r
+  REG_4_reg_23_/Q (DFQD1BWP40P140)                        0.06       0.06 r
+  usint_ext_mult_2/io_opu[23] (usint_ext_mult_726)        0.00       0.06 r
+  usint_ext_mult_2/mult_x_1/a[23] (usint_ext_mult_0_DW_mult_uns_J2_0_726)
+                                                          0.00       0.06 r
+  usint_ext_mult_2/mult_x_1/U498/ZN (AOI221D1BWP40P140)
+                                                          0.01       0.07 f
+  usint_ext_mult_2/mult_x_1/U353/Z (XOR3UD1BWP40P140)     0.02       0.09 f
+  usint_ext_mult_2/mult_x_1/product[23] (usint_ext_mult_0_DW_mult_uns_J2_0_726)
+                                                          0.00       0.09 f
+  usint_ext_mult_2/U5/ZN (INR2D1BWP40P140)                0.02       0.11 f
+  usint_ext_mult_2/holdl_delay_reg_23_/D (DFQD1BWP40P140)
+                                                          0.00       0.11 f
+  data arrival time                                                  0.11
+
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  clock uncertainty                                       0.10       0.10
+  usint_ext_mult_2/holdl_delay_reg_23_/CP (DFQD1BWP40P140)
+                                                          0.00       0.10 r
+  library hold time                                       0.02       0.12
+  data required time                                                 0.12
+  --------------------------------------------------------------------------
+  data required time                                                 0.12
+  data arrival time                                                 -0.11
+  --------------------------------------------------------------------------
+  slack (VIOLATED)                                                  -0.01
+
+
+1

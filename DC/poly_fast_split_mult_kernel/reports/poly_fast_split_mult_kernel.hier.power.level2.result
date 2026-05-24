@@ -1,0 +1,1248 @@
+ 
+****************************************
+Report : power
+        -hier
+        -analysis_effort low
+Design : poly_fast_split_mult_kernel
+Version: O-2018.06-SP5
+Date   : Mon Aug 25 17:06:29 2025
+****************************************
+
+
+Library(s) Used:
+
+    tcbn28hpcplusbwp40p140lvtssg0p81vm40c_ccs (File: /export1/Library/TN28HPC+/STD_CELL_ext/track9_200824/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp40p140lvt_180a/tcbn28hpcplusbwp40p140lvtssg0p81vm40c_ccs.db)
+    tcbn28hpcplusbwp40p140ssg0p81vm40c_ccs (File: /export1/Library/TN28HPC+/STD_CELL_ext/track9_200824/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp40p140_180a/tcbn28hpcplusbwp40p140ssg0p81vm40c_ccs.db)
+    tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs (File: /export1/Library/TN28HPC+/STD_CELL_ext/track9_200824/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp40p140hvt_180a/tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs.db)
+
+
+Operating Conditions: ssg0p81vm40c   Library: tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+Wire Load Model Mode: segmented
+
+Design        Wire Load Model            Library
+------------------------------------------------
+poly_fast_split_mult_kernel
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fast_split_mult_kernel_DP_OP_2852J2_135_6110_J2_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fast_split_mult_kernel_DP_OP_2848J2_131_9237_J2_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fast_split_mult_kernel_DP_OP_2846J2_129_9237_J2_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fast_split_mult_kernel_DP_OP_2842J2_125_9237_J2_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fast_split_mult_kernel_DP_OP_2840J2_123_9237_J2_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fast_split_mult_kernel_DP_OP_2839J2_122_1542_J2_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fast_split_mult_kernel_DW01_add_J2_1
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fast_split_mult_kernel_DW01_add_J2_3
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fast_split_mult_kernel_DW01_add_J2_5
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fast_split_mult_kernel_DW01_add_J2_7
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fast_split_mult_kernel_DW01_add_J2_9
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fast_split_mult_kernel_DW01_add_J2_11
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fast_split_mult_kernel_DW01_add_J2_13
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fast_split_mult_kernel_DW01_add_J2_15
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_80
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_80
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_80
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_79
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_79
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_79
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_78
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_78
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_78
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_77
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_77
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_77
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_76
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_76
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_76
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_75
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_75
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_75
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_74
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_74
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_74
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_73
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_73
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_73
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_72
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_72
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_72
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_71
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_71
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_71
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_70
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_70
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_70
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_69
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_69
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_69
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_68
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_68
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_68
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_67
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_67
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_67
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_66
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_66
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_66
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_65
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_65
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_65
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_64
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_64
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_64
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_63
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_63
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_63
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_62
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_62
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_62
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_61
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_61
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_61
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_60
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_60
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_60
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_59
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_59
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_59
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_58
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_58
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_58
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_57
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_57
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_57
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_56
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_56
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_56
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_55
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_55
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_55
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_54
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_54
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_54
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_53
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_53
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_53
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_52
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_52
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_52
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_51
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_51
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_51
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_50
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_50
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_50
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_49
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_49
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_49
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_48
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_48
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_48
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_47
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_47
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_47
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_46
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_46
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_46
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_45
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_45
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_45
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_44
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_44
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_44
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_43
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_43
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_43
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_42
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_42
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_42
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_41
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_41
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_41
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_40
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_40
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_40
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_39
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_39
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_39
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_38
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_38
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_38
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_37
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_37
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_37
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_36
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_36
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_36
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_35
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_35
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_35
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_34
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_34
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_34
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_33
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_33
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_33
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_32
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_32
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_32
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_31
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_31
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_31
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_30
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_30
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_30
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_29
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_29
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_29
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_28
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_28
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_28
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_27
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_27
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_27
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_26
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_26
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_26
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_25
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_25
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_25
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_24
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_24
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_24
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_23
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_23
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_23
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_22
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_22
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_22
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_21
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_21
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_21
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_20
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_20
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_20
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_19
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_19
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_19
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_18
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_18
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_18
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_17
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_17
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_17
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_16
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_16
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_16
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_15
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_15
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_15
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_14
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_14
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_14
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_13
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_13
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_13
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_12
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_12
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_12
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_11
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_11
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_11
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_10
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_10
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_10
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_9
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_9
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_9
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_8
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_8
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_8
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_7
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_7
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_7
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_6
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_6
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_6
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_5
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_5
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_5
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_4
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_4
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_4
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_3
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_3
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_3
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_2
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_2
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_2
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_1
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_1
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_1
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW01_add_J2_0_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+usint_ext_mult_0_DW_mult_uns_J2_0_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fast_split_mult_kernel_DP_OP_2841J2_124_179_J2_0_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fast_split_mult_kernel_DP_OP_2843J2_126_179_J2_0_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fast_split_mult_kernel_DP_OP_2844J2_127_1430_J2_0_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fast_split_mult_kernel_DP_OP_2845J2_128_6777_J2_0_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fast_split_mult_kernel_DP_OP_2847J2_130_179_J2_0_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fast_split_mult_kernel_DP_OP_2849J2_132_179_J2_0_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fast_split_mult_kernel_DP_OP_2850J2_133_1430_J2_0_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fast_split_mult_kernel_DP_OP_2851J2_134_6777_J2_0_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+poly_fast_split_mult_kernel_DP_OP_2853J2_136_9956_J2_0_0
+                       ZeroWireload      tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+
+Global Operating Voltage = 0.81 
+Power-specific unit information :
+    Voltage Units = 1V
+    Capacitance Units = 1.000000pf
+    Time Units = 1ns
+    Dynamic Power Units = 1mW    (derived from V,C,T units)
+    Leakage Power Units = 1nW
+
+
+--------------------------------------------------------------------------------
+                                       Switch   Int      Leak     Total
+Hierarchy                              Power    Power    Power    Power    %
+--------------------------------------------------------------------------------
+poly_fast_split_mult_kernel               2.354    6.996 3.30e+03    9.353 100.0
+  DP_OP_2853J2_136_9956 (poly_fast_split_mult_kernel_DP_OP_2853J2_136_9956_J2_0_0)
+                                       5.53e-02 8.41e-02   42.575    0.139   1.5
+  DP_OP_2851J2_134_6777 (poly_fast_split_mult_kernel_DP_OP_2851J2_134_6777_J2_0_0)
+                                       1.38e-02 2.35e-02   14.219 3.72e-02   0.4
+  DP_OP_2850J2_133_1430 (poly_fast_split_mult_kernel_DP_OP_2850J2_133_1430_J2_0_0)
+                                       2.22e-02 3.83e-02   22.281 6.06e-02   0.6
+  DP_OP_2849J2_132_179 (poly_fast_split_mult_kernel_DP_OP_2849J2_132_179_J2_0_0)
+                                       3.00e-03 6.34e-03    4.616 9.34e-03   0.1
+  DP_OP_2847J2_130_179 (poly_fast_split_mult_kernel_DP_OP_2847J2_130_179_J2_0_0)
+                                       2.98e-03 6.35e-03    4.536 9.34e-03   0.1
+  DP_OP_2845J2_128_6777 (poly_fast_split_mult_kernel_DP_OP_2845J2_128_6777_J2_0_0)
+                                       1.38e-02 2.34e-02   14.218 3.72e-02   0.4
+  DP_OP_2844J2_127_1430 (poly_fast_split_mult_kernel_DP_OP_2844J2_127_1430_J2_0_0)
+                                       2.22e-02 3.84e-02   22.280 6.07e-02   0.6
+  DP_OP_2843J2_126_179 (poly_fast_split_mult_kernel_DP_OP_2843J2_126_179_J2_0_0)
+                                       3.01e-03 6.36e-03    4.616 9.37e-03   0.1
+  DP_OP_2841J2_124_179 (poly_fast_split_mult_kernel_DP_OP_2841J2_124_179_J2_0_0)
+                                       2.97e-03 6.32e-03    4.558 9.30e-03   0.1
+  add_x_1 (poly_fast_split_mult_kernel_DW01_add_J2_15)
+                                       6.13e-04 2.70e-03    1.986 3.31e-03   0.0
+  add_x_3 (poly_fast_split_mult_kernel_DW01_add_J2_13)
+                                       6.06e-04 2.67e-03    1.986 3.28e-03   0.0
+  add_x_5 (poly_fast_split_mult_kernel_DW01_add_J2_11)
+                                       6.12e-04 2.69e-03    1.986 3.31e-03   0.0
+  add_x_7 (poly_fast_split_mult_kernel_DW01_add_J2_9)
+                                       6.13e-04 2.70e-03    1.987 3.31e-03   0.0
+  add_x_9 (poly_fast_split_mult_kernel_DW01_add_J2_7)
+                                       6.19e-04 2.72e-03    1.987 3.34e-03   0.0
+  add_x_11 (poly_fast_split_mult_kernel_DW01_add_J2_5)
+                                       6.14e-04 2.70e-03    1.986 3.31e-03   0.0
+  add_x_13 (poly_fast_split_mult_kernel_DW01_add_J2_3)
+                                       6.12e-04 2.69e-03    1.986 3.31e-03   0.0
+  add_x_15 (poly_fast_split_mult_kernel_DW01_add_J2_1)
+                                       6.13e-04 2.69e-03    1.987 3.31e-03   0.0
+  DP_OP_2839J2_122_1542 (poly_fast_split_mult_kernel_DP_OP_2839J2_122_1542_J2_0)
+                                          0.373    0.560  432.739    0.933  10.0
+  DP_OP_2840J2_123_9237 (poly_fast_split_mult_kernel_DP_OP_2840J2_123_9237_J2_0)
+                                       4.53e-03 1.04e-02    5.958 1.49e-02   0.2
+  DP_OP_2842J2_125_9237 (poly_fast_split_mult_kernel_DP_OP_2842J2_125_9237_J2_0)
+                                       4.53e-03 1.04e-02    5.958 1.49e-02   0.2
+  DP_OP_2846J2_129_9237 (poly_fast_split_mult_kernel_DP_OP_2846J2_129_9237_J2_0)
+                                       4.54e-03 1.04e-02    5.958 1.49e-02   0.2
+  DP_OP_2848J2_131_9237 (poly_fast_split_mult_kernel_DP_OP_2848J2_131_9237_J2_0)
+                                       4.54e-03 1.04e-02    5.958 1.49e-02   0.2
+  DP_OP_2852J2_135_6110 (poly_fast_split_mult_kernel_DP_OP_2852J2_135_6110_J2_0)
+                                       8.51e-02    0.134   53.390    0.219   2.3
+  usint_ext_mult_80 (usint_ext_mult_0) 2.25e-02 5.36e-02   28.798 7.60e-02   0.8
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_0)
+                                       9.56e-03 1.36e-02   12.285 2.32e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_0)
+                                       8.75e-04 1.74e-03    1.321 2.62e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_0)
+                                       9.04e-03 1.08e-02   10.589 1.99e-02   0.2
+  usint_ext_mult_79 (usint_ext_mult_1) 2.12e-02 5.30e-02   28.799 7.42e-02   0.8
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_1)
+                                       9.32e-03 1.34e-02   12.285 2.28e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_1)
+                                       4.70e-04 1.72e-03    1.321 2.19e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_1)
+                                       8.66e-03 1.05e-02   10.591 1.92e-02   0.2
+  usint_ext_mult_78 (usint_ext_mult_2) 2.12e-02 5.30e-02   28.800 7.42e-02   0.8
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_2)
+                                       9.35e-03 1.35e-02   12.285 2.28e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_2)
+                                       4.68e-04 1.72e-03    1.321 2.19e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_2)
+                                       8.64e-03 1.05e-02   10.592 1.91e-02   0.2
+  usint_ext_mult_77 (usint_ext_mult_3) 2.12e-02 5.29e-02   28.800 7.42e-02   0.8
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_3)
+                                       9.31e-03 1.34e-02   12.284 2.27e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_3)
+                                       4.78e-04 1.72e-03    1.321 2.20e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_3)
+                                       8.64e-03 1.05e-02   10.592 1.91e-02   0.2
+  usint_ext_mult_76 (usint_ext_mult_4) 1.98e-02 5.11e-02   28.802 7.10e-02   0.8
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_4)
+                                       8.51e-03 1.25e-02   12.284 2.10e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_4)
+                                       8.63e-04 1.72e-03    1.321 2.58e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_4)
+                                       7.74e-03 9.74e-03   10.595 1.75e-02   0.2
+  usint_ext_mult_75 (usint_ext_mult_5) 1.98e-02 5.11e-02   28.802 7.09e-02   0.8
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_5)
+                                       8.50e-03 1.25e-02   12.284 2.10e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_5)
+                                       8.67e-04 1.72e-03    1.321 2.59e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_5)
+                                       7.73e-03 9.73e-03   10.594 1.75e-02   0.2
+  usint_ext_mult_74 (usint_ext_mult_6) 2.17e-02 5.30e-02   28.800 7.48e-02   0.8
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_6)
+                                       9.34e-03 1.34e-02   12.285 2.28e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_6)
+                                       8.62e-04 1.73e-03    1.321 2.59e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_6)
+                                       8.64e-03 1.05e-02   10.592 1.92e-02   0.2
+  usint_ext_mult_73 (usint_ext_mult_7) 1.98e-02 5.11e-02   28.801 7.09e-02   0.8
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_7)
+                                       8.49e-03 1.25e-02   12.283 2.10e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_7)
+                                       8.57e-04 1.72e-03    1.321 2.58e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_7)
+                                       7.75e-03 9.75e-03   10.595 1.75e-02   0.2
+  usint_ext_mult_72 (usint_ext_mult_8) 1.93e-02 5.11e-02   28.801 7.04e-02   0.8
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_8)
+                                       8.48e-03 1.25e-02   12.283 2.10e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_8)
+                                       4.63e-04 1.71e-03    1.321 2.17e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_8)
+                                       7.77e-03 9.77e-03   10.595 1.76e-02   0.2
+  usint_ext_mult_71 (usint_ext_mult_9) 2.12e-02 5.30e-02   28.800 7.42e-02   0.8
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_9)
+                                       9.32e-03 1.34e-02   12.286 2.28e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_9)
+                                       4.68e-04 1.72e-03    1.321 2.19e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_9)
+                                       8.66e-03 1.05e-02   10.591 1.92e-02   0.2
+  usint_ext_mult_70 (usint_ext_mult_10)
+                                       1.99e-02 5.12e-02   28.801 7.11e-02   0.8
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_10)
+                                       8.52e-03 1.25e-02   12.284 2.11e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_10)
+                                       8.57e-04 1.72e-03    1.321 2.58e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_10)
+                                       7.78e-03 9.78e-03   10.594 1.76e-02   0.2
+  usint_ext_mult_69 (usint_ext_mult_11)
+                                       1.98e-02 5.11e-02   28.799 7.09e-02   0.8
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_11)
+                                       8.50e-03 1.25e-02   12.281 2.10e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_11)
+                                       8.54e-04 1.72e-03    1.321 2.57e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_11)
+                                       7.74e-03 9.74e-03   10.595 1.75e-02   0.2
+  usint_ext_mult_68 (usint_ext_mult_12)
+                                       1.93e-02 5.11e-02   28.799 7.05e-02   0.8
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_12)
+                                       8.51e-03 1.25e-02   12.284 2.10e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_12)
+                                       4.65e-04 1.71e-03    1.321 2.18e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_12)
+                                       7.78e-03 9.77e-03   10.593 1.76e-02   0.2
+  usint_ext_mult_67 (usint_ext_mult_13)
+                                       1.61e-02 4.73e-02   28.803 6.34e-02   0.7
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_13)
+                                       6.96e-03 1.06e-02   12.286 1.76e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_13)
+                                       4.51e-04 1.68e-03    1.321 2.13e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_13)
+                                       6.40e-03 8.41e-03   10.594 1.48e-02   0.2
+  usint_ext_mult_66 (usint_ext_mult_14)
+                                       1.60e-02 4.72e-02   28.803 6.33e-02   0.7
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_14)
+                                       6.99e-03 1.06e-02   12.283 1.76e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_14)
+                                       4.50e-04 1.67e-03    1.321 2.12e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_14)
+                                       6.35e-03 8.36e-03   10.598 1.47e-02   0.2
+  usint_ext_mult_65 (usint_ext_mult_15)
+                                       1.93e-02 5.11e-02   28.799 7.04e-02   0.8
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_15)
+                                       8.48e-03 1.25e-02   12.282 2.10e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_15)
+                                       4.63e-04 1.71e-03    1.321 2.17e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_15)
+                                       7.77e-03 9.77e-03   10.595 1.76e-02   0.2
+  usint_ext_mult_64 (usint_ext_mult_16)
+                                       1.61e-02 4.73e-02   28.803 6.34e-02   0.7
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_16)
+                                       7.00e-03 1.06e-02   12.284 1.76e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_16)
+                                       4.51e-04 1.68e-03    1.321 2.13e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_16)
+                                       6.38e-03 8.38e-03   10.597 1.48e-02   0.2
+  usint_ext_mult_63 (usint_ext_mult_17)
+                                       1.60e-02 4.72e-02   28.803 6.32e-02   0.7
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_17)
+                                       6.96e-03 1.06e-02   12.284 1.76e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_17)
+                                       4.49e-04 1.67e-03    1.321 2.12e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_17)
+                                       6.36e-03 8.37e-03   10.597 1.47e-02   0.2
+  usint_ext_mult_62 (usint_ext_mult_18)
+                                       2.17e-02 5.30e-02   28.798 7.48e-02   0.8
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_18)
+                                       9.34e-03 1.34e-02   12.282 2.28e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_18)
+                                       8.70e-04 1.73e-03    1.321 2.60e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_18)
+                                       8.63e-03 1.05e-02   10.592 1.91e-02   0.2
+  usint_ext_mult_61 (usint_ext_mult_19)
+                                       2.01e-02 5.11e-02   28.802 7.12e-02   0.8
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_19)
+                                       8.49e-03 1.25e-02   12.284 2.10e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_19)
+                                       1.01e-03 1.73e-03    1.321 2.74e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_19)
+                                       7.76e-03 9.74e-03   10.595 1.75e-02   0.2
+  usint_ext_mult_60 (usint_ext_mult_20)
+                                       1.93e-02 5.10e-02   28.800 7.03e-02   0.8
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_20)
+                                       8.48e-03 1.25e-02   12.283 2.10e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_20)
+                                       4.65e-04 1.71e-03    1.321 2.18e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_20)
+                                       7.75e-03 9.74e-03   10.594 1.75e-02   0.2
+  usint_ext_mult_59 (usint_ext_mult_21)
+                                       1.93e-02 5.11e-02   28.800 7.04e-02   0.8
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_21)
+                                       8.50e-03 1.25e-02   12.283 2.10e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_21)
+                                       4.62e-04 1.70e-03    1.321 2.16e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_21)
+                                       7.79e-03 9.78e-03   10.594 1.76e-02   0.2
+  usint_ext_mult_58 (usint_ext_mult_22)
+                                       1.66e-02 4.72e-02   28.802 6.39e-02   0.7
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_22)
+                                       6.95e-03 1.06e-02   12.283 1.75e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_22)
+                                       8.49e-04 1.68e-03    1.321 2.53e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_22)
+                                       6.38e-03 8.39e-03   10.596 1.48e-02   0.2
+  usint_ext_mult_57 (usint_ext_mult_23)
+                                       1.61e-02 4.72e-02   28.804 6.33e-02   0.7
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_23)
+                                       6.96e-03 1.06e-02   12.283 1.76e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_23)
+                                       4.59e-04 1.68e-03    1.322 2.14e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_23)
+                                       6.38e-03 8.38e-03   10.598 1.48e-02   0.2
+  usint_ext_mult_56 (usint_ext_mult_24)
+                                       1.93e-02 5.10e-02   28.799 7.03e-02   0.8
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_24)
+                                       8.47e-03 1.25e-02   12.282 2.10e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_24)
+                                       4.83e-04 1.71e-03    1.321 2.20e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_24)
+                                       7.75e-03 9.75e-03   10.594 1.75e-02   0.2
+  usint_ext_mult_55 (usint_ext_mult_25)
+                                       1.60e-02 4.72e-02   28.802 6.32e-02   0.7
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_25)
+                                       6.97e-03 1.06e-02   12.281 1.76e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_25)
+                                       4.47e-04 1.67e-03    1.321 2.12e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_25)
+                                       6.35e-03 8.35e-03   10.599 1.47e-02   0.2
+  usint_ext_mult_54 (usint_ext_mult_26)
+                                       1.61e-02 4.73e-02   28.803 6.34e-02   0.7
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_26)
+                                       6.97e-03 1.06e-02   12.284 1.76e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_26)
+                                       4.48e-04 1.67e-03    1.321 2.12e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_26)
+                                       6.39e-03 8.40e-03   10.595 1.48e-02   0.2
+  usint_ext_mult_53 (usint_ext_mult_27)
+                                       2.12e-02 5.30e-02   28.796 7.42e-02   0.8
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_27)
+                                       9.32e-03 1.34e-02   12.282 2.28e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_27)
+                                       4.87e-04 1.72e-03    1.321 2.21e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_27)
+                                       8.65e-03 1.05e-02   10.591 1.92e-02   0.2
+  usint_ext_mult_52 (usint_ext_mult_28)
+                                       2.06e-02 5.11e-02   28.800 7.17e-02   0.8
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_28)
+                                       8.48e-03 1.25e-02   12.282 2.10e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_28)
+                                       1.37e-03 1.73e-03    1.321 3.10e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_28)
+                                       7.76e-03 9.76e-03   10.594 1.75e-02   0.2
+  usint_ext_mult_51 (usint_ext_mult_29)
+                                       2.06e-02 5.10e-02   28.802 7.17e-02   0.8
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_29)
+                                       8.47e-03 1.25e-02   12.284 2.10e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_29)
+                                       1.40e-03 1.72e-03    1.321 3.12e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_29)
+                                       7.75e-03 9.74e-03   10.595 1.75e-02   0.2
+  usint_ext_mult_50 (usint_ext_mult_30)
+                                       2.06e-02 5.11e-02   28.803 7.17e-02   0.8
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_30)
+                                       8.50e-03 1.25e-02   12.287 2.10e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_30)
+                                       1.36e-03 1.73e-03    1.321 3.09e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_30)
+                                       7.77e-03 9.77e-03   10.593 1.75e-02   0.2
+  usint_ext_mult_49 (usint_ext_mult_31)
+                                       1.68e-02 4.72e-02   28.802 6.40e-02   0.7
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_31)
+                                       6.94e-03 1.05e-02   12.283 1.75e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_31)
+                                       9.96e-04 1.69e-03    1.321 2.69e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_31)
+                                       6.37e-03 8.37e-03   10.597 1.48e-02   0.2
+  usint_ext_mult_48 (usint_ext_mult_32)
+                                       1.60e-02 4.72e-02   28.801 6.32e-02   0.7
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_32)
+                                       6.97e-03 1.06e-02   12.281 1.76e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_32)
+                                       4.70e-04 1.67e-03    1.321 2.15e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_32)
+                                       6.33e-03 8.32e-03   10.597 1.47e-02   0.2
+  usint_ext_mult_47 (usint_ext_mult_33)
+                                       2.01e-02 5.11e-02   28.801 7.12e-02   0.8
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_33)
+                                       8.49e-03 1.25e-02   12.285 2.10e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_33)
+                                       1.02e-03 1.73e-03    1.321 2.75e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_33)
+                                       7.77e-03 9.76e-03   10.593 1.75e-02   0.2
+  usint_ext_mult_46 (usint_ext_mult_34)
+                                       1.68e-02 4.72e-02   28.804 6.40e-02   0.7
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_34)
+                                       6.96e-03 1.06e-02   12.283 1.76e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_34)
+                                       1.00e-03 1.68e-03    1.321 2.69e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_34)
+                                       6.36e-03 8.36e-03   10.599 1.47e-02   0.2
+  usint_ext_mult_45 (usint_ext_mult_35)
+                                       1.67e-02 4.72e-02   28.802 6.39e-02   0.7
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_35)
+                                       6.93e-03 1.05e-02   12.284 1.75e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_35)
+                                       9.96e-04 1.68e-03    1.321 2.68e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_35)
+                                       6.34e-03 8.35e-03   10.596 1.47e-02   0.2
+  usint_ext_mult_44 (usint_ext_mult_36)
+                                       2.00e-02 5.11e-02   28.800 7.12e-02   0.8
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_36)
+                                       8.49e-03 1.25e-02   12.284 2.10e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_36)
+                                       1.03e-03 1.72e-03    1.321 2.75e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_36)
+                                       7.75e-03 9.76e-03   10.593 1.75e-02   0.2
+  usint_ext_mult_43 (usint_ext_mult_37)
+                                       1.75e-02 4.72e-02   28.806 6.47e-02   0.7
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_37)
+                                       6.97e-03 1.06e-02   12.284 1.76e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_37)
+                                       1.50e-03 1.69e-03    1.321 3.19e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_37)
+                                       6.35e-03 8.35e-03   10.599 1.47e-02   0.2
+  usint_ext_mult_42 (usint_ext_mult_38)
+                                       1.68e-02 4.72e-02   28.802 6.40e-02   0.7
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_38)
+                                       6.96e-03 1.06e-02   12.283 1.75e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_38)
+                                       1.01e-03 1.69e-03    1.321 2.69e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_38)
+                                       6.35e-03 8.35e-03   10.597 1.47e-02   0.2
+  usint_ext_mult_41 (usint_ext_mult_39)
+                                       1.78e-02 4.71e-02   28.256 6.49e-02   0.7
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_39)
+                                       6.97e-03 1.06e-02   12.283 1.76e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_39)
+                                       1.93e-03 1.70e-03    1.321 3.63e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_39)
+                                       6.19e-03 8.25e-03   10.152 1.44e-02   0.2
+  usint_ext_mult_40 (usint_ext_mult_40)
+                                       1.16e-02 3.96e-02   27.322 5.12e-02   0.5
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_40)
+                                       4.87e-03 7.63e-03   12.281 1.25e-02   0.1
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_40)
+                                       1.19e-03 1.53e-03    1.321 2.72e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_40)
+                                       3.75e-03 5.27e-03    9.273 9.03e-03   0.1
+  usint_ext_mult_39 (usint_ext_mult_41)
+                                       1.17e-02 3.97e-02   27.325 5.14e-02   0.5
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_41)
+                                       4.90e-03 7.68e-03   12.282 1.26e-02   0.1
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_41)
+                                       1.23e-03 1.53e-03    1.321 2.77e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_41)
+                                       3.75e-03 5.26e-03    9.272 9.02e-03   0.1
+  usint_ext_mult_38 (usint_ext_mult_42)
+                                       1.65e-02 4.71e-02   28.253 6.37e-02   0.7
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_42)
+                                       7.00e-03 1.06e-02   12.283 1.76e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_42)
+                                       9.52e-04 1.69e-03    1.321 2.64e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_42)
+                                       6.23e-03 8.29e-03   10.149 1.45e-02   0.2
+  usint_ext_mult_37 (usint_ext_mult_43)
+                                       1.17e-02 3.98e-02   27.329 5.15e-02   0.6
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_43)
+                                       4.94e-03 7.73e-03   12.285 1.27e-02   0.1
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_43)
+                                       1.21e-03 1.54e-03    1.321 2.75e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_43)
+                                       3.77e-03 5.29e-03    9.273 9.07e-03   0.1
+  usint_ext_mult_36 (usint_ext_mult_44)
+                                       1.16e-02 3.96e-02   27.322 5.12e-02   0.5
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_44)
+                                       4.87e-03 7.64e-03   12.279 1.25e-02   0.1
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_44)
+                                       1.20e-03 1.53e-03    1.322 2.73e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_44)
+                                       3.74e-03 5.26e-03    9.272 9.01e-03   0.1
+  usint_ext_mult_35 (usint_ext_mult_45)
+                                       1.92e-02 5.10e-02   28.801 7.03e-02   0.8
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_45)
+                                       8.48e-03 1.25e-02   12.283 2.10e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_45)
+                                       4.63e-04 1.71e-03    1.321 2.17e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_45)
+                                       7.76e-03 9.75e-03   10.595 1.75e-02   0.2
+  usint_ext_mult_34 (usint_ext_mult_46)
+                                       1.68e-02 4.73e-02   28.804 6.41e-02   0.7
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_46)
+                                       6.96e-03 1.06e-02   12.284 1.76e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_46)
+                                       1.01e-03 1.69e-03    1.322 2.70e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_46)
+                                       6.39e-03 8.40e-03   10.598 1.48e-02   0.2
+  usint_ext_mult_33 (usint_ext_mult_47)
+                                       1.73e-02 4.72e-02   28.803 6.45e-02   0.7
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_47)
+                                       6.96e-03 1.06e-02   12.283 1.76e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_47)
+                                       1.34e-03 1.70e-03    1.321 3.04e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_47)
+                                       6.35e-03 8.34e-03   10.597 1.47e-02   0.2
+  usint_ext_mult_32 (usint_ext_mult_48)
+                                       1.70e-02 4.70e-02   28.254 6.40e-02   0.7
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_48)
+                                       6.95e-03 1.06e-02   12.281 1.75e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_48)
+                                       1.34e-03 1.69e-03    1.321 3.04e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_48)
+                                       6.20e-03 8.26e-03   10.152 1.45e-02   0.2
+  usint_ext_mult_31 (usint_ext_mult_49)
+                                       1.13e-02 3.97e-02   27.326 5.10e-02   0.5
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_49)
+                                       4.88e-03 7.67e-03   12.280 1.26e-02   0.1
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_49)
+                                       9.15e-04 1.53e-03    1.321 2.45e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_49)
+                                       3.79e-03 5.31e-03    9.275 9.11e-03   0.1
+  usint_ext_mult_30 (usint_ext_mult_50)
+                                       1.17e-02 3.97e-02   27.326 5.14e-02   0.5
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_50)
+                                       4.90e-03 7.68e-03   12.283 1.26e-02   0.1
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_50)
+                                       1.25e-03 1.54e-03    1.321 2.79e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_50)
+                                       3.75e-03 5.26e-03    9.272 9.02e-03   0.1
+  usint_ext_mult_29 (usint_ext_mult_51)
+                                       1.80e-02 4.71e-02   28.254 6.51e-02   0.7
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_51)
+                                       6.95e-03 1.06e-02   12.282 1.75e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_51)
+                                       2.08e-03 1.70e-03    1.321 3.78e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_51)
+                                       6.20e-03 8.26e-03   10.151 1.45e-02   0.2
+  usint_ext_mult_28 (usint_ext_mult_52)
+                                       1.16e-02 3.96e-02   27.323 5.13e-02   0.5
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_52)
+                                       4.86e-03 7.64e-03   12.281 1.25e-02   0.1
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_52)
+                                       1.24e-03 1.53e-03    1.321 2.77e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_52)
+                                       3.75e-03 5.26e-03    9.272 9.01e-03   0.1
+  usint_ext_mult_27 (usint_ext_mult_53)
+                                       1.16e-02 3.95e-02   27.323 5.12e-02   0.5
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_53)
+                                       4.84e-03 7.61e-03   12.280 1.25e-02   0.1
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_53)
+                                       1.24e-03 1.52e-03    1.321 2.76e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_53)
+                                       3.73e-03 5.24e-03    9.273 8.99e-03   0.1
+  usint_ext_mult_26 (usint_ext_mult_54)
+                                       2.17e-02 5.30e-02   28.799 7.47e-02   0.8
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_54)
+                                       9.31e-03 1.34e-02   12.282 2.27e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_54)
+                                       8.72e-04 1.73e-03    1.321 2.60e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_54)
+                                       8.65e-03 1.05e-02   10.592 1.92e-02   0.2
+  usint_ext_mult_25 (usint_ext_mult_55)
+                                       2.01e-02 5.11e-02   28.800 7.12e-02   0.8
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_55)
+                                       8.50e-03 1.25e-02   12.282 2.10e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_55)
+                                       1.03e-03 1.72e-03    1.321 2.75e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_55)
+                                       7.74e-03 9.74e-03   10.595 1.75e-02   0.2
+  usint_ext_mult_24 (usint_ext_mult_56)
+                                       2.00e-02 5.11e-02   28.800 7.11e-02   0.8
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_56)
+                                       8.49e-03 1.25e-02   12.283 2.10e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_56)
+                                       1.02e-03 1.72e-03    1.321 2.74e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_56)
+                                       7.75e-03 9.74e-03   10.594 1.75e-02   0.2
+  usint_ext_mult_23 (usint_ext_mult_57)
+                                       2.00e-02 5.10e-02   28.799 7.11e-02   0.8
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_57)
+                                       8.47e-03 1.25e-02   12.281 2.09e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_57)
+                                       1.02e-03 1.73e-03    1.321 2.75e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_57)
+                                       7.76e-03 9.75e-03   10.595 1.75e-02   0.2
+  usint_ext_mult_22 (usint_ext_mult_58)
+                                       1.68e-02 4.72e-02   28.802 6.41e-02   0.7
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_58)
+                                       6.95e-03 1.06e-02   12.282 1.75e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_58)
+                                       9.94e-04 1.69e-03    1.321 2.68e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_58)
+                                       6.38e-03 8.38e-03   10.597 1.48e-02   0.2
+  usint_ext_mult_21 (usint_ext_mult_59)
+                                       1.68e-02 4.72e-02   28.808 6.41e-02   0.7
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_59)
+                                       6.99e-03 1.06e-02   12.287 1.76e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_59)
+                                       9.93e-04 1.69e-03    1.321 2.69e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_59)
+                                       6.35e-03 8.36e-03   10.598 1.47e-02   0.2
+  usint_ext_mult_20 (usint_ext_mult_60)
+                                       2.01e-02 5.11e-02   28.804 7.12e-02   0.8
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_60)
+                                       8.49e-03 1.25e-02   12.286 2.10e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_60)
+                                       1.03e-03 1.73e-03    1.321 2.76e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_60)
+                                       7.76e-03 9.77e-03   10.595 1.75e-02   0.2
+  usint_ext_mult_19 (usint_ext_mult_61)
+                                       1.68e-02 4.71e-02   28.802 6.39e-02   0.7
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_61)
+                                       6.95e-03 1.06e-02   12.281 1.75e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_61)
+                                       1.00e-03 1.69e-03    1.321 2.69e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_61)
+                                       6.34e-03 8.33e-03   10.598 1.47e-02   0.2
+  usint_ext_mult_18 (usint_ext_mult_62)
+                                       1.73e-02 4.72e-02   28.802 6.45e-02   0.7
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_62)
+                                       6.93e-03 1.05e-02   12.280 1.75e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_62)
+                                       1.34e-03 1.69e-03    1.321 3.03e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_62)
+                                       6.39e-03 8.39e-03   10.598 1.48e-02   0.2
+  usint_ext_mult_17 (usint_ext_mult_63)
+                                       2.00e-02 5.10e-02   28.802 7.10e-02   0.8
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_63)
+                                       8.48e-03 1.25e-02   12.284 2.10e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_63)
+                                       9.74e-04 1.72e-03    1.321 2.69e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_63)
+                                       7.75e-03 9.72e-03   10.595 1.75e-02   0.2
+  usint_ext_mult_16 (usint_ext_mult_64)
+                                       1.75e-02 4.73e-02   28.805 6.48e-02   0.7
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_64)
+                                       6.99e-03 1.06e-02   12.283 1.76e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_64)
+                                       1.49e-03 1.69e-03    1.322 3.19e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_64)
+                                       6.36e-03 8.35e-03   10.599 1.47e-02   0.2
+  usint_ext_mult_15 (usint_ext_mult_65)
+                                       1.67e-02 4.71e-02   28.805 6.39e-02   0.7
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_65)
+                                       6.94e-03 1.05e-02   12.282 1.75e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_65)
+                                       9.51e-04 1.68e-03    1.322 2.63e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_65)
+                                       6.35e-03 8.34e-03   10.600 1.47e-02   0.2
+  usint_ext_mult_14 (usint_ext_mult_66)
+                                       1.65e-02 4.71e-02   28.258 6.36e-02   0.7
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_66)
+                                       6.99e-03 1.06e-02   12.286 1.76e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_66)
+                                       9.61e-04 1.69e-03    1.321 2.65e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_66)
+                                       6.22e-03 8.27e-03   10.151 1.45e-02   0.2
+  usint_ext_mult_13 (usint_ext_mult_67)
+                                       1.13e-02 3.98e-02   27.327 5.12e-02   0.5
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_67)
+                                       4.90e-03 7.70e-03   12.286 1.26e-02   0.1
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_67)
+                                       9.25e-04 1.54e-03    1.321 2.46e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_67)
+                                       3.80e-03 5.32e-03    9.270 9.13e-03   0.1
+  usint_ext_mult_12 (usint_ext_mult_68)
+                                       1.13e-02 3.96e-02   27.327 5.09e-02   0.5
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_68)
+                                       4.88e-03 7.66e-03   12.286 1.26e-02   0.1
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_68)
+                                       9.29e-04 1.53e-03    1.321 2.46e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_68)
+                                       3.75e-03 5.27e-03    9.270 9.03e-03   0.1
+  usint_ext_mult_11 (usint_ext_mult_69)
+                                       1.72e-02 4.70e-02   28.257 6.42e-02   0.7
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_69)
+                                       6.93e-03 1.05e-02   12.284 1.75e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_69)
+                                       1.49e-03 1.69e-03    1.322 3.18e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_69)
+                                       6.21e-03 8.27e-03   10.151 1.45e-02   0.2
+  usint_ext_mult_10 (usint_ext_mult_70)
+                                       1.13e-02 3.97e-02   27.326 5.10e-02   0.5
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_70)
+                                       4.91e-03 7.69e-03   12.284 1.26e-02   0.1
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_70)
+                                       9.12e-04 1.54e-03    1.322 2.45e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_70)
+                                       3.77e-03 5.29e-03    9.270 9.07e-03   0.1
+  usint_ext_mult_9 (usint_ext_mult_71) 1.12e-02 3.97e-02   27.325 5.09e-02   0.5
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_71)
+                                       4.88e-03 7.66e-03   12.283 1.26e-02   0.1
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_71)
+                                       9.12e-04 1.53e-03    1.321 2.45e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_71)
+                                       3.75e-03 5.26e-03    9.271 9.02e-03   0.1
+  usint_ext_mult_8 (usint_ext_mult_72) 1.92e-02 5.10e-02   28.803 7.03e-02   0.8
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_72)
+                                       8.46e-03 1.25e-02   12.285 2.09e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_72)
+                                       4.66e-04 1.71e-03    1.321 2.18e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_72)
+                                       7.74e-03 9.75e-03   10.595 1.75e-02   0.2
+  usint_ext_mult_7 (usint_ext_mult_73) 1.67e-02 4.71e-02   28.804 6.39e-02   0.7
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_73)
+                                       6.93e-03 1.05e-02   12.282 1.75e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_73)
+                                       9.94e-04 1.69e-03    1.321 2.68e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_73)
+                                       6.33e-03 8.33e-03   10.598 1.47e-02   0.2
+  usint_ext_mult_6 (usint_ext_mult_74) 1.73e-02 4.72e-02   28.802 6.46e-02   0.7
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_74)
+                                       6.97e-03 1.06e-02   12.282 1.76e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_74)
+                                       1.35e-03 1.69e-03    1.322 3.04e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_74)
+                                       6.38e-03 8.37e-03   10.597 1.48e-02   0.2
+  usint_ext_mult_5 (usint_ext_mult_75) 1.65e-02 4.70e-02   28.257 6.35e-02   0.7
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_75)
+                                       6.94e-03 1.05e-02   12.286 1.75e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_75)
+                                       1.01e-03 1.69e-03    1.321 2.70e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_75)
+                                       6.19e-03 8.24e-03   10.150 1.44e-02   0.2
+  usint_ext_mult_4 (usint_ext_mult_76) 1.12e-02 3.96e-02   27.329 5.08e-02   0.5
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_76)
+                                       4.86e-03 7.61e-03   12.285 1.25e-02   0.1
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_76)
+                                       9.08e-04 1.53e-03    1.321 2.44e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_76)
+                                       3.76e-03 5.28e-03    9.273 9.05e-03   0.1
+  usint_ext_mult_3 (usint_ext_mult_77) 1.17e-02 3.96e-02   27.326 5.14e-02   0.5
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_77)
+                                       4.89e-03 7.66e-03   12.284 1.26e-02   0.1
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_77)
+                                       1.28e-03 1.54e-03    1.321 2.82e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_77)
+                                       3.75e-03 5.27e-03    9.271 9.03e-03   0.1
+  usint_ext_mult_2 (usint_ext_mult_78) 1.77e-02 4.70e-02   28.256 6.47e-02   0.7
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_78)
+                                       6.96e-03 1.06e-02   12.282 1.76e-02   0.2
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_78)
+                                       1.84e-03 1.70e-03    1.321 3.54e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_78)
+                                       6.19e-03 8.25e-03   10.152 1.45e-02   0.2
+  usint_ext_mult_1 (usint_ext_mult_79) 1.12e-02 3.96e-02   27.324 5.08e-02   0.5
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_79)
+                                       4.87e-03 7.64e-03   12.280 1.25e-02   0.1
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_79)
+                                       9.13e-04 1.52e-03    1.321 2.44e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_79)
+                                       3.74e-03 5.25e-03    9.274 9.00e-03   0.1
+  usint_ext_mult (usint_ext_mult_80)   1.17e-02 3.96e-02   27.323 5.14e-02   0.5
+    mult_x_1 (usint_ext_mult_0_DW_mult_uns_J2_0_80)
+                                       4.87e-03 7.64e-03   12.283 1.25e-02   0.1
+    add_x_3 (usint_ext_mult_0_DW01_add_J2_0_80)
+                                       1.28e-03 1.53e-03    1.321 2.81e-03   0.0
+    DP_OP_17J2_137_1390 (usint_ext_mult_0_DP_OP_17J2_137_1390_J2_0_80)
+                                       3.76e-03 5.28e-03    9.270 9.05e-03   0.1
+1

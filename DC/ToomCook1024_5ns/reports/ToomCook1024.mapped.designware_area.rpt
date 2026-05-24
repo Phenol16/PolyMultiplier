@@ -1,0 +1,79 @@
+ 
+****************************************
+Report : area
+Design : ToomCook1024
+Version: O-2018.06-SP5
+Date   : Sun May 24 10:50:45 2026
+****************************************
+
+Library(s) Used:
+
+    tcbn28hpcplusbwp40p140ssg0p81vm40c_ccs (File: /export1/Library/TN28HPC+/STD_CELL_ext/track9_200824/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp40p140_180a/tcbn28hpcplusbwp40p140ssg0p81vm40c_ccs.db)
+    tcbn28hpcplusbwp40p140lvtssg0p81vm40c_ccs (File: /export1/Library/TN28HPC+/STD_CELL_ext/track9_200824/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp40p140lvt_180a/tcbn28hpcplusbwp40p140lvtssg0p81vm40c_ccs.db)
+    tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs (File: /export1/Library/TN28HPC+/STD_CELL_ext/track9_200824/TSMCHOME/digital/Front_End/timing_power_noise/CCS/tcbn28hpcplusbwp40p140hvt_180a/tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs.db)
+    ts1n28hpcphvtb32x96m4s_ssg0p81vm40c (File: /export4/Home/iac01/shiliubowen/Work/SramLibrary28/ts1n28hpcphvtb32x96m4s_180a/NLDM/ts1n28hpcphvtb32x96m4s_ssg0p81vm40c.db)
+    ts1n28hpcphvtb256x96m4s_ssg0p81vm40c (File: /export4/Home/iac01/shiliubowen/Work/SramLibrary28/ts1n28hpcphvtb256x96m4s_180a/NLDM/ts1n28hpcphvtb256x96m4s_ssg0p81vm40c.db)
+
+Number of ports:                       751919
+Number of nets:                       1562306
+Number of cells:                       650815
+Number of combinational cells:         529472
+Number of sequential cells:            115640
+Number of macros/black boxes:             146
+Number of buf/inv:                      92578
+Number of references:                     299
+
+Combinational area:             635442.183105
+Buf/Inv area:                    28081.997895
+Noncombinational area:          218567.914345
+Macro/Black Box area:           837646.967773
+Net Interconnect area:      undefined  (Wire load has zero net area)
+
+Total cell area:               1691657.065223
+Total area:                 undefined
+
+Area of detected synthetic parts
+--------------------------------
+                                                     Perc. of
+  Module                Implem.  Count         Area cell area
+  --------------------- -------  ----- ------------ ---------
+  DP_OP_103J14_122_3786     str     16   24683.6461      1.5%
+  DP_OP_106J19_122_8869     str      4   11443.9028      0.7%
+  DP_OP_106J21_122_5029     str      3    8306.5952      0.5%
+  DP_OP_107J15_122_8720     str     16   31217.5436      1.8%
+  DP_OP_107J16_122_6984     str     16   27912.5929      1.7%
+  DP_OP_421J4_122_7810      str      1   10882.7627      0.6%
+  DP_OP_52J12_122_578       str    256   14611.9682      0.9%
+  DP_OP_52J15_123_6887      str    256   40932.8438      2.4%
+  DP_OP_53J12_123_4351      str    256   18643.9626      1.1%
+  DP_OP_53J13_122_6766      str     91   15581.6550      0.9%
+  DP_OP_53J15_124_2684      str    256   54777.3305      3.2%
+  DP_OP_53J9_122_27         str     91   21551.1522      1.3%
+  DP_OP_54J12_124_2093      str    256   20482.5547      1.2%
+  DP_OP_54J13_123_757       str     91   22845.6761      1.4%
+  DP_OP_54J15_125_8373      str    256   56609.2461      3.3%
+  DP_OP_54J9_123_3531       str     91   31228.1966      1.8%
+  DP_OP_55J13_124_323       str     91   21632.0446      1.3%
+  DP_OP_55J9_124_1598       str     91   29831.6120      1.8%
+  DW01_add              apparch     48    2733.6952      0.2%
+  DW01_inc              apparch      3      37.0440      0.0%
+  DW01_sub              apparch      9     566.9998      0.0%
+  DW_mult_tc            apparch     49   64952.5776      3.8%
+  --------------------- -------  ----- ------------ ---------
+  DP_OP Subtotal:                 2138  463175.2857     27.4%
+  Total:                          2247  531465.6023     31.4%
+
+Estimated area of ungrouped synthetic parts
+-------------------------------------------
+                           Estimated  Perc. of
+  Module   Implem.  Count       Area cell area
+  -------- -------  ----- ---------- ---------
+  DW01_inc apparch     15    30.2652      0.0%
+  DW_cmp   apparch      6    27.1656      0.0%
+  -------- -------  ----- ---------- ---------
+  Total:               21    57.4308      0.0%
+
+Subtotal of datapath(DP_OP) cell area:  463175.2857  27.4%  (estimated)
+Total synthetic cell area:              531523.0331  31.4%  (estimated)
+
+1

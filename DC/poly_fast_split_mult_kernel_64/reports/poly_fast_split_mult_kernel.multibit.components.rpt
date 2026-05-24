@@ -1,0 +1,18 @@
+ 
+****************************************
+Report : multibit
+Design : poly_fast_split_mult_kernel
+Version: O-2018.06-SP5
+Date   : Fri May 22 18:32:19 2026
+****************************************
+
+Attributes:
+    b - black box (unknown)
+    h - hierarchical
+    n - noncombinational
+    r - removable
+    u - contains unmapped logic
+
+
+Total 0 Multibit Components
+1

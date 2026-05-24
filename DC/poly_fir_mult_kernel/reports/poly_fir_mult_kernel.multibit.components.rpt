@@ -1,0 +1,18 @@
+ 
+****************************************
+Report : multibit
+Design : poly_fir_mult_kernel
+Version: O-2018.06-SP5
+Date   : Tue Sep  2 18:49:37 2025
+****************************************
+
+Attributes:
+    b - black box (unknown)
+    h - hierarchical
+    n - noncombinational
+    r - removable
+    u - contains unmapped logic
+
+
+Total 0 Multibit Components
+1

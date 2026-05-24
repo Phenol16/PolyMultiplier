@@ -1,0 +1,118 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -nets
+        -max_paths 1
+        -transition_time
+Design : poly_fir_mult_kernel
+Version: O-2018.06-SP5
+Date   : Sat May 23 05:39:34 2026
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: ssg0p81vm40c   Library: tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+Wire Load Model Mode: segmented
+
+  Startpoint: C_0_33_reg_3_
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: io_polyc_0[23]
+            (output port)
+  Path Group: (none)
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  poly_fir_mult_kernel ZeroWireload        tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  unordered_adder_0_DP_OP_126J3_122_3296_J3_0_63 ZeroWireload tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+Attributes:
+    d - dont_touch
+    u - dont_use
+   mo - map_only
+   so - size_only
+    i - ideal_net or ideal_network
+  inf - infeasible path
+
+  Point                                       Fanout     Trans      Incr       Path      Attributes
+  ---------------------------------------------------------------------------------------------------------
+  C_0_33_reg_3_/CP (DFQD1BWP40P140)                       0.10      0.00 #     0.00 r    i 
+  C_0_33_reg_3_/Q (DFQD1BWP40P140)                        0.02      0.13       0.13 f
+  unordered_adder_io_din_33[3] (net)            1                   0.00       0.13 f
+  unordered_adder/io_din_33[3] (unordered_adder_63)                 0.00       0.13 f
+  unordered_adder/io_din_33[3] (net)                                0.00       0.13 f
+  unordered_adder/DP_OP_126J3_122_3296/I31[3] (unordered_adder_0_DP_OP_126J3_122_3296_J3_0_63)     0.00     0.13 f
+  unordered_adder/DP_OP_126J3_122_3296/I31[3] (net)                 0.00       0.13 f
+  unordered_adder/DP_OP_126J3_122_3296/U2554/CO (FA1D1BWP40P140)     0.02     0.07     0.19 f
+  unordered_adder/DP_OP_126J3_122_3296/n6361 (net)     1            0.00       0.19 f
+  unordered_adder/DP_OP_126J3_122_3296/U2537/CO (FA1D1BWP40P140)     0.02     0.07     0.26 f
+  unordered_adder/DP_OP_126J3_122_3296/n6330 (net)     1            0.00       0.26 f
+  unordered_adder/DP_OP_126J3_122_3296/U2521/S (FA1D1BWP40P140)     0.03     0.11     0.37 r
+  unordered_adder/DP_OP_126J3_122_3296/n6547 (net)     1            0.00       0.37 r
+  unordered_adder/DP_OP_126J3_122_3296/U2635/S (FA1D1BWP40P140)     0.03     0.10     0.47 f
+  unordered_adder/DP_OP_126J3_122_3296/n6726 (net)     1            0.00       0.47 f
+  unordered_adder/DP_OP_126J3_122_3296/U2716/S (FA1D1BWP40P140)     0.03     0.11     0.58 r
+  unordered_adder/DP_OP_126J3_122_3296/n6876 (net)     1            0.00       0.58 r
+  unordered_adder/DP_OP_126J3_122_3296/U2787/CO (FA1D1BWP40P140)     0.02     0.05     0.63 r
+  unordered_adder/DP_OP_126J3_122_3296/n6867 (net)     1            0.00       0.63 r
+  unordered_adder/DP_OP_126J3_122_3296/U2784/S (FA1D1BWP40P140)     0.02     0.09     0.73 f
+  unordered_adder/DP_OP_126J3_122_3296/n6948 (net)     1            0.00       0.73 f
+  unordered_adder/DP_OP_126J3_122_3296/U2811/S (FA1D1BWP40P140)     0.03     0.10     0.83 r
+  unordered_adder/DP_OP_126J3_122_3296/n7005 (net)     1            0.00       0.83 r
+  unordered_adder/DP_OP_126J3_122_3296/U2830/S (FA1D1BWP40P140)     0.03     0.10     0.92 f
+  unordered_adder/DP_OP_126J3_122_3296/n7171 (net)     1            0.00       0.92 f
+  unordered_adder/DP_OP_126J3_122_3296/U2886/CO (FA1D1BWP40P140)     0.02     0.07     0.99 f
+  unordered_adder/DP_OP_126J3_122_3296/n7167 (net)     1            0.00       0.99 f
+  unordered_adder/DP_OP_126J3_122_3296/U2885/CO (FA1D1BWP40P140)     0.02     0.06     1.05 f
+  unordered_adder/DP_OP_126J3_122_3296/n7164 (net)     1            0.00       1.05 f
+  unordered_adder/DP_OP_126J3_122_3296/U2884/CO (FA1D1BWP40P140)     0.02     0.06     1.10 f
+  unordered_adder/DP_OP_126J3_122_3296/n7161 (net)     1            0.00       1.10 f
+  unordered_adder/DP_OP_126J3_122_3296/U2883/CO (FA1D1BWP40P140)     0.02     0.06     1.16 f
+  unordered_adder/DP_OP_126J3_122_3296/n7158 (net)     1            0.00       1.16 f
+  unordered_adder/DP_OP_126J3_122_3296/U2882/CO (FA1D1BWP40P140)     0.02     0.06     1.21 f
+  unordered_adder/DP_OP_126J3_122_3296/n7155 (net)     1            0.00       1.21 f
+  unordered_adder/DP_OP_126J3_122_3296/U2881/CO (FA1D1BWP40P140)     0.02     0.06     1.27 f
+  unordered_adder/DP_OP_126J3_122_3296/n7152 (net)     1            0.00       1.27 f
+  unordered_adder/DP_OP_126J3_122_3296/U2880/CO (FA1D1BWP40P140)     0.02     0.06     1.32 f
+  unordered_adder/DP_OP_126J3_122_3296/n7149 (net)     1            0.00       1.32 f
+  unordered_adder/DP_OP_126J3_122_3296/U2879/CO (FA1D1BWP40P140)     0.02     0.06     1.38 f
+  unordered_adder/DP_OP_126J3_122_3296/n7146 (net)     1            0.00       1.38 f
+  unordered_adder/DP_OP_126J3_122_3296/U2878/CO (FA1D1BWP40P140)     0.02     0.06     1.43 f
+  unordered_adder/DP_OP_126J3_122_3296/n7143 (net)     1            0.00       1.43 f
+  unordered_adder/DP_OP_126J3_122_3296/U2877/CO (FA1D1BWP40P140)     0.02     0.06     1.49 f
+  unordered_adder/DP_OP_126J3_122_3296/n7140 (net)     1            0.00       1.49 f
+  unordered_adder/DP_OP_126J3_122_3296/U2876/CO (FA1D1BWP40P140)     0.02     0.06     1.55 f
+  unordered_adder/DP_OP_126J3_122_3296/n7137 (net)     1            0.00       1.55 f
+  unordered_adder/DP_OP_126J3_122_3296/U2875/CO (FA1D1BWP40P140)     0.02     0.06     1.60 f
+  unordered_adder/DP_OP_126J3_122_3296/n7134 (net)     1            0.00       1.60 f
+  unordered_adder/DP_OP_126J3_122_3296/U2874/CO (FA1D1BWP40P140)     0.02     0.06     1.66 f
+  unordered_adder/DP_OP_126J3_122_3296/n7131 (net)     1            0.00       1.66 f
+  unordered_adder/DP_OP_126J3_122_3296/U2873/CO (FA1D1BWP40P140)     0.02     0.06     1.71 f
+  unordered_adder/DP_OP_126J3_122_3296/n7128 (net)     1            0.00       1.71 f
+  unordered_adder/DP_OP_126J3_122_3296/U2872/CO (FA1D1BWP40P140)     0.02     0.06     1.77 f
+  unordered_adder/DP_OP_126J3_122_3296/n7125 (net)     1            0.00       1.77 f
+  unordered_adder/DP_OP_126J3_122_3296/U2871/CO (FA1D1BWP40P140)     0.02     0.06     1.82 f
+  unordered_adder/DP_OP_126J3_122_3296/n7122 (net)     1            0.00       1.82 f
+  unordered_adder/DP_OP_126J3_122_3296/U2870/CO (FA1D1BWP40P140)     0.02     0.05     1.87 f
+  unordered_adder/DP_OP_126J3_122_3296/n7051 (net)     1            0.00       1.87 f
+  unordered_adder/DP_OP_126J3_122_3296/U2845/Z (XOR4D1BWP40P140)     0.02     0.10     1.98 r
+  unordered_adder/DP_OP_126J3_122_3296/n7081 (net)     1            0.00       1.98 r
+  unordered_adder/DP_OP_126J3_122_3296/U2855/Z (XOR4D1BWP40P140)     0.02     0.08     2.06 r
+  unordered_adder/DP_OP_126J3_122_3296/n7098 (net)     1            0.00       2.06 r
+  unordered_adder/DP_OP_126J3_122_3296/U2862/Z (XOR4D1BWP40P140)     0.02     0.08     2.14 r
+  unordered_adder/DP_OP_126J3_122_3296/n7119 (net)     1            0.00       2.14 r
+  unordered_adder/DP_OP_126J3_122_3296/U1464/Z (XOR4D1BWP40P140)     0.01     0.10     2.24 f
+  unordered_adder/DP_OP_126J3_122_3296/O1[23] (net)     1           0.00       2.24 f
+  unordered_adder/DP_OP_126J3_122_3296/O1[23] (unordered_adder_0_DP_OP_126J3_122_3296_J3_0_63)     0.00     2.24 f
+  unordered_adder/io_dout[23] (net)                                 0.00       2.24 f
+  unordered_adder/io_dout[23] (unordered_adder_63)                  0.00       2.24 f
+  io_polyc_0[23] (net)                                              0.00       2.24 f
+  io_polyc_0[23] (out)                                    0.01      0.00       2.24 f
+  data arrival time                                                            2.24
+  ---------------------------------------------------------------------------------------------------------
+  (Path is unconstrained)
+
+
+1

@@ -1,0 +1,790 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay min
+        -max_paths 3
+Design : ToomCook1024
+Version: O-2018.06-SP5
+Date   : Thu May 21 04:10:39 2026
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: ffg0p99v125c   Library: tcbn28hpcplusbwp40p140hvtffg0p99v125c_ccs
+Wire Load Model Mode: segmented
+
+  Startpoint: firstOut_4_reg_0_
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: outRam/GEN_16x1536_u_ram/GEN_SRAM_32x96_1__u_sram
+            (rising edge-triggered flip-flop clocked by clock_main)
+  Path Group: REG2REG
+  Path Type: min
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  ToomCook1024       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_16x1536_0   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH1536_DEPTH16_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  firstOut_4_reg_0_/CP (DFQD1BWP40P140)                   0.00 #     0.00 r
+  firstOut_4_reg_0_/Q (DFQD1BWP40P140)                    0.04       0.04 r
+  U96588/Z (AO22D0BWP40P140LVT)                           0.02       0.06 r
+  outRam/din[96] (sp_ram_WIDTH1536_DEPTH16_0)             0.00       0.06 r
+  outRam/GEN_16x1536_u_ram/din[96] (sp_ram_16x1536_0)     0.00       0.06 r
+  outRam/GEN_16x1536_u_ram/GEN_SRAM_32x96_1__u_sram/D[0] (TS1N28HPCPHVTB32X96M4S)
+                                                          0.00       0.06 r
+  data arrival time                                                  0.06
+
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  clock uncertainty                                       0.10       0.10
+  outRam/GEN_16x1536_u_ram/GEN_SRAM_32x96_1__u_sram/CLK (TS1N28HPCPHVTB32X96M4S)
+                                                          0.00       0.10 r
+  library hold time                                       0.10       0.20
+  data required time                                                 0.20
+  --------------------------------------------------------------------------
+  data required time                                                 0.20
+  data arrival time                                                 -0.06
+  --------------------------------------------------------------------------
+  slack (VIOLATED)                                                  -0.14
+
+
+  Startpoint: firstOut_24_reg_0_
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: outRam/GEN_16x1536_u_ram/GEN_SRAM_32x96_6__u_sram
+            (rising edge-triggered flip-flop clocked by clock_main)
+  Path Group: REG2REG
+  Path Type: min
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  ToomCook1024       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_16x1536_0   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH1536_DEPTH16_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  firstOut_24_reg_0_/CP (DFQD1BWP40P140)                  0.00 #     0.00 r
+  firstOut_24_reg_0_/Q (DFQD1BWP40P140)                   0.04       0.04 r
+  U97277/Z (AO22D0BWP40P140LVT)                           0.02       0.06 r
+  outRam/din[576] (sp_ram_WIDTH1536_DEPTH16_0)            0.00       0.06 r
+  outRam/GEN_16x1536_u_ram/din[576] (sp_ram_16x1536_0)
+                                                          0.00       0.06 r
+  outRam/GEN_16x1536_u_ram/GEN_SRAM_32x96_6__u_sram/D[0] (TS1N28HPCPHVTB32X96M4S)
+                                                          0.00       0.06 r
+  data arrival time                                                  0.06
+
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  clock uncertainty                                       0.10       0.10
+  outRam/GEN_16x1536_u_ram/GEN_SRAM_32x96_6__u_sram/CLK (TS1N28HPCPHVTB32X96M4S)
+                                                          0.00       0.10 r
+  library hold time                                       0.10       0.20
+  data required time                                                 0.20
+  --------------------------------------------------------------------------
+  data required time                                                 0.20
+  data arrival time                                                 -0.06
+  --------------------------------------------------------------------------
+  slack (VIOLATED)                                                  -0.14
+
+
+  Startpoint: firstOut_48_reg_0_
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: outRam/GEN_16x1536_u_ram/GEN_SRAM_32x96_12__u_sram
+            (rising edge-triggered flip-flop clocked by clock_main)
+  Path Group: REG2REG
+  Path Type: min
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  ToomCook1024       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_16x1536_0   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH1536_DEPTH16_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  firstOut_48_reg_0_/CP (DFQD1BWP40P140)                  0.00 #     0.00 r
+  firstOut_48_reg_0_/Q (DFQD1BWP40P140)                   0.04       0.04 r
+  U97202/Z (AO22D0BWP40P140LVT)                           0.02       0.06 r
+  outRam/din[1152] (sp_ram_WIDTH1536_DEPTH16_0)           0.00       0.06 r
+  outRam/GEN_16x1536_u_ram/din[1152] (sp_ram_16x1536_0)
+                                                          0.00       0.06 r
+  outRam/GEN_16x1536_u_ram/GEN_SRAM_32x96_12__u_sram/D[0] (TS1N28HPCPHVTB32X96M4S)
+                                                          0.00       0.06 r
+  data arrival time                                                  0.06
+
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  clock uncertainty                                       0.10       0.10
+  outRam/GEN_16x1536_u_ram/GEN_SRAM_32x96_12__u_sram/CLK (TS1N28HPCPHVTB32X96M4S)
+                                                          0.00       0.10 r
+  library hold time                                       0.10       0.20
+  data required time                                                 0.20
+  --------------------------------------------------------------------------
+  data required time                                                 0.20
+  data arrival time                                                 -0.06
+  --------------------------------------------------------------------------
+  slack (VIOLATED)                                                  -0.14
+
+
+  Startpoint: io_a_din[0]
+              (input port clocked by clock_main)
+  Endpoint: inARam/GEN_16x1536_u_ram/GEN_SRAM_32x96_0__u_sram
+            (rising edge-triggered flip-flop clocked by clock_main)
+  Path Group: REGIN
+  Path Type: min
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  ToomCook1024       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_16x1536_1   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH1536_DEPTH16_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  input external delay                                    2.00       2.00 f
+  io_a_din[0] (in)                                        0.00       2.00 f
+  U95992/Z (AN2D0BWP40P140)                               0.01       2.01 f
+  inARam/din[0] (sp_ram_WIDTH1536_DEPTH16_1)              0.00       2.01 f
+  inARam/GEN_16x1536_u_ram/din[0] (sp_ram_16x1536_1)      0.00       2.01 f
+  inARam/GEN_16x1536_u_ram/GEN_SRAM_32x96_0__u_sram/D[0] (TS1N28HPCPHVTB32X96M4S)
+                                                          0.00       2.01 f
+  data arrival time                                                  2.01
+
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  clock uncertainty                                       0.10       0.10
+  inARam/GEN_16x1536_u_ram/GEN_SRAM_32x96_0__u_sram/CLK (TS1N28HPCPHVTB32X96M4S)
+                                                          0.00       0.10 r
+  library hold time                                       0.10       0.20
+  data required time                                                 0.20
+  --------------------------------------------------------------------------
+  data required time                                                 0.20
+  data arrival time                                                 -2.01
+  --------------------------------------------------------------------------
+  slack (MET)                                                        1.81
+
+
+  Startpoint: io_a_din[1]
+              (input port clocked by clock_main)
+  Endpoint: inARam/GEN_16x1536_u_ram/GEN_SRAM_32x96_0__u_sram
+            (rising edge-triggered flip-flop clocked by clock_main)
+  Path Group: REGIN
+  Path Type: min
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  ToomCook1024       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_16x1536_1   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH1536_DEPTH16_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  input external delay                                    2.00       2.00 f
+  io_a_din[1] (in)                                        0.00       2.00 f
+  U95916/Z (AN2D0BWP40P140)                               0.01       2.01 f
+  inARam/din[1] (sp_ram_WIDTH1536_DEPTH16_1)              0.00       2.01 f
+  inARam/GEN_16x1536_u_ram/din[1] (sp_ram_16x1536_1)      0.00       2.01 f
+  inARam/GEN_16x1536_u_ram/GEN_SRAM_32x96_0__u_sram/D[1] (TS1N28HPCPHVTB32X96M4S)
+                                                          0.00       2.01 f
+  data arrival time                                                  2.01
+
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  clock uncertainty                                       0.10       0.10
+  inARam/GEN_16x1536_u_ram/GEN_SRAM_32x96_0__u_sram/CLK (TS1N28HPCPHVTB32X96M4S)
+                                                          0.00       0.10 r
+  library hold time                                       0.10       0.20
+  data required time                                                 0.20
+  --------------------------------------------------------------------------
+  data required time                                                 0.20
+  data arrival time                                                 -2.01
+  --------------------------------------------------------------------------
+  slack (MET)                                                        1.81
+
+
+  Startpoint: io_a_din[2]
+              (input port clocked by clock_main)
+  Endpoint: inARam/GEN_16x1536_u_ram/GEN_SRAM_32x96_0__u_sram
+            (rising edge-triggered flip-flop clocked by clock_main)
+  Path Group: REGIN
+  Path Type: min
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  ToomCook1024       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_16x1536_1   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH1536_DEPTH16_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  input external delay                                    2.00       2.00 f
+  io_a_din[2] (in)                                        0.00       2.00 f
+  U95836/Z (AN2D0BWP40P140)                               0.01       2.01 f
+  inARam/din[2] (sp_ram_WIDTH1536_DEPTH16_1)              0.00       2.01 f
+  inARam/GEN_16x1536_u_ram/din[2] (sp_ram_16x1536_1)      0.00       2.01 f
+  inARam/GEN_16x1536_u_ram/GEN_SRAM_32x96_0__u_sram/D[2] (TS1N28HPCPHVTB32X96M4S)
+                                                          0.00       2.01 f
+  data arrival time                                                  2.01
+
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  clock uncertainty                                       0.10       0.10
+  inARam/GEN_16x1536_u_ram/GEN_SRAM_32x96_0__u_sram/CLK (TS1N28HPCPHVTB32X96M4S)
+                                                          0.00       0.10 r
+  library hold time                                       0.10       0.20
+  data required time                                                 0.20
+  --------------------------------------------------------------------------
+  data required time                                                 0.20
+  data arrival time                                                 -2.01
+  --------------------------------------------------------------------------
+  slack (MET)                                                        1.81
+
+
+  Startpoint: io_c_valid_REG_reg
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: io_c_valid (output port clocked by clock_main)
+  Path Group: REGOUT
+  Path Type: min
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  ToomCook1024       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_10   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_9    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_8    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_4    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_3    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_12   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_7    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_6    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_0    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_10
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_9
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_8
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_4
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_3
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_12
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_7
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_6
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_0    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_1    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_2    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_3    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_4    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_5    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_6    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_7    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_0            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_1            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_2            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_3            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_4            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_5            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_6            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_1    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_2    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_5    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_11   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_13   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_172x464_0   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_172x464_1   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_172x624_0   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_172x624_1   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_16x1536_0   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_16x512      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_16x1536_1   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core16             ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_2
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_5
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_11
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_13
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH464_DEPTH172_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH464_DEPTH172_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH624_DEPTH172_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH624_DEPTH172_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH1536_DEPTH16_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH512_DEPTH16
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH1536_DEPTH16_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  io_c_valid_REG_reg/CP (DFQD1BWP40P140)                  0.00 #     0.00 r
+  io_c_valid_REG_reg/Q (DFQD1BWP40P140)                   0.04       0.04 r
+  io_c_valid (out)                                        0.00       0.04 r
+  data arrival time                                                  0.04
+
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  clock uncertainty                                       0.10       0.10
+  output external delay                                  -2.00      -1.90
+  data required time                                                -1.90
+  --------------------------------------------------------------------------
+  data required time                                                -1.90
+  data arrival time                                                 -0.04
+  --------------------------------------------------------------------------
+  slack (MET)                                                        1.94
+
+
+  Startpoint: doneReg_reg
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: io_done (output port clocked by clock_main)
+  Path Group: REGOUT
+  Path Type: min
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  ToomCook1024       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clock_main (rise edge)             0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  doneReg_reg/CP (DFQD1BWP40P140)          0.00       0.00 r
+  doneReg_reg/Q (DFQD1BWP40P140)           0.05       0.05 r
+  io_done (out)                            0.00       0.05 r
+  data arrival time                                   0.05
+
+  clock clock_main (rise edge)             0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  clock uncertainty                        0.10       0.10
+  output external delay                   -2.00      -1.90
+  data required time                                 -1.90
+  -----------------------------------------------------------
+  data required time                                 -1.90
+  data arrival time                                  -0.05
+  -----------------------------------------------------------
+  slack (MET)                                         1.95
+
+
+  Startpoint: i1Active_reg
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: io_busy (output port clocked by clock_main)
+  Path Group: REGOUT
+  Path Type: min
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  ToomCook1024       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_10   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_9    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_8    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_4    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_3    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_12   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_7    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_6    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_0    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_10
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_9
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_8
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_4
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_3
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_12
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_7
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_6
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_0    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_1    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_2    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_3    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_4    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_5    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_6    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_7    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_0            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_1            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_2            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_3            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_4            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_5            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_6            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_1    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_2    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_5    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_11   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_13   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_172x464_0   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_172x464_1   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_172x624_0   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_172x624_1   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_16x1536_0   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_16x512      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_16x1536_1   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core16             ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_2
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_5
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_11
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_13
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH464_DEPTH172_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH464_DEPTH172_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH624_DEPTH172_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH624_DEPTH172_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH1536_DEPTH16_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH512_DEPTH16
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH1536_DEPTH16_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clock_main (rise edge)             0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  i1Active_reg/CP (DFQD1BWP40P140)         0.00 #     0.00 r
+  i1Active_reg/Q (DFQD1BWP40P140)          0.05       0.05 r
+  U81463/ZN (NR4D0BWP40P140)               0.01       0.06 f
+  U83881/ZN (ND3D0BWP40P140HVT)            0.01       0.08 r
+  io_busy (out)                            0.00       0.08 r
+  data arrival time                                   0.08
+
+  clock clock_main (rise edge)             0.00       0.00
+  clock network delay (ideal)              0.00       0.00
+  clock uncertainty                        0.10       0.10
+  output external delay                   -2.00      -1.90
+  data required time                                 -1.90
+  -----------------------------------------------------------
+  data required time                                 -1.90
+  data arrival time                                  -0.08
+  -----------------------------------------------------------
+  slack (MET)                                         1.98
+
+
+  Startpoint: i1Pt0_reg_0_
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: clk_gate_w1Buf_0_3_0_reg/latch
+            (gating element for clock clock_main)
+  Path Group: clock_main
+  Path Type: min
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  ToomCook1024       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_10   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_9    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_8    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_4    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_3    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_12   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_7    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_6    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_0    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_10
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_9
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_8
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_4
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_3
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_12
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_7
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_6
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_0    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_1    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_2    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_3    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_4    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_5    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_6    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_7    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_0            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_1            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_2            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_3            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_4            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_5            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_6            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_1    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_2    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_5    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_11   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_13   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_172x464_0   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_172x464_1   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_172x624_0   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_172x624_1   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_16x1536_0   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_16x512      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_16x1536_1   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core16             ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_2
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_5
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_11
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_13
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH464_DEPTH172_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH464_DEPTH172_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH624_DEPTH172_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH624_DEPTH172_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH1536_DEPTH16_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH512_DEPTH16
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH1536_DEPTH16_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  i1Pt0_reg_0_/CP (EDFQD1BWP40P140)                       0.00 #     0.00 r
+  i1Pt0_reg_0_/Q (EDFQD1BWP40P140)                        0.05       0.05 r
+  U134623/ZN (NR3D0BWP40P140)                             0.01       0.06 f
+  clk_gate_w1Buf_0_3_0_reg/EN (SNPS_CLOCK_GATE_HIGH_ToomCook1024_261)
+                                                          0.00       0.06 f
+  clk_gate_w1Buf_0_3_0_reg/latch/E (CKLNQD1BWP40P140HVT)
+                                                          0.00       0.06 f
+  data arrival time                                                  0.06
+
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  clock uncertainty                                       0.10       0.10
+  clk_gate_w1Buf_0_3_0_reg/latch/CP (CKLNQD1BWP40P140HVT)
+                                                          0.00       0.10 r
+  clock gating hold time                                  0.00       0.10
+  data required time                                                 0.10
+  --------------------------------------------------------------------------
+  data required time                                                 0.10
+  data arrival time                                                 -0.06
+  --------------------------------------------------------------------------
+  slack (VIOLATED)                                                  -0.04
+
+
+  Startpoint: i1Pt0_reg_0_
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: clk_gate_w1Buf_0_6_0_reg/latch
+            (gating element for clock clock_main)
+  Path Group: clock_main
+  Path Type: min
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  ToomCook1024       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_10   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_9    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_8    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_4    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_3    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_12   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_7    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_6    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_0    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_10
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_9
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_8
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_4
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_3
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_12
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_7
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_6
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_0    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_1    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_2    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_3    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_4    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_5    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_6    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  Interpolation_7    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_0            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_1            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_2            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_3            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_4            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_5            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core4_6            ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_1    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_2    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_5    ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_11   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_25x576_13   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_172x464_0   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_172x464_1   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_172x624_0   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_172x624_1   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_16x1536_0   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_16x512      ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_16x1536_1   ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  core16             ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_2
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_5
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_11
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH576_DEPTH25_13
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH464_DEPTH172_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH464_DEPTH172_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH624_DEPTH172_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH624_DEPTH172_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH1536_DEPTH16_0
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH512_DEPTH16
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+  sp_ram_WIDTH1536_DEPTH16_1
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  i1Pt0_reg_0_/CP (EDFQD1BWP40P140)                       0.00 #     0.00 r
+  i1Pt0_reg_0_/Q (EDFQD1BWP40P140)                        0.05       0.05 r
+  U83775/ZN (NR3D0BWP40P140)                              0.01       0.06 f
+  clk_gate_w1Buf_0_6_0_reg/EN (SNPS_CLOCK_GATE_HIGH_ToomCook1024_249)
+                                                          0.00       0.06 f
+  clk_gate_w1Buf_0_6_0_reg/latch/E (CKLNQD1BWP40P140HVT)
+                                                          0.00       0.06 f
+  data arrival time                                                  0.06
+
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  clock uncertainty                                       0.10       0.10
+  clk_gate_w1Buf_0_6_0_reg/latch/CP (CKLNQD1BWP40P140HVT)
+                                                          0.00       0.10 r
+  clock gating hold time                                  0.00       0.10
+  data required time                                                 0.10
+  --------------------------------------------------------------------------
+  data required time                                                 0.10
+  data arrival time                                                 -0.06
+  --------------------------------------------------------------------------
+  slack (VIOLATED)                                                  -0.04
+
+
+  Startpoint: coreReadValid_reg
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: clk_gate_coreAWordReg_reg/latch
+            (gating element for clock clock_main)
+  Path Group: clock_main
+  Path Type: min
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  ToomCook1024       ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  coreReadValid_reg/CP (EDFQD1BWP40P140)                  0.00       0.00 r
+  coreReadValid_reg/Q (EDFQD1BWP40P140)                   0.04       0.04 f
+  U83899/Z (AN2D0BWP40P140)                               0.02       0.06 f
+  clk_gate_coreAWordReg_reg/EN (SNPS_CLOCK_GATE_HIGH_ToomCook1024_102)
+                                                          0.00       0.06 f
+  clk_gate_coreAWordReg_reg/latch/E (CKLNQD1BWP40P140HVT)
+                                                          0.00       0.06 f
+  data arrival time                                                  0.06
+
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  clock uncertainty                                       0.10       0.10
+  clk_gate_coreAWordReg_reg/latch/CP (CKLNQD1BWP40P140HVT)
+                                                          0.00       0.10 r
+  clock gating hold time                                  0.00       0.10
+  data required time                                                 0.10
+  --------------------------------------------------------------------------
+  data required time                                                 0.10
+  data arrival time                                                 -0.06
+  --------------------------------------------------------------------------
+  slack (VIOLATED)                                                  -0.04
+
+
+1

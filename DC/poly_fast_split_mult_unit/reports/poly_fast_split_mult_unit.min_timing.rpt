@@ -1,0 +1,167 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay min
+        -max_paths 3
+Design : poly_fast_split_mult_unit
+Version: O-2018.06-SP5
+Date   : Fri May 22 20:10:15 2026
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: ffg0p99v125c   Library: tcbn28hpcplusbwp40p140hvtffg0p99v125c_ccs
+Wire Load Model Mode: segmented
+
+  Startpoint: poly_fast_split_mult_core/poly_fast_split_mult_preadd/polyb_preadd_left_reg_0_
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: sp_sram_mc_wrapped_4/sp_sram_64_112/u_TS1N28HPCPLVTB64X112M4S
+            (rising edge-triggered flip-flop clocked by clock_main)
+  Path Group: clock_main
+  Path Type: min
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  poly_fast_split_mult_unit
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  poly_fast_split_mult_core/poly_fast_split_mult_preadd/polyb_preadd_left_reg_0_/CP (DFCNQD1BWP40P140)
+                                                          0.00       0.00 r
+  poly_fast_split_mult_core/poly_fast_split_mult_preadd/polyb_preadd_left_reg_0_/Q (DFCNQD1BWP40P140)
+                                                          0.06       0.06 r
+  poly_fast_split_mult_core/poly_fast_split_mult_preadd/U1747/ZN (AOI22D1BWP40P140LVT)
+                                                          0.01       0.07 f
+  poly_fast_split_mult_core/poly_fast_split_mult_preadd/U3478/ZN (OAI21D1BWP40P140LVT)
+                                                          0.01       0.07 r
+  poly_fast_split_mult_core/poly_fast_split_mult_preadd/io_adj2p_din_0[0] (poly_fast_split_mult_preadd)
+                                                          0.00       0.07 r
+  poly_fast_split_mult_core/io_adj2p_din_0[0] (poly_fast_split_mult_core)
+                                                          0.00       0.07 r
+  sp_sram_mc_wrapped_4/io_din[0] (sp_sram_mc_wrapped_4_1)
+                                                          0.00       0.07 r
+  sp_sram_mc_wrapped_4/sp_sram_64_112/din[0] (sp_sram_64_112_WIDTH112_DEPTH64_1)
+                                                          0.00       0.07 r
+  sp_sram_mc_wrapped_4/sp_sram_64_112/u_TS1N28HPCPLVTB64X112M4S/D[0] (TS1N28HPCPHVTB64X112M4S)
+                                                          0.00       0.07 r
+  data arrival time                                                  0.07
+
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  clock uncertainty                                       0.10       0.10
+  sp_sram_mc_wrapped_4/sp_sram_64_112/u_TS1N28HPCPLVTB64X112M4S/CLK (TS1N28HPCPHVTB64X112M4S)
+                                                          0.00       0.10 r
+  library hold time                                       0.12       0.22
+  data required time                                                 0.22
+  --------------------------------------------------------------------------
+  data required time                                                 0.22
+  data arrival time                                                 -0.07
+  --------------------------------------------------------------------------
+  slack (VIOLATED)                                                  -0.14
+
+
+  Startpoint: poly_fast_split_mult_core/poly_fast_split_mult_preadd/polyb_preadd_left_reg_1_
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: sp_sram_mc_wrapped_4/sp_sram_64_112/u_TS1N28HPCPLVTB64X112M4S
+            (rising edge-triggered flip-flop clocked by clock_main)
+  Path Group: clock_main
+  Path Type: min
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  poly_fast_split_mult_unit
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  poly_fast_split_mult_core/poly_fast_split_mult_preadd/polyb_preadd_left_reg_1_/CP (DFCNQD1BWP40P140)
+                                                          0.00       0.00 r
+  poly_fast_split_mult_core/poly_fast_split_mult_preadd/polyb_preadd_left_reg_1_/Q (DFCNQD1BWP40P140)
+                                                          0.06       0.06 r
+  poly_fast_split_mult_core/poly_fast_split_mult_preadd/U1724/ZN (AOI22D1BWP40P140LVT)
+                                                          0.01       0.07 f
+  poly_fast_split_mult_core/poly_fast_split_mult_preadd/U2040/ZN (OAI21D1BWP40P140LVT)
+                                                          0.01       0.07 r
+  poly_fast_split_mult_core/poly_fast_split_mult_preadd/io_adj2p_din_0[1] (poly_fast_split_mult_preadd)
+                                                          0.00       0.07 r
+  poly_fast_split_mult_core/io_adj2p_din_0[1] (poly_fast_split_mult_core)
+                                                          0.00       0.07 r
+  sp_sram_mc_wrapped_4/io_din[1] (sp_sram_mc_wrapped_4_1)
+                                                          0.00       0.07 r
+  sp_sram_mc_wrapped_4/sp_sram_64_112/din[1] (sp_sram_64_112_WIDTH112_DEPTH64_1)
+                                                          0.00       0.07 r
+  sp_sram_mc_wrapped_4/sp_sram_64_112/u_TS1N28HPCPLVTB64X112M4S/D[1] (TS1N28HPCPHVTB64X112M4S)
+                                                          0.00       0.07 r
+  data arrival time                                                  0.07
+
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  clock uncertainty                                       0.10       0.10
+  sp_sram_mc_wrapped_4/sp_sram_64_112/u_TS1N28HPCPLVTB64X112M4S/CLK (TS1N28HPCPHVTB64X112M4S)
+                                                          0.00       0.10 r
+  library hold time                                       0.12       0.22
+  data required time                                                 0.22
+  --------------------------------------------------------------------------
+  data required time                                                 0.22
+  data arrival time                                                 -0.07
+  --------------------------------------------------------------------------
+  slack (VIOLATED)                                                  -0.14
+
+
+  Startpoint: poly_fast_split_mult_core/poly_fast_split_mult_preadd/polyb_preadd_left_reg_2_
+              (rising edge-triggered flip-flop clocked by clock_main)
+  Endpoint: sp_sram_mc_wrapped_4/sp_sram_64_112/u_TS1N28HPCPLVTB64X112M4S
+            (rising edge-triggered flip-flop clocked by clock_main)
+  Path Group: clock_main
+  Path Type: min
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  poly_fast_split_mult_unit
+                     ZeroWireload          tcbn28hpcplusbwp40p140hvtssg0p81vm40c_ccs
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  poly_fast_split_mult_core/poly_fast_split_mult_preadd/polyb_preadd_left_reg_2_/CP (DFCNQD1BWP40P140)
+                                                          0.00       0.00 r
+  poly_fast_split_mult_core/poly_fast_split_mult_preadd/polyb_preadd_left_reg_2_/Q (DFCNQD1BWP40P140)
+                                                          0.06       0.06 r
+  poly_fast_split_mult_core/poly_fast_split_mult_preadd/U1713/ZN (AOI22D1BWP40P140LVT)
+                                                          0.01       0.07 f
+  poly_fast_split_mult_core/poly_fast_split_mult_preadd/U4391/ZN (OAI21D1BWP40P140LVT)
+                                                          0.01       0.07 r
+  poly_fast_split_mult_core/poly_fast_split_mult_preadd/io_adj2p_din_0[2] (poly_fast_split_mult_preadd)
+                                                          0.00       0.07 r
+  poly_fast_split_mult_core/io_adj2p_din_0[2] (poly_fast_split_mult_core)
+                                                          0.00       0.07 r
+  sp_sram_mc_wrapped_4/io_din[2] (sp_sram_mc_wrapped_4_1)
+                                                          0.00       0.07 r
+  sp_sram_mc_wrapped_4/sp_sram_64_112/din[2] (sp_sram_64_112_WIDTH112_DEPTH64_1)
+                                                          0.00       0.07 r
+  sp_sram_mc_wrapped_4/sp_sram_64_112/u_TS1N28HPCPLVTB64X112M4S/D[2] (TS1N28HPCPHVTB64X112M4S)
+                                                          0.00       0.07 r
+  data arrival time                                                  0.07
+
+  clock clock_main (rise edge)                            0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  clock uncertainty                                       0.10       0.10
+  sp_sram_mc_wrapped_4/sp_sram_64_112/u_TS1N28HPCPLVTB64X112M4S/CLK (TS1N28HPCPHVTB64X112M4S)
+                                                          0.00       0.10 r
+  library hold time                                       0.12       0.22
+  data required time                                                 0.22
+  --------------------------------------------------------------------------
+  data required time                                                 0.22
+  data arrival time                                                 -0.07
+  --------------------------------------------------------------------------
+  slack (VIOLATED)                                                  -0.14
+
+
+1

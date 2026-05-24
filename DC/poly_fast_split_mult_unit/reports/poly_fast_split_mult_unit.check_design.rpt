@@ -1,0 +1,121 @@
+ 
+****************************************
+check_design summary:
+Version:     O-2018.06-SP5
+Date:        Fri May 22 19:23:27 2026
+****************************************
+
+                   Name                                            Total
+--------------------------------------------------------------------------------
+Cells                                                              50
+    Cells do not drive (LINT-1)                                     2
+    Connected to power or ground (LINT-32)                         31
+    Nets connected to multiple pins on same cell (LINT-33)         17
+
+Nets                                                                4
+    Unloaded nets (LINT-2)                                          4
+--------------------------------------------------------------------------------
+
+Warning: In design 'poly_fast_split_mult_kernel', cell 'B_16' does not drive any nets. (LINT-1)
+Warning: In design 'poly_fast_split_mult_kernel', cell 'B_17' does not drive any nets. (LINT-1)
+Warning: In design 'poly_fast_split_mult_unit', net 'poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/uint_reorder_3_io_reord[4]' driven by pin 'poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/uint_reorder_3/io_reord[4]' has no loads. (LINT-2)
+Warning: In design 'poly_fast_split_mult_unit', net 'poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/uint_reorder_2_io_reord[3]' driven by pin 'poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/uint_reorder_2/io_reord[3]' has no loads. (LINT-2)
+Warning: In design 'poly_fast_split_mult_unit', net 'poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/uint_reorder_1_io_reord[2]' driven by pin 'poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/uint_reorder_1/io_reord[2]' has no loads. (LINT-2)
+Warning: In design 'poly_fast_split_mult_unit', net 'poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/uint_reorder_io_reord[1]' driven by pin 'poly_fast_split_mult_core/poly_fast_split_mult_postadd_core/uint_reorder/io_reord[1]' has no loads. (LINT-2)
+Warning: In design 'poly_fast_split_mult_preadd', a pin on submodule 'unordered_adder' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'io_din_0[5]' is connected to logic 0. 
+Warning: In design 'poly_fast_split_mult_preadd', a pin on submodule 'unordered_adder' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'io_din_0[4]' is connected to logic 0. 
+Warning: In design 'poly_fast_split_mult_preadd', a pin on submodule 'unordered_adder' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'io_din_0[3]' is connected to logic 0. 
+Warning: In design 'poly_fast_split_mult_preadd', a pin on submodule 'unordered_adder' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'io_din_0[2]' is connected to logic 0. 
+Warning: In design 'poly_fast_split_mult_preadd', a pin on submodule 'unordered_adder' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'io_din_0[1]' is connected to logic 0. 
+Warning: In design 'poly_fast_split_mult_preadd', a pin on submodule 'unordered_adder' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'io_din_1[5]' is connected to logic 0. 
+Warning: In design 'poly_fast_split_mult_preadd', a pin on submodule 'unordered_adder' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'io_din_1[4]' is connected to logic 0. 
+Warning: In design 'poly_fast_split_mult_preadd', a pin on submodule 'unordered_adder' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'io_din_1[3]' is connected to logic 0. 
+Warning: In design 'poly_fast_split_mult_preadd', a pin on submodule 'unordered_adder' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'io_din_1[0]' is connected to logic 0. 
+Warning: In design 'poly_fast_split_mult_preadd', a pin on submodule 'unordered_adder' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'io_din_2[5]' is connected to logic 0. 
+Warning: In design 'poly_fast_split_mult_preadd', a pin on submodule 'unordered_adder' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'io_din_2[4]' is connected to logic 0. 
+Warning: In design 'poly_fast_split_mult_preadd', a pin on submodule 'unordered_adder' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'io_din_2[1]' is connected to logic 0. 
+Warning: In design 'poly_fast_split_mult_preadd', a pin on submodule 'unordered_adder' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'io_din_2[0]' is connected to logic 0. 
+Warning: In design 'poly_fast_split_mult_preadd', a pin on submodule 'unordered_adder' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'io_din_3[5]' is connected to logic 0. 
+Warning: In design 'poly_fast_split_mult_preadd', a pin on submodule 'unordered_adder' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'io_din_3[2]' is connected to logic 0. 
+Warning: In design 'poly_fast_split_mult_preadd', a pin on submodule 'unordered_adder' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'io_din_3[1]' is connected to logic 0. 
+Warning: In design 'poly_fast_split_mult_preadd', a pin on submodule 'unordered_adder' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'io_din_3[0]' is connected to logic 0. 
+Warning: In design 'poly_fast_split_mult_preadd', a pin on submodule 'unordered_adder_1' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'io_din_0[5]' is connected to logic 0. 
+Warning: In design 'poly_fast_split_mult_preadd', a pin on submodule 'unordered_adder_1' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'io_din_0[4]' is connected to logic 0. 
+Warning: In design 'poly_fast_split_mult_preadd', a pin on submodule 'unordered_adder_1' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'io_din_0[3]' is connected to logic 0. 
+Warning: In design 'poly_fast_split_mult_preadd', a pin on submodule 'unordered_adder_1' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'io_din_0[2]' is connected to logic 0. 
+Warning: In design 'poly_fast_split_mult_preadd', a pin on submodule 'unordered_adder_1' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'io_din_0[1]' is connected to logic 0. 
+Warning: In design 'poly_fast_split_mult_preadd', a pin on submodule 'unordered_adder_1' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'io_din_1[5]' is connected to logic 0. 
+Warning: In design 'poly_fast_split_mult_preadd', a pin on submodule 'unordered_adder_1' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'io_din_1[4]' is connected to logic 0. 
+Warning: In design 'poly_fast_split_mult_preadd', a pin on submodule 'unordered_adder_1' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'io_din_1[0]' is connected to logic 0. 
+Warning: In design 'poly_fast_split_mult_preadd', a pin on submodule 'unordered_adder_1' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'io_din_2[5]' is connected to logic 0. 
+Warning: In design 'poly_fast_split_mult_preadd', a pin on submodule 'unordered_adder_1' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'io_din_2[1]' is connected to logic 0. 
+Warning: In design 'poly_fast_split_mult_preadd', a pin on submodule 'unordered_adder_1' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'io_din_2[0]' is connected to logic 0. 
+Warning: In design 'poly_fast_split_mult_preadd', a pin on submodule 'unordered_adder_1' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'io_din_3[2]' is connected to logic 0. 
+Warning: In design 'poly_fast_split_mult_preadd', a pin on submodule 'unordered_adder_1' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'io_din_3[1]' is connected to logic 0. 
+Warning: In design 'poly_fast_split_mult_preadd', a pin on submodule 'unordered_adder_1' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'io_din_3[0]' is connected to logic 0. 
+Warning: In design 'poly_fast_split_mult_preadd', the same net is connected to more than one pin on submodule 'unordered_adder'. (LINT-33)
+   Net '*Logic0*' is connected to pins 'io_din_0[5]', 'io_din_0[4]'', 'io_din_0[3]', 'io_din_0[2]', 'io_din_0[1]', 'io_din_1[5]', 'io_din_1[4]', 'io_din_1[3]', 'io_din_1[0]', 'io_din_2[5]', 'io_din_2[4]', 'io_din_2[1]', 'io_din_2[0]', 'io_din_3[5]', 'io_din_3[2]', 'io_din_3[1]', 'io_din_3[0]'.
+Warning: In design 'poly_fast_split_mult_preadd', the same net is connected to more than one pin on submodule 'unordered_adder_1'. (LINT-33)
+   Net '*Logic0*' is connected to pins 'io_din_0[5]', 'io_din_0[4]'', 'io_din_0[3]', 'io_din_0[2]', 'io_din_0[1]', 'io_din_1[5]', 'io_din_1[4]', 'io_din_1[0]', 'io_din_2[5]', 'io_din_2[1]', 'io_din_2[0]', 'io_din_3[2]', 'io_din_3[1]', 'io_din_3[0]'.
+Warning: In design 'uint_reorder', the same net is connected to more than one pin on submodule 'unordered_mux1h'. (LINT-33)
+   Net 'io_uint[1]' is connected to pins 'io_din_0[1]', 'io_din_1[1]'', 'io_sel_1'.
+Warning: In design 'uint_reorder_1', the same net is connected to more than one pin on submodule 'unordered_mux1h'. (LINT-33)
+   Net 'io_uint[2]' is connected to pins 'io_din_0[2]', 'io_din_1[2]'', 'io_din_2[2]'.
+Warning: In design 'uint_reorder_1', the same net is connected to more than one pin on submodule 'unordered_mux1h'. (LINT-33)
+   Net 'io_uint[1]' is connected to pins 'io_din_1[1]', 'io_din_2[1]''.
+Warning: In design 'uint_reorder_2', the same net is connected to more than one pin on submodule 'unordered_mux1h'. (LINT-33)
+   Net 'io_uint[3]' is connected to pins 'io_din_0[3]', 'io_din_1[3]'', 'io_din_2[3]', 'io_din_3[3]'.
+Warning: In design 'uint_reorder_2', the same net is connected to more than one pin on submodule 'unordered_mux1h'. (LINT-33)
+   Net 'io_uint[2]' is connected to pins 'io_din_1[2]', 'io_din_2[2]'', 'io_din_3[2]'.
+Warning: In design 'uint_reorder_2', the same net is connected to more than one pin on submodule 'unordered_mux1h'. (LINT-33)
+   Net 'io_uint[1]' is connected to pins 'io_din_2[1]', 'io_din_3[1]''.
+Warning: In design 'uint_reorder_3', the same net is connected to more than one pin on submodule 'unordered_mux1h'. (LINT-33)
+   Net 'io_uint[4]' is connected to pins 'io_din_0[4]', 'io_din_1[4]'', 'io_din_2[4]', 'io_din_3[4]', 'io_din_4[4]'.
+Warning: In design 'uint_reorder_3', the same net is connected to more than one pin on submodule 'unordered_mux1h'. (LINT-33)
+   Net 'io_uint[3]' is connected to pins 'io_din_1[3]', 'io_din_2[3]'', 'io_din_3[3]', 'io_din_4[3]'.
+Warning: In design 'uint_reorder_3', the same net is connected to more than one pin on submodule 'unordered_mux1h'. (LINT-33)
+   Net 'io_uint[2]' is connected to pins 'io_din_2[2]', 'io_din_3[2]'', 'io_din_4[2]'.
+Warning: In design 'uint_reorder_3', the same net is connected to more than one pin on submodule 'unordered_mux1h'. (LINT-33)
+   Net 'io_uint[1]' is connected to pins 'io_din_3[1]', 'io_din_4[1]''.
+Warning: In design 'uint_reorder_4', the same net is connected to more than one pin on submodule 'unordered_mux1h'. (LINT-33)
+   Net 'io_uint[5]' is connected to pins 'io_din_0[5]', 'io_din_1[5]'', 'io_din_2[5]', 'io_din_3[5]', 'io_din_4[5]', 'io_din_5[5]'.
+Warning: In design 'uint_reorder_4', the same net is connected to more than one pin on submodule 'unordered_mux1h'. (LINT-33)
+   Net 'io_uint[4]' is connected to pins 'io_din_1[4]', 'io_din_2[4]'', 'io_din_3[4]', 'io_din_4[4]', 'io_din_5[4]'.
+Warning: In design 'uint_reorder_4', the same net is connected to more than one pin on submodule 'unordered_mux1h'. (LINT-33)
+   Net 'io_uint[3]' is connected to pins 'io_din_2[3]', 'io_din_3[3]'', 'io_din_4[3]', 'io_din_5[3]'.
+Warning: In design 'uint_reorder_4', the same net is connected to more than one pin on submodule 'unordered_mux1h'. (LINT-33)
+   Net 'io_uint[2]' is connected to pins 'io_din_3[2]', 'io_din_4[2]'', 'io_din_5[2]'.
+Warning: In design 'uint_reorder_4', the same net is connected to more than one pin on submodule 'unordered_mux1h'. (LINT-33)
+   Net 'io_uint[1]' is connected to pins 'io_din_4[1]', 'io_din_5[1]''.
+1

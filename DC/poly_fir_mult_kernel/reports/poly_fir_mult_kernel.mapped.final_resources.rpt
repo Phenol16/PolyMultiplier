@@ -1,0 +1,2422 @@
+ 
+****************************************
+Report : resources
+Design : poly_fir_mult_kernel
+Version: O-2018.06-SP5
+Date   : Tue Sep  2 19:34:10 2025
+****************************************
+
+
+Resource Report for this hierarchy in file
+        /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fir_mult_kernel/poly_fir_mult_kernel.v
+=============================================================================
+| Cell           | Module         | Parameters | Contained Operations       |
+=============================================================================
+| mult_x_1       | DW_mult_uns    | a_width=24 | mult_874 (poly_fir_mult_kernel.v:874) |
+      |                | b_width=20 |                            |
+| mult_x_2       | DW_mult_uns    | a_width=24 | mult_875 (poly_fir_mult_kernel.v:875) |
+      |                | b_width=20 |                            |
+| mult_x_3       | DW_mult_uns    | a_width=24 | mult_876 (poly_fir_mult_kernel.v:876) |
+      |                | b_width=20 |                            |
+| mult_x_4       | DW_mult_uns    | a_width=24 | mult_877 (poly_fir_mult_kernel.v:877) |
+      |                | b_width=20 |                            |
+| mult_x_5       | DW_mult_uns    | a_width=24 | mult_878 (poly_fir_mult_kernel.v:878) |
+      |                | b_width=20 |                            |
+| mult_x_6       | DW_mult_uns    | a_width=24 | mult_879 (poly_fir_mult_kernel.v:879) |
+      |                | b_width=20 |                            |
+| mult_x_7       | DW_mult_uns    | a_width=24 | mult_880 (poly_fir_mult_kernel.v:880) |
+      |                | b_width=20 |                            |
+| mult_x_8       | DW_mult_uns    | a_width=24 | mult_881 (poly_fir_mult_kernel.v:881) |
+      |                | b_width=20 |                            |
+| mult_x_9       | DW_mult_uns    | a_width=24 | mult_882 (poly_fir_mult_kernel.v:882) |
+      |                | b_width=20 |                            |
+| mult_x_10      | DW_mult_uns    | a_width=24 | mult_883 (poly_fir_mult_kernel.v:883) |
+      |                | b_width=20 |                            |
+| mult_x_11      | DW_mult_uns    | a_width=24 | mult_884 (poly_fir_mult_kernel.v:884) |
+      |                | b_width=20 |                            |
+| mult_x_12      | DW_mult_uns    | a_width=24 | mult_885 (poly_fir_mult_kernel.v:885) |
+      |                | b_width=20 |                            |
+| mult_x_13      | DW_mult_uns    | a_width=24 | mult_886 (poly_fir_mult_kernel.v:886) |
+      |                | b_width=20 |                            |
+| mult_x_14      | DW_mult_uns    | a_width=24 | mult_887 (poly_fir_mult_kernel.v:887) |
+      |                | b_width=20 |                            |
+| mult_x_15      | DW_mult_uns    | a_width=24 | mult_888 (poly_fir_mult_kernel.v:888) |
+      |                | b_width=20 |                            |
+| mult_x_16      | DW_mult_uns    | a_width=24 | mult_889 (poly_fir_mult_kernel.v:889) |
+      |                | b_width=20 |                            |
+| mult_x_17      | DW_mult_uns    | a_width=24 | mult_890 (poly_fir_mult_kernel.v:890) |
+      |                | b_width=20 |                            |
+| mult_x_18      | DW_mult_uns    | a_width=24 | mult_891 (poly_fir_mult_kernel.v:891) |
+      |                | b_width=20 |                            |
+| mult_x_19      | DW_mult_uns    | a_width=24 | mult_892 (poly_fir_mult_kernel.v:892) |
+      |                | b_width=20 |                            |
+| mult_x_20      | DW_mult_uns    | a_width=24 | mult_893 (poly_fir_mult_kernel.v:893) |
+      |                | b_width=20 |                            |
+| mult_x_21      | DW_mult_uns    | a_width=24 | mult_894 (poly_fir_mult_kernel.v:894) |
+      |                | b_width=20 |                            |
+| mult_x_22      | DW_mult_uns    | a_width=24 | mult_895 (poly_fir_mult_kernel.v:895) |
+      |                | b_width=20 |                            |
+| mult_x_23      | DW_mult_uns    | a_width=24 | mult_896 (poly_fir_mult_kernel.v:896) |
+      |                | b_width=20 |                            |
+| mult_x_24      | DW_mult_uns    | a_width=24 | mult_897 (poly_fir_mult_kernel.v:897) |
+      |                | b_width=20 |                            |
+| mult_x_25      | DW_mult_uns    | a_width=24 | mult_898 (poly_fir_mult_kernel.v:898) |
+      |                | b_width=20 |                            |
+| mult_x_26      | DW_mult_uns    | a_width=24 | mult_899 (poly_fir_mult_kernel.v:899) |
+      |                | b_width=20 |                            |
+| mult_x_27      | DW_mult_uns    | a_width=24 | mult_900 (poly_fir_mult_kernel.v:900) |
+      |                | b_width=20 |                            |
+| mult_x_28      | DW_mult_uns    | a_width=24 | mult_901 (poly_fir_mult_kernel.v:901) |
+      |                | b_width=20 |                            |
+| mult_x_29      | DW_mult_uns    | a_width=24 | mult_902 (poly_fir_mult_kernel.v:902) |
+      |                | b_width=20 |                            |
+| mult_x_30      | DW_mult_uns    | a_width=24 | mult_903 (poly_fir_mult_kernel.v:903) |
+      |                | b_width=20 |                            |
+| mult_x_31      | DW_mult_uns    | a_width=24 | mult_904 (poly_fir_mult_kernel.v:904) |
+      |                | b_width=20 |                            |
+| mult_x_32      | DW_mult_uns    | a_width=24 | mult_907 (poly_fir_mult_kernel.v:907) |
+      |                | b_width=20 |                            |
+| mult_x_33      | DW_mult_uns    | a_width=24 | mult_908 (poly_fir_mult_kernel.v:908) |
+      |                | b_width=20 |                            |
+| mult_x_34      | DW_mult_uns    | a_width=24 | mult_909 (poly_fir_mult_kernel.v:909) |
+      |                | b_width=20 |                            |
+| mult_x_35      | DW_mult_uns    | a_width=24 | mult_910 (poly_fir_mult_kernel.v:910) |
+      |                | b_width=20 |                            |
+| mult_x_36      | DW_mult_uns    | a_width=24 | mult_911 (poly_fir_mult_kernel.v:911) |
+      |                | b_width=20 |                            |
+| mult_x_37      | DW_mult_uns    | a_width=24 | mult_912 (poly_fir_mult_kernel.v:912) |
+      |                | b_width=20 |                            |
+| mult_x_38      | DW_mult_uns    | a_width=24 | mult_913 (poly_fir_mult_kernel.v:913) |
+      |                | b_width=20 |                            |
+| mult_x_39      | DW_mult_uns    | a_width=24 | mult_914 (poly_fir_mult_kernel.v:914) |
+      |                | b_width=20 |                            |
+| mult_x_40      | DW_mult_uns    | a_width=24 | mult_915 (poly_fir_mult_kernel.v:915) |
+      |                | b_width=20 |                            |
+| mult_x_41      | DW_mult_uns    | a_width=24 | mult_916 (poly_fir_mult_kernel.v:916) |
+      |                | b_width=20 |                            |
+| mult_x_42      | DW_mult_uns    | a_width=24 | mult_917 (poly_fir_mult_kernel.v:917) |
+      |                | b_width=20 |                            |
+| mult_x_43      | DW_mult_uns    | a_width=24 | mult_918 (poly_fir_mult_kernel.v:918) |
+      |                | b_width=20 |                            |
+| mult_x_44      | DW_mult_uns    | a_width=24 | mult_919 (poly_fir_mult_kernel.v:919) |
+      |                | b_width=20 |                            |
+| mult_x_45      | DW_mult_uns    | a_width=24 | mult_920 (poly_fir_mult_kernel.v:920) |
+      |                | b_width=20 |                            |
+| mult_x_46      | DW_mult_uns    | a_width=24 | mult_924 (poly_fir_mult_kernel.v:924) |
+      |                | b_width=20 |                            |
+| mult_x_47      | DW_mult_uns    | a_width=24 | mult_925 (poly_fir_mult_kernel.v:925) |
+      |                | b_width=20 |                            |
+| mult_x_48      | DW_mult_uns    | a_width=24 | mult_926 (poly_fir_mult_kernel.v:926) |
+      |                | b_width=20 |                            |
+| mult_x_49      | DW_mult_uns    | a_width=24 | mult_927 (poly_fir_mult_kernel.v:927) |
+      |                | b_width=20 |                            |
+| mult_x_50      | DW_mult_uns    | a_width=24 | mult_928 (poly_fir_mult_kernel.v:928) |
+      |                | b_width=20 |                            |
+| mult_x_51      | DW_mult_uns    | a_width=24 | mult_929 (poly_fir_mult_kernel.v:929) |
+      |                | b_width=20 |                            |
+| mult_x_52      | DW_mult_uns    | a_width=24 | mult_930 (poly_fir_mult_kernel.v:930) |
+      |                | b_width=20 |                            |
+| mult_x_53      | DW_mult_uns    | a_width=24 | mult_931 (poly_fir_mult_kernel.v:931) |
+      |                | b_width=20 |                            |
+| mult_x_54      | DW_mult_uns    | a_width=24 | mult_932 (poly_fir_mult_kernel.v:932) |
+      |                | b_width=20 |                            |
+| mult_x_55      | DW_mult_uns    | a_width=24 | mult_933 (poly_fir_mult_kernel.v:933) |
+      |                | b_width=20 |                            |
+| mult_x_56      | DW_mult_uns    | a_width=24 | mult_934 (poly_fir_mult_kernel.v:934) |
+      |                | b_width=20 |                            |
+| mult_x_57      | DW_mult_uns    | a_width=24 | mult_935 (poly_fir_mult_kernel.v:935) |
+      |                | b_width=20 |                            |
+| mult_x_58      | DW_mult_uns    | a_width=24 | mult_936 (poly_fir_mult_kernel.v:936) |
+      |                | b_width=20 |                            |
+| mult_x_59      | DW_mult_uns    | a_width=24 | mult_941 (poly_fir_mult_kernel.v:941) |
+      |                | b_width=20 |                            |
+| mult_x_60      | DW_mult_uns    | a_width=24 | mult_942 (poly_fir_mult_kernel.v:942) |
+      |                | b_width=20 |                            |
+| mult_x_61      | DW_mult_uns    | a_width=24 | mult_943 (poly_fir_mult_kernel.v:943) |
+      |                | b_width=20 |                            |
+| mult_x_62      | DW_mult_uns    | a_width=24 | mult_944 (poly_fir_mult_kernel.v:944) |
+      |                | b_width=20 |                            |
+| mult_x_63      | DW_mult_uns    | a_width=24 | mult_945 (poly_fir_mult_kernel.v:945) |
+      |                | b_width=20 |                            |
+| mult_x_64      | DW_mult_uns    | a_width=24 | mult_946 (poly_fir_mult_kernel.v:946) |
+      |                | b_width=20 |                            |
+| mult_x_65      | DW_mult_uns    | a_width=24 | mult_947 (poly_fir_mult_kernel.v:947) |
+      |                | b_width=20 |                            |
+| mult_x_66      | DW_mult_uns    | a_width=24 | mult_948 (poly_fir_mult_kernel.v:948) |
+      |                | b_width=20 |                            |
+| mult_x_67      | DW_mult_uns    | a_width=24 | mult_949 (poly_fir_mult_kernel.v:949) |
+      |                | b_width=20 |                            |
+| mult_x_68      | DW_mult_uns    | a_width=24 | mult_950 (poly_fir_mult_kernel.v:950) |
+      |                | b_width=20 |                            |
+| mult_x_69      | DW_mult_uns    | a_width=24 | mult_951 (poly_fir_mult_kernel.v:951) |
+      |                | b_width=20 |                            |
+| mult_x_70      | DW_mult_uns    | a_width=24 | mult_952 (poly_fir_mult_kernel.v:952) |
+      |                | b_width=20 |                            |
+| mult_x_71      | DW_mult_uns    | a_width=24 | mult_958 (poly_fir_mult_kernel.v:958) |
+      |                | b_width=20 |                            |
+| mult_x_72      | DW_mult_uns    | a_width=24 | mult_959 (poly_fir_mult_kernel.v:959) |
+      |                | b_width=20 |                            |
+| mult_x_73      | DW_mult_uns    | a_width=24 | mult_960 (poly_fir_mult_kernel.v:960) |
+      |                | b_width=20 |                            |
+| mult_x_74      | DW_mult_uns    | a_width=24 | mult_961 (poly_fir_mult_kernel.v:961) |
+      |                | b_width=20 |                            |
+| mult_x_75      | DW_mult_uns    | a_width=24 | mult_962 (poly_fir_mult_kernel.v:962) |
+      |                | b_width=20 |                            |
+| mult_x_76      | DW_mult_uns    | a_width=24 | mult_963 (poly_fir_mult_kernel.v:963) |
+      |                | b_width=20 |                            |
+| mult_x_77      | DW_mult_uns    | a_width=24 | mult_964 (poly_fir_mult_kernel.v:964) |
+      |                | b_width=20 |                            |
+| mult_x_78      | DW_mult_uns    | a_width=24 | mult_965 (poly_fir_mult_kernel.v:965) |
+      |                | b_width=20 |                            |
+| mult_x_79      | DW_mult_uns    | a_width=24 | mult_966 (poly_fir_mult_kernel.v:966) |
+      |                | b_width=20 |                            |
+| mult_x_80      | DW_mult_uns    | a_width=24 | mult_967 (poly_fir_mult_kernel.v:967) |
+      |                | b_width=20 |                            |
+| mult_x_81      | DW_mult_uns    | a_width=24 | mult_968 (poly_fir_mult_kernel.v:968) |
+      |                | b_width=20 |                            |
+| mult_x_82      | DW_mult_uns    | a_width=24 | mult_975 (poly_fir_mult_kernel.v:975) |
+      |                | b_width=20 |                            |
+| mult_x_83      | DW_mult_uns    | a_width=24 | mult_976 (poly_fir_mult_kernel.v:976) |
+      |                | b_width=20 |                            |
+| mult_x_84      | DW_mult_uns    | a_width=24 | mult_977 (poly_fir_mult_kernel.v:977) |
+      |                | b_width=20 |                            |
+| mult_x_85      | DW_mult_uns    | a_width=24 | mult_978 (poly_fir_mult_kernel.v:978) |
+      |                | b_width=20 |                            |
+| mult_x_86      | DW_mult_uns    | a_width=24 | mult_979 (poly_fir_mult_kernel.v:979) |
+      |                | b_width=20 |                            |
+| mult_x_87      | DW_mult_uns    | a_width=24 | mult_980 (poly_fir_mult_kernel.v:980) |
+      |                | b_width=20 |                            |
+| mult_x_88      | DW_mult_uns    | a_width=24 | mult_981 (poly_fir_mult_kernel.v:981) |
+      |                | b_width=20 |                            |
+| mult_x_89      | DW_mult_uns    | a_width=24 | mult_982 (poly_fir_mult_kernel.v:982) |
+      |                | b_width=20 |                            |
+| mult_x_90      | DW_mult_uns    | a_width=24 | mult_983 (poly_fir_mult_kernel.v:983) |
+      |                | b_width=20 |                            |
+| mult_x_91      | DW_mult_uns    | a_width=24 | mult_984 (poly_fir_mult_kernel.v:984) |
+      |                | b_width=20 |                            |
+| mult_x_92      | DW_mult_uns    | a_width=24 | mult_992 (poly_fir_mult_kernel.v:992) |
+      |                | b_width=20 |                            |
+| mult_x_93      | DW_mult_uns    | a_width=24 | mult_993 (poly_fir_mult_kernel.v:993) |
+      |                | b_width=20 |                            |
+| mult_x_94      | DW_mult_uns    | a_width=24 | mult_994 (poly_fir_mult_kernel.v:994) |
+      |                | b_width=20 |                            |
+| mult_x_95      | DW_mult_uns    | a_width=24 | mult_995 (poly_fir_mult_kernel.v:995) |
+      |                | b_width=20 |                            |
+| mult_x_96      | DW_mult_uns    | a_width=24 | mult_996 (poly_fir_mult_kernel.v:996) |
+      |                | b_width=20 |                            |
+| mult_x_97      | DW_mult_uns    | a_width=24 | mult_997 (poly_fir_mult_kernel.v:997) |
+      |                | b_width=20 |                            |
+| mult_x_98      | DW_mult_uns    | a_width=24 | mult_998 (poly_fir_mult_kernel.v:998) |
+      |                | b_width=20 |                            |
+| mult_x_99      | DW_mult_uns    | a_width=24 | mult_999 (poly_fir_mult_kernel.v:999) |
+      |                | b_width=20 |                            |
+| mult_x_100     | DW_mult_uns    | a_width=24 | mult_1000 (poly_fir_mult_kernel.v:1000) |
+    |                | b_width=20 |                            |
+| mult_x_101     | DW_mult_uns    | a_width=24 | mult_1009 (poly_fir_mult_kernel.v:1009) |
+    |                | b_width=20 |                            |
+| mult_x_102     | DW_mult_uns    | a_width=24 | mult_1010 (poly_fir_mult_kernel.v:1010) |
+    |                | b_width=20 |                            |
+| mult_x_103     | DW_mult_uns    | a_width=24 | mult_1011 (poly_fir_mult_kernel.v:1011) |
+    |                | b_width=20 |                            |
+| mult_x_104     | DW_mult_uns    | a_width=24 | mult_1012 (poly_fir_mult_kernel.v:1012) |
+    |                | b_width=20 |                            |
+| mult_x_105     | DW_mult_uns    | a_width=24 | mult_1013 (poly_fir_mult_kernel.v:1013) |
+    |                | b_width=20 |                            |
+| mult_x_106     | DW_mult_uns    | a_width=24 | mult_1014 (poly_fir_mult_kernel.v:1014) |
+    |                | b_width=20 |                            |
+| mult_x_107     | DW_mult_uns    | a_width=24 | mult_1015 (poly_fir_mult_kernel.v:1015) |
+    |                | b_width=20 |                            |
+| mult_x_108     | DW_mult_uns    | a_width=24 | mult_1016 (poly_fir_mult_kernel.v:1016) |
+    |                | b_width=20 |                            |
+| mult_x_109     | DW_mult_uns    | a_width=24 | mult_1026 (poly_fir_mult_kernel.v:1026) |
+    |                | b_width=20 |                            |
+| mult_x_110     | DW_mult_uns    | a_width=24 | mult_1027 (poly_fir_mult_kernel.v:1027) |
+    |                | b_width=20 |                            |
+| mult_x_111     | DW_mult_uns    | a_width=24 | mult_1028 (poly_fir_mult_kernel.v:1028) |
+    |                | b_width=20 |                            |
+| mult_x_112     | DW_mult_uns    | a_width=24 | mult_1029 (poly_fir_mult_kernel.v:1029) |
+    |                | b_width=20 |                            |
+| mult_x_113     | DW_mult_uns    | a_width=24 | mult_1030 (poly_fir_mult_kernel.v:1030) |
+    |                | b_width=20 |                            |
+| mult_x_114     | DW_mult_uns    | a_width=24 | mult_1031 (poly_fir_mult_kernel.v:1031) |
+    |                | b_width=20 |                            |
+| mult_x_115     | DW_mult_uns    | a_width=24 | mult_1032 (poly_fir_mult_kernel.v:1032) |
+    |                | b_width=20 |                            |
+| mult_x_116     | DW_mult_uns    | a_width=24 | mult_1043 (poly_fir_mult_kernel.v:1043) |
+    |                | b_width=20 |                            |
+| mult_x_117     | DW_mult_uns    | a_width=24 | mult_1044 (poly_fir_mult_kernel.v:1044) |
+    |                | b_width=20 |                            |
+| mult_x_118     | DW_mult_uns    | a_width=24 | mult_1045 (poly_fir_mult_kernel.v:1045) |
+    |                | b_width=20 |                            |
+| mult_x_119     | DW_mult_uns    | a_width=24 | mult_1046 (poly_fir_mult_kernel.v:1046) |
+    |                | b_width=20 |                            |
+| mult_x_120     | DW_mult_uns    | a_width=24 | mult_1047 (poly_fir_mult_kernel.v:1047) |
+    |                | b_width=20 |                            |
+| mult_x_121     | DW_mult_uns    | a_width=24 | mult_1048 (poly_fir_mult_kernel.v:1048) |
+    |                | b_width=20 |                            |
+| mult_x_122     | DW_mult_uns    | a_width=24 | mult_1060 (poly_fir_mult_kernel.v:1060) |
+    |                | b_width=20 |                            |
+| mult_x_123     | DW_mult_uns    | a_width=24 | mult_1061 (poly_fir_mult_kernel.v:1061) |
+    |                | b_width=20 |                            |
+| mult_x_124     | DW_mult_uns    | a_width=24 | mult_1062 (poly_fir_mult_kernel.v:1062) |
+    |                | b_width=20 |                            |
+| mult_x_125     | DW_mult_uns    | a_width=24 | mult_1063 (poly_fir_mult_kernel.v:1063) |
+    |                | b_width=20 |                            |
+| mult_x_126     | DW_mult_uns    | a_width=24 | mult_1064 (poly_fir_mult_kernel.v:1064) |
+    |                | b_width=20 |                            |
+| mult_x_127     | DW_mult_uns    | a_width=24 | mult_1077 (poly_fir_mult_kernel.v:1077) |
+    |                | b_width=20 |                            |
+| mult_x_128     | DW_mult_uns    | a_width=24 | mult_1078 (poly_fir_mult_kernel.v:1078) |
+    |                | b_width=20 |                            |
+| mult_x_129     | DW_mult_uns    | a_width=24 | mult_1079 (poly_fir_mult_kernel.v:1079) |
+    |                | b_width=20 |                            |
+| mult_x_130     | DW_mult_uns    | a_width=24 | mult_1080 (poly_fir_mult_kernel.v:1080) |
+    |                | b_width=20 |                            |
+| mult_x_131     | DW_mult_uns    | a_width=24 | mult_1094 (poly_fir_mult_kernel.v:1094) |
+    |                | b_width=20 |                            |
+| mult_x_132     | DW_mult_uns    | a_width=24 | mult_1095 (poly_fir_mult_kernel.v:1095) |
+    |                | b_width=20 |                            |
+| mult_x_133     | DW_mult_uns    | a_width=24 | mult_1096 (poly_fir_mult_kernel.v:1096) |
+    |                | b_width=20 |                            |
+| mult_x_134     | DW_mult_uns    | a_width=24 | mult_1111 (poly_fir_mult_kernel.v:1111) |
+    |                | b_width=20 |                            |
+| mult_x_135     | DW_mult_uns    | a_width=24 | mult_1112 (poly_fir_mult_kernel.v:1112) |
+    |                | b_width=20 |                            |
+| mult_x_136     | DW_mult_uns    | a_width=24 | mult_1128 (poly_fir_mult_kernel.v:1128) |
+    |                | b_width=20 |                            |
+| DP_OP_528J2_122_2783            |            |                            |
+|                | DP_OP_528J2_122_2783 |      |                            |
+| DP_OP_529J2_123_1794            |            |                            |
+|                | DP_OP_529J2_123_1794 |      |                            |
+| DP_OP_530J2_124_5650            |            |                            |
+|                | DP_OP_530J2_124_5650 |      |                            |
+| DP_OP_531J2_125_4661            |            |                            |
+|                | DP_OP_531J2_125_4661 |      |                            |
+| DP_OP_532J2_126_2783            |            |                            |
+|                | DP_OP_532J2_126_2783 |      |                            |
+| DP_OP_533J2_127_4661            |            |                            |
+|                | DP_OP_533J2_127_4661 |      |                            |
+| DP_OP_534J2_128_4969            |            |                            |
+|                | DP_OP_534J2_128_4969 |      |                            |
+| DP_OP_535J2_129_2539            |            |                            |
+|                | DP_OP_535J2_129_2539 |      |                            |
+| DP_OP_536J2_130_2783            |            |                            |
+|                | DP_OP_536J2_130_2783 |      |                            |
+| DP_OP_537J2_131_4526            |            |                            |
+|                | DP_OP_537J2_131_4526 |      |                            |
+| DP_OP_538J2_132_9963            |            |                            |
+|                | DP_OP_538J2_132_9963 |      |                            |
+| DP_OP_539J2_133_4645            |            |                            |
+|                | DP_OP_539J2_133_4645 |      |                            |
+| DP_OP_540J2_134_2879            |            |                            |
+|                | DP_OP_540J2_134_2879 |      |                            |
+| DP_OP_541J2_135_7361            |            |                            |
+|                | DP_OP_541J2_135_7361 |      |                            |
+| DP_OP_542J2_136_9218            |            |                            |
+|                | DP_OP_542J2_136_9218 |      |                            |
+=============================================================================
+
+Datapath Report for DP_OP_528J2_122_2783
+==============================================================================
+| Cell                 | Contained Operations                                |
+==============================================================================
+| DP_OP_528J2_122_2783 | sub_1129 (poly_fir_mult_kernel.v:1129)              |
+|                      | mult_1130 (poly_fir_mult_kernel.v:1130)             |
+|                      | mult_1131 (poly_fir_mult_kernel.v:1131)             |
+|                      | mult_1132 (poly_fir_mult_kernel.v:1132)             |
+|                      | mult_1133 (poly_fir_mult_kernel.v:1133)             |
+|                      | mult_1134 (poly_fir_mult_kernel.v:1134)             |
+|                      | mult_1135 (poly_fir_mult_kernel.v:1135)             |
+|                      | mult_1136 (poly_fir_mult_kernel.v:1136)             |
+|                      | mult_1137 (poly_fir_mult_kernel.v:1137)             |
+|                      | mult_1138 (poly_fir_mult_kernel.v:1138)             |
+|                      | mult_1139 (poly_fir_mult_kernel.v:1139)             |
+|                      | mult_1140 (poly_fir_mult_kernel.v:1140)             |
+|                      | mult_1141 (poly_fir_mult_kernel.v:1141)             |
+|                      | mult_1142 (poly_fir_mult_kernel.v:1142)             |
+|                      | mult_1143 (poly_fir_mult_kernel.v:1143)             |
+|                      | mult_1144 (poly_fir_mult_kernel.v:1144)             |
+==============================================================================
+
+==============================================================================
+|       |      | Data     |       |                                          |
+| Var   | Type | Class    | Width | Expression                               |
+==============================================================================
+| I1    | PI   | Unsigned | 24    |                                          |
+| I2    | PI   | Unsigned | 20    |                                          |
+| I3    | PI   | Unsigned | 20    |                                          |
+| I4    | PI   | Unsigned | 20    |                                          |
+| I5    | PI   | Unsigned | 20    |                                          |
+| I6    | PI   | Unsigned | 20    |                                          |
+| I7    | PI   | Unsigned | 20    |                                          |
+| I8    | PI   | Unsigned | 20    |                                          |
+| I9    | PI   | Unsigned | 20    |                                          |
+| I10   | PI   | Unsigned | 20    |                                          |
+| I11   | PI   | Unsigned | 20    |                                          |
+| I12   | PI   | Unsigned | 20    |                                          |
+| I13   | PI   | Unsigned | 20    |                                          |
+| I14   | PI   | Unsigned | 20    |                                          |
+| I15   | PI   | Unsigned | 20    |                                          |
+| I16   | PI   | Unsigned | 20    |                                          |
+| T255  | IFO  | Signed   | 24    | $unsigned(1'b0) - I1 (poly_fir_mult_kernel.v:1129) |
+| O1    | PO   | Unsigned | 24    | T255 * I2 (poly_fir_mult_kernel.v:1130)  |
+| O2    | PO   | Unsigned | 24    | T255 * I3 (poly_fir_mult_kernel.v:1131)  |
+| O3    | PO   | Unsigned | 24    | T255 * I4 (poly_fir_mult_kernel.v:1132)  |
+| O4    | PO   | Unsigned | 24    | T255 * I5 (poly_fir_mult_kernel.v:1133)  |
+| O5    | PO   | Unsigned | 24    | T255 * I6 (poly_fir_mult_kernel.v:1134)  |
+| O6    | PO   | Unsigned | 24    | T255 * I7 (poly_fir_mult_kernel.v:1135)  |
+| O7    | PO   | Unsigned | 24    | T255 * I8 (poly_fir_mult_kernel.v:1136)  |
+| O8    | PO   | Unsigned | 24    | T255 * I9 (poly_fir_mult_kernel.v:1137)  |
+| O9    | PO   | Unsigned | 24    | T255 * I10 (poly_fir_mult_kernel.v:1138) |
+| O10   | PO   | Unsigned | 24    | T255 * I11 (poly_fir_mult_kernel.v:1139) |
+| O11   | PO   | Unsigned | 24    | T255 * I12 (poly_fir_mult_kernel.v:1140) |
+| O12   | PO   | Unsigned | 24    | T255 * I13 (poly_fir_mult_kernel.v:1141) |
+| O13   | PO   | Unsigned | 24    | T255 * I14 (poly_fir_mult_kernel.v:1142) |
+| O14   | PO   | Unsigned | 24    | T255 * I15 (poly_fir_mult_kernel.v:1143) |
+| O15   | PO   | Unsigned | 24    | T255 * I16 (poly_fir_mult_kernel.v:1144) |
+==============================================================================
+
+Datapath Report for DP_OP_529J2_123_1794
+==============================================================================
+| Cell                 | Contained Operations                                |
+==============================================================================
+| DP_OP_529J2_123_1794 | sub_1113 (poly_fir_mult_kernel.v:1113)              |
+|                      | mult_1114 (poly_fir_mult_kernel.v:1114)             |
+|                      | mult_1115 (poly_fir_mult_kernel.v:1115)             |
+|                      | mult_1116 (poly_fir_mult_kernel.v:1116)             |
+|                      | mult_1117 (poly_fir_mult_kernel.v:1117)             |
+|                      | mult_1118 (poly_fir_mult_kernel.v:1118)             |
+|                      | mult_1119 (poly_fir_mult_kernel.v:1119)             |
+|                      | mult_1120 (poly_fir_mult_kernel.v:1120)             |
+|                      | mult_1121 (poly_fir_mult_kernel.v:1121)             |
+|                      | mult_1122 (poly_fir_mult_kernel.v:1122)             |
+|                      | mult_1123 (poly_fir_mult_kernel.v:1123)             |
+|                      | mult_1124 (poly_fir_mult_kernel.v:1124)             |
+|                      | mult_1125 (poly_fir_mult_kernel.v:1125)             |
+|                      | mult_1126 (poly_fir_mult_kernel.v:1126)             |
+|                      | mult_1127 (poly_fir_mult_kernel.v:1127)             |
+==============================================================================
+
+==============================================================================
+|       |      | Data     |       |                                          |
+| Var   | Type | Class    | Width | Expression                               |
+==============================================================================
+| I1    | PI   | Unsigned | 24    |                                          |
+| I2    | PI   | Unsigned | 20    |                                          |
+| I3    | PI   | Unsigned | 20    |                                          |
+| I4    | PI   | Unsigned | 20    |                                          |
+| I5    | PI   | Unsigned | 20    |                                          |
+| I6    | PI   | Unsigned | 20    |                                          |
+| I7    | PI   | Unsigned | 20    |                                          |
+| I8    | PI   | Unsigned | 20    |                                          |
+| I9    | PI   | Unsigned | 20    |                                          |
+| I10   | PI   | Unsigned | 20    |                                          |
+| I11   | PI   | Unsigned | 20    |                                          |
+| I12   | PI   | Unsigned | 20    |                                          |
+| I13   | PI   | Unsigned | 20    |                                          |
+| I14   | PI   | Unsigned | 20    |                                          |
+| I15   | PI   | Unsigned | 20    |                                          |
+| T239  | IFO  | Signed   | 24    | $unsigned(1'b0) - I1 (poly_fir_mult_kernel.v:1113) |
+| O1    | PO   | Unsigned | 24    | T239 * I2 (poly_fir_mult_kernel.v:1114)  |
+| O2    | PO   | Unsigned | 24    | T239 * I3 (poly_fir_mult_kernel.v:1115)  |
+| O3    | PO   | Unsigned | 24    | T239 * I4 (poly_fir_mult_kernel.v:1116)  |
+| O4    | PO   | Unsigned | 24    | T239 * I5 (poly_fir_mult_kernel.v:1117)  |
+| O5    | PO   | Unsigned | 24    | T239 * I6 (poly_fir_mult_kernel.v:1118)  |
+| O6    | PO   | Unsigned | 24    | T239 * I7 (poly_fir_mult_kernel.v:1119)  |
+| O7    | PO   | Unsigned | 24    | T239 * I8 (poly_fir_mult_kernel.v:1120)  |
+| O8    | PO   | Unsigned | 24    | T239 * I9 (poly_fir_mult_kernel.v:1121)  |
+| O9    | PO   | Unsigned | 24    | T239 * I10 (poly_fir_mult_kernel.v:1122) |
+| O10   | PO   | Unsigned | 24    | T239 * I11 (poly_fir_mult_kernel.v:1123) |
+| O11   | PO   | Unsigned | 24    | T239 * I12 (poly_fir_mult_kernel.v:1124) |
+| O12   | PO   | Unsigned | 24    | T239 * I13 (poly_fir_mult_kernel.v:1125) |
+| O13   | PO   | Unsigned | 24    | T239 * I14 (poly_fir_mult_kernel.v:1126) |
+| O14   | PO   | Unsigned | 24    | T239 * I15 (poly_fir_mult_kernel.v:1127) |
+==============================================================================
+
+Datapath Report for DP_OP_530J2_124_5650
+==============================================================================
+| Cell                 | Contained Operations                                |
+==============================================================================
+| DP_OP_530J2_124_5650 | sub_1097 (poly_fir_mult_kernel.v:1097)              |
+|                      | mult_1098 (poly_fir_mult_kernel.v:1098)             |
+|                      | mult_1099 (poly_fir_mult_kernel.v:1099)             |
+|                      | mult_1100 (poly_fir_mult_kernel.v:1100)             |
+|                      | mult_1101 (poly_fir_mult_kernel.v:1101)             |
+|                      | mult_1102 (poly_fir_mult_kernel.v:1102)             |
+|                      | mult_1103 (poly_fir_mult_kernel.v:1103)             |
+|                      | mult_1104 (poly_fir_mult_kernel.v:1104)             |
+|                      | mult_1105 (poly_fir_mult_kernel.v:1105)             |
+|                      | mult_1106 (poly_fir_mult_kernel.v:1106)             |
+|                      | mult_1107 (poly_fir_mult_kernel.v:1107)             |
+|                      | mult_1108 (poly_fir_mult_kernel.v:1108)             |
+|                      | mult_1109 (poly_fir_mult_kernel.v:1109)             |
+|                      | mult_1110 (poly_fir_mult_kernel.v:1110)             |
+==============================================================================
+
+==============================================================================
+|       |      | Data     |       |                                          |
+| Var   | Type | Class    | Width | Expression                               |
+==============================================================================
+| I1    | PI   | Unsigned | 24    |                                          |
+| I2    | PI   | Unsigned | 20    |                                          |
+| I3    | PI   | Unsigned | 20    |                                          |
+| I4    | PI   | Unsigned | 20    |                                          |
+| I5    | PI   | Unsigned | 20    |                                          |
+| I6    | PI   | Unsigned | 20    |                                          |
+| I7    | PI   | Unsigned | 20    |                                          |
+| I8    | PI   | Unsigned | 20    |                                          |
+| I9    | PI   | Unsigned | 20    |                                          |
+| I10   | PI   | Unsigned | 20    |                                          |
+| I11   | PI   | Unsigned | 20    |                                          |
+| I12   | PI   | Unsigned | 20    |                                          |
+| I13   | PI   | Unsigned | 20    |                                          |
+| I14   | PI   | Unsigned | 20    |                                          |
+| T223  | IFO  | Signed   | 24    | $unsigned(1'b0) - I1 (poly_fir_mult_kernel.v:1097) |
+| O1    | PO   | Unsigned | 24    | T223 * I2 (poly_fir_mult_kernel.v:1098)  |
+| O2    | PO   | Unsigned | 24    | T223 * I3 (poly_fir_mult_kernel.v:1099)  |
+| O3    | PO   | Unsigned | 24    | T223 * I4 (poly_fir_mult_kernel.v:1100)  |
+| O4    | PO   | Unsigned | 24    | T223 * I5 (poly_fir_mult_kernel.v:1101)  |
+| O5    | PO   | Unsigned | 24    | T223 * I6 (poly_fir_mult_kernel.v:1102)  |
+| O6    | PO   | Unsigned | 24    | T223 * I7 (poly_fir_mult_kernel.v:1103)  |
+| O7    | PO   | Unsigned | 24    | T223 * I8 (poly_fir_mult_kernel.v:1104)  |
+| O8    | PO   | Unsigned | 24    | T223 * I9 (poly_fir_mult_kernel.v:1105)  |
+| O9    | PO   | Unsigned | 24    | T223 * I10 (poly_fir_mult_kernel.v:1106) |
+| O10   | PO   | Unsigned | 24    | T223 * I11 (poly_fir_mult_kernel.v:1107) |
+| O11   | PO   | Unsigned | 24    | T223 * I12 (poly_fir_mult_kernel.v:1108) |
+| O12   | PO   | Unsigned | 24    | T223 * I13 (poly_fir_mult_kernel.v:1109) |
+| O13   | PO   | Unsigned | 24    | T223 * I14 (poly_fir_mult_kernel.v:1110) |
+==============================================================================
+
+Datapath Report for DP_OP_531J2_125_4661
+==============================================================================
+| Cell                 | Contained Operations                                |
+==============================================================================
+| DP_OP_531J2_125_4661 | sub_1081 (poly_fir_mult_kernel.v:1081)              |
+|                      | mult_1082 (poly_fir_mult_kernel.v:1082)             |
+|                      | mult_1083 (poly_fir_mult_kernel.v:1083)             |
+|                      | mult_1084 (poly_fir_mult_kernel.v:1084)             |
+|                      | mult_1085 (poly_fir_mult_kernel.v:1085)             |
+|                      | mult_1086 (poly_fir_mult_kernel.v:1086)             |
+|                      | mult_1087 (poly_fir_mult_kernel.v:1087)             |
+|                      | mult_1088 (poly_fir_mult_kernel.v:1088)             |
+|                      | mult_1089 (poly_fir_mult_kernel.v:1089)             |
+|                      | mult_1090 (poly_fir_mult_kernel.v:1090)             |
+|                      | mult_1091 (poly_fir_mult_kernel.v:1091)             |
+|                      | mult_1092 (poly_fir_mult_kernel.v:1092)             |
+|                      | mult_1093 (poly_fir_mult_kernel.v:1093)             |
+==============================================================================
+
+==============================================================================
+|       |      | Data     |       |                                          |
+| Var   | Type | Class    | Width | Expression                               |
+==============================================================================
+| I1    | PI   | Unsigned | 24    |                                          |
+| I2    | PI   | Unsigned | 20    |                                          |
+| I3    | PI   | Unsigned | 20    |                                          |
+| I4    | PI   | Unsigned | 20    |                                          |
+| I5    | PI   | Unsigned | 20    |                                          |
+| I6    | PI   | Unsigned | 20    |                                          |
+| I7    | PI   | Unsigned | 20    |                                          |
+| I8    | PI   | Unsigned | 20    |                                          |
+| I9    | PI   | Unsigned | 20    |                                          |
+| I10   | PI   | Unsigned | 20    |                                          |
+| I11   | PI   | Unsigned | 20    |                                          |
+| I12   | PI   | Unsigned | 20    |                                          |
+| I13   | PI   | Unsigned | 20    |                                          |
+| T207  | IFO  | Signed   | 24    | $unsigned(1'b0) - I1 (poly_fir_mult_kernel.v:1081) |
+| O1    | PO   | Unsigned | 24    | T207 * I2 (poly_fir_mult_kernel.v:1082)  |
+| O2    | PO   | Unsigned | 24    | T207 * I3 (poly_fir_mult_kernel.v:1083)  |
+| O3    | PO   | Unsigned | 24    | T207 * I4 (poly_fir_mult_kernel.v:1084)  |
+| O4    | PO   | Unsigned | 24    | T207 * I5 (poly_fir_mult_kernel.v:1085)  |
+| O5    | PO   | Unsigned | 24    | T207 * I6 (poly_fir_mult_kernel.v:1086)  |
+| O6    | PO   | Unsigned | 24    | T207 * I7 (poly_fir_mult_kernel.v:1087)  |
+| O7    | PO   | Unsigned | 24    | T207 * I8 (poly_fir_mult_kernel.v:1088)  |
+| O8    | PO   | Unsigned | 24    | T207 * I9 (poly_fir_mult_kernel.v:1089)  |
+| O9    | PO   | Unsigned | 24    | T207 * I10 (poly_fir_mult_kernel.v:1090) |
+| O10   | PO   | Unsigned | 24    | T207 * I11 (poly_fir_mult_kernel.v:1091) |
+| O11   | PO   | Unsigned | 24    | T207 * I12 (poly_fir_mult_kernel.v:1092) |
+| O12   | PO   | Unsigned | 24    | T207 * I13 (poly_fir_mult_kernel.v:1093) |
+==============================================================================
+
+Datapath Report for DP_OP_532J2_126_2783
+==============================================================================
+| Cell                 | Contained Operations                                |
+==============================================================================
+| DP_OP_532J2_126_2783 | sub_1065 (poly_fir_mult_kernel.v:1065)              |
+|                      | mult_1066 (poly_fir_mult_kernel.v:1066)             |
+|                      | mult_1067 (poly_fir_mult_kernel.v:1067)             |
+|                      | mult_1068 (poly_fir_mult_kernel.v:1068)             |
+|                      | mult_1069 (poly_fir_mult_kernel.v:1069)             |
+|                      | mult_1070 (poly_fir_mult_kernel.v:1070)             |
+|                      | mult_1071 (poly_fir_mult_kernel.v:1071)             |
+|                      | mult_1072 (poly_fir_mult_kernel.v:1072)             |
+|                      | mult_1073 (poly_fir_mult_kernel.v:1073)             |
+|                      | mult_1074 (poly_fir_mult_kernel.v:1074)             |
+|                      | mult_1075 (poly_fir_mult_kernel.v:1075)             |
+|                      | mult_1076 (poly_fir_mult_kernel.v:1076)             |
+==============================================================================
+
+==============================================================================
+|       |      | Data     |       |                                          |
+| Var   | Type | Class    | Width | Expression                               |
+==============================================================================
+| I1    | PI   | Unsigned | 24    |                                          |
+| I2    | PI   | Unsigned | 20    |                                          |
+| I3    | PI   | Unsigned | 20    |                                          |
+| I4    | PI   | Unsigned | 20    |                                          |
+| I5    | PI   | Unsigned | 20    |                                          |
+| I6    | PI   | Unsigned | 20    |                                          |
+| I7    | PI   | Unsigned | 20    |                                          |
+| I8    | PI   | Unsigned | 20    |                                          |
+| I9    | PI   | Unsigned | 20    |                                          |
+| I10   | PI   | Unsigned | 20    |                                          |
+| I11   | PI   | Unsigned | 20    |                                          |
+| I12   | PI   | Unsigned | 20    |                                          |
+| T191  | IFO  | Signed   | 24    | $unsigned(1'b0) - I1 (poly_fir_mult_kernel.v:1065) |
+| O1    | PO   | Unsigned | 24    | T191 * I2 (poly_fir_mult_kernel.v:1066)  |
+| O2    | PO   | Unsigned | 24    | T191 * I3 (poly_fir_mult_kernel.v:1067)  |
+| O3    | PO   | Unsigned | 24    | T191 * I4 (poly_fir_mult_kernel.v:1068)  |
+| O4    | PO   | Unsigned | 24    | T191 * I5 (poly_fir_mult_kernel.v:1069)  |
+| O5    | PO   | Unsigned | 24    | T191 * I6 (poly_fir_mult_kernel.v:1070)  |
+| O6    | PO   | Unsigned | 24    | T191 * I7 (poly_fir_mult_kernel.v:1071)  |
+| O7    | PO   | Unsigned | 24    | T191 * I8 (poly_fir_mult_kernel.v:1072)  |
+| O8    | PO   | Unsigned | 24    | T191 * I9 (poly_fir_mult_kernel.v:1073)  |
+| O9    | PO   | Unsigned | 24    | T191 * I10 (poly_fir_mult_kernel.v:1074) |
+| O10   | PO   | Unsigned | 24    | T191 * I11 (poly_fir_mult_kernel.v:1075) |
+| O11   | PO   | Unsigned | 24    | T191 * I12 (poly_fir_mult_kernel.v:1076) |
+==============================================================================
+
+Datapath Report for DP_OP_533J2_127_4661
+==============================================================================
+| Cell                 | Contained Operations                                |
+==============================================================================
+| DP_OP_533J2_127_4661 | sub_1049 (poly_fir_mult_kernel.v:1049)              |
+|                      | mult_1050 (poly_fir_mult_kernel.v:1050)             |
+|                      | mult_1051 (poly_fir_mult_kernel.v:1051)             |
+|                      | mult_1052 (poly_fir_mult_kernel.v:1052)             |
+|                      | mult_1053 (poly_fir_mult_kernel.v:1053)             |
+|                      | mult_1054 (poly_fir_mult_kernel.v:1054)             |
+|                      | mult_1055 (poly_fir_mult_kernel.v:1055)             |
+|                      | mult_1056 (poly_fir_mult_kernel.v:1056)             |
+|                      | mult_1057 (poly_fir_mult_kernel.v:1057)             |
+|                      | mult_1058 (poly_fir_mult_kernel.v:1058)             |
+|                      | mult_1059 (poly_fir_mult_kernel.v:1059)             |
+==============================================================================
+
+==============================================================================
+|       |      | Data     |       |                                          |
+| Var   | Type | Class    | Width | Expression                               |
+==============================================================================
+| I1    | PI   | Unsigned | 24    |                                          |
+| I2    | PI   | Unsigned | 20    |                                          |
+| I3    | PI   | Unsigned | 20    |                                          |
+| I4    | PI   | Unsigned | 20    |                                          |
+| I5    | PI   | Unsigned | 20    |                                          |
+| I6    | PI   | Unsigned | 20    |                                          |
+| I7    | PI   | Unsigned | 20    |                                          |
+| I8    | PI   | Unsigned | 20    |                                          |
+| I9    | PI   | Unsigned | 20    |                                          |
+| I10   | PI   | Unsigned | 20    |                                          |
+| I11   | PI   | Unsigned | 20    |                                          |
+| T175  | IFO  | Signed   | 24    | $unsigned(1'b0) - I1 (poly_fir_mult_kernel.v:1049) |
+| O1    | PO   | Unsigned | 24    | T175 * I2 (poly_fir_mult_kernel.v:1050)  |
+| O2    | PO   | Unsigned | 24    | T175 * I3 (poly_fir_mult_kernel.v:1051)  |
+| O3    | PO   | Unsigned | 24    | T175 * I4 (poly_fir_mult_kernel.v:1052)  |
+| O4    | PO   | Unsigned | 24    | T175 * I5 (poly_fir_mult_kernel.v:1053)  |
+| O5    | PO   | Unsigned | 24    | T175 * I6 (poly_fir_mult_kernel.v:1054)  |
+| O6    | PO   | Unsigned | 24    | T175 * I7 (poly_fir_mult_kernel.v:1055)  |
+| O7    | PO   | Unsigned | 24    | T175 * I8 (poly_fir_mult_kernel.v:1056)  |
+| O8    | PO   | Unsigned | 24    | T175 * I9 (poly_fir_mult_kernel.v:1057)  |
+| O9    | PO   | Unsigned | 24    | T175 * I10 (poly_fir_mult_kernel.v:1058) |
+| O10   | PO   | Unsigned | 24    | T175 * I11 (poly_fir_mult_kernel.v:1059) |
+==============================================================================
+
+Datapath Report for DP_OP_534J2_128_4969
+==============================================================================
+| Cell                 | Contained Operations                                |
+==============================================================================
+| DP_OP_534J2_128_4969 | sub_1033 (poly_fir_mult_kernel.v:1033)              |
+|                      | mult_1034 (poly_fir_mult_kernel.v:1034)             |
+|                      | mult_1035 (poly_fir_mult_kernel.v:1035)             |
+|                      | mult_1036 (poly_fir_mult_kernel.v:1036)             |
+|                      | mult_1037 (poly_fir_mult_kernel.v:1037)             |
+|                      | mult_1038 (poly_fir_mult_kernel.v:1038)             |
+|                      | mult_1039 (poly_fir_mult_kernel.v:1039)             |
+|                      | mult_1040 (poly_fir_mult_kernel.v:1040)             |
+|                      | mult_1041 (poly_fir_mult_kernel.v:1041)             |
+|                      | mult_1042 (poly_fir_mult_kernel.v:1042)             |
+==============================================================================
+
+==============================================================================
+|       |      | Data     |       |                                          |
+| Var   | Type | Class    | Width | Expression                               |
+==============================================================================
+| I1    | PI   | Unsigned | 24    |                                          |
+| I2    | PI   | Unsigned | 20    |                                          |
+| I3    | PI   | Unsigned | 20    |                                          |
+| I4    | PI   | Unsigned | 20    |                                          |
+| I5    | PI   | Unsigned | 20    |                                          |
+| I6    | PI   | Unsigned | 20    |                                          |
+| I7    | PI   | Unsigned | 20    |                                          |
+| I8    | PI   | Unsigned | 20    |                                          |
+| I9    | PI   | Unsigned | 20    |                                          |
+| I10   | PI   | Unsigned | 20    |                                          |
+| T159  | IFO  | Signed   | 24    | $unsigned(1'b0) - I1 (poly_fir_mult_kernel.v:1033) |
+| O1    | PO   | Unsigned | 24    | T159 * I2 (poly_fir_mult_kernel.v:1034)  |
+| O2    | PO   | Unsigned | 24    | T159 * I3 (poly_fir_mult_kernel.v:1035)  |
+| O3    | PO   | Unsigned | 24    | T159 * I4 (poly_fir_mult_kernel.v:1036)  |
+| O4    | PO   | Unsigned | 24    | T159 * I5 (poly_fir_mult_kernel.v:1037)  |
+| O5    | PO   | Unsigned | 24    | T159 * I6 (poly_fir_mult_kernel.v:1038)  |
+| O6    | PO   | Unsigned | 24    | T159 * I7 (poly_fir_mult_kernel.v:1039)  |
+| O7    | PO   | Unsigned | 24    | T159 * I8 (poly_fir_mult_kernel.v:1040)  |
+| O8    | PO   | Unsigned | 24    | T159 * I9 (poly_fir_mult_kernel.v:1041)  |
+| O9    | PO   | Unsigned | 24    | T159 * I10 (poly_fir_mult_kernel.v:1042) |
+==============================================================================
+
+Datapath Report for DP_OP_535J2_129_2539
+==============================================================================
+| Cell                 | Contained Operations                                |
+==============================================================================
+| DP_OP_535J2_129_2539 | sub_1017 (poly_fir_mult_kernel.v:1017)              |
+|                      | mult_1018 (poly_fir_mult_kernel.v:1018)             |
+|                      | mult_1019 (poly_fir_mult_kernel.v:1019)             |
+|                      | mult_1020 (poly_fir_mult_kernel.v:1020)             |
+|                      | mult_1021 (poly_fir_mult_kernel.v:1021)             |
+|                      | mult_1022 (poly_fir_mult_kernel.v:1022)             |
+|                      | mult_1023 (poly_fir_mult_kernel.v:1023)             |
+|                      | mult_1024 (poly_fir_mult_kernel.v:1024)             |
+|                      | mult_1025 (poly_fir_mult_kernel.v:1025)             |
+==============================================================================
+
+==============================================================================
+|       |      | Data     |       |                                          |
+| Var   | Type | Class    | Width | Expression                               |
+==============================================================================
+| I1    | PI   | Unsigned | 24    |                                          |
+| I2    | PI   | Unsigned | 20    |                                          |
+| I3    | PI   | Unsigned | 20    |                                          |
+| I4    | PI   | Unsigned | 20    |                                          |
+| I5    | PI   | Unsigned | 20    |                                          |
+| I6    | PI   | Unsigned | 20    |                                          |
+| I7    | PI   | Unsigned | 20    |                                          |
+| I8    | PI   | Unsigned | 20    |                                          |
+| I9    | PI   | Unsigned | 20    |                                          |
+| T143  | IFO  | Signed   | 24    | $unsigned(1'b0) - I1 (poly_fir_mult_kernel.v:1017) |
+| O1    | PO   | Unsigned | 24    | T143 * I2 (poly_fir_mult_kernel.v:1018)  |
+| O2    | PO   | Unsigned | 24    | T143 * I3 (poly_fir_mult_kernel.v:1019)  |
+| O3    | PO   | Unsigned | 24    | T143 * I4 (poly_fir_mult_kernel.v:1020)  |
+| O4    | PO   | Unsigned | 24    | T143 * I5 (poly_fir_mult_kernel.v:1021)  |
+| O5    | PO   | Unsigned | 24    | T143 * I6 (poly_fir_mult_kernel.v:1022)  |
+| O6    | PO   | Unsigned | 24    | T143 * I7 (poly_fir_mult_kernel.v:1023)  |
+| O7    | PO   | Unsigned | 24    | T143 * I8 (poly_fir_mult_kernel.v:1024)  |
+| O8    | PO   | Unsigned | 24    | T143 * I9 (poly_fir_mult_kernel.v:1025)  |
+==============================================================================
+
+Datapath Report for DP_OP_536J2_130_2783
+==============================================================================
+| Cell                 | Contained Operations                                |
+==============================================================================
+| DP_OP_536J2_130_2783 | sub_1001 (poly_fir_mult_kernel.v:1001)              |
+|                      | mult_1002 (poly_fir_mult_kernel.v:1002)             |
+|                      | mult_1003 (poly_fir_mult_kernel.v:1003)             |
+|                      | mult_1004 (poly_fir_mult_kernel.v:1004)             |
+|                      | mult_1005 (poly_fir_mult_kernel.v:1005)             |
+|                      | mult_1006 (poly_fir_mult_kernel.v:1006)             |
+|                      | mult_1007 (poly_fir_mult_kernel.v:1007)             |
+|                      | mult_1008 (poly_fir_mult_kernel.v:1008)             |
+==============================================================================
+
+==============================================================================
+|       |      | Data     |       |                                          |
+| Var   | Type | Class    | Width | Expression                               |
+==============================================================================
+| I1    | PI   | Unsigned | 24    |                                          |
+| I2    | PI   | Unsigned | 20    |                                          |
+| I3    | PI   | Unsigned | 20    |                                          |
+| I4    | PI   | Unsigned | 20    |                                          |
+| I5    | PI   | Unsigned | 20    |                                          |
+| I6    | PI   | Unsigned | 20    |                                          |
+| I7    | PI   | Unsigned | 20    |                                          |
+| I8    | PI   | Unsigned | 20    |                                          |
+| T127  | IFO  | Signed   | 24    | $unsigned(1'b0) - I1 (poly_fir_mult_kernel.v:1001) |
+| O1    | PO   | Unsigned | 24    | T127 * I2 (poly_fir_mult_kernel.v:1002)  |
+| O2    | PO   | Unsigned | 24    | T127 * I3 (poly_fir_mult_kernel.v:1003)  |
+| O3    | PO   | Unsigned | 24    | T127 * I4 (poly_fir_mult_kernel.v:1004)  |
+| O4    | PO   | Unsigned | 24    | T127 * I5 (poly_fir_mult_kernel.v:1005)  |
+| O5    | PO   | Unsigned | 24    | T127 * I6 (poly_fir_mult_kernel.v:1006)  |
+| O6    | PO   | Unsigned | 24    | T127 * I7 (poly_fir_mult_kernel.v:1007)  |
+| O7    | PO   | Unsigned | 24    | T127 * I8 (poly_fir_mult_kernel.v:1008)  |
+==============================================================================
+
+Datapath Report for DP_OP_537J2_131_4526
+==============================================================================
+| Cell                 | Contained Operations                                |
+==============================================================================
+| DP_OP_537J2_131_4526 | sub_985 (poly_fir_mult_kernel.v:985)                |
+|                      | mult_986 (poly_fir_mult_kernel.v:986)               |
+|                      | mult_987 (poly_fir_mult_kernel.v:987)               |
+|                      | mult_988 (poly_fir_mult_kernel.v:988)               |
+|                      | mult_989 (poly_fir_mult_kernel.v:989)               |
+|                      | mult_990 (poly_fir_mult_kernel.v:990)               |
+|                      | mult_991 (poly_fir_mult_kernel.v:991)               |
+==============================================================================
+
+==============================================================================
+|       |      | Data     |       |                                          |
+| Var   | Type | Class    | Width | Expression                               |
+==============================================================================
+| I1    | PI   | Unsigned | 24    |                                          |
+| I2    | PI   | Unsigned | 20    |                                          |
+| I3    | PI   | Unsigned | 20    |                                          |
+| I4    | PI   | Unsigned | 20    |                                          |
+| I5    | PI   | Unsigned | 20    |                                          |
+| I6    | PI   | Unsigned | 20    |                                          |
+| I7    | PI   | Unsigned | 20    |                                          |
+| T111  | IFO  | Signed   | 24    | $unsigned(1'b0) - I1 (poly_fir_mult_kernel.v:985) |
+| O1    | PO   | Unsigned | 24    | T111 * I2 (poly_fir_mult_kernel.v:986)   |
+| O2    | PO   | Unsigned | 24    | T111 * I3 (poly_fir_mult_kernel.v:987)   |
+| O3    | PO   | Unsigned | 24    | T111 * I4 (poly_fir_mult_kernel.v:988)   |
+| O4    | PO   | Unsigned | 24    | T111 * I5 (poly_fir_mult_kernel.v:989)   |
+| O5    | PO   | Unsigned | 24    | T111 * I6 (poly_fir_mult_kernel.v:990)   |
+| O6    | PO   | Unsigned | 24    | T111 * I7 (poly_fir_mult_kernel.v:991)   |
+==============================================================================
+
+Datapath Report for DP_OP_538J2_132_9963
+==============================================================================
+| Cell                 | Contained Operations                                |
+==============================================================================
+| DP_OP_538J2_132_9963 | sub_969 (poly_fir_mult_kernel.v:969)                |
+|                      | mult_970 (poly_fir_mult_kernel.v:970)               |
+|                      | mult_971 (poly_fir_mult_kernel.v:971)               |
+|                      | mult_972 (poly_fir_mult_kernel.v:972)               |
+|                      | mult_973 (poly_fir_mult_kernel.v:973)               |
+|                      | mult_974 (poly_fir_mult_kernel.v:974)               |
+==============================================================================
+
+==============================================================================
+|       |      | Data     |       |                                          |
+| Var   | Type | Class    | Width | Expression                               |
+==============================================================================
+| I1    | PI   | Unsigned | 24    |                                          |
+| I2    | PI   | Unsigned | 20    |                                          |
+| I3    | PI   | Unsigned | 20    |                                          |
+| I4    | PI   | Unsigned | 20    |                                          |
+| I5    | PI   | Unsigned | 20    |                                          |
+| I6    | PI   | Unsigned | 20    |                                          |
+| T95   | IFO  | Signed   | 24    | $unsigned(1'b0) - I1 (poly_fir_mult_kernel.v:969) |
+| O1    | PO   | Unsigned | 24    | T95 * I2 (poly_fir_mult_kernel.v:970)    |
+| O2    | PO   | Unsigned | 24    | T95 * I3 (poly_fir_mult_kernel.v:971)    |
+| O3    | PO   | Unsigned | 24    | T95 * I4 (poly_fir_mult_kernel.v:972)    |
+| O4    | PO   | Unsigned | 24    | T95 * I5 (poly_fir_mult_kernel.v:973)    |
+| O5    | PO   | Unsigned | 24    | T95 * I6 (poly_fir_mult_kernel.v:974)    |
+==============================================================================
+
+Datapath Report for DP_OP_539J2_133_4645
+==============================================================================
+| Cell                 | Contained Operations                                |
+==============================================================================
+| DP_OP_539J2_133_4645 | sub_953 (poly_fir_mult_kernel.v:953)                |
+|                      | mult_954 (poly_fir_mult_kernel.v:954)               |
+|                      | mult_955 (poly_fir_mult_kernel.v:955)               |
+|                      | mult_956 (poly_fir_mult_kernel.v:956)               |
+|                      | mult_957 (poly_fir_mult_kernel.v:957)               |
+==============================================================================
+
+==============================================================================
+|       |      | Data     |       |                                          |
+| Var   | Type | Class    | Width | Expression                               |
+==============================================================================
+| I1    | PI   | Unsigned | 24    |                                          |
+| I2    | PI   | Unsigned | 20    |                                          |
+| I3    | PI   | Unsigned | 20    |                                          |
+| I4    | PI   | Unsigned | 20    |                                          |
+| I5    | PI   | Unsigned | 20    |                                          |
+| T79   | IFO  | Signed   | 24    | $unsigned(1'b0) - I1 (poly_fir_mult_kernel.v:953) |
+| O1    | PO   | Unsigned | 24    | T79 * I2 (poly_fir_mult_kernel.v:954)    |
+| O2    | PO   | Unsigned | 24    | T79 * I3 (poly_fir_mult_kernel.v:955)    |
+| O3    | PO   | Unsigned | 24    | T79 * I4 (poly_fir_mult_kernel.v:956)    |
+| O4    | PO   | Unsigned | 24    | T79 * I5 (poly_fir_mult_kernel.v:957)    |
+==============================================================================
+
+Datapath Report for DP_OP_540J2_134_2879
+==============================================================================
+| Cell                 | Contained Operations                                |
+==============================================================================
+| DP_OP_540J2_134_2879 | sub_937 (poly_fir_mult_kernel.v:937)                |
+|                      | mult_938 (poly_fir_mult_kernel.v:938)               |
+|                      | mult_939 (poly_fir_mult_kernel.v:939)               |
+|                      | mult_940 (poly_fir_mult_kernel.v:940)               |
+==============================================================================
+
+==============================================================================
+|       |      | Data     |       |                                          |
+| Var   | Type | Class    | Width | Expression                               |
+==============================================================================
+| I1    | PI   | Unsigned | 24    |                                          |
+| I2    | PI   | Unsigned | 20    |                                          |
+| I3    | PI   | Unsigned | 20    |                                          |
+| I4    | PI   | Unsigned | 20    |                                          |
+| T63   | IFO  | Signed   | 24    | $unsigned(1'b0) - I1 (poly_fir_mult_kernel.v:937) |
+| O1    | PO   | Unsigned | 24    | T63 * I2 (poly_fir_mult_kernel.v:938)    |
+| O2    | PO   | Unsigned | 24    | T63 * I3 (poly_fir_mult_kernel.v:939)    |
+| O3    | PO   | Unsigned | 24    | T63 * I4 (poly_fir_mult_kernel.v:940)    |
+==============================================================================
+
+Datapath Report for DP_OP_541J2_135_7361
+==============================================================================
+| Cell                 | Contained Operations                                |
+==============================================================================
+| DP_OP_541J2_135_7361 | sub_921 (poly_fir_mult_kernel.v:921)                |
+|                      | mult_922 (poly_fir_mult_kernel.v:922)               |
+|                      | mult_923 (poly_fir_mult_kernel.v:923)               |
+==============================================================================
+
+==============================================================================
+|       |      | Data     |       |                                          |
+| Var   | Type | Class    | Width | Expression                               |
+==============================================================================
+| I1    | PI   | Unsigned | 24    |                                          |
+| I2    | PI   | Unsigned | 20    |                                          |
+| I3    | PI   | Unsigned | 20    |                                          |
+| T47   | IFO  | Signed   | 24    | $unsigned(1'b0) - I1 (poly_fir_mult_kernel.v:921) |
+| O1    | PO   | Unsigned | 24    | T47 * I2 (poly_fir_mult_kernel.v:922)    |
+| O2    | PO   | Unsigned | 24    | T47 * I3 (poly_fir_mult_kernel.v:923)    |
+==============================================================================
+
+Datapath Report for DP_OP_542J2_136_9218
+==============================================================================
+| Cell                 | Contained Operations                                |
+==============================================================================
+| DP_OP_542J2_136_9218 | sub_905 (poly_fir_mult_kernel.v:905)                |
+|                      | mult_906 (poly_fir_mult_kernel.v:906)               |
+==============================================================================
+
+==============================================================================
+|       |      | Data     |       |                                          |
+| Var   | Type | Class    | Width | Expression                               |
+==============================================================================
+| I1    | PI   | Unsigned | 24    |                                          |
+| I2    | PI   | Unsigned | 20    |                                          |
+| T31   | IFO  | Signed   | 24    | $unsigned(1'b0) - I1 (poly_fir_mult_kernel.v:905) |
+| O1    | PO   | Unsigned | 24    | T31 * I2 (poly_fir_mult_kernel.v:906)    |
+==============================================================================
+
+
+Implementation Report
+===============================================================================
+|                    |                  | Current            | Set            |
+| Cell               | Module           | Implementation     | Implementation |
+===============================================================================
+| mult_x_1           | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_2           | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_3           | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_4           | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_5           | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_6           | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_7           | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_8           | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_9           | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_10          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_11          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_12          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_13          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_14          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_15          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_16          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_17          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_18          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_19          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_20          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_21          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_22          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_23          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_24          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_25          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_26          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_27          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_28          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_29          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_30          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_31          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_32          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_33          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_34          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_35          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_36          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_37          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_38          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_39          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_40          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_41          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_42          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_43          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_44          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_45          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_46          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_47          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_48          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_49          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_50          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_51          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_52          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_53          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_54          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_55          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_56          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_57          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_58          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_59          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_60          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_61          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_62          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_63          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_64          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_65          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_66          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_67          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_68          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_69          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_70          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_71          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_72          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_73          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_74          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_75          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_76          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_77          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_78          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_79          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_80          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_81          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_82          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_83          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_84          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_85          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_86          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_87          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_88          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_89          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_90          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_91          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_92          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_93          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_94          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_95          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_96          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_97          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_98          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_99          | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_100         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_101         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_102         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_103         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_104         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_105         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_106         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_107         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_108         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_109         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_110         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_111         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_112         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_113         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_114         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_115         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_116         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_117         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_118         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_119         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_120         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_121         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_122         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_123         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_124         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_125         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_126         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_127         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_128         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_129         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_130         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_131         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_132         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_133         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_134         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_135         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| mult_x_136         | DW_mult_uns      | apparch (area)     |                |
+|                    |                  | mult_arch: benc_radix8              |
+| DP_OP_528J2_122_2783                  |                    |                |
+|                    | DP_OP_528J2_122_2783 | str (area)     |                |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+| DP_OP_529J2_123_1794                  |                    |                |
+|                    | DP_OP_529J2_123_1794 | str (area)     |                |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+| DP_OP_530J2_124_5650                  |                    |                |
+|                    | DP_OP_530J2_124_5650 | str (area)     |                |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+| DP_OP_531J2_125_4661                  |                    |                |
+|                    | DP_OP_531J2_125_4661 | str (area)     |                |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+| DP_OP_532J2_126_2783                  |                    |                |
+|                    | DP_OP_532J2_126_2783 | str (area)     |                |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+| DP_OP_533J2_127_4661                  |                    |                |
+|                    | DP_OP_533J2_127_4661 | str (area)     |                |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+| DP_OP_534J2_128_4969                  |                    |                |
+|                    | DP_OP_534J2_128_4969 | str (area)     |                |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+| DP_OP_535J2_129_2539                  |                    |                |
+|                    | DP_OP_535J2_129_2539 | str (area)     |                |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+| DP_OP_536J2_130_2783                  |                    |                |
+|                    | DP_OP_536J2_130_2783 | str (area)     |                |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+| DP_OP_537J2_131_4526                  |                    |                |
+|                    | DP_OP_537J2_131_4526 | str (area)     |                |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+| DP_OP_538J2_132_9963                  |                    |                |
+|                    | DP_OP_538J2_132_9963 | str (area)     |                |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+| DP_OP_539J2_133_4645                  |                    |                |
+|                    | DP_OP_539J2_133_4645 | str (area)     |                |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+| DP_OP_540J2_134_2879                  |                    |                |
+|                    | DP_OP_540J2_134_2879 | str (area)     |                |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+| DP_OP_541J2_135_7361                  |                    |                |
+|                    | DP_OP_541J2_135_7361 | str (area)     |                |
+|                    |                  | mult_arch: benc_radix4              |
+|                    |                  | mult_arch: benc_radix4              |
+| DP_OP_542J2_136_9218                  |                    |                |
+|                    | DP_OP_542J2_136_9218 | str (area)     |                |
+|                    |                  | mult_arch: benc_radix4              |
+===============================================================================
+
+ 
+****************************************
+Design : unordered_adder_0
+****************************************
+
+Resource Report for this hierarchy in file
+        /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fir_mult_kernel/poly_fir_mult_kernel.v
+=============================================================================
+| Cell           | Module         | Parameters | Contained Operations       |
+=============================================================================
+| DP_OP_30J2_137_3296             |            |                            |
+|                | DP_OP_30J2_137_3296 |       |                            |
+=============================================================================
+
+Datapath Report for DP_OP_30J2_137_3296
+==============================================================================
+| Cell                 | Contained Operations                                |
+==============================================================================
+| DP_OP_30J2_137_3296  | add_27 (poly_fir_mult_kernel.v:27)                  |
+|                      | add_26 (poly_fir_mult_kernel.v:26)                  |
+|                      | add_31 (poly_fir_mult_kernel.v:31)                  |
+|                      | add_25 (poly_fir_mult_kernel.v:25)                  |
+|                      | add_24 (poly_fir_mult_kernel.v:24)                  |
+|                      | add_30 (poly_fir_mult_kernel.v:30)                  |
+|                      | add_33 (poly_fir_mult_kernel.v:33)                  |
+|                      | add_23 (poly_fir_mult_kernel.v:23)                  |
+|                      | add_22 (poly_fir_mult_kernel.v:22)                  |
+|                      | add_29 (poly_fir_mult_kernel.v:29)                  |
+|                      | add_21 (poly_fir_mult_kernel.v:21)                  |
+|                      | add_20 (poly_fir_mult_kernel.v:20)                  |
+|                      | add_28 (poly_fir_mult_kernel.v:28)                  |
+|                      | add_32 (poly_fir_mult_kernel.v:32)                  |
+|                      | add_34 (poly_fir_mult_kernel.v:34)                  |
+==============================================================================
+
+==============================================================================
+|       |      | Data     |       |                                          |
+| Var   | Type | Class    | Width | Expression                               |
+==============================================================================
+| I1    | PI   | Unsigned | 24    |                                          |
+| I2    | PI   | Unsigned | 24    |                                          |
+| I3    | PI   | Unsigned | 24    |                                          |
+| I4    | PI   | Unsigned | 24    |                                          |
+| I5    | PI   | Unsigned | 24    |                                          |
+| I6    | PI   | Unsigned | 24    |                                          |
+| I7    | PI   | Unsigned | 24    |                                          |
+| I8    | PI   | Unsigned | 24    |                                          |
+| I9    | PI   | Unsigned | 24    |                                          |
+| I10   | PI   | Unsigned | 24    |                                          |
+| I11   | PI   | Unsigned | 24    |                                          |
+| I12   | PI   | Unsigned | 24    |                                          |
+| I13   | PI   | Unsigned | 24    |                                          |
+| I14   | PI   | Unsigned | 24    |                                          |
+| I15   | PI   | Unsigned | 24    |                                          |
+| I16   | PI   | Unsigned | 24    |                                          |
+| O1    | PO   | Unsigned | 24    | I1 + I2 + I3 + I4 + I5 + I6 + I7 + I8 + I9 + I10 + I11 + I12 + I13 + I14 + I15 + I16 ( poly_fir_mult_kernel.v:20 poly_fir_mult_kernel.v:21 poly_fir_mult_kernel.v:22 poly_fir_mult_kernel.v:23 poly_fir_mult_kernel.v:24 poly_fir_mult_kernel.v:25 poly_fir_mult_kernel.v:26 poly_fir_mult_kernel.v:27 poly_fir_mult_kernel.v:28 poly_fir_mult_kernel.v:29 poly_fir_mult_kernel.v:30 poly_fir_mult_kernel.v:31 poly_fir_mult_kernel.v:32 poly_fir_mult_kernel.v:33 poly_fir_mult_kernel.v:34 ) |
+==============================================================================
+
+
+Implementation Report
+===============================================================================
+|                    |                  | Current            | Set            |
+| Cell               | Module           | Implementation     | Implementation |
+===============================================================================
+| DP_OP_30J2_137_3296                   |                    |                |
+|                    | DP_OP_30J2_137_3296 | str (area)      |                |
+===============================================================================
+
+ 
+****************************************
+Design : unordered_adder_1
+****************************************
+
+Resource Report for this hierarchy in file
+        /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fir_mult_kernel/poly_fir_mult_kernel.v
+=============================================================================
+| Cell           | Module         | Parameters | Contained Operations       |
+=============================================================================
+| DP_OP_30J2_137_3296             |            |                            |
+|                | DP_OP_30J2_137_3296 |       |                            |
+=============================================================================
+
+Datapath Report for DP_OP_30J2_137_3296
+==============================================================================
+| Cell                 | Contained Operations                                |
+==============================================================================
+| DP_OP_30J2_137_3296  | add_27 (poly_fir_mult_kernel.v:27)                  |
+|                      | add_26 (poly_fir_mult_kernel.v:26)                  |
+|                      | add_31 (poly_fir_mult_kernel.v:31)                  |
+|                      | add_25 (poly_fir_mult_kernel.v:25)                  |
+|                      | add_24 (poly_fir_mult_kernel.v:24)                  |
+|                      | add_30 (poly_fir_mult_kernel.v:30)                  |
+|                      | add_33 (poly_fir_mult_kernel.v:33)                  |
+|                      | add_23 (poly_fir_mult_kernel.v:23)                  |
+|                      | add_22 (poly_fir_mult_kernel.v:22)                  |
+|                      | add_29 (poly_fir_mult_kernel.v:29)                  |
+|                      | add_21 (poly_fir_mult_kernel.v:21)                  |
+|                      | add_20 (poly_fir_mult_kernel.v:20)                  |
+|                      | add_28 (poly_fir_mult_kernel.v:28)                  |
+|                      | add_32 (poly_fir_mult_kernel.v:32)                  |
+|                      | add_34 (poly_fir_mult_kernel.v:34)                  |
+==============================================================================
+
+==============================================================================
+|       |      | Data     |       |                                          |
+| Var   | Type | Class    | Width | Expression                               |
+==============================================================================
+| I1    | PI   | Unsigned | 24    |                                          |
+| I2    | PI   | Unsigned | 24    |                                          |
+| I3    | PI   | Unsigned | 24    |                                          |
+| I4    | PI   | Unsigned | 24    |                                          |
+| I5    | PI   | Unsigned | 24    |                                          |
+| I6    | PI   | Unsigned | 24    |                                          |
+| I7    | PI   | Unsigned | 24    |                                          |
+| I8    | PI   | Unsigned | 24    |                                          |
+| I9    | PI   | Unsigned | 24    |                                          |
+| I10   | PI   | Unsigned | 24    |                                          |
+| I11   | PI   | Unsigned | 24    |                                          |
+| I12   | PI   | Unsigned | 24    |                                          |
+| I13   | PI   | Unsigned | 24    |                                          |
+| I14   | PI   | Unsigned | 24    |                                          |
+| I15   | PI   | Unsigned | 24    |                                          |
+| I16   | PI   | Unsigned | 24    |                                          |
+| O1    | PO   | Unsigned | 24    | I1 + I2 + I3 + I4 + I5 + I6 + I7 + I8 + I9 + I10 + I11 + I12 + I13 + I14 + I15 + I16 ( poly_fir_mult_kernel.v:20 poly_fir_mult_kernel.v:21 poly_fir_mult_kernel.v:22 poly_fir_mult_kernel.v:23 poly_fir_mult_kernel.v:24 poly_fir_mult_kernel.v:25 poly_fir_mult_kernel.v:26 poly_fir_mult_kernel.v:27 poly_fir_mult_kernel.v:28 poly_fir_mult_kernel.v:29 poly_fir_mult_kernel.v:30 poly_fir_mult_kernel.v:31 poly_fir_mult_kernel.v:32 poly_fir_mult_kernel.v:33 poly_fir_mult_kernel.v:34 ) |
+==============================================================================
+
+
+Implementation Report
+===============================================================================
+|                    |                  | Current            | Set            |
+| Cell               | Module           | Implementation     | Implementation |
+===============================================================================
+| DP_OP_30J2_137_3296                   |                    |                |
+|                    | DP_OP_30J2_137_3296 | str (area)      |                |
+===============================================================================
+
+ 
+****************************************
+Design : unordered_adder_2
+****************************************
+
+Resource Report for this hierarchy in file
+        /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fir_mult_kernel/poly_fir_mult_kernel.v
+=============================================================================
+| Cell           | Module         | Parameters | Contained Operations       |
+=============================================================================
+| DP_OP_30J2_137_3296             |            |                            |
+|                | DP_OP_30J2_137_3296 |       |                            |
+=============================================================================
+
+Datapath Report for DP_OP_30J2_137_3296
+==============================================================================
+| Cell                 | Contained Operations                                |
+==============================================================================
+| DP_OP_30J2_137_3296  | add_27 (poly_fir_mult_kernel.v:27)                  |
+|                      | add_26 (poly_fir_mult_kernel.v:26)                  |
+|                      | add_31 (poly_fir_mult_kernel.v:31)                  |
+|                      | add_25 (poly_fir_mult_kernel.v:25)                  |
+|                      | add_24 (poly_fir_mult_kernel.v:24)                  |
+|                      | add_30 (poly_fir_mult_kernel.v:30)                  |
+|                      | add_33 (poly_fir_mult_kernel.v:33)                  |
+|                      | add_23 (poly_fir_mult_kernel.v:23)                  |
+|                      | add_22 (poly_fir_mult_kernel.v:22)                  |
+|                      | add_29 (poly_fir_mult_kernel.v:29)                  |
+|                      | add_21 (poly_fir_mult_kernel.v:21)                  |
+|                      | add_20 (poly_fir_mult_kernel.v:20)                  |
+|                      | add_28 (poly_fir_mult_kernel.v:28)                  |
+|                      | add_32 (poly_fir_mult_kernel.v:32)                  |
+|                      | add_34 (poly_fir_mult_kernel.v:34)                  |
+==============================================================================
+
+==============================================================================
+|       |      | Data     |       |                                          |
+| Var   | Type | Class    | Width | Expression                               |
+==============================================================================
+| I1    | PI   | Unsigned | 24    |                                          |
+| I2    | PI   | Unsigned | 24    |                                          |
+| I3    | PI   | Unsigned | 24    |                                          |
+| I4    | PI   | Unsigned | 24    |                                          |
+| I5    | PI   | Unsigned | 24    |                                          |
+| I6    | PI   | Unsigned | 24    |                                          |
+| I7    | PI   | Unsigned | 24    |                                          |
+| I8    | PI   | Unsigned | 24    |                                          |
+| I9    | PI   | Unsigned | 24    |                                          |
+| I10   | PI   | Unsigned | 24    |                                          |
+| I11   | PI   | Unsigned | 24    |                                          |
+| I12   | PI   | Unsigned | 24    |                                          |
+| I13   | PI   | Unsigned | 24    |                                          |
+| I14   | PI   | Unsigned | 24    |                                          |
+| I15   | PI   | Unsigned | 24    |                                          |
+| I16   | PI   | Unsigned | 24    |                                          |
+| O1    | PO   | Unsigned | 24    | I1 + I2 + I3 + I4 + I5 + I6 + I7 + I8 + I9 + I10 + I11 + I12 + I13 + I14 + I15 + I16 ( poly_fir_mult_kernel.v:20 poly_fir_mult_kernel.v:21 poly_fir_mult_kernel.v:22 poly_fir_mult_kernel.v:23 poly_fir_mult_kernel.v:24 poly_fir_mult_kernel.v:25 poly_fir_mult_kernel.v:26 poly_fir_mult_kernel.v:27 poly_fir_mult_kernel.v:28 poly_fir_mult_kernel.v:29 poly_fir_mult_kernel.v:30 poly_fir_mult_kernel.v:31 poly_fir_mult_kernel.v:32 poly_fir_mult_kernel.v:33 poly_fir_mult_kernel.v:34 ) |
+==============================================================================
+
+
+Implementation Report
+===============================================================================
+|                    |                  | Current            | Set            |
+| Cell               | Module           | Implementation     | Implementation |
+===============================================================================
+| DP_OP_30J2_137_3296                   |                    |                |
+|                    | DP_OP_30J2_137_3296 | str (area)      |                |
+===============================================================================
+
+ 
+****************************************
+Design : unordered_adder_3
+****************************************
+
+Resource Report for this hierarchy in file
+        /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fir_mult_kernel/poly_fir_mult_kernel.v
+=============================================================================
+| Cell           | Module         | Parameters | Contained Operations       |
+=============================================================================
+| DP_OP_30J2_137_3296             |            |                            |
+|                | DP_OP_30J2_137_3296 |       |                            |
+=============================================================================
+
+Datapath Report for DP_OP_30J2_137_3296
+==============================================================================
+| Cell                 | Contained Operations                                |
+==============================================================================
+| DP_OP_30J2_137_3296  | add_27 (poly_fir_mult_kernel.v:27)                  |
+|                      | add_26 (poly_fir_mult_kernel.v:26)                  |
+|                      | add_31 (poly_fir_mult_kernel.v:31)                  |
+|                      | add_25 (poly_fir_mult_kernel.v:25)                  |
+|                      | add_24 (poly_fir_mult_kernel.v:24)                  |
+|                      | add_30 (poly_fir_mult_kernel.v:30)                  |
+|                      | add_33 (poly_fir_mult_kernel.v:33)                  |
+|                      | add_23 (poly_fir_mult_kernel.v:23)                  |
+|                      | add_22 (poly_fir_mult_kernel.v:22)                  |
+|                      | add_29 (poly_fir_mult_kernel.v:29)                  |
+|                      | add_21 (poly_fir_mult_kernel.v:21)                  |
+|                      | add_20 (poly_fir_mult_kernel.v:20)                  |
+|                      | add_28 (poly_fir_mult_kernel.v:28)                  |
+|                      | add_32 (poly_fir_mult_kernel.v:32)                  |
+|                      | add_34 (poly_fir_mult_kernel.v:34)                  |
+==============================================================================
+
+==============================================================================
+|       |      | Data     |       |                                          |
+| Var   | Type | Class    | Width | Expression                               |
+==============================================================================
+| I1    | PI   | Unsigned | 24    |                                          |
+| I2    | PI   | Unsigned | 24    |                                          |
+| I3    | PI   | Unsigned | 24    |                                          |
+| I4    | PI   | Unsigned | 24    |                                          |
+| I5    | PI   | Unsigned | 24    |                                          |
+| I6    | PI   | Unsigned | 24    |                                          |
+| I7    | PI   | Unsigned | 24    |                                          |
+| I8    | PI   | Unsigned | 24    |                                          |
+| I9    | PI   | Unsigned | 24    |                                          |
+| I10   | PI   | Unsigned | 24    |                                          |
+| I11   | PI   | Unsigned | 24    |                                          |
+| I12   | PI   | Unsigned | 24    |                                          |
+| I13   | PI   | Unsigned | 24    |                                          |
+| I14   | PI   | Unsigned | 24    |                                          |
+| I15   | PI   | Unsigned | 24    |                                          |
+| I16   | PI   | Unsigned | 24    |                                          |
+| O1    | PO   | Unsigned | 24    | I1 + I2 + I3 + I4 + I5 + I6 + I7 + I8 + I9 + I10 + I11 + I12 + I13 + I14 + I15 + I16 ( poly_fir_mult_kernel.v:20 poly_fir_mult_kernel.v:21 poly_fir_mult_kernel.v:22 poly_fir_mult_kernel.v:23 poly_fir_mult_kernel.v:24 poly_fir_mult_kernel.v:25 poly_fir_mult_kernel.v:26 poly_fir_mult_kernel.v:27 poly_fir_mult_kernel.v:28 poly_fir_mult_kernel.v:29 poly_fir_mult_kernel.v:30 poly_fir_mult_kernel.v:31 poly_fir_mult_kernel.v:32 poly_fir_mult_kernel.v:33 poly_fir_mult_kernel.v:34 ) |
+==============================================================================
+
+
+Implementation Report
+===============================================================================
+|                    |                  | Current            | Set            |
+| Cell               | Module           | Implementation     | Implementation |
+===============================================================================
+| DP_OP_30J2_137_3296                   |                    |                |
+|                    | DP_OP_30J2_137_3296 | str (area)      |                |
+===============================================================================
+
+ 
+****************************************
+Design : unordered_adder_4
+****************************************
+
+Resource Report for this hierarchy in file
+        /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fir_mult_kernel/poly_fir_mult_kernel.v
+=============================================================================
+| Cell           | Module         | Parameters | Contained Operations       |
+=============================================================================
+| DP_OP_30J2_137_3296             |            |                            |
+|                | DP_OP_30J2_137_3296 |       |                            |
+=============================================================================
+
+Datapath Report for DP_OP_30J2_137_3296
+==============================================================================
+| Cell                 | Contained Operations                                |
+==============================================================================
+| DP_OP_30J2_137_3296  | add_27 (poly_fir_mult_kernel.v:27)                  |
+|                      | add_26 (poly_fir_mult_kernel.v:26)                  |
+|                      | add_31 (poly_fir_mult_kernel.v:31)                  |
+|                      | add_25 (poly_fir_mult_kernel.v:25)                  |
+|                      | add_24 (poly_fir_mult_kernel.v:24)                  |
+|                      | add_30 (poly_fir_mult_kernel.v:30)                  |
+|                      | add_33 (poly_fir_mult_kernel.v:33)                  |
+|                      | add_23 (poly_fir_mult_kernel.v:23)                  |
+|                      | add_22 (poly_fir_mult_kernel.v:22)                  |
+|                      | add_29 (poly_fir_mult_kernel.v:29)                  |
+|                      | add_21 (poly_fir_mult_kernel.v:21)                  |
+|                      | add_20 (poly_fir_mult_kernel.v:20)                  |
+|                      | add_28 (poly_fir_mult_kernel.v:28)                  |
+|                      | add_32 (poly_fir_mult_kernel.v:32)                  |
+|                      | add_34 (poly_fir_mult_kernel.v:34)                  |
+==============================================================================
+
+==============================================================================
+|       |      | Data     |       |                                          |
+| Var   | Type | Class    | Width | Expression                               |
+==============================================================================
+| I1    | PI   | Unsigned | 24    |                                          |
+| I2    | PI   | Unsigned | 24    |                                          |
+| I3    | PI   | Unsigned | 24    |                                          |
+| I4    | PI   | Unsigned | 24    |                                          |
+| I5    | PI   | Unsigned | 24    |                                          |
+| I6    | PI   | Unsigned | 24    |                                          |
+| I7    | PI   | Unsigned | 24    |                                          |
+| I8    | PI   | Unsigned | 24    |                                          |
+| I9    | PI   | Unsigned | 24    |                                          |
+| I10   | PI   | Unsigned | 24    |                                          |
+| I11   | PI   | Unsigned | 24    |                                          |
+| I12   | PI   | Unsigned | 24    |                                          |
+| I13   | PI   | Unsigned | 24    |                                          |
+| I14   | PI   | Unsigned | 24    |                                          |
+| I15   | PI   | Unsigned | 24    |                                          |
+| I16   | PI   | Unsigned | 24    |                                          |
+| O1    | PO   | Unsigned | 24    | I1 + I2 + I3 + I4 + I5 + I6 + I7 + I8 + I9 + I10 + I11 + I12 + I13 + I14 + I15 + I16 ( poly_fir_mult_kernel.v:20 poly_fir_mult_kernel.v:21 poly_fir_mult_kernel.v:22 poly_fir_mult_kernel.v:23 poly_fir_mult_kernel.v:24 poly_fir_mult_kernel.v:25 poly_fir_mult_kernel.v:26 poly_fir_mult_kernel.v:27 poly_fir_mult_kernel.v:28 poly_fir_mult_kernel.v:29 poly_fir_mult_kernel.v:30 poly_fir_mult_kernel.v:31 poly_fir_mult_kernel.v:32 poly_fir_mult_kernel.v:33 poly_fir_mult_kernel.v:34 ) |
+==============================================================================
+
+
+Implementation Report
+===============================================================================
+|                    |                  | Current            | Set            |
+| Cell               | Module           | Implementation     | Implementation |
+===============================================================================
+| DP_OP_30J2_137_3296                   |                    |                |
+|                    | DP_OP_30J2_137_3296 | str (area)      |                |
+===============================================================================
+
+ 
+****************************************
+Design : unordered_adder_5
+****************************************
+
+Resource Report for this hierarchy in file
+        /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fir_mult_kernel/poly_fir_mult_kernel.v
+=============================================================================
+| Cell           | Module         | Parameters | Contained Operations       |
+=============================================================================
+| DP_OP_30J2_137_3296             |            |                            |
+|                | DP_OP_30J2_137_3296 |       |                            |
+=============================================================================
+
+Datapath Report for DP_OP_30J2_137_3296
+==============================================================================
+| Cell                 | Contained Operations                                |
+==============================================================================
+| DP_OP_30J2_137_3296  | add_27 (poly_fir_mult_kernel.v:27)                  |
+|                      | add_26 (poly_fir_mult_kernel.v:26)                  |
+|                      | add_31 (poly_fir_mult_kernel.v:31)                  |
+|                      | add_25 (poly_fir_mult_kernel.v:25)                  |
+|                      | add_24 (poly_fir_mult_kernel.v:24)                  |
+|                      | add_30 (poly_fir_mult_kernel.v:30)                  |
+|                      | add_33 (poly_fir_mult_kernel.v:33)                  |
+|                      | add_23 (poly_fir_mult_kernel.v:23)                  |
+|                      | add_22 (poly_fir_mult_kernel.v:22)                  |
+|                      | add_29 (poly_fir_mult_kernel.v:29)                  |
+|                      | add_21 (poly_fir_mult_kernel.v:21)                  |
+|                      | add_20 (poly_fir_mult_kernel.v:20)                  |
+|                      | add_28 (poly_fir_mult_kernel.v:28)                  |
+|                      | add_32 (poly_fir_mult_kernel.v:32)                  |
+|                      | add_34 (poly_fir_mult_kernel.v:34)                  |
+==============================================================================
+
+==============================================================================
+|       |      | Data     |       |                                          |
+| Var   | Type | Class    | Width | Expression                               |
+==============================================================================
+| I1    | PI   | Unsigned | 24    |                                          |
+| I2    | PI   | Unsigned | 24    |                                          |
+| I3    | PI   | Unsigned | 24    |                                          |
+| I4    | PI   | Unsigned | 24    |                                          |
+| I5    | PI   | Unsigned | 24    |                                          |
+| I6    | PI   | Unsigned | 24    |                                          |
+| I7    | PI   | Unsigned | 24    |                                          |
+| I8    | PI   | Unsigned | 24    |                                          |
+| I9    | PI   | Unsigned | 24    |                                          |
+| I10   | PI   | Unsigned | 24    |                                          |
+| I11   | PI   | Unsigned | 24    |                                          |
+| I12   | PI   | Unsigned | 24    |                                          |
+| I13   | PI   | Unsigned | 24    |                                          |
+| I14   | PI   | Unsigned | 24    |                                          |
+| I15   | PI   | Unsigned | 24    |                                          |
+| I16   | PI   | Unsigned | 24    |                                          |
+| O1    | PO   | Unsigned | 24    | I1 + I2 + I3 + I4 + I5 + I6 + I7 + I8 + I9 + I10 + I11 + I12 + I13 + I14 + I15 + I16 ( poly_fir_mult_kernel.v:20 poly_fir_mult_kernel.v:21 poly_fir_mult_kernel.v:22 poly_fir_mult_kernel.v:23 poly_fir_mult_kernel.v:24 poly_fir_mult_kernel.v:25 poly_fir_mult_kernel.v:26 poly_fir_mult_kernel.v:27 poly_fir_mult_kernel.v:28 poly_fir_mult_kernel.v:29 poly_fir_mult_kernel.v:30 poly_fir_mult_kernel.v:31 poly_fir_mult_kernel.v:32 poly_fir_mult_kernel.v:33 poly_fir_mult_kernel.v:34 ) |
+==============================================================================
+
+
+Implementation Report
+===============================================================================
+|                    |                  | Current            | Set            |
+| Cell               | Module           | Implementation     | Implementation |
+===============================================================================
+| DP_OP_30J2_137_3296                   |                    |                |
+|                    | DP_OP_30J2_137_3296 | str (area)      |                |
+===============================================================================
+
+ 
+****************************************
+Design : unordered_adder_6
+****************************************
+
+Resource Report for this hierarchy in file
+        /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fir_mult_kernel/poly_fir_mult_kernel.v
+=============================================================================
+| Cell           | Module         | Parameters | Contained Operations       |
+=============================================================================
+| DP_OP_30J2_137_3296             |            |                            |
+|                | DP_OP_30J2_137_3296 |       |                            |
+=============================================================================
+
+Datapath Report for DP_OP_30J2_137_3296
+==============================================================================
+| Cell                 | Contained Operations                                |
+==============================================================================
+| DP_OP_30J2_137_3296  | add_27 (poly_fir_mult_kernel.v:27)                  |
+|                      | add_26 (poly_fir_mult_kernel.v:26)                  |
+|                      | add_31 (poly_fir_mult_kernel.v:31)                  |
+|                      | add_25 (poly_fir_mult_kernel.v:25)                  |
+|                      | add_24 (poly_fir_mult_kernel.v:24)                  |
+|                      | add_30 (poly_fir_mult_kernel.v:30)                  |
+|                      | add_33 (poly_fir_mult_kernel.v:33)                  |
+|                      | add_23 (poly_fir_mult_kernel.v:23)                  |
+|                      | add_22 (poly_fir_mult_kernel.v:22)                  |
+|                      | add_29 (poly_fir_mult_kernel.v:29)                  |
+|                      | add_21 (poly_fir_mult_kernel.v:21)                  |
+|                      | add_20 (poly_fir_mult_kernel.v:20)                  |
+|                      | add_28 (poly_fir_mult_kernel.v:28)                  |
+|                      | add_32 (poly_fir_mult_kernel.v:32)                  |
+|                      | add_34 (poly_fir_mult_kernel.v:34)                  |
+==============================================================================
+
+==============================================================================
+|       |      | Data     |       |                                          |
+| Var   | Type | Class    | Width | Expression                               |
+==============================================================================
+| I1    | PI   | Unsigned | 24    |                                          |
+| I2    | PI   | Unsigned | 24    |                                          |
+| I3    | PI   | Unsigned | 24    |                                          |
+| I4    | PI   | Unsigned | 24    |                                          |
+| I5    | PI   | Unsigned | 24    |                                          |
+| I6    | PI   | Unsigned | 24    |                                          |
+| I7    | PI   | Unsigned | 24    |                                          |
+| I8    | PI   | Unsigned | 24    |                                          |
+| I9    | PI   | Unsigned | 24    |                                          |
+| I10   | PI   | Unsigned | 24    |                                          |
+| I11   | PI   | Unsigned | 24    |                                          |
+| I12   | PI   | Unsigned | 24    |                                          |
+| I13   | PI   | Unsigned | 24    |                                          |
+| I14   | PI   | Unsigned | 24    |                                          |
+| I15   | PI   | Unsigned | 24    |                                          |
+| I16   | PI   | Unsigned | 24    |                                          |
+| O1    | PO   | Unsigned | 24    | I1 + I2 + I3 + I4 + I5 + I6 + I7 + I8 + I9 + I10 + I11 + I12 + I13 + I14 + I15 + I16 ( poly_fir_mult_kernel.v:20 poly_fir_mult_kernel.v:21 poly_fir_mult_kernel.v:22 poly_fir_mult_kernel.v:23 poly_fir_mult_kernel.v:24 poly_fir_mult_kernel.v:25 poly_fir_mult_kernel.v:26 poly_fir_mult_kernel.v:27 poly_fir_mult_kernel.v:28 poly_fir_mult_kernel.v:29 poly_fir_mult_kernel.v:30 poly_fir_mult_kernel.v:31 poly_fir_mult_kernel.v:32 poly_fir_mult_kernel.v:33 poly_fir_mult_kernel.v:34 ) |
+==============================================================================
+
+
+Implementation Report
+===============================================================================
+|                    |                  | Current            | Set            |
+| Cell               | Module           | Implementation     | Implementation |
+===============================================================================
+| DP_OP_30J2_137_3296                   |                    |                |
+|                    | DP_OP_30J2_137_3296 | str (area)      |                |
+===============================================================================
+
+ 
+****************************************
+Design : unordered_adder_7
+****************************************
+
+Resource Report for this hierarchy in file
+        /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fir_mult_kernel/poly_fir_mult_kernel.v
+=============================================================================
+| Cell           | Module         | Parameters | Contained Operations       |
+=============================================================================
+| DP_OP_30J2_137_3296             |            |                            |
+|                | DP_OP_30J2_137_3296 |       |                            |
+=============================================================================
+
+Datapath Report for DP_OP_30J2_137_3296
+==============================================================================
+| Cell                 | Contained Operations                                |
+==============================================================================
+| DP_OP_30J2_137_3296  | add_27 (poly_fir_mult_kernel.v:27)                  |
+|                      | add_26 (poly_fir_mult_kernel.v:26)                  |
+|                      | add_31 (poly_fir_mult_kernel.v:31)                  |
+|                      | add_25 (poly_fir_mult_kernel.v:25)                  |
+|                      | add_24 (poly_fir_mult_kernel.v:24)                  |
+|                      | add_30 (poly_fir_mult_kernel.v:30)                  |
+|                      | add_33 (poly_fir_mult_kernel.v:33)                  |
+|                      | add_23 (poly_fir_mult_kernel.v:23)                  |
+|                      | add_22 (poly_fir_mult_kernel.v:22)                  |
+|                      | add_29 (poly_fir_mult_kernel.v:29)                  |
+|                      | add_21 (poly_fir_mult_kernel.v:21)                  |
+|                      | add_20 (poly_fir_mult_kernel.v:20)                  |
+|                      | add_28 (poly_fir_mult_kernel.v:28)                  |
+|                      | add_32 (poly_fir_mult_kernel.v:32)                  |
+|                      | add_34 (poly_fir_mult_kernel.v:34)                  |
+==============================================================================
+
+==============================================================================
+|       |      | Data     |       |                                          |
+| Var   | Type | Class    | Width | Expression                               |
+==============================================================================
+| I1    | PI   | Unsigned | 24    |                                          |
+| I2    | PI   | Unsigned | 24    |                                          |
+| I3    | PI   | Unsigned | 24    |                                          |
+| I4    | PI   | Unsigned | 24    |                                          |
+| I5    | PI   | Unsigned | 24    |                                          |
+| I6    | PI   | Unsigned | 24    |                                          |
+| I7    | PI   | Unsigned | 24    |                                          |
+| I8    | PI   | Unsigned | 24    |                                          |
+| I9    | PI   | Unsigned | 24    |                                          |
+| I10   | PI   | Unsigned | 24    |                                          |
+| I11   | PI   | Unsigned | 24    |                                          |
+| I12   | PI   | Unsigned | 24    |                                          |
+| I13   | PI   | Unsigned | 24    |                                          |
+| I14   | PI   | Unsigned | 24    |                                          |
+| I15   | PI   | Unsigned | 24    |                                          |
+| I16   | PI   | Unsigned | 24    |                                          |
+| O1    | PO   | Unsigned | 24    | I1 + I2 + I3 + I4 + I5 + I6 + I7 + I8 + I9 + I10 + I11 + I12 + I13 + I14 + I15 + I16 ( poly_fir_mult_kernel.v:20 poly_fir_mult_kernel.v:21 poly_fir_mult_kernel.v:22 poly_fir_mult_kernel.v:23 poly_fir_mult_kernel.v:24 poly_fir_mult_kernel.v:25 poly_fir_mult_kernel.v:26 poly_fir_mult_kernel.v:27 poly_fir_mult_kernel.v:28 poly_fir_mult_kernel.v:29 poly_fir_mult_kernel.v:30 poly_fir_mult_kernel.v:31 poly_fir_mult_kernel.v:32 poly_fir_mult_kernel.v:33 poly_fir_mult_kernel.v:34 ) |
+==============================================================================
+
+
+Implementation Report
+===============================================================================
+|                    |                  | Current            | Set            |
+| Cell               | Module           | Implementation     | Implementation |
+===============================================================================
+| DP_OP_30J2_137_3296                   |                    |                |
+|                    | DP_OP_30J2_137_3296 | str (area)      |                |
+===============================================================================
+
+ 
+****************************************
+Design : unordered_adder_8
+****************************************
+
+Resource Report for this hierarchy in file
+        /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fir_mult_kernel/poly_fir_mult_kernel.v
+=============================================================================
+| Cell           | Module         | Parameters | Contained Operations       |
+=============================================================================
+| DP_OP_30J2_137_3296             |            |                            |
+|                | DP_OP_30J2_137_3296 |       |                            |
+=============================================================================
+
+Datapath Report for DP_OP_30J2_137_3296
+==============================================================================
+| Cell                 | Contained Operations                                |
+==============================================================================
+| DP_OP_30J2_137_3296  | add_27 (poly_fir_mult_kernel.v:27)                  |
+|                      | add_26 (poly_fir_mult_kernel.v:26)                  |
+|                      | add_31 (poly_fir_mult_kernel.v:31)                  |
+|                      | add_25 (poly_fir_mult_kernel.v:25)                  |
+|                      | add_24 (poly_fir_mult_kernel.v:24)                  |
+|                      | add_30 (poly_fir_mult_kernel.v:30)                  |
+|                      | add_33 (poly_fir_mult_kernel.v:33)                  |
+|                      | add_23 (poly_fir_mult_kernel.v:23)                  |
+|                      | add_22 (poly_fir_mult_kernel.v:22)                  |
+|                      | add_29 (poly_fir_mult_kernel.v:29)                  |
+|                      | add_21 (poly_fir_mult_kernel.v:21)                  |
+|                      | add_20 (poly_fir_mult_kernel.v:20)                  |
+|                      | add_28 (poly_fir_mult_kernel.v:28)                  |
+|                      | add_32 (poly_fir_mult_kernel.v:32)                  |
+|                      | add_34 (poly_fir_mult_kernel.v:34)                  |
+==============================================================================
+
+==============================================================================
+|       |      | Data     |       |                                          |
+| Var   | Type | Class    | Width | Expression                               |
+==============================================================================
+| I1    | PI   | Unsigned | 24    |                                          |
+| I2    | PI   | Unsigned | 24    |                                          |
+| I3    | PI   | Unsigned | 24    |                                          |
+| I4    | PI   | Unsigned | 24    |                                          |
+| I5    | PI   | Unsigned | 24    |                                          |
+| I6    | PI   | Unsigned | 24    |                                          |
+| I7    | PI   | Unsigned | 24    |                                          |
+| I8    | PI   | Unsigned | 24    |                                          |
+| I9    | PI   | Unsigned | 24    |                                          |
+| I10   | PI   | Unsigned | 24    |                                          |
+| I11   | PI   | Unsigned | 24    |                                          |
+| I12   | PI   | Unsigned | 24    |                                          |
+| I13   | PI   | Unsigned | 24    |                                          |
+| I14   | PI   | Unsigned | 24    |                                          |
+| I15   | PI   | Unsigned | 24    |                                          |
+| I16   | PI   | Unsigned | 24    |                                          |
+| O1    | PO   | Unsigned | 24    | I1 + I2 + I3 + I4 + I5 + I6 + I7 + I8 + I9 + I10 + I11 + I12 + I13 + I14 + I15 + I16 ( poly_fir_mult_kernel.v:20 poly_fir_mult_kernel.v:21 poly_fir_mult_kernel.v:22 poly_fir_mult_kernel.v:23 poly_fir_mult_kernel.v:24 poly_fir_mult_kernel.v:25 poly_fir_mult_kernel.v:26 poly_fir_mult_kernel.v:27 poly_fir_mult_kernel.v:28 poly_fir_mult_kernel.v:29 poly_fir_mult_kernel.v:30 poly_fir_mult_kernel.v:31 poly_fir_mult_kernel.v:32 poly_fir_mult_kernel.v:33 poly_fir_mult_kernel.v:34 ) |
+==============================================================================
+
+
+Implementation Report
+===============================================================================
+|                    |                  | Current            | Set            |
+| Cell               | Module           | Implementation     | Implementation |
+===============================================================================
+| DP_OP_30J2_137_3296                   |                    |                |
+|                    | DP_OP_30J2_137_3296 | str (area)      |                |
+===============================================================================
+
+ 
+****************************************
+Design : unordered_adder_9
+****************************************
+
+Resource Report for this hierarchy in file
+        /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fir_mult_kernel/poly_fir_mult_kernel.v
+=============================================================================
+| Cell           | Module         | Parameters | Contained Operations       |
+=============================================================================
+| DP_OP_30J2_137_3296             |            |                            |
+|                | DP_OP_30J2_137_3296 |       |                            |
+=============================================================================
+
+Datapath Report for DP_OP_30J2_137_3296
+==============================================================================
+| Cell                 | Contained Operations                                |
+==============================================================================
+| DP_OP_30J2_137_3296  | add_27 (poly_fir_mult_kernel.v:27)                  |
+|                      | add_26 (poly_fir_mult_kernel.v:26)                  |
+|                      | add_31 (poly_fir_mult_kernel.v:31)                  |
+|                      | add_25 (poly_fir_mult_kernel.v:25)                  |
+|                      | add_24 (poly_fir_mult_kernel.v:24)                  |
+|                      | add_30 (poly_fir_mult_kernel.v:30)                  |
+|                      | add_33 (poly_fir_mult_kernel.v:33)                  |
+|                      | add_23 (poly_fir_mult_kernel.v:23)                  |
+|                      | add_22 (poly_fir_mult_kernel.v:22)                  |
+|                      | add_29 (poly_fir_mult_kernel.v:29)                  |
+|                      | add_21 (poly_fir_mult_kernel.v:21)                  |
+|                      | add_20 (poly_fir_mult_kernel.v:20)                  |
+|                      | add_28 (poly_fir_mult_kernel.v:28)                  |
+|                      | add_32 (poly_fir_mult_kernel.v:32)                  |
+|                      | add_34 (poly_fir_mult_kernel.v:34)                  |
+==============================================================================
+
+==============================================================================
+|       |      | Data     |       |                                          |
+| Var   | Type | Class    | Width | Expression                               |
+==============================================================================
+| I1    | PI   | Unsigned | 24    |                                          |
+| I2    | PI   | Unsigned | 24    |                                          |
+| I3    | PI   | Unsigned | 24    |                                          |
+| I4    | PI   | Unsigned | 24    |                                          |
+| I5    | PI   | Unsigned | 24    |                                          |
+| I6    | PI   | Unsigned | 24    |                                          |
+| I7    | PI   | Unsigned | 24    |                                          |
+| I8    | PI   | Unsigned | 24    |                                          |
+| I9    | PI   | Unsigned | 24    |                                          |
+| I10   | PI   | Unsigned | 24    |                                          |
+| I11   | PI   | Unsigned | 24    |                                          |
+| I12   | PI   | Unsigned | 24    |                                          |
+| I13   | PI   | Unsigned | 24    |                                          |
+| I14   | PI   | Unsigned | 24    |                                          |
+| I15   | PI   | Unsigned | 24    |                                          |
+| I16   | PI   | Unsigned | 24    |                                          |
+| O1    | PO   | Unsigned | 24    | I1 + I2 + I3 + I4 + I5 + I6 + I7 + I8 + I9 + I10 + I11 + I12 + I13 + I14 + I15 + I16 ( poly_fir_mult_kernel.v:20 poly_fir_mult_kernel.v:21 poly_fir_mult_kernel.v:22 poly_fir_mult_kernel.v:23 poly_fir_mult_kernel.v:24 poly_fir_mult_kernel.v:25 poly_fir_mult_kernel.v:26 poly_fir_mult_kernel.v:27 poly_fir_mult_kernel.v:28 poly_fir_mult_kernel.v:29 poly_fir_mult_kernel.v:30 poly_fir_mult_kernel.v:31 poly_fir_mult_kernel.v:32 poly_fir_mult_kernel.v:33 poly_fir_mult_kernel.v:34 ) |
+==============================================================================
+
+
+Implementation Report
+===============================================================================
+|                    |                  | Current            | Set            |
+| Cell               | Module           | Implementation     | Implementation |
+===============================================================================
+| DP_OP_30J2_137_3296                   |                    |                |
+|                    | DP_OP_30J2_137_3296 | str (area)      |                |
+===============================================================================
+
+ 
+****************************************
+Design : unordered_adder_10
+****************************************
+
+Resource Report for this hierarchy in file
+        /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fir_mult_kernel/poly_fir_mult_kernel.v
+=============================================================================
+| Cell           | Module         | Parameters | Contained Operations       |
+=============================================================================
+| DP_OP_30J2_137_3296             |            |                            |
+|                | DP_OP_30J2_137_3296 |       |                            |
+=============================================================================
+
+Datapath Report for DP_OP_30J2_137_3296
+==============================================================================
+| Cell                 | Contained Operations                                |
+==============================================================================
+| DP_OP_30J2_137_3296  | add_27 (poly_fir_mult_kernel.v:27)                  |
+|                      | add_26 (poly_fir_mult_kernel.v:26)                  |
+|                      | add_31 (poly_fir_mult_kernel.v:31)                  |
+|                      | add_25 (poly_fir_mult_kernel.v:25)                  |
+|                      | add_24 (poly_fir_mult_kernel.v:24)                  |
+|                      | add_30 (poly_fir_mult_kernel.v:30)                  |
+|                      | add_33 (poly_fir_mult_kernel.v:33)                  |
+|                      | add_23 (poly_fir_mult_kernel.v:23)                  |
+|                      | add_22 (poly_fir_mult_kernel.v:22)                  |
+|                      | add_29 (poly_fir_mult_kernel.v:29)                  |
+|                      | add_21 (poly_fir_mult_kernel.v:21)                  |
+|                      | add_20 (poly_fir_mult_kernel.v:20)                  |
+|                      | add_28 (poly_fir_mult_kernel.v:28)                  |
+|                      | add_32 (poly_fir_mult_kernel.v:32)                  |
+|                      | add_34 (poly_fir_mult_kernel.v:34)                  |
+==============================================================================
+
+==============================================================================
+|       |      | Data     |       |                                          |
+| Var   | Type | Class    | Width | Expression                               |
+==============================================================================
+| I1    | PI   | Unsigned | 24    |                                          |
+| I2    | PI   | Unsigned | 24    |                                          |
+| I3    | PI   | Unsigned | 24    |                                          |
+| I4    | PI   | Unsigned | 24    |                                          |
+| I5    | PI   | Unsigned | 24    |                                          |
+| I6    | PI   | Unsigned | 24    |                                          |
+| I7    | PI   | Unsigned | 24    |                                          |
+| I8    | PI   | Unsigned | 24    |                                          |
+| I9    | PI   | Unsigned | 24    |                                          |
+| I10   | PI   | Unsigned | 24    |                                          |
+| I11   | PI   | Unsigned | 24    |                                          |
+| I12   | PI   | Unsigned | 24    |                                          |
+| I13   | PI   | Unsigned | 24    |                                          |
+| I14   | PI   | Unsigned | 24    |                                          |
+| I15   | PI   | Unsigned | 24    |                                          |
+| I16   | PI   | Unsigned | 24    |                                          |
+| O1    | PO   | Unsigned | 24    | I1 + I2 + I3 + I4 + I5 + I6 + I7 + I8 + I9 + I10 + I11 + I12 + I13 + I14 + I15 + I16 ( poly_fir_mult_kernel.v:20 poly_fir_mult_kernel.v:21 poly_fir_mult_kernel.v:22 poly_fir_mult_kernel.v:23 poly_fir_mult_kernel.v:24 poly_fir_mult_kernel.v:25 poly_fir_mult_kernel.v:26 poly_fir_mult_kernel.v:27 poly_fir_mult_kernel.v:28 poly_fir_mult_kernel.v:29 poly_fir_mult_kernel.v:30 poly_fir_mult_kernel.v:31 poly_fir_mult_kernel.v:32 poly_fir_mult_kernel.v:33 poly_fir_mult_kernel.v:34 ) |
+==============================================================================
+
+
+Implementation Report
+===============================================================================
+|                    |                  | Current            | Set            |
+| Cell               | Module           | Implementation     | Implementation |
+===============================================================================
+| DP_OP_30J2_137_3296                   |                    |                |
+|                    | DP_OP_30J2_137_3296 | str (area)      |                |
+===============================================================================
+
+ 
+****************************************
+Design : unordered_adder_11
+****************************************
+
+Resource Report for this hierarchy in file
+        /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fir_mult_kernel/poly_fir_mult_kernel.v
+=============================================================================
+| Cell           | Module         | Parameters | Contained Operations       |
+=============================================================================
+| DP_OP_30J2_137_3296             |            |                            |
+|                | DP_OP_30J2_137_3296 |       |                            |
+=============================================================================
+
+Datapath Report for DP_OP_30J2_137_3296
+==============================================================================
+| Cell                 | Contained Operations                                |
+==============================================================================
+| DP_OP_30J2_137_3296  | add_27 (poly_fir_mult_kernel.v:27)                  |
+|                      | add_26 (poly_fir_mult_kernel.v:26)                  |
+|                      | add_31 (poly_fir_mult_kernel.v:31)                  |
+|                      | add_25 (poly_fir_mult_kernel.v:25)                  |
+|                      | add_24 (poly_fir_mult_kernel.v:24)                  |
+|                      | add_30 (poly_fir_mult_kernel.v:30)                  |
+|                      | add_33 (poly_fir_mult_kernel.v:33)                  |
+|                      | add_23 (poly_fir_mult_kernel.v:23)                  |
+|                      | add_22 (poly_fir_mult_kernel.v:22)                  |
+|                      | add_29 (poly_fir_mult_kernel.v:29)                  |
+|                      | add_21 (poly_fir_mult_kernel.v:21)                  |
+|                      | add_20 (poly_fir_mult_kernel.v:20)                  |
+|                      | add_28 (poly_fir_mult_kernel.v:28)                  |
+|                      | add_32 (poly_fir_mult_kernel.v:32)                  |
+|                      | add_34 (poly_fir_mult_kernel.v:34)                  |
+==============================================================================
+
+==============================================================================
+|       |      | Data     |       |                                          |
+| Var   | Type | Class    | Width | Expression                               |
+==============================================================================
+| I1    | PI   | Unsigned | 24    |                                          |
+| I2    | PI   | Unsigned | 24    |                                          |
+| I3    | PI   | Unsigned | 24    |                                          |
+| I4    | PI   | Unsigned | 24    |                                          |
+| I5    | PI   | Unsigned | 24    |                                          |
+| I6    | PI   | Unsigned | 24    |                                          |
+| I7    | PI   | Unsigned | 24    |                                          |
+| I8    | PI   | Unsigned | 24    |                                          |
+| I9    | PI   | Unsigned | 24    |                                          |
+| I10   | PI   | Unsigned | 24    |                                          |
+| I11   | PI   | Unsigned | 24    |                                          |
+| I12   | PI   | Unsigned | 24    |                                          |
+| I13   | PI   | Unsigned | 24    |                                          |
+| I14   | PI   | Unsigned | 24    |                                          |
+| I15   | PI   | Unsigned | 24    |                                          |
+| I16   | PI   | Unsigned | 24    |                                          |
+| O1    | PO   | Unsigned | 24    | I1 + I2 + I3 + I4 + I5 + I6 + I7 + I8 + I9 + I10 + I11 + I12 + I13 + I14 + I15 + I16 ( poly_fir_mult_kernel.v:20 poly_fir_mult_kernel.v:21 poly_fir_mult_kernel.v:22 poly_fir_mult_kernel.v:23 poly_fir_mult_kernel.v:24 poly_fir_mult_kernel.v:25 poly_fir_mult_kernel.v:26 poly_fir_mult_kernel.v:27 poly_fir_mult_kernel.v:28 poly_fir_mult_kernel.v:29 poly_fir_mult_kernel.v:30 poly_fir_mult_kernel.v:31 poly_fir_mult_kernel.v:32 poly_fir_mult_kernel.v:33 poly_fir_mult_kernel.v:34 ) |
+==============================================================================
+
+
+Implementation Report
+===============================================================================
+|                    |                  | Current            | Set            |
+| Cell               | Module           | Implementation     | Implementation |
+===============================================================================
+| DP_OP_30J2_137_3296                   |                    |                |
+|                    | DP_OP_30J2_137_3296 | str (area)      |                |
+===============================================================================
+
+ 
+****************************************
+Design : unordered_adder_12
+****************************************
+
+Resource Report for this hierarchy in file
+        /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fir_mult_kernel/poly_fir_mult_kernel.v
+=============================================================================
+| Cell           | Module         | Parameters | Contained Operations       |
+=============================================================================
+| DP_OP_30J2_137_3296             |            |                            |
+|                | DP_OP_30J2_137_3296 |       |                            |
+=============================================================================
+
+Datapath Report for DP_OP_30J2_137_3296
+==============================================================================
+| Cell                 | Contained Operations                                |
+==============================================================================
+| DP_OP_30J2_137_3296  | add_27 (poly_fir_mult_kernel.v:27)                  |
+|                      | add_26 (poly_fir_mult_kernel.v:26)                  |
+|                      | add_31 (poly_fir_mult_kernel.v:31)                  |
+|                      | add_25 (poly_fir_mult_kernel.v:25)                  |
+|                      | add_24 (poly_fir_mult_kernel.v:24)                  |
+|                      | add_30 (poly_fir_mult_kernel.v:30)                  |
+|                      | add_33 (poly_fir_mult_kernel.v:33)                  |
+|                      | add_23 (poly_fir_mult_kernel.v:23)                  |
+|                      | add_22 (poly_fir_mult_kernel.v:22)                  |
+|                      | add_29 (poly_fir_mult_kernel.v:29)                  |
+|                      | add_21 (poly_fir_mult_kernel.v:21)                  |
+|                      | add_20 (poly_fir_mult_kernel.v:20)                  |
+|                      | add_28 (poly_fir_mult_kernel.v:28)                  |
+|                      | add_32 (poly_fir_mult_kernel.v:32)                  |
+|                      | add_34 (poly_fir_mult_kernel.v:34)                  |
+==============================================================================
+
+==============================================================================
+|       |      | Data     |       |                                          |
+| Var   | Type | Class    | Width | Expression                               |
+==============================================================================
+| I1    | PI   | Unsigned | 24    |                                          |
+| I2    | PI   | Unsigned | 24    |                                          |
+| I3    | PI   | Unsigned | 24    |                                          |
+| I4    | PI   | Unsigned | 24    |                                          |
+| I5    | PI   | Unsigned | 24    |                                          |
+| I6    | PI   | Unsigned | 24    |                                          |
+| I7    | PI   | Unsigned | 24    |                                          |
+| I8    | PI   | Unsigned | 24    |                                          |
+| I9    | PI   | Unsigned | 24    |                                          |
+| I10   | PI   | Unsigned | 24    |                                          |
+| I11   | PI   | Unsigned | 24    |                                          |
+| I12   | PI   | Unsigned | 24    |                                          |
+| I13   | PI   | Unsigned | 24    |                                          |
+| I14   | PI   | Unsigned | 24    |                                          |
+| I15   | PI   | Unsigned | 24    |                                          |
+| I16   | PI   | Unsigned | 24    |                                          |
+| O1    | PO   | Unsigned | 24    | I1 + I2 + I3 + I4 + I5 + I6 + I7 + I8 + I9 + I10 + I11 + I12 + I13 + I14 + I15 + I16 ( poly_fir_mult_kernel.v:20 poly_fir_mult_kernel.v:21 poly_fir_mult_kernel.v:22 poly_fir_mult_kernel.v:23 poly_fir_mult_kernel.v:24 poly_fir_mult_kernel.v:25 poly_fir_mult_kernel.v:26 poly_fir_mult_kernel.v:27 poly_fir_mult_kernel.v:28 poly_fir_mult_kernel.v:29 poly_fir_mult_kernel.v:30 poly_fir_mult_kernel.v:31 poly_fir_mult_kernel.v:32 poly_fir_mult_kernel.v:33 poly_fir_mult_kernel.v:34 ) |
+==============================================================================
+
+
+Implementation Report
+===============================================================================
+|                    |                  | Current            | Set            |
+| Cell               | Module           | Implementation     | Implementation |
+===============================================================================
+| DP_OP_30J2_137_3296                   |                    |                |
+|                    | DP_OP_30J2_137_3296 | str (area)      |                |
+===============================================================================
+
+ 
+****************************************
+Design : unordered_adder_13
+****************************************
+
+Resource Report for this hierarchy in file
+        /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fir_mult_kernel/poly_fir_mult_kernel.v
+=============================================================================
+| Cell           | Module         | Parameters | Contained Operations       |
+=============================================================================
+| DP_OP_30J2_137_3296             |            |                            |
+|                | DP_OP_30J2_137_3296 |       |                            |
+=============================================================================
+
+Datapath Report for DP_OP_30J2_137_3296
+==============================================================================
+| Cell                 | Contained Operations                                |
+==============================================================================
+| DP_OP_30J2_137_3296  | add_27 (poly_fir_mult_kernel.v:27)                  |
+|                      | add_26 (poly_fir_mult_kernel.v:26)                  |
+|                      | add_31 (poly_fir_mult_kernel.v:31)                  |
+|                      | add_25 (poly_fir_mult_kernel.v:25)                  |
+|                      | add_24 (poly_fir_mult_kernel.v:24)                  |
+|                      | add_30 (poly_fir_mult_kernel.v:30)                  |
+|                      | add_33 (poly_fir_mult_kernel.v:33)                  |
+|                      | add_23 (poly_fir_mult_kernel.v:23)                  |
+|                      | add_22 (poly_fir_mult_kernel.v:22)                  |
+|                      | add_29 (poly_fir_mult_kernel.v:29)                  |
+|                      | add_21 (poly_fir_mult_kernel.v:21)                  |
+|                      | add_20 (poly_fir_mult_kernel.v:20)                  |
+|                      | add_28 (poly_fir_mult_kernel.v:28)                  |
+|                      | add_32 (poly_fir_mult_kernel.v:32)                  |
+|                      | add_34 (poly_fir_mult_kernel.v:34)                  |
+==============================================================================
+
+==============================================================================
+|       |      | Data     |       |                                          |
+| Var   | Type | Class    | Width | Expression                               |
+==============================================================================
+| I1    | PI   | Unsigned | 24    |                                          |
+| I2    | PI   | Unsigned | 24    |                                          |
+| I3    | PI   | Unsigned | 24    |                                          |
+| I4    | PI   | Unsigned | 24    |                                          |
+| I5    | PI   | Unsigned | 24    |                                          |
+| I6    | PI   | Unsigned | 24    |                                          |
+| I7    | PI   | Unsigned | 24    |                                          |
+| I8    | PI   | Unsigned | 24    |                                          |
+| I9    | PI   | Unsigned | 24    |                                          |
+| I10   | PI   | Unsigned | 24    |                                          |
+| I11   | PI   | Unsigned | 24    |                                          |
+| I12   | PI   | Unsigned | 24    |                                          |
+| I13   | PI   | Unsigned | 24    |                                          |
+| I14   | PI   | Unsigned | 24    |                                          |
+| I15   | PI   | Unsigned | 24    |                                          |
+| I16   | PI   | Unsigned | 24    |                                          |
+| O1    | PO   | Unsigned | 24    | I1 + I2 + I3 + I4 + I5 + I6 + I7 + I8 + I9 + I10 + I11 + I12 + I13 + I14 + I15 + I16 ( poly_fir_mult_kernel.v:20 poly_fir_mult_kernel.v:21 poly_fir_mult_kernel.v:22 poly_fir_mult_kernel.v:23 poly_fir_mult_kernel.v:24 poly_fir_mult_kernel.v:25 poly_fir_mult_kernel.v:26 poly_fir_mult_kernel.v:27 poly_fir_mult_kernel.v:28 poly_fir_mult_kernel.v:29 poly_fir_mult_kernel.v:30 poly_fir_mult_kernel.v:31 poly_fir_mult_kernel.v:32 poly_fir_mult_kernel.v:33 poly_fir_mult_kernel.v:34 ) |
+==============================================================================
+
+
+Implementation Report
+===============================================================================
+|                    |                  | Current            | Set            |
+| Cell               | Module           | Implementation     | Implementation |
+===============================================================================
+| DP_OP_30J2_137_3296                   |                    |                |
+|                    | DP_OP_30J2_137_3296 | str (area)      |                |
+===============================================================================
+
+ 
+****************************************
+Design : unordered_adder_14
+****************************************
+
+Resource Report for this hierarchy in file
+        /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fir_mult_kernel/poly_fir_mult_kernel.v
+=============================================================================
+| Cell           | Module         | Parameters | Contained Operations       |
+=============================================================================
+| DP_OP_30J2_137_3296             |            |                            |
+|                | DP_OP_30J2_137_3296 |       |                            |
+=============================================================================
+
+Datapath Report for DP_OP_30J2_137_3296
+==============================================================================
+| Cell                 | Contained Operations                                |
+==============================================================================
+| DP_OP_30J2_137_3296  | add_27 (poly_fir_mult_kernel.v:27)                  |
+|                      | add_26 (poly_fir_mult_kernel.v:26)                  |
+|                      | add_31 (poly_fir_mult_kernel.v:31)                  |
+|                      | add_25 (poly_fir_mult_kernel.v:25)                  |
+|                      | add_24 (poly_fir_mult_kernel.v:24)                  |
+|                      | add_30 (poly_fir_mult_kernel.v:30)                  |
+|                      | add_33 (poly_fir_mult_kernel.v:33)                  |
+|                      | add_23 (poly_fir_mult_kernel.v:23)                  |
+|                      | add_22 (poly_fir_mult_kernel.v:22)                  |
+|                      | add_29 (poly_fir_mult_kernel.v:29)                  |
+|                      | add_21 (poly_fir_mult_kernel.v:21)                  |
+|                      | add_20 (poly_fir_mult_kernel.v:20)                  |
+|                      | add_28 (poly_fir_mult_kernel.v:28)                  |
+|                      | add_32 (poly_fir_mult_kernel.v:32)                  |
+|                      | add_34 (poly_fir_mult_kernel.v:34)                  |
+==============================================================================
+
+==============================================================================
+|       |      | Data     |       |                                          |
+| Var   | Type | Class    | Width | Expression                               |
+==============================================================================
+| I1    | PI   | Unsigned | 24    |                                          |
+| I2    | PI   | Unsigned | 24    |                                          |
+| I3    | PI   | Unsigned | 24    |                                          |
+| I4    | PI   | Unsigned | 24    |                                          |
+| I5    | PI   | Unsigned | 24    |                                          |
+| I6    | PI   | Unsigned | 24    |                                          |
+| I7    | PI   | Unsigned | 24    |                                          |
+| I8    | PI   | Unsigned | 24    |                                          |
+| I9    | PI   | Unsigned | 24    |                                          |
+| I10   | PI   | Unsigned | 24    |                                          |
+| I11   | PI   | Unsigned | 24    |                                          |
+| I12   | PI   | Unsigned | 24    |                                          |
+| I13   | PI   | Unsigned | 24    |                                          |
+| I14   | PI   | Unsigned | 24    |                                          |
+| I15   | PI   | Unsigned | 24    |                                          |
+| I16   | PI   | Unsigned | 24    |                                          |
+| O1    | PO   | Unsigned | 24    | I1 + I2 + I3 + I4 + I5 + I6 + I7 + I8 + I9 + I10 + I11 + I12 + I13 + I14 + I15 + I16 ( poly_fir_mult_kernel.v:20 poly_fir_mult_kernel.v:21 poly_fir_mult_kernel.v:22 poly_fir_mult_kernel.v:23 poly_fir_mult_kernel.v:24 poly_fir_mult_kernel.v:25 poly_fir_mult_kernel.v:26 poly_fir_mult_kernel.v:27 poly_fir_mult_kernel.v:28 poly_fir_mult_kernel.v:29 poly_fir_mult_kernel.v:30 poly_fir_mult_kernel.v:31 poly_fir_mult_kernel.v:32 poly_fir_mult_kernel.v:33 poly_fir_mult_kernel.v:34 ) |
+==============================================================================
+
+
+Implementation Report
+===============================================================================
+|                    |                  | Current            | Set            |
+| Cell               | Module           | Implementation     | Implementation |
+===============================================================================
+| DP_OP_30J2_137_3296                   |                    |                |
+|                    | DP_OP_30J2_137_3296 | str (area)      |                |
+===============================================================================
+
+ 
+****************************************
+Design : unordered_adder_15
+****************************************
+
+Resource Report for this hierarchy in file
+        /export4/Home/yvxinglong/Work/BackFlow28/4Backend/1DR-RM-Unit/RTL/poly_fir_mult_kernel/poly_fir_mult_kernel.v
+=============================================================================
+| Cell           | Module         | Parameters | Contained Operations       |
+=============================================================================
+| DP_OP_30J2_137_3296             |            |                            |
+|                | DP_OP_30J2_137_3296 |       |                            |
+=============================================================================
+
+Datapath Report for DP_OP_30J2_137_3296
+==============================================================================
+| Cell                 | Contained Operations                                |
+==============================================================================
+| DP_OP_30J2_137_3296  | add_27 (poly_fir_mult_kernel.v:27)                  |
+|                      | add_26 (poly_fir_mult_kernel.v:26)                  |
+|                      | add_31 (poly_fir_mult_kernel.v:31)                  |
+|                      | add_25 (poly_fir_mult_kernel.v:25)                  |
+|                      | add_24 (poly_fir_mult_kernel.v:24)                  |
+|                      | add_30 (poly_fir_mult_kernel.v:30)                  |
+|                      | add_33 (poly_fir_mult_kernel.v:33)                  |
+|                      | add_23 (poly_fir_mult_kernel.v:23)                  |
+|                      | add_22 (poly_fir_mult_kernel.v:22)                  |
+|                      | add_29 (poly_fir_mult_kernel.v:29)                  |
+|                      | add_21 (poly_fir_mult_kernel.v:21)                  |
+|                      | add_20 (poly_fir_mult_kernel.v:20)                  |
+|                      | add_28 (poly_fir_mult_kernel.v:28)                  |
+|                      | add_32 (poly_fir_mult_kernel.v:32)                  |
+|                      | add_34 (poly_fir_mult_kernel.v:34)                  |
+==============================================================================
+
+==============================================================================
+|       |      | Data     |       |                                          |
+| Var   | Type | Class    | Width | Expression                               |
+==============================================================================
+| I1    | PI   | Unsigned | 24    |                                          |
+| I2    | PI   | Unsigned | 24    |                                          |
+| I3    | PI   | Unsigned | 24    |                                          |
+| I4    | PI   | Unsigned | 24    |                                          |
+| I5    | PI   | Unsigned | 24    |                                          |
+| I6    | PI   | Unsigned | 24    |                                          |
+| I7    | PI   | Unsigned | 24    |                                          |
+| I8    | PI   | Unsigned | 24    |                                          |
+| I9    | PI   | Unsigned | 24    |                                          |
+| I10   | PI   | Unsigned | 24    |                                          |
+| I11   | PI   | Unsigned | 24    |                                          |
+| I12   | PI   | Unsigned | 24    |                                          |
+| I13   | PI   | Unsigned | 24    |                                          |
+| I14   | PI   | Unsigned | 24    |                                          |
+| I15   | PI   | Unsigned | 24    |                                          |
+| I16   | PI   | Unsigned | 24    |                                          |
+| O1    | PO   | Unsigned | 24    | I1 + I2 + I3 + I4 + I5 + I6 + I7 + I8 + I9 + I10 + I11 + I12 + I13 + I14 + I15 + I16 ( poly_fir_mult_kernel.v:20 poly_fir_mult_kernel.v:21 poly_fir_mult_kernel.v:22 poly_fir_mult_kernel.v:23 poly_fir_mult_kernel.v:24 poly_fir_mult_kernel.v:25 poly_fir_mult_kernel.v:26 poly_fir_mult_kernel.v:27 poly_fir_mult_kernel.v:28 poly_fir_mult_kernel.v:29 poly_fir_mult_kernel.v:30 poly_fir_mult_kernel.v:31 poly_fir_mult_kernel.v:32 poly_fir_mult_kernel.v:33 poly_fir_mult_kernel.v:34 ) |
+==============================================================================
+
+
+Implementation Report
+===============================================================================
+|                    |                  | Current            | Set            |
+| Cell               | Module           | Implementation     | Implementation |
+===============================================================================
+| DP_OP_30J2_137_3296                   |                    |                |
+|                    | DP_OP_30J2_137_3296 | str (area)      |                |
+===============================================================================
+
+1
